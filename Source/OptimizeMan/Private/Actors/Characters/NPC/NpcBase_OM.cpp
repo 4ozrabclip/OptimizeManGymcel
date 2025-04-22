@@ -18,6 +18,7 @@
 #include "MovieSceneObjectBindingID.h"
 #include "Actors/Characters/NPC/Components/NPCBodyDeformationsComponent_OM.h"
 #include "Audio/GameAudio_OM.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Utils/Structs/AudioTypes.h"
 
 ANpcBase_OM::ANpcBase_OM()
@@ -46,6 +47,8 @@ ANpcBase_OM::ANpcBase_OM()
 	MaxPlayerLookAtRange = 1600.f;
 
 	bHasMogFace = false;
+
+	WalkSpeed = 100.f;
 	
 }
 
@@ -72,6 +75,10 @@ void ANpcBase_OM::BeginPlay()
 
 	
 
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	}
 	
 	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (!PlayerController)
@@ -123,6 +130,7 @@ void ANpcBase_OM::Tick(float DeltaTime)
 			GymSpeaker->ChangePitch(CurrentMusicPitch);
 		}
 	}
+	
 }
 UNpcBaseAnimInstance_OM* ANpcBase_OM::GetAnimInstance()
 {

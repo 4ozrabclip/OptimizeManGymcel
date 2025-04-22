@@ -17,6 +17,7 @@ class OPTIMIZEMAN_API UNpcBaseAnimInstance_OM : public UAnimInstance
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	void UpdateIsMoving();
 
 	void SetIsTalking(const bool InIsTalking);
 	void SetIsYelling(const bool InIsYelling) { bIsYelling = InIsYelling; }
@@ -64,7 +65,9 @@ protected:
 	bool bIsLaughing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Talking", meta = (AllowPrivateAccess = "true"))
 	bool bIsConfused;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Locomotion", meta = (AllowPrivateAccess = "true"))
+	bool bIsMoving;
 	
 	
 	UPROPERTY()

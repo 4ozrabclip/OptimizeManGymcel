@@ -57,6 +57,9 @@ public:
 	
 	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Walk Speed")
+	float WalkSpeed;
+
 	UFUNCTION(BlueprintCallable)
 	void SayHello() { PlayRandomTalkingHelper(FriendlyHello); }
 	
@@ -168,6 +171,8 @@ private:
 	float CurrentTalkTime = 3.f;
 
 	bool bHasMogFace = false;
+
+	bool bIsMoving = false;
 
 	UPROPERTY()
 	FVector SmoothedLookAtLocation;

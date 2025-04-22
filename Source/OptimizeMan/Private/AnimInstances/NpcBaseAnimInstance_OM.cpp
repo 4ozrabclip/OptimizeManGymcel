@@ -7,6 +7,7 @@
 void UNpcBaseAnimInstance_OM::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
+	
 
 	bIsTalking = false;
 	bIsWalking = false;
@@ -26,13 +27,30 @@ void UNpcBaseAnimInstance_OM::NativeInitializeAnimation()
 void UNpcBaseAnimInstance_OM::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	
+
 	if (OwningNpc && Player && GetWorld() && !GetWorld()->IsPaused())
 	{
 		LookAtLocation = OwningNpc->LookAtLocation(DeltaSeconds);
+		
+		UpdateIsMoving();
 	}
-}
 
+}
+void UNpcBaseAnimInstance_OM::UpdateIsMoving()
+{
+	if (!OwningNpc) return;
+
+
+
+	constexpr int MovementThreshold = 35;
+	FVector Velocity = OwningNpc->GetVelocity();
+	const float SpeedSq = Velocity.SizeSquared2D();
+
+
+	
+	bIsWalking = SpeedSq > MovementThreshold;
+	
+}
 void UNpcBaseAnimInstance_OM::SetIsTalking(const bool InIsTalking)
 {
 	bIsTalking = InIsTalking;
