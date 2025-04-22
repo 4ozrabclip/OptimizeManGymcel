@@ -1,0 +1,68 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "OptimizeMan/Public/Actors/InteractableActor_OM.h"
+#include "GymGate_OM.generated.h"
+
+class UGameAudio_OM;
+/**
+ * 
+ */
+UCLASS()
+class OPTIMIZEMAN_API AGymGate_OM : public AInteractableActor_OM
+{
+	GENERATED_BODY()
+
+	AGymGate_OM();
+
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
+	virtual void Interact_Implementation() override;
+
+public:
+	void ClearGateTimer();
+
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* GateOne;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* GateTwo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UGameAudio_OM* AudioComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FColor GateRedColour = {0, 255, 255};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FColor GateGreenColour = {255, 0, 255};
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* GateBeepSound;
+
+	FRotator DoorOneClosedRotation;
+	FRotator DoorTwoClosedRotation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GateDoors")
+	FRotator DoorOpenRotation;
+
+private:
+	bool bGateIsOpen;
+
+	float CurrentRotationAlpha;
+	float TimeSinceTriggered;
+	float GateOpenSpeed;
+
+	const float GateCloseDelay = 4.f;
+
+	UPROPERTY()
+	FTimerHandle GateCloseTimerHandle;
+
+
+	void OpenGate(float DeltaTime);
+	void PrepareDelayForGateClose();
+	void CloseGate(float DeltaTime);
+};
