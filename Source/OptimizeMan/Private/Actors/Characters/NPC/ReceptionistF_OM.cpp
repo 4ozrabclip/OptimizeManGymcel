@@ -6,4 +6,5 @@
 AReceptionistF_OM::AReceptionistF_OM()
 {
 	CurrentMood = ENpcMood::Neutral;
+	CurrentState = ENpcState::Idle;
 }

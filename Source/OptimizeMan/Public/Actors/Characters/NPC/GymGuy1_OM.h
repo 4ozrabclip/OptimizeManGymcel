@@ -13,7 +13,9 @@ UCLASS()
 class OPTIMIZEMAN_API AGymGuy1_OM : public AMaleBase_OM
 {
 	GENERATED_BODY()
-
+public:
 	AGymGuy1_OM();
+
+	virtual void BeginPlay() override;
 	
 };

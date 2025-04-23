@@ -3,6 +3,7 @@
 
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
 #include "Actors/Characters/NPC/NpcBase_OM.h"
+#include "Chaos/Character/CharacterGroundConstraintContainer.h"
 
 void UNpcBaseAnimInstance_OM::NativeInitializeAnimation()
 {
@@ -11,6 +12,9 @@ void UNpcBaseAnimInstance_OM::NativeInitializeAnimation()
 
 	bIsTalking = false;
 	bIsWalking = false;
+
+	bPreviousIsMoving = false;
+	
 	bIsYelling = false;
 	bIsExplaining = false;
 	bIsAffirming = false;
@@ -34,22 +38,22 @@ void UNpcBaseAnimInstance_OM::NativeUpdateAnimation(float DeltaSeconds)
 		
 		UpdateIsMoving();
 	}
-
 }
 void UNpcBaseAnimInstance_OM::UpdateIsMoving()
 {
 	if (!OwningNpc) return;
 
+	const float SpeedSq = OwningNpc->GetVelocity().SizeSquared2D();
 
+	if (const bool bCurrentlyMoving = SpeedSq > 25.0f)
+	{
+		bPreviousIsMoving = true;
+		GetWorld()->GetTimerManager().ClearTimer(MovementDecayTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(MovementDecayTimerHandle, this, &UNpcBaseAnimInstance_OM::ResetMovementFlag, 0.2f, false); 
+	}
 
-	constexpr int MovementThreshold = 35;
-	FVector Velocity = OwningNpc->GetVelocity();
-	const float SpeedSq = Velocity.SizeSquared2D();
-
-
-	
-	bIsWalking = SpeedSq > MovementThreshold;
-	
+	bIsWalking = bPreviousIsMoving;
+	UE_LOG(LogTemp, Error, TEXT("SpeedSq: %f\n bIsWalking: %hs"), SpeedSq, bIsWalking ? "true" : "false");
 }
 void UNpcBaseAnimInstance_OM::SetIsTalking(const bool InIsTalking)
 {

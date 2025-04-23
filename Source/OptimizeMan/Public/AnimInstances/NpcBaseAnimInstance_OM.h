@@ -36,6 +36,9 @@ public:
 	bool GetIsDisgusted() const { return bIsDisgusted; }
 	bool GetIsLaughing() const { return bIsLaughing; }
 	bool GetIsConfused() const { return bIsConfused; }
+
+	UFUNCTION()
+	void ResetMovementFlag() { bPreviousIsMoving = false; }
 	
 	UPROPERTY()
 	class APlayerCharacter_OM* Player;
@@ -65,9 +68,7 @@ protected:
 	bool bIsLaughing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Talking", meta = (AllowPrivateAccess = "true"))
 	bool bIsConfused;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Locomotion", meta = (AllowPrivateAccess = "true"))
-	bool bIsMoving;
+	
 	
 	
 	UPROPERTY()
@@ -78,6 +79,10 @@ protected:
 
 private:
 	int RandomIndex = 0;
+
+	
+	FTimerHandle MovementDecayTimerHandle;
+	bool bPreviousIsMoving;
 
 	float AnimationLength = 0;
 

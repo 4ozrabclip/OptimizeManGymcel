@@ -17,7 +17,9 @@
 #include "Components/AudioComponent.h"
 #include "MovieSceneObjectBindingID.h"
 #include "Actors/Characters/NPC/Components/NPCBodyDeformationsComponent_OM.h"
+#include "AI/NPC_AIController_OM.h"
 #include "Audio/GameAudio_OM.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Utils/Structs/AudioTypes.h"
 
@@ -218,6 +220,8 @@ void ANpcBase_OM::StartDialogue()
 	if (!bIsInDialogue)
 	{
 		bIsInDialogue = true;
+		SetCurrentState(ENpcState::Talking);
+		ActiveTags.AddTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 	UE_LOG(LogTemp, Warning, TEXT("START DIALOGUE"));
 	
@@ -235,6 +239,8 @@ void ANpcBase_OM::EndDialog()
 	if (bIsInDialogue)
 	{
 		bIsInDialogue = false;
+		SetCurrentState(ExitDialogueState);
+		ActiveTags.RemoveTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 	if (!PlayerRelationship.bHasMetPlayer)
 	{
@@ -255,6 +261,19 @@ void ANpcBase_OM::SetFriendshipLevel(const float InAmount, const bool bReset)
 		PlayerRelationship.FriendshipLevel = FMath::Clamp(PlayerRelationship.FriendshipLevel + InAmount, -1.f, 1.f);
 	}
 
+}
+
+void ANpcBase_OM::SetCurrentState(const ENpcState InState)
+{
+	CurrentState = InState;
+	
+	if (auto* AICont = Cast<ANPC_AIController_OM>(GetController()))
+	{
+		if (UBlackboardComponent* BB = AICont->GetBlackboardComponent())
+		{
+			BB->SetValueAsEnum("NPCState", static_cast<uint8>(InState));
+		}
+	}
 }
 
 

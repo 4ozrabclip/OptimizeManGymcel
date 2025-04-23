@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Utils/structs/NpcStates.h"
 #include "NPC_AIController_OM.generated.h"
 
 /**
