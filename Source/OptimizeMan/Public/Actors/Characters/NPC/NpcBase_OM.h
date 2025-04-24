@@ -12,6 +12,7 @@
 #include "NpcBase_OM.generated.h"
 
 
+class UBlackboardComponent;
 class UGameAudio_OM;
 class UBehaviorTree;
 class UNpcBaseAnimInstance_OM;
@@ -64,6 +65,11 @@ public:
 	class AGymSpeaker_OM* GymSpeaker;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Walk Speed")
 	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
+	TArray<TSoftObjectPtr<class AExerciseEquipment_OM>> EquipmentInLevel;
+
+
 	
 
 
@@ -103,6 +109,8 @@ protected: //Anim stuff
 protected: //AI stuff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta=(AllowPrivateAccess=true))
 	UBehaviorTree* Tree;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta=(AllowPrivateAccess=true))
+	UBlackboardComponent* Blackboard;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta=(AllowPrivateAccess=true))
 	ENpcState ExitDialogueState;
@@ -121,6 +129,10 @@ protected: // Gameplay Tags
 	FGameplayTagContainer ActiveTags;
 
 public: //Getters and Setters
+
+	UFUNCTION()
+	TArray<TSoftObjectPtr<AExerciseEquipment_OM>> GetEquipmentInLevel() { return EquipmentInLevel; };
+	
 	UFUNCTION(Category = "NPC Social")
 	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; };
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")

@@ -17,7 +17,7 @@
 #include "Components/AudioComponent.h"
 #include "MovieSceneObjectBindingID.h"
 #include "Actors/Characters/NPC/Components/NPCBodyDeformationsComponent_OM.h"
-#include "AI/NPC_AIController_OM.h"
+#include "AI/Controllers/NPC_AIController_OM.h"
 #include "Audio/GameAudio_OM.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -221,6 +221,10 @@ void ANpcBase_OM::StartDialogue()
 	{
 		bIsInDialogue = true;
 		SetCurrentState(ENpcState::Talking);
+		if (auto* Cont = Cast<ANPC_AIController_OM>(GetController()))
+		{
+			Cont->GetBlackboardComponent()->ClearValue(FName("TargetLocation")); // ----- Move this to a proper location for starting workout
+		}
 		ActiveTags.AddTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 	UE_LOG(LogTemp, Warning, TEXT("START DIALOGUE"));
@@ -240,13 +244,18 @@ void ANpcBase_OM::EndDialog()
 	{
 		bIsInDialogue = false;
 		SetCurrentState(ExitDialogueState);
+		if (auto* Cont = Cast<ANPC_AIController_OM>(GetController()))
+		{
+			Cont->GetBlackboardComponent()->ClearValue(FName("TargetRotation"));
+
+		}
+		
 		ActiveTags.RemoveTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 	if (!PlayerRelationship.bHasMetPlayer)
 	{
 		SetHasMetPlayer(true);
 	}
-
 	//SetActorTickEnabled(false);
 }
 
@@ -271,11 +280,10 @@ void ANpcBase_OM::SetCurrentState(const ENpcState InState)
 	{
 		if (UBlackboardComponent* BB = AICont->GetBlackboardComponent())
 		{
-			BB->SetValueAsEnum("NPCState", static_cast<uint8>(InState));
+			BB->SetValueAsEnum("NPC State", static_cast<uint8>(InState));
 		}
 	}
 }
-
 
 void ANpcBase_OM::Talk(USoundBase* InChatAudio) const
 {

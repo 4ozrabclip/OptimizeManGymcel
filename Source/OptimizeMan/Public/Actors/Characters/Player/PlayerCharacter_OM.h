@@ -241,7 +241,6 @@ protected: //Update States and Playmodes
 
 	
 public: //Getters and Setters
-
 	UFUNCTION()
 	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
 
@@ -258,7 +257,6 @@ public: //Getters and Setters
 	ANpcBase_OM* GetCurrentInteractedCharacter() const { return CurrentInteractedCharacter; };
 
 	void SetCurrentInteractedCharacter(ANpcBase_OM* InInteractedCharacter = nullptr) { CurrentInteractedCharacter = InInteractedCharacter; };
-
 	
 	void SetIsWalking(const bool InIsWalking) { bIsWalking = InIsWalking; };
 	bool GetIsWalking() const { return bIsWalking; };

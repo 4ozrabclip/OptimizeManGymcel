@@ -189,9 +189,9 @@ void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick
 	
 	if (CurrentInteractedNpc)
 	{
-		if (CurrentInteractedNpc->GetDistanceFromPlayerVector().X > 200.f || CurrentInteractedNpc->GetDistanceFromPlayerVector().Y > 170.f)
+		FVector2D Delta = FVector2D(CurrentInteractedNpc->GetActorLocation()) - FVector2D(Player->GetActorLocation());
+		if (Delta.Size() > 300)
 		{
-			UE_LOG(LogTemp, Error, TEXT("WalkedAway"));
 			LeaveConversationOnWalkingOff();
 		}
 	}

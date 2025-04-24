@@ -51,9 +51,7 @@ void UNpcBaseAnimInstance_OM::UpdateIsMoving()
 		GetWorld()->GetTimerManager().ClearTimer(MovementDecayTimerHandle);
 		GetWorld()->GetTimerManager().SetTimer(MovementDecayTimerHandle, this, &UNpcBaseAnimInstance_OM::ResetMovementFlag, 0.2f, false); 
 	}
-
 	bIsWalking = bPreviousIsMoving;
-	UE_LOG(LogTemp, Error, TEXT("SpeedSq: %f\n bIsWalking: %hs"), SpeedSq, bIsWalking ? "true" : "false");
 }
 void UNpcBaseAnimInstance_OM::SetIsTalking(const bool InIsTalking)
 {
