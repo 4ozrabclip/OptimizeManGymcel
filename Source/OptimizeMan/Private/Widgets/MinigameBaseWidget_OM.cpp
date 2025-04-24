@@ -54,7 +54,7 @@ void UMinigameBaseWidget_OM::OnExitButtonClicked()
 {
 	if (!Player)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Player is NULL"));
+		UE_LOG(LogTemp, Error, TEXT("Player is NULL in Minigame Base Widget"));
 	}
 	Player->SetCurrentPlayMode(EPlayModes::RegularMode);
 

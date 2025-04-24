@@ -221,10 +221,6 @@ void ANpcBase_OM::StartDialogue()
 	{
 		bIsInDialogue = true;
 		SetCurrentState(ENpcState::Talking);
-		if (auto* Cont = Cast<ANPC_AIController_OM>(GetController()))
-		{
-			Cont->GetBlackboardComponent()->ClearValue(FName("TargetLocation")); // ----- Move this to a proper location for starting workout
-		}
 		ActiveTags.AddTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 	UE_LOG(LogTemp, Warning, TEXT("START DIALOGUE"));
@@ -281,6 +277,8 @@ void ANpcBase_OM::SetCurrentState(const ENpcState InState)
 		if (UBlackboardComponent* BB = AICont->GetBlackboardComponent())
 		{
 			BB->SetValueAsEnum("NPC State", static_cast<uint8>(InState));
+
+			BB->ClearValue(FName("TargetLocation"));
 		}
 	}
 }

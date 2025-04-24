@@ -40,7 +40,7 @@ void UCharacterComponentBase_OM::BeginPlay()
 	Player = Cast<APlayerCharacter_OM>(GetOwner());
 	if (!Player)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Player is NULL"));
+		UE_LOG(LogTemp, Error, TEXT("Player is NULL in Character Component base"));
 		return;
 	}
 

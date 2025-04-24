@@ -10,7 +10,6 @@ AGymGuy1_OM::AGymGuy1_OM()
 	CurrentState = ENpcState::Idle;
 
 	ExitDialogueState = ENpcState::Walking;
-
 }
 
 void AGymGuy1_OM::BeginPlay()
@@ -19,5 +18,3 @@ void AGymGuy1_OM::BeginPlay()
 
 	SetCurrentState(ENpcState::Walking);
 }
-
-
