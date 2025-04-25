@@ -7,6 +7,7 @@
 #include "OptimizeMan/Public/Interfaces/InteractableInterface_OM.h"
 #include "GameFramework/Character.h"
 #include "Utils/NpcDataSave.h"
+#include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/NpcStates.h"
 #include "Utils/Structs/SocialData.h"
 #include "NpcBase_OM.generated.h"
@@ -43,8 +44,8 @@ public:
 	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
 
 
-	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
+	EExerciseType CurrentExerciseType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
 	ENpcState CurrentState;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
@@ -151,8 +152,13 @@ public: //Getters and Setters
 	UBehaviorTree* GetBehaviorTree() const { return Tree; };
 	UFUNCTION()
 	UNpcBaseAnimInstance_OM* GetAnimInstance();
+	UFUNCTION()
+	EExerciseType GetCurrentExerciseType() const { return CurrentExerciseType; };
+	UFUNCTION()
+	ENpcState GetCurrentState() const { return CurrentState; };
 
-	
+	UFUNCTION()
+	void SetCurrentExerciseType(const EExerciseType InExerciseType) { CurrentExerciseType = InExerciseType; }
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	virtual void SetCurrentMood(ENpcMood InMood) { CurrentMood = InMood;};
 	UFUNCTION(BlueprintCallable, Category = "NPC States")

@@ -19,6 +19,11 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 	void UpdateIsMoving();
 
+
+	UFUNCTION()
+	void ResetMovementFlag() { bPreviousIsMoving = false; }
+	
+	void SetPlayer(APlayerCharacter_OM* InPlayerCharacter) { Player = InPlayerCharacter; }
 	void SetIsTalking(const bool InIsTalking);
 	void SetIsYelling(const bool InIsYelling) { bIsYelling = InIsYelling; }
 	void SetIsExplaining(const bool InIsExplaining) { bIsExplaining = InIsExplaining; }
@@ -36,15 +41,35 @@ public:
 	bool GetIsDisgusted() const { return bIsDisgusted; }
 	bool GetIsLaughing() const { return bIsLaughing; }
 	bool GetIsConfused() const { return bIsConfused; }
+	bool GetIsInSquatPosition() const;
+
+	
+
+
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void SetIsInSquatPosition(const bool InIsInSquatPosition);
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void SetIsInCurlPosition(bool InIsInCurlPosition);
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void SetIsInOverheadPressPosition(bool InIsInOverheadPressPosition);
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void SetIsInLeftCurlPosition(bool InIsInLeftCurlPosition);
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void SetIsInRightCurlPosition(bool InIsInRightCurlPosition);
+	
+	UFUNCTION()
+	void DoRepAnim(bool& InIsRepping, bool& InIsInPosition, float AnimDuration);
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void DoSquatRep() { DoRepAnim(bIsSquatting, bIsInSquatPosition, SquatAnimationDuration); }
+	UFUNCTION(BlueprintCallable, Category = "Exercises")
+	void DoCurlRep() { DoRepAnim(bIsCurling, bIsInCurlPosition, CurlAnimationDuration); }
 
 	UFUNCTION()
-	void ResetMovementFlag() { bPreviousIsMoving = false; }
-	
-	UPROPERTY()
-	class APlayerCharacter_OM* Player;
-
+	void ExitPosition(bool& InIsRepping, bool& InIsInPosition);
 
 protected:
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
 	//Locomotion
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	bool bIsWalking;
@@ -68,23 +93,50 @@ protected:
 	bool bIsLaughing;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Talking", meta = (AllowPrivateAccess = "true"))
 	bool bIsConfused;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsInSquatPosition;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsInCurlPosition;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsInOverheadPressPosition;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsInLeftCurlPosition;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsInRightCurlPosition;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsSquatting;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsCurling;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsOverheadPressing;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsLeftCurling;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
+	bool bIsRightCurling;
+
 	
 	
 	
 	UPROPERTY()
 	class ANpcBase_OM* OwningNpc;
 
-	float MaxPlayerLookAtRange = 500.f;
-	FVector DefaultLookAtOffset = FVector::ZeroVector;
+
 
 private:
-	int RandomIndex = 0;
-
-	
+	FTimerHandle RepAnimTimerHandle;
 	FTimerHandle MovementDecayTimerHandle;
 	bool bPreviousIsMoving;
-
+	int RandomIndex = 0;
+	float MaxPlayerLookAtRange = 500.f;
 	float AnimationLength = 0;
-
+	FVector DefaultLookAtOffset = FVector::ZeroVector;
+	float SquatAnimationDuration = 4.f;
+	float CurlAnimationDuration = 4.f;
+	float OverheadPressAnimationDuration = 4.f;
+	float LeftCurlAnimationDuration = 4.f;
+	float RightCurlAnimationDuration = 4.f;
+	
 };
 

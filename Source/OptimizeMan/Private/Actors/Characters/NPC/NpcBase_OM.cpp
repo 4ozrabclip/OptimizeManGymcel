@@ -3,19 +3,14 @@
 
 #include "Actors/Characters/NPC/NpcBase_OM.h"
 
-#include "LevelSequenceActor.h"
-#include "LevelSequencePlayer.h"
-#include "MovieSceneSequencePlaybackSettings.h"
 #include "Components/PointLightComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/Components/SocialInteractionSystem_OM.h"
 #include "Utils/GameInstance_OM.h"
 #include "Interfaces/InteractableInterface_OM.h"
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
 #include "Audio/GymSpeaker_OM.h"
 #include "Components/AudioComponent.h"
-#include "MovieSceneObjectBindingID.h"
 #include "Actors/Characters/NPC/Components/NPCBodyDeformationsComponent_OM.h"
 #include "AI/Controllers/NPC_AIController_OM.h"
 #include "Audio/GameAudio_OM.h"
@@ -29,6 +24,7 @@ ANpcBase_OM::ANpcBase_OM()
 	CurrentState = ENpcState::Idle;
 	CurrentLookState = ENpcLookStates::Idle;
 	CurrentMood = ENpcMood::Neutral;
+	CurrentExerciseType = EExerciseType::None;
 	bCanInteract = true;
 	bIsInDialogue = false;
 
@@ -51,6 +47,8 @@ ANpcBase_OM::ANpcBase_OM()
 	bHasMogFace = false;
 
 	WalkSpeed = 100.f;
+
+
 	
 }
 
@@ -71,7 +69,7 @@ void ANpcBase_OM::BeginPlay()
 		AnimInstance = Cast<UNpcBaseAnimInstance_OM>(GetMesh()->GetAnimInstance());
 		if (AnimInstance)
 		{
-			AnimInstance->Player = Player;
+			AnimInstance->SetPlayer(Player);
 		}
 	}
 
