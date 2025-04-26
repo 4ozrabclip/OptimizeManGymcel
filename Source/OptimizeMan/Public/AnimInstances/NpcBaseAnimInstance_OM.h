@@ -64,6 +64,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Exercises")
 	void DoCurlRep() { DoRepAnim(bIsCurling, bIsInCurlPosition, CurlAnimationDuration); }
 
+
+	UFUNCTION(BlueprintCallable, Category = "ExercisePositions")
+	void ExitSquatPosition() { ExitPosition(bIsSquatting, bIsInSquatPosition); }
+	UFUNCTION(BlueprintCallable, Category = "ExercisePositions")
+	void ExitCurlPosition() { ExitPosition(bIsCurling, bIsInCurlPosition); }
+	UFUNCTION(BlueprintCallable, Category = "ExercisePositions")
+	void ExitOverheadPressPosition() { ExitPosition(bIsOverheadPressing, bIsInOverheadPressPosition);}
+	UFUNCTION(BlueprintCallable, Category = "ExercisePositions")
+	void ExitLeftCurlPosition() { ExitPosition(bIsLeftCurling, bIsInLeftCurlPosition); }
+	UFUNCTION(BlueprintCallable, Category = "ExercisePositions")
+	void ExitRightCurlPosition() { ExitPosition(bIsRightCurling, bIsInRightCurlPosition); }
+
 	UFUNCTION()
 	void ExitPosition(bool& InIsRepping, bool& InIsInPosition);
 
@@ -121,7 +133,6 @@ protected:
 	
 	UPROPERTY()
 	class ANpcBase_OM* OwningNpc;
-
 
 
 private:

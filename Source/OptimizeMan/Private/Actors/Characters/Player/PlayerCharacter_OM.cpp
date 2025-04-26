@@ -708,6 +708,7 @@ void APlayerCharacter_OM::Interact(const bool bToggleable)
 		
 		if (AInteractableActor_OM* InteractedActorInterface = Cast<AInteractableActor_OM>(InteractedActor))
 		{
+			if (!InteractedActorInterface->InteractableInterfaceProperties.bIsInteractable) return;
 			if (!GameInstance->GetHasInteractedInitial())
 				GameInstance->SetHasInteractedInitial(true);
 			
@@ -739,8 +740,10 @@ void APlayerCharacter_OM::CheckInteractable()
 		AActor* InteractedActor = HitResult.GetActor();
 		if (!InteractedActor) return;
 		
+		
 		if (AInteractableActor_OM* InteractedActorInterface = Cast<AInteractableActor_OM>(InteractedActor))
 		{
+			if (!InteractedActorInterface->InteractableInterfaceProperties.bIsInteractable) return;
 			WidgetInteraction(InteractedActorInterface);
 		}
 		else if (ANpcBase_OM* InteractedNpcInterface = Cast<ANpcBase_OM>(InteractedActor))

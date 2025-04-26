@@ -111,6 +111,7 @@ void ANpcBase_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	ToggleNpcLookStates();
+	
 
 	if (Player && bIsInDialogue)
 	{
@@ -164,12 +165,10 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 	if (!Player || !Player->GetMesh()) 
 	{
 		return GetActorLocation() + DefaultLookAtOffset;
-		
 	}
 
 	FVector PlayersHeadLocation = Player->GetMesh()->GetSocketLocation("Head");
-
-
+	
 	FVector TargetLookAtLocation;
 
 	switch (CurrentLookState)
@@ -202,7 +201,6 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 	return SmoothedLookAtLocation;
 }
 
-
 ENpcRelationshipState ANpcBase_OM::GetCurrentRelationshipState()
 {
 	if (!PlayerRelationship.bHasMetPlayer)
@@ -229,7 +227,6 @@ void ANpcBase_OM::StartDialogue()
 		return;
 	}
 	Player->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
-	
 }
 
 void ANpcBase_OM::EndDialog()

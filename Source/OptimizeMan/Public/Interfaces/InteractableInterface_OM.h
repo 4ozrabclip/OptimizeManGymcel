@@ -16,6 +16,10 @@ struct FInteractableInterface
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> InteractableWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	bool bIsInteractable = true;
+	
 };
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
@@ -37,7 +41,7 @@ public:
 	void Interact();
 	
 	
-	
+	virtual void SetIsInteractable(const bool InIsInteractable) { InteractableInterfaceProperties.bIsInteractable = InIsInteractable; }
 	virtual FString GetInteractionWidgetText() const;
 	virtual TSubclassOf<UUserWidget> GetInteractableWidget() const;
 	virtual void SetInteractableWidgetText(const FString& InText);

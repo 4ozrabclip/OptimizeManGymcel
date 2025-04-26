@@ -107,7 +107,6 @@ void UExercise_OM::EnterExercisePosition()
 	const FName LeftHandSocket = FName("LeftHandSocket");
 	const FName RightHandSocket = FName("RightHandSocket");
 
-
 	AnimInstance = Player->GetCachedAnimInstance();
 
 	if (!AnimInstance) return;
