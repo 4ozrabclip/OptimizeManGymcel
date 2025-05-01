@@ -6,6 +6,9 @@
 #include "Widgets/ParentWidget_OM.h"
 #include "MainMenuWidget_OM.generated.h"
 
+class UGameAudio_OM;
+class USlider;
+class UBorder;
 class UVerticalBox;
 class USlateBrushAsset;
 class UButton;
@@ -16,9 +19,10 @@ UCLASS()
 class OPTIMIZEMAN_API UMainMenuWidget_OM : public UParentWidget_OM
 {
 	GENERATED_BODY()
-
+public:
 	virtual void NativeConstruct() override;
-	void OpenWindow(UVerticalBox* InWindow) const;
+
+	void OpenWindow(UVerticalBox* InWindow = nullptr, UBorder* InBorder = nullptr) const;
 	void InitButtons();
 
 	UFUNCTION()
@@ -34,13 +38,32 @@ class OPTIMIZEMAN_API UMainMenuWidget_OM : public UParentWidget_OM
 	void SettingsButtonClicked() { OpenWindow(SettingsBox); };
 
 	UFUNCTION()
+	void AudioQualitySettingsButtonClicked() { OpenWindow(nullptr, AudioQualitySettings_Layer); }
+
+	UFUNCTION()
 	void BackButtonClicked() { OpenWindow(MainMenuBox); };
+
+	UFUNCTION()
+	void UpdateGameSettings();
 	
 	UFUNCTION()
 	void ToggleDarkModeFunction();
 
-protected:
+	UPROPERTY()
+	UGameAudio_OM* NotificationAudio;
+	UPROPERTY()
+	UGameAudio_OM* MenuMusic;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
+	USoundBase* MenuSong;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NotificationAudio")
+	USoundBase* SplatSound;
+		
+	void PlaySplat();
+
+protected:
+	
+	
 	UPROPERTY(meta = (BindWidget))
 	UVerticalBox* MainMenuBox;
 	UPROPERTY(meta = (BindWidget))
@@ -65,7 +88,26 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* ToggleDarkMode;
 	UPROPERTY(meta = (BindWidget))
+	UButton* AudioQualitySettingsButton;
+	UPROPERTY(meta = (BindWidget))
 	UButton* SettingsBackButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UBorder* AudioQualitySettings_Layer;
+	UPROPERTY(meta = (BindWidget))
+	USlider* MasterVolume_Slider;
+	UPROPERTY(meta = (BindWidget))
+	USlider* MusicVolume_Slider;
+	UPROPERTY(meta = (BindWidget))
+	USlider* VoiceVolume_Slider;
+	UPROPERTY(meta = (BindWidget))
+	USlider* NotificationVolume_Slider;
+	UPROPERTY(meta = (BindWidget))
+	USlider* SfxVolume_Slider;
+	UPROPERTY(meta = (BindWidget))
+	UButton* BackFromSettings_Button;
+	UPROPERTY(meta = (BindWidget))
+	UButton* AcceptSettings_Button;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Title;
@@ -129,6 +171,15 @@ private:
 	UMaterial* ToggleDarkModeWhite;
 	UPROPERTY(Editanywhere, Category = "Images")
 	UMaterial* ToggleDarkModeWhiteHover;
+	UPROPERTY(EditAnywhere, Category = "Images")
+	UMaterial* AudioQualityBlack;
+	UPROPERTY(EditAnywhere, Category = "Images")
+	UMaterial* AudioQualityBlackHover;
+	UPROPERTY(EditAnywhere, Category = "Images")
+	UMaterial* AudioQualityWhite;
+	UPROPERTY(EditAnywhere, Category = "Images")
+	UMaterial* AudioQualityWhiteHover;
+
 	
 	UPROPERTY(EditAnywhere, Category = "Images")
 	UMaterial* BackButtonBlack;
@@ -138,5 +189,6 @@ private:
 	UMaterial* BackButtonWhite;
 	UPROPERTY(EditAnywhere, Category = "Images")
 	UMaterial* BackButtonWhiteHover;
+	
 
 };

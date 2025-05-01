@@ -18,7 +18,6 @@ UCLASS()
 class OPTIMIZEMAN_API UPauseMenuWidget_OM : public UMinigameBaseWidget_OM
 {
 	GENERATED_BODY()
-
 public:
 	virtual void NativeConstruct() override;
 
@@ -37,6 +36,8 @@ public:
 	void OpenMoreOptions() { OpenLayer(MoreOptions_VBox); }
 	UFUNCTION()
 	void OpenBase() { OpenLayer(Base_VBox); }
+	UFUNCTION()
+	void OpenQuitScreen() { OpenLayer(nullptr, AreYouSure_Grid); }
 	UFUNCTION()
 	void OpenChangeStats();
 
@@ -61,15 +62,24 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* MoreSettingsButton;
 	UPROPERTY(meta = (BindWidget))
-	UButton* QuitToTitleScreenButton;
+	UButton* OpenQuitScreenButton;
+
 
 	// MoreOptions
+	UPROPERTY(meta = (BindWidget))
+	UGridPanel* AreYouSure_Grid;
 	UPROPERTY(meta = (BindWidget))
 	UButton* ChangeStatsButton;
 	UPROPERTY(meta = (BindWidget))
 	UButton* SettingsAudioButton;
 	UPROPERTY(meta = (BindWidget))
 	UButton* BackFromMoreOptionsButton;
+
+	// Are You Sure Quit
+	UPROPERTY(meta = (BindWidget))
+	UButton* BackToBaseButton;
+	UPROPERTY(meta = (BindWidget))
+	UButton* QuitToTitleScreenButton;
 
 	// Settings
 	UPROPERTY(meta = (BindWidget))

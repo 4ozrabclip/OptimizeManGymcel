@@ -47,9 +47,6 @@ ANpcBase_OM::ANpcBase_OM()
 	bHasMogFace = false;
 
 	WalkSpeed = 100.f;
-
-
-	
 }
 
 void ANpcBase_OM::BeginPlay()
@@ -72,9 +69,7 @@ void ANpcBase_OM::BeginPlay()
 			AnimInstance->SetPlayer(Player);
 		}
 	}
-
 	
-
 	if (GetCharacterMovement())
 	{
 		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
@@ -92,10 +87,18 @@ void ANpcBase_OM::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("game instance not found in npc beginplay"))
 		return;
 	}
+	
+	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OM::CheckAndSetDarkMode);
+
+	CheckAndSetDarkMode();
+
+	
 
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 }
+
+
 
 void ANpcBase_OM::Interact_Implementation()
 {
@@ -147,9 +150,17 @@ void ANpcBase_OM::ToggleNpcLookStates()
 	}
 	DistanceFromPlayerValue = FVector::Distance(GetActorLocation(), Player->GetActorLocation());
 	
+	
 	if (!Player || DistanceFromPlayerValue > MaxPlayerLookAtRange)
 	{
 		NewState = ENpcLookStates::Idle;
+	}
+	else if (CurrentState == ENpcState::WorkingOut)
+	{
+		if (GetCharacterMovement()->GetGroundMovementMode() != EMovementMode::MOVE_None)
+		{
+			NewState = ENpcLookStates::LookingAtItem;
+		}
 	}
 	else if (GetFriendshipLevel() < -0.6f && GetFriendshipLevel() > -1.f)
 	{
@@ -188,6 +199,10 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 			TargetLookAtLocation = GetActorLocation() + (AwayDirection * 200.0f);
 			break;
 		}
+		case ENpcLookStates::LookingAtItem:
+			if (CurrentInteractedItem)
+				TargetLookAtLocation = CurrentInteractedItem->GetActorLocation();
+			break;
 		default:
 			TargetLookAtLocation = GetActorLocation() + DefaultLookAtOffset;
 			break;
@@ -199,6 +214,22 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 	SmoothedLookAtLocation = FMath::VInterpTo(SmoothedLookAtLocation, TargetLookAtLocation, DeltaTime, InterpSpeed);
 
 	return SmoothedLookAtLocation;
+}
+
+void ANpcBase_OM::CheckAndSetDarkMode()
+{
+	if (!GameInstance)
+	{
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	}
+	if (GameInstance->GetDarkMode())
+	{
+		AuraLight->SetAttenuationRadius(35.f);
+	}
+	else
+	{
+		AuraLight->SetAttenuationRadius(100.f);
+	}
 }
 
 ENpcRelationshipState ANpcBase_OM::GetCurrentRelationshipState()

@@ -70,6 +70,16 @@ void UPauseMenuWidget_OM::NativeConstruct()
 		BackFromSettings_Button->OnClicked.RemoveAll(this);
 		BackFromSettings_Button->OnClicked.AddDynamic(this, &UPauseMenuWidget_OM::OpenMoreOptions);
 	}
+	if (BackToBaseButton)
+	{
+		BackToBaseButton->OnClicked.RemoveAll(this);
+		BackToBaseButton->OnClicked.AddDynamic(this, &UPauseMenuWidget_OM::OpenBase);
+	}
+	if (OpenQuitScreenButton)
+	{
+		OpenQuitScreenButton->OnClicked.RemoveAll(this);
+		OpenQuitScreenButton->OnClicked.AddDynamic(this, &UPauseMenuWidget_OM::OpenQuitScreen);
+	}
 	OpenBase();
 
 	if (!Player)
@@ -339,6 +349,7 @@ void UPauseMenuWidget_OM::OpenLayer(UVerticalBox* InVbox, UGridPanel* InGridPane
 	MoreOptions_VBox->SetVisibility(ESlateVisibility::Hidden);
 	ChangeStats_Grid->SetVisibility(ESlateVisibility::Hidden);
 	Settings_Grid->SetVisibility(ESlateVisibility::Hidden);
+	AreYouSure_Grid->SetVisibility(ESlateVisibility::Hidden);
 
 	if (InVbox) InVbox->SetVisibility(ESlateVisibility::Visible);
 	if (InGridPanel) InGridPanel->SetVisibility(ESlateVisibility::Visible);

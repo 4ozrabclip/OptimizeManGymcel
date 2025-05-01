@@ -16,12 +16,16 @@ class OPTIMIZEMAN_API UFootstepAudio_OM : public UGameAudio_OM
 
 public:
 	UFootstepAudio_OM();
+
+	virtual void BeginPlay() override;
 	
 	void Footsteps(float DeltaTime);
 	
 	void PlayFootstepSound();
 
-	
+protected:
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
 private:
 	UPROPERTY(EditAnywhere, Category = "FootstepsSounds")
 	TArray<USoundBase*> FootstepSounds;

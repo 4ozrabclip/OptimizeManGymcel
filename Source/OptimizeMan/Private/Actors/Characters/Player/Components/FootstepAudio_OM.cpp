@@ -13,6 +13,14 @@ UFootstepAudio_OM::UFootstepAudio_OM()
 	FootstepInterval = 0.65f;
 	TimeSinceLastFootstep = 0.f;
 	AudioType = EAudioTypes::SfxAudio;
+	Player = nullptr;
+}
+
+void UFootstepAudio_OM::BeginPlay()
+{
+	Super::BeginPlay();
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(GetOwner());
 }
 
 void UFootstepAudio_OM::Footsteps(float DeltaTime)

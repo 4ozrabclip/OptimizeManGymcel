@@ -274,8 +274,7 @@ public: //Getters and Setters
 	
 	void SetMinimumMovementThreshold(const float InMinimumMovementThreshold) { 	MinimumMovementThreshold = InMinimumMovementThreshold;}
 	float GetMinimumMovementThreshold() const { return MinimumMovementThreshold; }
-
-
+	
 	UUserWidget* GetMirrorWidget() const { return MirrorWidget; };
 	UUserWidget* GetLaptopWidget() const { return LaptopWidget; };
 

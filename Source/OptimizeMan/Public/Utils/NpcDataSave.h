@@ -4,37 +4,38 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "Structs/SocialData.h"
 #include "NpcDataSave.generated.h"
 
+enum class ENpcRelationshipState : uint8;
 /**
- * 
- */
-USTRUCT(BlueprintType)
+* USTRUCT(BlueprintType)
 struct FNpcRelationshipData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bHasMetPlayer = false;
+	UPROPERTY()
+	FName NpcIdentifier;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float FriendshipLevel = 0.f;
+	UPROPERTY()
+	float FriendshipLevel;
+
+	UPROPERTY()
+	bool bHasMetPlayer;
+
+	UPROPERTY()
+	ENpcRelationshipState RelationshipState;
 
 };
+ */
+
 UCLASS()
 class OPTIMIZEMAN_API UNpcDataSave : public USaveGame
 {
 	GENERATED_BODY()
 
 public:
-	//UPROPERTY()
-	//FNpcRelationshipData NpcRelationship;
-
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bHasMetPlayer = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float FriendshipLevel = 0.f;
+	UPROPERTY()
+	TArray<FNpcRelationship> NpcRelationships;
 	
 };

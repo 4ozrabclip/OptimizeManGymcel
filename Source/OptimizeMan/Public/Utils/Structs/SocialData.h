@@ -41,6 +41,9 @@ struct FNpcRelationship
 {
 	GENERATED_USTRUCT_BODY()
 
+	UPROPERTY()
+	FName NpcIdentifier;
+
 	UPROPERTY(EditAnywhere)
 	bool bHasMetPlayer = false;
 
@@ -96,3 +99,4 @@ struct FDialogueCondition
 						  GetTypeHash(Condition.FriendshipThreshold));
 	}
 };
+

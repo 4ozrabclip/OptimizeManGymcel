@@ -118,7 +118,7 @@ void UGameInstance_OM::SetCurrentEmotionalState(const EPlayerEmotionalStates New
 
 void UGameInstance_OM::SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx)
 {
-	
+	UE_LOG(LogTemp, Display, TEXT("Changed audio settings"));
 	if (GameSettings.MasterVolume != InMaster)
 		GameSettings.MasterVolume = InMaster;
 	if (GameSettings.VoiceVolume != InVoice)

@@ -28,7 +28,9 @@ public:
 	void WorkoutGruntSoundEffects(const EExerciseType CurrentExerciseType);
 	void UpsetSoundEffects();
 	void GrumpySoundEffects();
-
+protected:
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
 private:
 	UPROPERTY(EditAnywhere, Category = "PlayerVoiceSounds")
 	TArray<USoundBase*> MajorInjurySounds;

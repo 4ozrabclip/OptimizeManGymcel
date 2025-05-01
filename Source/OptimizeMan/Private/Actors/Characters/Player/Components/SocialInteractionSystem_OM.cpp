@@ -15,10 +15,7 @@ USocialInteractionSystem_OM::USocialInteractionSystem_OM()
 	CurrentInteractedNpc = nullptr;
 	CurrentNpcMood = ENpcMood::Neutral;
 	NpcAnimInstance = nullptr;
-
-
 }
-
 void USocialInteractionSystem_OM::BeginPlay()
 {
 	Super::BeginPlay();
@@ -41,7 +38,6 @@ void USocialInteractionSystem_OM::InitConversation()
 		return;
 	}
 	
-
 	UE_LOG(LogTemp, Warning, TEXT("InitConvo function called"));
 	
 	LoadNpcFriendshipData();
@@ -55,64 +51,64 @@ void USocialInteractionSystem_OM::InitConversation()
 
 void USocialInteractionSystem_OM::SaveNpcFriendshipData()
 {
-	if (!CurrentInteractedNpc)
+	if (!CurrentInteractedNpc) return;
+
+	FName NpcID = CurrentInteractedNpc->GetUniqueNpcID(); 
+
+	UNpcDataSave* NpcData = Cast<UNpcDataSave>(
+		UGameplayStatics::DoesSaveGameExist(TEXT("NpcSaveSlot"), 0)
+			? UGameplayStatics::LoadGameFromSlot(TEXT("NpcSaveSlot"), 0)
+			: UGameplayStatics::CreateSaveGameObject(UNpcDataSave::StaticClass())
+	);
+
+	if (!NpcData) return;
+
+	// Update or add
+	bool bFound = false;
+	for (auto& Entry : NpcData->NpcRelationships)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Current Interacted NPC is null"));
-		return;
+		if (Entry.NpcIdentifier == NpcID)
+		{
+			Entry.FriendshipLevel = CurrentInteractedNpc->GetFriendshipLevel();
+			Entry.bHasMetPlayer = CurrentInteractedNpc->GetHasMetPlayer();
+			bFound = true;
+			break;
+		}
 	}
 
-	UNpcDataSave* NpcData;
-
-	if (UGameplayStatics::DoesSaveGameExist(TEXT("NpcSaveSlot"), 0))
+	if (!bFound)
 	{
-		NpcData = Cast<UNpcDataSave>(UGameplayStatics::LoadGameFromSlot(TEXT("NpcSaveSlot"), 0));
-	}
-	else
-	{
-		NpcData = Cast<UNpcDataSave>(UGameplayStatics::CreateSaveGameObject(UNpcDataSave::StaticClass()));
+		NpcData->NpcRelationships.Add({
+			NpcID,
+			CurrentInteractedNpc->GetHasMetPlayer(),
+			CurrentInteractedNpc->GetFriendshipLevel()
+		});
 	}
 
-	if (!NpcData)
-	{
-		UE_LOG(LogTemp, Error, TEXT("NpcData is null"));
-		return;
-	}
-	
-	NpcData->FriendshipLevel = CurrentInteractedNpc->GetFriendshipLevel();
-	NpcData->bHasMetPlayer = CurrentInteractedNpc->GetHasMetPlayer();
-
-	// Save the data (and check at the same time if it saves correctly)
-	if (!UGameplayStatics::SaveGameToSlot(NpcData, TEXT("NpcSaveSlot"), 0))
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to save to slot NpcSaveSlot"));
-	}
-
+	UGameplayStatics::SaveGameToSlot(NpcData, TEXT("NpcSaveSlot"), 0);
 }
 
 void USocialInteractionSystem_OM::LoadNpcFriendshipData()
 {
-	if (!CurrentInteractedNpc)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Current Interacted NPC is null"));
-		return;
-	}
-	
-	if (!UGameplayStatics::DoesSaveGameExist(TEXT("NpcSaveSlot"), 0))
-	{
-		UE_LOG(LogTemp, Error, TEXT("NpcSaveSlot does not exist"));
-		return;
-	}
-	
-	UNpcDataSave* NpcData = Cast<UNpcDataSave>(UGameplayStatics::LoadGameFromSlot(TEXT("NpcSaveSlot"), 0));
-	if (!NpcData)
-	{
-		UE_LOG(LogTemp, Error, TEXT("NpcData is null in load"));
-		return;
-	}
-	
-	CurrentInteractedNpc->SetFriendshipLevel(NpcData->FriendshipLevel, true);
-	CurrentInteractedNpc->SetHasMetPlayer(NpcData->bHasMetPlayer);
+	if (!CurrentInteractedNpc) return;
 
+	FName NpcID = CurrentInteractedNpc->GetUniqueNpcID();
+
+	UNpcDataSave* NpcData = Cast<UNpcDataSave>(
+		UGameplayStatics::LoadGameFromSlot(TEXT("NpcSaveSlot"), 0)
+	);
+
+	if (!NpcData) return;
+
+	for (const auto& Entry : NpcData->NpcRelationships)
+	{
+		if (Entry.NpcIdentifier == NpcID)
+		{
+			CurrentInteractedNpc->SetFriendshipLevel(Entry.FriendshipLevel, true);
+			CurrentInteractedNpc->SetHasMetPlayer(Entry.bHasMetPlayer);
+			break;
+		}
+	}
 }
 
 void USocialInteractionSystem_OM::ProcessConversationData()

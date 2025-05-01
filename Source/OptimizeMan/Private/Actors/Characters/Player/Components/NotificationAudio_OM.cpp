@@ -3,6 +3,7 @@
 
 #include "Actors/Characters/Player/Components/NotificationAudio_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Utils/Structs/AudioTypes.h"
 
 UNotificationAudio_OM::UNotificationAudio_OM()
@@ -11,6 +12,14 @@ UNotificationAudio_OM::UNotificationAudio_OM()
 	TodoCompletedSound = nullptr;
 	SplatSound = nullptr;
 	AudioType = EAudioTypes::NotificationAudio;
+	Player = nullptr;
+}
+
+void UNotificationAudio_OM::BeginPlay()
+{
+	Super::BeginPlay();
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(GetOwner());
 }
 
 void UNotificationAudio_OM::PlayWritingSound()

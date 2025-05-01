@@ -28,6 +28,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Interact_Implementation() override;
 
+	UPROPERTY(EditAnywhere)
+	FName NpcID;
+
 	//UFUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "NPC Dialogue")
 	virtual void StartDialogue();
@@ -40,8 +43,19 @@ public:
 	
 	void ToggleNpcLookStates();
 	FVector LookAtLocation(const float DeltaTime);
+	UFUNCTION()
+	void CheckAndSetDarkMode();
 	void PlayRandomTalkingAnimForMood();
 	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
+
+	
+
+	UFUNCTION()
+	FName GetUniqueNpcID() const { return NpcID; }
+	UFUNCTION()
+	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; }
+	UFUNCTION()
+	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; }
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
@@ -133,9 +147,7 @@ public: //Getters and Setters
 
 	UFUNCTION()
 	TArray<TSoftObjectPtr<AExerciseEquipment_OM>> GetEquipmentInLevel() { return EquipmentInLevel; };
-	
-	UFUNCTION(Category = "NPC Social")
-	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; };
+
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	bool GetPlayerCanInteract() const { return bCanInteract; }
 	UFUNCTION(BlueprintCallable)
@@ -144,8 +156,6 @@ public: //Getters and Setters
 	ENpcRelationshipState GetCurrentRelationshipState();
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	ENpcMood GetCurrentMood() const { return CurrentMood;};
-	UFUNCTION(BlueprintCallable, Category = "NPC Social")
-	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; };
 	UFUNCTION()
 	float GetCurrentTalkTime() const { return CurrentTalkTime; }
 	UFUNCTION()
@@ -168,6 +178,11 @@ public: //Getters and Setters
 	UFUNCTION()
 	void SetHasMetPlayer(const bool InHasMet) { PlayerRelationship.bHasMetPlayer = InHasMet; }
 
+	UFUNCTION()
+	AActor* GetCurrentInteractedItem() const { return CurrentInteractedItem; }
+	UFUNCTION()
+	void SetCurrentInteractedItem(AActor* InItem) { CurrentInteractedItem = InItem; }
+
 private:
 	UPROPERTY()
 	class APlayerCharacter_OM* Player;
@@ -178,6 +193,9 @@ private:
 	UPROPERTY()
 	FVector SmoothedLookAtLocation;
 	FVector DistanceFromPlayerVector;
+
+	UPROPERTY()
+	AActor* CurrentInteractedItem;
 	
 	bool bCanInteract;
 	bool bIsInDialogue;

@@ -31,10 +31,7 @@ public:
 
 protected:
 	
-	
-	UPROPERTY()
-	APlayerCharacter_OM* Player;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Audio", meta=(AllowPrivateAccess="true"))
 	EAudioTypes AudioType;
 
 	

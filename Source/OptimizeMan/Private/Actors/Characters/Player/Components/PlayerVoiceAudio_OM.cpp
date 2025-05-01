@@ -11,11 +11,16 @@
 UPlayerVoiceAudio_OM::UPlayerVoiceAudio_OM()
 {
 	AudioType = EAudioTypes::VoiceAudio;
+	Player = nullptr;
 }
 
 void UPlayerVoiceAudio_OM::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(GetOwner());
+	
 }
 
 

@@ -8,7 +8,9 @@ enum class ENpcLookStates : uint8
 {
 	Idle UMETA(DisplayName = "Idle"),
 	LookingAtPlayer UMETA(DisplayName = "LookingAtPlayer"),
-	IgnoringPlayer UMETA(DisplayName = "IgnoringPlayer")
+	IgnoringPlayer UMETA(DisplayName = "IgnoringPlayer"),
+	LookingAtItem UMETA(DisplayName = "LookingAtItem"),
+	LookingAtNpc UMETA(DisplayName = "LookingAtNpc"),
 };
 
 UENUM(BlueprintType)
