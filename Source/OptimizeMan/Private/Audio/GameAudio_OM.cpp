@@ -17,10 +17,54 @@ void UGameAudio_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	SetIsVirtualized(true);
+	GetAndSetVolume();
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
 		GameInstance->OnAudioSettingsChanged.AddDynamic(this, &UGameAudio_OM::UpdateAudioSettings);
 	}
+}
+
+void UGameAudio_OM::GetAndSetVolume()
+{
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		FGameSettings Settings = GameInstance->GetGameSettings();
+
+		switch (AudioType)
+		{
+		case EAudioTypes::None:
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Audio Type Not Set.  Please set in constructor"));
+				return;
+			}
+		case EAudioTypes::VoiceAudio:
+			{
+				CurrentVolumeMultiplier = Settings.VoiceVolume * Settings.MasterVolume;
+				break;
+			}
+		case EAudioTypes::MusicAudio:
+			{
+				CurrentVolumeMultiplier = Settings.MusicVolume * Settings.MasterVolume;
+				break;
+			}
+		case EAudioTypes::SfxAudio:
+			{
+				CurrentVolumeMultiplier = Settings.SfxVolume * Settings.MasterVolume;
+				break;
+			}
+		case EAudioTypes::NotificationAudio:
+			{
+				CurrentVolumeMultiplier = Settings.NotificationVolume * Settings.MasterVolume;
+				break;
+			}
+		default:
+			{
+				break;
+			}
+		}
+		SetVolumeMultiplier(CurrentVolumeMultiplier);
+	}
+	
 }
 
 void UGameAudio_OM::UpdateAudioSettings(const float InMasterVolume, const float InVoiceVolume,

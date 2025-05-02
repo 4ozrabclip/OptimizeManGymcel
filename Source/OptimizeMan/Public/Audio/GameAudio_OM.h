@@ -19,6 +19,7 @@ class OPTIMIZEMAN_API UGameAudio_OM : public UAudioComponent
 public:
 	UGameAudio_OM();
 	virtual void BeginPlay() override;
+	void GetAndSetVolume();
 
 	UFUNCTION()
 	void UpdateAudioSettings(const float InMasterVolume, const float InVoiceVolume, const float InMusicVolume, const float InNotificationVolume, const float InSfxVolume);

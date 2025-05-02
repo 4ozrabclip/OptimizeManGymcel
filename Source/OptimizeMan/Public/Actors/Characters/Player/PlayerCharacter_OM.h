@@ -288,12 +288,13 @@ protected: //Manage PlayModes
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageTodoMode();
 
-
-	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;
-
 	void FadeWidgets(UUserWidget* FadeOutWidget, UUserWidget* FadeInWidget);
-	void RemoveAllActiveWidgets();
 
+
+
+public:
+	void RemoveAllActiveWidgets();
+	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;
 
 
 private:

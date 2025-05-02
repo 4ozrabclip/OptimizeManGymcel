@@ -79,6 +79,8 @@ void APlayerCharacter_OM::BeginPlay()
 	Super::BeginPlay();
 
 	InitPlayModes();
+
+	
 	
 	PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	
@@ -134,7 +136,7 @@ void APlayerCharacter_OM::BeginPlay()
 	}
 
 	HeadPosition = GetMesh()->GetBoneLocation("Head");
-
+	SetCurrentPlayMode(EPlayModes::RegularMode);
 	SetEmotionalState();
 
 	RefreshJumpSettings();
@@ -289,6 +291,16 @@ void APlayerCharacter_OM::InitPlayModes()
 	TodoConfig.bHasAFadeIn = false;
 	TodoConfig.bNeedsPreSteps = false;
 	PlayModeConfigs.Add(EPlayModes::TodoMode, TodoConfig);
+
+	FPlayModeConfig SpeakerModeConfig;
+	SpeakerModeConfig.bSetToUiMode = true;
+	SpeakerModeConfig.bAllowGameMovement = true;
+	SpeakerModeConfig.WidgetToDisplay = nullptr;
+	SpeakerModeConfig.ForcedLocation = FVector();
+	SpeakerModeConfig.ForcedRotation = FRotator();
+	SpeakerModeConfig.bHasAFadeIn = false;
+	SpeakerModeConfig.bNeedsPreSteps = false;
+	PlayModeConfigs.Add(EPlayModes::SpeakerMode, SpeakerModeConfig);
 }
 
 void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, AInteractableActor_OM* InInteractedActor, ANpcBase_OM* InInteractedCharacter)

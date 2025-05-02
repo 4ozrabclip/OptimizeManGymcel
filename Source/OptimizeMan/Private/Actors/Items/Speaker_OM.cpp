@@ -3,20 +3,30 @@
 
 #include "Actors/Items/Speaker_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Audio/GameAudio_OM.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Utils/GameInstance_OM.h"
 #include "Utils/Structs/AudioTypes.h"
+#include "Widgets/SpeakerWidget_OM.h"
 
 ASpeaker_OM::ASpeaker_OM()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	
 	AudioComponent = CreateDefaultSubobject<UGameAudio_OM>(TEXT("AudioComponent"));
 	AudioComponent->bAutoActivate = true;
 	AudioComponent->SetAudioType(EAudioTypes::MusicAudio);
 	ExtraCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("ExtraCollider"));
 	ExtraCollider->SetCollisionProfileName(TEXT("Default"));
 	ExtraCollider->SetupAttachment(RootComponent);
+
+	SpeakerWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
+	SpeakerWidget->SetupAttachment(RootComponent);
+	SpeakerWidget->SetVisibility(false);
 }
 
 void ASpeaker_OM::BeginPlay()
@@ -32,9 +42,14 @@ void ASpeaker_OM::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Failed to recast in speaker"));
 		return;
 	}
+
+	USpeakerWidget_OM* Widg = Cast<USpeakerWidget_OM>(SpeakerWidget->GetWidget());
+	if (Widg) Widg->InitSpeaker(this);
 	
+	SetActorTickEnabled(false);
 	SongIndex = Songs.Num();
 }
+
 
 void ASpeaker_OM::Interact_Implementation()
 {
@@ -44,13 +59,47 @@ void ASpeaker_OM::Interact_Implementation()
 		UE_LOG(LogTemp, Error, TEXT("%s: AudioComponent is invalid"), *GetName());
 		return;
 	}
+	Player->RemoveAllActiveWidgets();
+	SpeakerWidget->SetVisibility(true);
+	//InteractableInterfaceProperties.bIsInteractable = false;
+	Player->SetToUIMode(true, true);
+	
 	if (Songs.Num() <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Songs is empty"));
 		return;
 	}
-	PlayNextSong();
+	
+	SetActorTickEnabled(true);
+	//PlayNextSong();
 }
+
+void ASpeaker_OM::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (Player)
+	{
+		FVector2D Delta = FVector2D(this->GetActorLocation()) - FVector2D(Player->GetActorLocation());
+
+
+
+		if (Delta.Size() > 200)
+		{
+			TurnOffWidget();
+		}
+	}
+}
+
+void ASpeaker_OM::TurnOffWidget()
+{
+	SpeakerWidget->SetVisibility(false);
+	//InteractableInterfaceProperties.bIsInteractable = true;
+	Player->SetToUIMode(false);
+	SetActorTickEnabled(false);
+}
+
 
 void ASpeaker_OM::PlayNextSong()
 {
@@ -97,4 +146,13 @@ void ASpeaker_OM::PlaySong()
 	AudioComponent->SetVolumeMultiplier(Volume);
 	AudioComponent->Play();
 	bIsPlaying = true;
+}
+
+void ASpeaker_OM::StopSong()
+{
+	if (!bIsPlaying) return;
+
+	AudioComponent->Stop();
+
+	bIsPlaying = false;
 }

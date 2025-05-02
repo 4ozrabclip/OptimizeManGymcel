@@ -20,8 +20,15 @@ public:
 	
 	virtual void BeginPlay() override;
 	virtual void Interact_Implementation() override;
+	UFUNCTION()
 	void PlayNextSong();
 	void PlaySong();
+	virtual void Tick(float DeltaSeconds) override;
+	UFUNCTION()
+	void TurnOffWidget();
+
+	UFUNCTION()
+	void StopSong();
 
 	void SetSongIndex(const int InIndex) {	SongIndex = InIndex; }
 
@@ -29,6 +36,10 @@ public:
 	class UBoxComponent* ExtraCollider;
 
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	class UWidgetComponent* SpeakerWidget;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UGameAudio_OM* AudioComponent;
 
