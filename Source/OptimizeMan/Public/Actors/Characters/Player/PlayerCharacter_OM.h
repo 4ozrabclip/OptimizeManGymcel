@@ -291,8 +291,8 @@ protected: //Manage PlayModes
 	void FadeWidgets(UUserWidget* FadeOutWidget, UUserWidget* FadeInWidget);
 
 
-
 public:
+	void HideUnhideInteractableWidget(bool bHide);
 	void RemoveAllActiveWidgets();
 	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;
 

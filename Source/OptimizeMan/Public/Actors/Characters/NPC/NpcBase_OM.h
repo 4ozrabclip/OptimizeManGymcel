@@ -29,7 +29,7 @@ public:
 	virtual void Interact_Implementation() override;
 
 	UPROPERTY(EditAnywhere)
-	FName NpcID;
+	FString NpcID;
 
 	//UFUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "NPC Dialogue")
@@ -51,7 +51,7 @@ public:
 	
 
 	UFUNCTION()
-	FName GetUniqueNpcID() const { return NpcID; }
+	FName GetUniqueNpcID() const { return FName(NpcID); }
 	UFUNCTION()
 	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; }
 	UFUNCTION()

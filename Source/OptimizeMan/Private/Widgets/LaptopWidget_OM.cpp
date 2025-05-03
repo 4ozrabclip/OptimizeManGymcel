@@ -255,7 +255,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
 			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
 			BankAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
-			BankAdv_V_Text->SetText(FText::FromString("Corn"));
+			BankAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
 		}
 		break;
 	}
@@ -271,7 +271,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);*/
 			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
 			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
-			GenrAdv_H_Text->SetText(FText::FromString("Corn"));
+			GenrAdv_H_Text->SetText(FText::FromString("Brainrot Advertisement"));
 			GenrAdv_V_Text->SetText(FText::FromString("Supplements"));
 			UE_LOG(LogTemp, Error, TEXT("General Store Open1"));
 		}
@@ -279,6 +279,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		{
 			/*SupplementsShopBackButton->OnClicked.RemoveAll(this);
 			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);*/
+			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
 			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
 			GenrAdv_H_Text->SetText(FText::FromString("Bank"));
@@ -300,7 +301,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);*/
 			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
 			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			SuppAdv_H_Text->SetText(FText::FromString("Corn"));
+			SuppAdv_H_Text->SetText(FText::FromString("Brainrot Advertisement"));
 			SuppAdv_V_Text->SetText(FText::FromString("ForSkan"));
 		}
 		else
@@ -327,7 +328,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
 			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
 			ForsAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
-			ForsAdv_V_Text->SetText(FText::FromString("Corn"));
+			ForsAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
 		}
 		else
 		{
@@ -353,7 +354,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
 			PlastAdv_H_Text->SetText(FText::FromString("Bank"));
-			PlastAdv_V_Text->SetText(FText::FromString("Corn"));
+			PlastAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
 		}
 		else
 		{

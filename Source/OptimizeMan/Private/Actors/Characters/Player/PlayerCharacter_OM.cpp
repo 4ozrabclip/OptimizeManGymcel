@@ -559,6 +559,10 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
        
 		PlayerController->SetInputMode(InputMode);
 		PlayerController->SetShowMouseCursor(true);
+
+		int32 ViewportSizeX, ViewportSizeY;
+		PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+		PlayerController->SetMouseLocation(ViewportSizeX / 2, ViewportSizeY / 2);
        
 		if (!bAllowGameMovement)
 		{
@@ -624,7 +628,15 @@ void APlayerCharacter_OM::FadeWidgets(UUserWidget* FadeOutWidget, UUserWidget* F
 		);
 	}
 }
+void APlayerCharacter_OM::HideUnhideInteractableWidget(const bool bHide)
+{
+	if (!InteractableActorWidget) return;
 
+	if (bHide)
+		InteractableActorWidget->SetVisibility(ESlateVisibility::Hidden);
+	else
+		InteractableActorWidget->SetVisibility(ESlateVisibility::Visible);
+}
 void APlayerCharacter_OM::RemoveAllActiveWidgets()
 {
 	if (InteractableActorWidget && InteractableActorWidget->IsInViewport())

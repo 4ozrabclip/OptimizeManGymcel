@@ -20,6 +20,7 @@ class OPTIMIZEMAN_API AGymGate_OM : public AInteractableActor_OM
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 	virtual void Interact_Implementation() override;
+	void CheckIfInwardOrOutward();
 
 public:
 	void ClearGateTimer();
@@ -44,12 +45,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USoundBase* GateBeepSound;
 
+private:
 	FRotator DoorOneClosedRotation;
 	FRotator DoorTwoClosedRotation;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GateDoors")
+	FVector DoorOneClosedLocation;
+	FVector DoorTwoClosedLocation;
 	FRotator DoorOpenRotation;
 
-private:
 	bool bGateIsOpen;
 
 	float CurrentRotationAlpha;

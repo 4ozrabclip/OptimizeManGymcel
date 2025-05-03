@@ -59,7 +59,7 @@ void ASpeaker_OM::Interact_Implementation()
 		UE_LOG(LogTemp, Error, TEXT("%s: AudioComponent is invalid"), *GetName());
 		return;
 	}
-	Player->RemoveAllActiveWidgets();
+	Player->HideUnhideInteractableWidget(true);
 	SpeakerWidget->SetVisibility(true);
 	//InteractableInterfaceProperties.bIsInteractable = false;
 	Player->SetToUIMode(true, true);
@@ -82,9 +82,7 @@ void ASpeaker_OM::Tick(float DeltaSeconds)
 	if (Player)
 	{
 		FVector2D Delta = FVector2D(this->GetActorLocation()) - FVector2D(Player->GetActorLocation());
-
-
-
+		
 		if (Delta.Size() > 200)
 		{
 			TurnOffWidget();
@@ -97,6 +95,7 @@ void ASpeaker_OM::TurnOffWidget()
 	SpeakerWidget->SetVisibility(false);
 	//InteractableInterfaceProperties.bIsInteractable = true;
 	Player->SetToUIMode(false);
+	Player->HideUnhideInteractableWidget(false);
 	SetActorTickEnabled(false);
 }
 
@@ -132,7 +131,7 @@ void ASpeaker_OM::PlayNextSong()
 		GetWorld()->GetTimerManager().SetTimer(SongTransitionTimerHandle, [this]()
 		{
 			PlaySong();
-		}, 2.f, false);
+		}, 1.f, false);
 	}
 }
 
