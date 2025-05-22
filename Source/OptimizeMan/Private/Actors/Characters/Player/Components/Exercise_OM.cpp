@@ -63,11 +63,18 @@ void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 			SetCurrentWorkoutState(EWorkoutStates::SetComplete);
 			SetCount++;
 			RepCount = 0;
+			
 		}
 		else if (TimeSinceLastRep > 0.f && CurrentWorkoutState == EWorkoutStates::DoingRep)
 		{
 			TimeSinceLastRep = 0.f;
 		}
+	}
+
+	if (TimeSinceLastRep > 10.f) //idle in set complete mode
+	{
+		constexpr float FocusDecreaseInWorkoutIdle = -0.0001f;
+		AddFocus(FocusDecreaseInWorkoutIdle);
 	}
 }
 
@@ -169,7 +176,9 @@ void UExercise_OM::MiniGame()
 	}
 }
 
-void UExercise_OM::Injury() const
+
+
+void UExercise_OM::Injury()
 {
 	switch (CurrentExerciseType)
 	{
@@ -178,14 +187,16 @@ void UExercise_OM::Injury() const
 		case EExerciseType::Squat:
 			AnimInstance->SetHasSquatInjury(true);
 			AudioComponent->InjurySoundEffects(CurrentExerciseType);
+		
 			break;
 		default:
 			break;
 	}
 }
 
-void UExercise_OM::MinorInjury() const
+void UExercise_OM::MinorInjury()
 {
+	constexpr float InjuryFocusDecrease = -0.2f;
 	constexpr float MinorInjuryEnergyUse = -0.2f;
 	switch (CurrentExerciseType)
 	{
@@ -194,27 +205,24 @@ void UExercise_OM::MinorInjury() const
 	case EExerciseType::Squat:
 		AnimInstance->SetHasMinorSquatInjury(true);
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
 		break;
 	case EExerciseType::BicepCurl:
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
 		break;
 	case EExerciseType::OverheadPress:
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
 		break;
 	case EExerciseType::LeftCurl:
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
 		break;
 	case EExerciseType::RightCurl:
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
 		break;
 	default:
 		break;
 	}
+	GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
+	AddFocus(InjuryFocusDecrease);
 }
 
 void UExercise_OM::DoASquat()

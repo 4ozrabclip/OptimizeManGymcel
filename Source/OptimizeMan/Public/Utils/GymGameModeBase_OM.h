@@ -18,9 +18,17 @@ class OPTIMIZEMAN_API AGymGameModeBase_OM : public AGameModeBase
 public:
 	AGymGameModeBase_OM();
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	void CheckIdleStats(float DeltaTime);
+	void CheckGymStats(float DeltaTime);
 
 protected:
 	UPROPERTY()
 	class UGameInstance_OM* GameInstance;
+	UPROPERTY()
+	class APlayerCharacter_OM* Player;
+
+private:
+	float TimePassedSinceIdle = 0.f;
 	
 };

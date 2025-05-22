@@ -42,6 +42,8 @@ void ABedroomGameModeBase_OM::BeginPlay()
 		return;
 	}
 
+	Player->SetGymHud(false);
+
 	
 	if (!GameInstance->GetHasBeenToGymToday())
 	{

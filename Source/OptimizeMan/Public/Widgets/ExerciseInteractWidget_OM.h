@@ -32,7 +32,8 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	virtual void OnExitButtonClicked() override;
-	
+	void SetInjuryRisk();
+
 	UFUNCTION(BlueprintCallable)
 	void UpdateStats();
 

@@ -25,6 +25,7 @@
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Misc/MapErrors.h"
 #include "Utils/TodoManagementSubsystem.h"
+#include "Widgets/GymHud_OM.h"
 #include "Widgets/HintsWidget_OM.h"
 
 // Sets default values
@@ -70,7 +71,6 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	PlayerFacingMuscleViewLocation = FVector(240, 2102, 90);
 
 	DefaultSkeletalMesh = nullptr;
-	
 	
 }
 
@@ -494,6 +494,33 @@ void APlayerCharacter_OM::ManageTodoMode()
  *
  * 
  */
+void APlayerCharacter_OM::UpdateGymHud()
+{
+	if (!GymHudWidget->IsInViewport()) return;
+	if (UGymHud_OM* HudClass = Cast<UGymHud_OM>(GymHudWidget))
+	{
+		HudClass->UpdateProgressBars();
+	}
+}
+void APlayerCharacter_OM::SetGymHud(bool bLoad)
+{
+	if (!GymHudWidget) return;
+
+	if (bLoad)
+	{
+		if (GymHudWidget->IsInViewport()) return;
+
+		GymHudWidget->AddToViewport();
+	}
+	else
+	{
+		if (!GymHudWidget->IsInViewport()) return;
+
+		GymHudWidget->RemoveFromParent();
+	}
+
+
+}
 
 void APlayerCharacter_OM::ShowOrHideHint(const FString& HintText, float HintLength, bool HideHint, bool RemoveFully) const // Move this out of the player class
 { 

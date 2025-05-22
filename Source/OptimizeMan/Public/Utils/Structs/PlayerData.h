@@ -10,6 +10,13 @@ enum EPlayerStatTypes : uint8
 	Social
 };
 UENUM(BlueprintType)
+enum EGymSpecificStats : uint8
+{
+	Energy	UMETA(DisplayName = "Energy"),
+	Focus	UMETA(DisplayName = "Focus"),
+	Bladder	UMETA(DisplayName = "Bladder")
+};
+UENUM(BlueprintType)
 enum EPlayerEmotionalStates : uint8
 {
 	Doomer,
@@ -25,12 +32,14 @@ struct FPlayerData
 
 	FPlayerData()
 	: CurrentEmotionalState(EPlayerEmotionalStates::Cope),
+	Energy(1.f),
+	Focus(1.f),
+	Bladder(0.f),
 	Ego(0.f),
 	SexAppeal(0.f),
 	Social(0.f),
 	bIsDelusional(false),
 	bCurrentlyOnSteroids(false),
-	Energy(1.f),
 	Money(30),
 	bOwnsSteroids(false),
 	bOwnsPreWorkout(false),
@@ -48,6 +57,16 @@ struct FPlayerData
 
 	EPlayerEmotionalStates CurrentEmotionalState;
 	/*
+	 *	Gym Specific Stats
+	 *
+	 */
+	UPROPERTY(BlueprintReadWrite)
+	float Energy;
+	UPROPERTY(BlueprintReadWrite)
+	float Focus;
+	UPROPERTY(BlueprintReadWrite)
+	float Bladder;
+	/*
 	 *	Mental Stats
 	 */
 	UPROPERTY(BlueprintReadWrite)
@@ -63,8 +82,6 @@ struct FPlayerData
 	/*
 	 * Energy, Money, Possesions
 	 */
-	UPROPERTY(BlueprintReadWrite)
-	float Energy;
 	UPROPERTY(BlueprintReadWrite)
 	int Money;
 	UPROPERTY(BlueprintReadWrite)

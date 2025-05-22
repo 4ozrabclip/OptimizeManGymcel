@@ -38,6 +38,8 @@ public:
 	float GetEnemyThreshold() const { return EnemyThreshold; }
 	float GetFriendThreshold() const { return FriendThreshold; }
 
+	virtual void AddFocus(const float InFocus) override;
+
 protected:
 	UPROPERTY()
 	class ANpcBase_OM* CurrentInteractedNpc;

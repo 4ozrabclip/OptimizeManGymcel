@@ -29,7 +29,6 @@ public:
 
 	bool GetIsDoingRep() const { return bIsDoingRep; };
 	void SetIsDoingRep(bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; };
-
 	
 protected: //Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -66,7 +65,6 @@ protected: //Widgets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UUserWidget* MuscleViewWidget;
 	
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UUserWidget* WorkoutWidget;
 
@@ -93,6 +91,9 @@ protected: //Widgets
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UUserWidget* CalenderWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UUserWidget* GymHudWidget;
 
 
 public: //Input variables
@@ -291,7 +292,14 @@ protected: //Manage PlayModes
 	void FadeWidgets(UUserWidget* FadeOutWidget, UUserWidget* FadeInWidget);
 
 
-public:
+	
+public: // ui stuff
+	//UI gym hud
+	UFUNCTION()
+	void SetGymHud(const bool bLoad = true);
+	UFUNCTION()
+	void UpdateGymHud();
+	
 	void HideUnhideInteractableWidget(bool bHide);
 	void RemoveAllActiveWidgets();
 	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;

@@ -55,11 +55,12 @@ public: // Exercise Management
 	           float MuscleIncrease, float EnergyUse, float RepDuration);
 	void CheckForExerciseAchievements();
 
-	void Injury() const;
-	void MinorInjury() const;
+	void Injury();
+	void MinorInjury();
 
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void MiniGame();
+
 
 	void EnterExercisePosition();
 	

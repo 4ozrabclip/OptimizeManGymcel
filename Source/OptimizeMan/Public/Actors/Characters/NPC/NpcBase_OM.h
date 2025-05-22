@@ -47,17 +47,14 @@ public:
 	void CheckAndSetDarkMode();
 	void PlayRandomTalkingAnimForMood();
 	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
-
 	
-
 	UFUNCTION()
 	FName GetUniqueNpcID() const { return FName(NpcID); }
 	UFUNCTION()
 	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; }
 	UFUNCTION()
 	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; }
-
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
 	EExerciseType CurrentExerciseType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
@@ -83,11 +80,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
 	TArray<TSoftObjectPtr<class AExerciseEquipment_OM>> EquipmentInLevel;
-
-
-	
-
-
 
 protected: //Audio Stuff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conversation")

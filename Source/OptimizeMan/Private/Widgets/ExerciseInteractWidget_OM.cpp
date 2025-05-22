@@ -271,6 +271,14 @@ void UExerciseInteractWidget_OM::OnExitButtonClicked()
 	}
 }
 
+void UExerciseInteractWidget_OM::SetInjuryRisk()
+{
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	
+	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	
+}
 
 void UExerciseInteractWidget_OM::MiniGame(float InDeltaTime)
 {
@@ -280,7 +288,11 @@ void UExerciseInteractWidget_OM::MiniGame(float InDeltaTime)
 	}
 
 	float ScaledSpeed = Speed * InDeltaTime;
+	FString MinAndMaxVals = FString::Printf(TEXT("RightMin: %.2f RightMax: %.2f\n LeftMin: %.2f LeftMax: %.2f\n"
+											  "LeftVal: %.2f RightVal: %.2f"), RightMin, RightMax, LeftMin, LeftMax, InjuryBoundsLeftValue, InjuryBoundsRightValue);
 	
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, MinAndMaxVals);
+
 	
 	if (bMovingRight)
 	{
@@ -393,6 +405,8 @@ void UExerciseInteractWidget_OM::MiniGame(float InDeltaTime)
 
 		SpecialSlider->SetValue(SpecialSliderValue);
 	}
+
+	
 }
 
 void UExerciseInteractWidget_OM::SetSetAndRepCountTextBlocks()
@@ -446,8 +460,6 @@ void UExerciseInteractWidget_OM::OnExerciseButtonClicked(const EButtonOptions In
 		WorkoutOptionButton_3->SetIsEnabled(false);
 		return;
 	}
-
-
 	
 	EExerciseType CurrentExerciseType = EExerciseType::None;
 
@@ -530,6 +542,7 @@ void UExerciseInteractWidget_OM::DisableEnableUnusableButtonsHelper()
 }
 void UExerciseInteractWidget_OM::UpdateStats()
 {
+	Player->UpdateGymHud();
 	EnergyLevel->SetPercent(GameInstance->GetPlayerData().GetEnergy());
 	if (EnergyLevel->GetPercent() <= 0.f)
 	{
@@ -537,6 +550,8 @@ void UExerciseInteractWidget_OM::UpdateStats()
 		SetMiniGameOn(false);
 	}
 }
+
+
 
 void UExerciseInteractWidget_OM::OnMiniGameClick()
 {
@@ -622,6 +637,7 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 	}
 
 	const float RepDuration = ExerciseComponent->GetRepDuration();
+	SetInjuryRisk();
 
 	GetWorld()->GetTimerManager().ClearTimer(RepTimeHandle);
 	GetWorld()->GetTimerManager().SetTimer(RepTimeHandle, [this]()

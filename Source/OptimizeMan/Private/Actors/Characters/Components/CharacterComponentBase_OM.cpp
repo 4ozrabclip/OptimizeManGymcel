@@ -53,5 +53,11 @@ void UCharacterComponentBase_OM::BeginPlay()
 	}
 }
 
-
+void UCharacterComponentBase_OM::AddFocus(const float InFocus)
+{
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	PlayerData.AddStat(PlayerData.Focus, InFocus);
+}
 

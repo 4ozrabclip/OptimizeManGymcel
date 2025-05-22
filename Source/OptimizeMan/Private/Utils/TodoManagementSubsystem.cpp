@@ -308,7 +308,6 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 				switch (BuffType)
 				{
 					case EPlayerStatTypes::Ego:
-						
 						PlayerData.AddStat(PlayerData.Ego, BuffAmount);
 						break;
 					case EPlayerStatTypes::Social:
@@ -320,6 +319,8 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 					default:
 						break;
 				}
+				constexpr float FocusIncrease = 0.005f;
+				PlayerData.AddStat(PlayerData.Focus, FocusIncrease);
 			}
 			
 			UpdateTodoList();

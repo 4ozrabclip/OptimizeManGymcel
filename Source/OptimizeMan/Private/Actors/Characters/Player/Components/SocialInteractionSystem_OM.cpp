@@ -134,27 +134,29 @@ void USocialInteractionSystem_OM::ProcessFriendshipLevel()
 		break;
 	case ENpcMood::Angry:
 		CurrentInteractedNpc->SetFriendshipLevel(-0.1f);
+		AddFocus(-0.1f);
 		break;
 	case ENpcMood::Happy:
 		CurrentInteractedNpc->SetFriendshipLevel(+0.1f);
 		break;
 	case ENpcMood::Randy:
 		CurrentInteractedNpc->SetFriendshipLevel(+0.3f);
+		AddFocus(+0.01f);
 		break;
 	case ENpcMood::Disgusted:
 		CurrentInteractedNpc->SetFriendshipLevel(-0.25f);
+		AddFocus(-0.15f);
 		break;
 	case ENpcMood::Uncomfortable:
 		CurrentInteractedNpc->SetFriendshipLevel(-0.15f);
+		AddFocus(-0.1f);
 		break;
 	default:
 		break;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Friendship Levvel from comp= %f"), CurrentInteractedNpc->GetFriendshipLevel());
-
-	
-	
 }
+
 void USocialInteractionSystem_OM::CheckForSocialAchievements()
 {
 	if (!TodoManager)
@@ -376,6 +378,14 @@ void USocialInteractionSystem_OM::LeaveConversation()
 
 	SetComponentTickEnabled(false);
 }
+
+void USocialInteractionSystem_OM::AddFocus(const float InFocus)
+{
+	Super::AddFocus(InFocus);
+
+	Player->UpdateGymHud();
+}
+
 void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 {
 	if (!CurrentInteractedNpc)
