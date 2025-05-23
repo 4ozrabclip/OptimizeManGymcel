@@ -30,7 +30,7 @@ void AExerciseEquipment_OM::Interact_Implementation()
 		UE_LOG(LogTemp, Error, TEXT("Player is invalid"));
 		return;
 	}
-	if (GameInstance && GameInstance->GetPlayerData().GetEnergy() > 0)
+	if (GameInstance && GameInstance->GetGymResStats().Energy > 0)
 	{
 		Player->SetCurrentPlayMode(EPlayModes::WorkoutMode, this);
 	}

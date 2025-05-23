@@ -9,13 +9,7 @@ enum EPlayerStatTypes : uint8
 	SexAppeal,
 	Social
 };
-UENUM(BlueprintType)
-enum EGymSpecificStats : uint8
-{
-	Energy	UMETA(DisplayName = "Energy"),
-	Focus	UMETA(DisplayName = "Focus"),
-	Bladder	UMETA(DisplayName = "Bladder")
-};
+
 UENUM(BlueprintType)
 enum EPlayerEmotionalStates : uint8
 {
@@ -26,15 +20,30 @@ enum EPlayerEmotionalStates : uint8
 	GoblinMode
 };
 USTRUCT(BlueprintType)
+struct FGymResStats
+{
+	GENERATED_USTRUCT_BODY()
+	FGymResStats() :
+	Energy(1.f),
+	Focus(1.f),
+	Bladder(0.f)
+	{}
+	
+	UPROPERTY(BlueprintReadWrite)
+	float Energy;
+	UPROPERTY(BlueprintReadWrite)
+	float Focus;
+	UPROPERTY(BlueprintReadWrite)
+	float Bladder;
+	
+};
+USTRUCT(BlueprintType)
 struct FPlayerData
 {
 	GENERATED_USTRUCT_BODY()
 
 	FPlayerData()
 	: CurrentEmotionalState(EPlayerEmotionalStates::Cope),
-	Energy(1.f),
-	Focus(1.f),
-	Bladder(0.f),
 	Ego(0.f),
 	SexAppeal(0.f),
 	Social(0.f),
@@ -56,16 +65,7 @@ struct FPlayerData
 	{}
 
 	EPlayerEmotionalStates CurrentEmotionalState;
-	/*
-	 *	Gym Specific Stats
-	 *
-	 */
-	UPROPERTY(BlueprintReadWrite)
-	float Energy;
-	UPROPERTY(BlueprintReadWrite)
-	float Focus;
-	UPROPERTY(BlueprintReadWrite)
-	float Bladder;
+
 	/*
 	 *	Mental Stats
 	 */
@@ -133,13 +133,11 @@ struct FPlayerData
 	
 	bool GetOwnsSteroids() const { return bOwnsSteroids; }
 	bool GetOwnsPreWorkout() const { return bOwnsPreWorkout; }
-	float GetEnergy() const { return Energy; }
 	int GetMoney() const { return Money; }
 	void SetMoney(const int InMoney)
 	{
 		Money += InMoney;
 	}
-	void SetEnergy(const float InEnergy, const bool bGoingToSleep = false);
 	
 	bool GetIsDelusional() const { return bIsDelusional; }
 	bool GetCurrentlyOnSteroids() const { return bCurrentlyOnSteroids; }

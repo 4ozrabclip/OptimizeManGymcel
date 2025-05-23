@@ -40,7 +40,7 @@ void UTodoList_OM::NativeConstruct()
 		Task3->SetText(FText::FromString(Task3String));
 		Task4->SetText(FText::FromString(Task4String));
 
-		TArray<FTodoItem>& CurrentTodos = TodoManagement->CurrentTodoArray;
+		TArray<FTodoItem>& CurrentTodos = TodoManagement->GetCurrentTodoArray();
 
 		if (CurrentTodos.IsValidIndex(0))
 		{

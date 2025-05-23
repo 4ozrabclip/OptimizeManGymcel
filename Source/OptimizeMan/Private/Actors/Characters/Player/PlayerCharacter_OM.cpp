@@ -5,14 +5,12 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 #include "Actors/InteractableActor_OM.h"
-#include "OptimizeMan/Public/Widgets/InteractWidget_OM.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/Items/Gym/Equipment/Barbell_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/NPC/NpcBase_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Actors/Characters/Player/Components/PlayerDeformationsComponent_OM.h"
 #include "OptimizeMan/Public/Utils/BedroomGameModeBase_OM.h"
 #include "OptimizeMan/Public/Utils/GymGameModeBase_OM.h"
@@ -23,12 +21,8 @@
 #include "Actors/Characters/Player/Components/PlayerVoiceAudio_OM.h"
 #include "Actors/Characters/Player/Components/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
-#include "Misc/MapErrors.h"
 #include "Utils/TodoManagementSubsystem.h"
-#include "Widgets/GymHud_OM.h"
-#include "Widgets/HintsWidget_OM.h"
 
-// Sets default values
 APlayerCharacter_OM::APlayerCharacter_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -79,15 +73,7 @@ void APlayerCharacter_OM::BeginPlay()
 	Super::BeginPlay();
 
 	InitPlayModes();
-
-	
-	
-	PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-	{
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
+	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	LastPosition = GetActorLocation();
 	
 	if (UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement()))
@@ -110,7 +96,6 @@ void APlayerCharacter_OM::BeginPlay()
 	{
 		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
 	}
-		
 	
 	 //THIS IS SUPER MESSY, FIX THIS.  ITS JUST TO PLAY THE SPLAT SOUND
 	if (GameInstance && NotificationAudioComponent)
@@ -138,10 +123,7 @@ void APlayerCharacter_OM::BeginPlay()
 	HeadPosition = GetMesh()->GetBoneLocation("Head");
 	SetCurrentPlayMode(EPlayModes::RegularMode);
 	SetEmotionalState();
-
-	RefreshJumpSettings();
-
-
+	
 }
 
 void APlayerCharacter_OM::Tick(float DeltaTime)
@@ -150,9 +132,7 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 	UpdateMovementState();
 	if (FootstepAudioComponent)
 		FootstepAudioComponent->Footsteps(DeltaTime);
-
-
-
+	
 	bIsJumping = GetIsJumping();
 	
 	if (CurrentPlayMode == EPlayModes::RegularMode)
@@ -161,21 +141,6 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 	}
 }
 
-void APlayerCharacter_OM::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(InputToLook, ETriggerEvent::Triggered, this, &APlayerCharacter_OM::Look);
-		EnhancedInputComponent->BindAction(InputToMove, ETriggerEvent::Triggered, this, &APlayerCharacter_OM::Move);
-		EnhancedInputComponent->BindAction(InputToJump, ETriggerEvent::Triggered, this, &APlayerCharacter_OM::Jump);
-		EnhancedInputComponent->BindAction(InputToInteractClick, ETriggerEvent::Completed, this, &APlayerCharacter_OM::InteractClick);
-		EnhancedInputComponent->BindAction(InputToInteractToggle, ETriggerEvent::Completed, this, &APlayerCharacter_OM::InteractToggle);
-		EnhancedInputComponent->BindAction(InputToOpenTodo, ETriggerEvent::Completed, this, &APlayerCharacter_OM::ToggleTodoMode);
-		EnhancedInputComponent->BindAction(InputToOpenPauseMenu, ETriggerEvent::Completed, this, &APlayerCharacter_OM::TogglePauseMode);
-	}
-}
 
 
 /*
@@ -190,7 +155,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig PauseModeConfig;
 	PauseModeConfig.bSetToUiMode = true;
 	PauseModeConfig.bAllowGameMovement = false;
-	PauseModeConfig.WidgetToDisplay = PauseMenuWidget;
+	PauseModeConfig.bHasWidget = true;
 	PauseModeConfig.ForcedLocation = FVector();
 	PauseModeConfig.ForcedRotation = FRotator();
 	PauseModeConfig.bHasAFadeIn = false;
@@ -200,7 +165,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig SocialModeConfig;
 	SocialModeConfig.bSetToUiMode = true;
 	SocialModeConfig.bAllowGameMovement = true;
-	SocialModeConfig.WidgetToDisplay = SocialWidget;
+	SocialModeConfig.bHasWidget = true;
 	SocialModeConfig.ForcedLocation = FVector();
 	SocialModeConfig.ForcedRotation = FRotator();
 	SocialModeConfig.bHasAFadeIn = false;
@@ -210,7 +175,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig WorkoutModeConfig;
 	WorkoutModeConfig.bSetToUiMode = true;
 	WorkoutModeConfig.bAllowGameMovement = false;
-	WorkoutModeConfig.WidgetToDisplay = WorkoutWidget;
+	WorkoutModeConfig.bHasWidget = true;
 	WorkoutModeConfig.ForcedLocation = FVector();
 	WorkoutModeConfig.ForcedRotation = FRotator();
 	WorkoutModeConfig.bHasAFadeIn = false;
@@ -222,7 +187,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig MirrorModeConfig;
 	MirrorModeConfig.bSetToUiMode = true;
 	MirrorModeConfig.bAllowGameMovement = false;
-	MirrorModeConfig.WidgetToDisplay = MirrorWidget;
+	MirrorModeConfig.bHasWidget = true;
 	MirrorModeConfig.ForcedLocation = PlayerFacingMirrorLoc;
 	MirrorModeConfig.ForcedRotation = FRotator(1, 1, 0);
 	MirrorModeConfig.bHasAFadeIn = false;
@@ -232,7 +197,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig MuscleViewModeConfig;
 	MuscleViewModeConfig.bSetToUiMode = true;
 	MuscleViewModeConfig.bAllowGameMovement = false;
-	MuscleViewModeConfig.WidgetToDisplay = MuscleViewWidget;
+	MuscleViewModeConfig.bHasWidget = true;
 	MuscleViewModeConfig.ForcedLocation = FVector();
 	MuscleViewModeConfig.ForcedRotation = FRotator::ZeroRotator;
 	MuscleViewModeConfig.bHasAFadeIn = false;
@@ -245,7 +210,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig ShelfModeConfig;
 	ShelfModeConfig.bSetToUiMode = true;
 	ShelfModeConfig.bAllowGameMovement = false;
-	ShelfModeConfig.WidgetToDisplay = ShelfWidget;
+	ShelfModeConfig.bHasWidget = true;
 	ShelfModeConfig.ForcedLocation = PlayerFacingShelfLoc;
 	ShelfModeConfig.ForcedRotation = PlayerFacingShelfRot;
 	ShelfModeConfig.bHasAFadeIn = false;
@@ -255,7 +220,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig LaptopModeConfig;
 	LaptopModeConfig.bSetToUiMode = true;
 	LaptopModeConfig.bAllowGameMovement = false;
-	LaptopModeConfig.WidgetToDisplay = LaptopWidget;
+	LaptopModeConfig.bHasWidget = true;
 	LaptopModeConfig.ForcedLocation = FVector();
 	LaptopModeConfig.ForcedRotation = FRotator();
 	LaptopModeConfig.bHasAFadeIn = false;
@@ -265,7 +230,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig CalenderModeConfig;
 	CalenderModeConfig.bSetToUiMode = true;
 	CalenderModeConfig.bAllowGameMovement = false;
-	CalenderModeConfig.WidgetToDisplay = CalenderWidget;
+	CalenderModeConfig.bHasWidget = true;
 	CalenderModeConfig.ForcedLocation = FVector();
 	CalenderModeConfig.ForcedRotation = FRotator();
 	CalenderModeConfig.bHasAFadeIn = false;
@@ -275,7 +240,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig WakeUpConfig;
 	WakeUpConfig.bSetToUiMode = true;
 	WakeUpConfig.bAllowGameMovement = false;
-	WakeUpConfig.WidgetToDisplay = WakeUpWidget;
+	WakeUpConfig.bHasWidget = true;
 	WakeUpConfig.ForcedLocation = FVector();
 	WakeUpConfig.ForcedRotation = FRotator();
 	WakeUpConfig.bHasAFadeIn = false;
@@ -285,7 +250,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig TodoConfig;
 	TodoConfig.bSetToUiMode = true;
 	TodoConfig.bAllowGameMovement = true;
-	TodoConfig.WidgetToDisplay = TodoWidget;
+	TodoConfig.bHasWidget = true;
 	TodoConfig.ForcedLocation = FVector();
 	TodoConfig.ForcedRotation = FRotator();
 	TodoConfig.bHasAFadeIn = false;
@@ -295,7 +260,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig SpeakerModeConfig;
 	SpeakerModeConfig.bSetToUiMode = true;
 	SpeakerModeConfig.bAllowGameMovement = true;
-	SpeakerModeConfig.WidgetToDisplay = nullptr;
+	SpeakerModeConfig.bHasWidget = false;
 	SpeakerModeConfig.ForcedLocation = FVector();
 	SpeakerModeConfig.ForcedRotation = FRotator();
 	SpeakerModeConfig.bHasAFadeIn = false;
@@ -324,8 +289,8 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, AInter
 		return;
 	}
 	const FPlayModeConfig& Config = PlayModeConfigs[InPlayMode];
-	
-	RemoveAllActiveWidgets();
+
+	PlayerController->RemoveAllActiveWidgets();
 	
 	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
 	
@@ -341,34 +306,12 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, AInter
 	if (Config.bNeedsPreSteps)
 		ManageCurrentPlayMode();
 
-	if (!Config.WidgetToDisplay)
+	if (Config.bHasWidget)
 	{
-		UE_LOG(LogTemp, Error, TEXT("No widget to display in current play mode"));
-		return;
+		PlayerController->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
 	}
 	
-	if (!Config.WidgetToDisplay->IsInViewport())
-	{
-		UE_LOG(LogTemp, Error, TEXT("Widget not already in viewport TEST"));
-		if (Config.bHasAFadeIn && Config.WidgetToDisplay)
-		{
-			FadeWidgets(nullptr, Config.WidgetToDisplay);
-			ActiveWidgets.Add(Config.WidgetToDisplay);
-		}
-		else if (Config.WidgetToDisplay)
-		{
-			Config.WidgetToDisplay->AddToViewport();
-			UE_LOG(LogTemp, Error, TEXT("Added to viewport TEST"));
-    
-			// Add these debug lines
-			UE_LOG(LogTemp, Error, TEXT("Widget Visibility: %d"), (int)Config.WidgetToDisplay->GetVisibility());
-			UE_LOG(LogTemp, Error, TEXT("Widget Size: %s"), *Config.WidgetToDisplay->GetDesiredSize().ToString());
-			UE_LOG(LogTemp, Error, TEXT("Widget Opacity: %f"), Config.WidgetToDisplay->GetRenderOpacity());
-			
-			ActiveWidgets.Add(Config.WidgetToDisplay);
-		}
-	}
-
+	
 	if (!Config.bNeedsPreSteps)
 		ManageCurrentPlayMode();
 }
@@ -377,7 +320,10 @@ void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrCl
 {
 	if (!InOpenOrClosedState && CurrentPlayMode == EPlayModes::RegularMode)
 	{
-		SetCurrentPlayMode(InPlayMode, InInteractableActor);
+		if (InInteractableActor != nullptr)
+			SetCurrentPlayMode(InPlayMode, InInteractableActor);
+		else
+			SetCurrentPlayMode(InPlayMode);
 		InOpenOrClosedState = true;
 		UE_LOG(LogTemp, Error, TEXT("Toggle on"));
 	}
@@ -388,6 +334,7 @@ void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrCl
 		UE_LOG(LogTemp, Error, TEXT("Toggle off"));
 	}
 }
+
 
 void APlayerCharacter_OM::ManageCurrentPlayMode()
 {
@@ -415,7 +362,8 @@ void APlayerCharacter_OM::ManageCurrentPlayMode()
 
 void APlayerCharacter_OM::ManageRegularMode()
 {
-	RemoveAllActiveWidgets();
+	if (!PlayerController) return;
+	PlayerController->RemoveAllActiveWidgets();
 	if (CurrentInteractedCharacter)
 	{
 		CurrentInteractedCharacter->EndDialog();
@@ -425,17 +373,17 @@ void APlayerCharacter_OM::ManageRegularMode()
 	{
 		CurrentInteractedActor = nullptr;
 	}
-	if (PlayerController)
-	{
-		PlayerController->SetViewTargetWithBlend(this, 0.5f);
 
-		SetToUIMode(false);
-	}
-	SetMaxMovementSpeed(GetOriginalMovementSpeed());
+	PlayerController->SetViewTargetWithBlend(this, 0.5f);
+
+	SetToUIMode(false);
 	
-	if (InteractableActorWidget && !InteractableActorWidget->IsInViewport())
+	SetMaxMovementSpeed(GetOriginalMovementSpeed());
+
+	
+	if (!PlayerController->GetIsInteractableWidgetOnViewport())
 	{
-		InteractableActorWidget->AddToViewport();
+		PlayerController->ToggleInteractWidgetFromViewport(false);
 	}
 }
 
@@ -469,18 +417,17 @@ void APlayerCharacter_OM::ManageWorkoutMode()
 		PlayerController->SetControlRotation(NewRotation);
 		SetActorLocationAndRotation(NewLocation, NewRotation);
 		
-		if (WorkoutWidget && !WorkoutWidget->IsInViewport())
-		{
-			if (EquipmentActor->GetGymCamera())
-			{
-				PlayerController->SetViewTargetWithBlend(EquipmentActor->GetGymCamera(), 0.5f);
-			}
 
-			WorkoutWidget->AddToViewport();
-			ActiveWidgets.Add(WorkoutWidget);
+		if (EquipmentActor->GetGymCamera())
+		{
+			PlayerController->SetViewTargetWithBlend(EquipmentActor->GetGymCamera(), 0.5f);
 		}
+
+		PlayerController->PlaymodeWidgetManagement(EPlayModes::WorkoutMode, false);
+
 	}
 }
+
 
 void APlayerCharacter_OM::ManageTodoMode()
 {
@@ -488,86 +435,11 @@ void APlayerCharacter_OM::ManageTodoMode()
 		GameInstance->SetHasOpenedTodoListInitial(true);
 }
 
-
 /*
- *			UI Related Stuff    ------- make hints component, and widgets component
+ *			UI Related Stuff   
  *
  * 
  */
-void APlayerCharacter_OM::UpdateGymHud()
-{
-	if (!GymHudWidget->IsInViewport()) return;
-	if (UGymHud_OM* HudClass = Cast<UGymHud_OM>(GymHudWidget))
-	{
-		HudClass->UpdateProgressBars();
-	}
-}
-void APlayerCharacter_OM::SetGymHud(bool bLoad)
-{
-	if (!GymHudWidget) return;
-
-	if (bLoad)
-	{
-		if (GymHudWidget->IsInViewport()) return;
-
-		GymHudWidget->AddToViewport();
-	}
-	else
-	{
-		if (!GymHudWidget->IsInViewport()) return;
-
-		GymHudWidget->RemoveFromParent();
-	}
-
-
-}
-
-void APlayerCharacter_OM::ShowOrHideHint(const FString& HintText, float HintLength, bool HideHint, bool RemoveFully) const // Move this out of the player class
-{ 
-	if (!HintWidget)
-	{
-		UE_LOG(LogTemp, Error, TEXT("HintWidget is NULL"));
-		return;
-	}
-	UHintsWidget_OM* HintWidgetClass = Cast<UHintsWidget_OM>(HintWidget);
-	if (!HintWidgetClass)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cast Failed to HintsWidget_OM"));
-		return;
-	}
-	const FText HintInputText = FText::FromString(*HintText);
-
-	if (RemoveFully && HintWidget->IsInViewport())
-		HintWidget->RemoveFromParent();
-	
-	if (HideHint && HintWidget->IsInViewport())
-	{
-		HintWidgetClass->HideHint();
-	}
-	else if (!HideHint && !HintWidget->IsInViewport())
-	{
-		HintWidget->AddToViewport();
-		if (HintLength > 0.f)
-		{
-			HintWidgetClass->ShowHint(HintInputText, HintLength);
-		}
-		else
-		{
-			HintWidgetClass->ShowHint(HintInputText);
-		}
-	}
-	else if (!HideHint && HintWidget->IsInViewport())
-	{
-		if (HintLength > 0.f)
-		{
-			HintWidgetClass->ShowHint(HintInputText, HintLength);
-		}
-		else
-		{
-			HintWidgetClass->ShowHint(HintInputText);
-		}
-	}
-}
 
 void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement) const
 {
@@ -624,113 +496,6 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 	}
 }
 
-void APlayerCharacter_OM::FadeWidgets(UUserWidget* FadeOutWidget, UUserWidget* FadeInWidget)
-{
-	ABedroomGameModeBase_OM* BedroomGameMode = Cast<ABedroomGameModeBase_OM>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (!FadeOutWidget && BedroomGameMode)
-		FadeOutWidget = BedroomGameMode->GetShowDayWidget(); 
-	if (!FadeOutWidget)
-		return;
-	
-	if (!FadeOutWidget->IsInViewport() && !FadeInWidget->IsInViewport())
-	{
-		FadeInWidget->AddToViewport();
-		return;
-	}
-	
-	if (UParentWidget_OM* WidgetParentClass = Cast<UParentWidget_OM>(FadeInWidget))
-	{
-		GetWorld()->GetTimerManager().SetTimer(
-			SetModeWidgetFadeInTimerHandle,
-			[this, FadeOutWidget, WidgetParentClass]()
-			{
-				if (FadeOutWidget->GetRenderOpacity() < 1.f)
-				{
-					GetWorld()->GetTimerManager().ClearTimer(SetModeWidgetFadeInTimerHandle);
-					WidgetParentClass->FadeIn();
-				}
-			},
-		0.016f, 
-		true
-		);
-	}
-}
-void APlayerCharacter_OM::HideUnhideInteractableWidget(const bool bHide)
-{
-	if (!InteractableActorWidget) return;
-
-	if (bHide)
-		InteractableActorWidget->SetVisibility(ESlateVisibility::Hidden);
-	else
-		InteractableActorWidget->SetVisibility(ESlateVisibility::Visible);
-}
-void APlayerCharacter_OM::RemoveAllActiveWidgets()
-{
-	if (InteractableActorWidget && InteractableActorWidget->IsInViewport())
-	{
-		InteractableActorWidget->RemoveFromParent();
-	}
-	for (UUserWidget* Widget : ActiveWidgets)
-	{
-		if (Widget && Widget->IsInViewport())
-		{
-			UE_LOG(LogTemp, Error, TEXT("Removing widget from viewport"));
-			Widget->RemoveFromParent();
-		}
-	}
-	ActiveWidgets.Empty();
-}
-
-void APlayerCharacter_OM::WidgetInteraction(const TScriptInterface<IInteractableInterface_OM>& InteractedActorInterface)
-{
-	if (InteractableActorWidget) return;
-	
-	if (const TSubclassOf<UUserWidget> WidgetClass = InteractedActorInterface->GetInteractableWidget())
-	{
-		InteractableActorWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
-		if (UInteractWidget_OM* InteractWidget = Cast<UInteractWidget_OM>(InteractableActorWidget))
-		{
-			//InteractWidget->CheckAndSetTextColour();
-			InteractWidget->SetText(InteractedActorInterface->GetInteractionWidgetText());
-		}
-		if (!InteractableActorWidget->IsInViewport())
-		{
-			InteractableActorWidget->AddToViewport();
-		}
-	}
-}
-
-void APlayerCharacter_OM::TodoCompletedPopUp()
-{
-	// Clean this up so that I dont need to recast so blatantly
-	if (!NotificationAudioComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Notification component is null"));
-		return;
-	}
-	NotificationAudioComponent->PlayTodoCompletedSound();
-	
-	if (TodoCompleteWidget && !TodoCompleteWidget->IsInViewport())
-	{
-		TodoCompleteWidget->AddToViewport();
-	}
-	
-	constexpr float PopUpTimeAmount = 4.f;
-
-	GetWorld()->GetTimerManager().ClearTimer(TodoPopUpHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-		TodoPopUpHandle,
-		[this]()
-		{
-			if (TodoCompleteWidget->IsInViewport())
-			{
-				TodoCompleteWidget->RemoveFromParent();
-			}
-		},
-		PopUpTimeAmount,
-		false
-		);
-}
 
 /*
  *			
@@ -784,6 +549,7 @@ void APlayerCharacter_OM::CheckInteractable()
 
 	FHitResult HitResult;
 	FCollisionQueryParams CollisionParams;
+	if (!PlayerController) return;
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 	if (bHit)
@@ -795,22 +561,20 @@ void APlayerCharacter_OM::CheckInteractable()
 		if (AInteractableActor_OM* InteractedActorInterface = Cast<AInteractableActor_OM>(InteractedActor))
 		{
 			if (!InteractedActorInterface->InteractableInterfaceProperties.bIsInteractable) return;
-			WidgetInteraction(InteractedActorInterface);
+			PlayerController->WidgetInteraction(InteractedActorInterface);
 		}
 		else if (ANpcBase_OM* InteractedNpcInterface = Cast<ANpcBase_OM>(InteractedActor))
 		{
-			WidgetInteraction(InteractedNpcInterface);
+			PlayerController->WidgetInteraction(InteractedNpcInterface);
 		}
-		else if (InteractableActorWidget && InteractableActorWidget->IsInViewport())
+		else if (PlayerController->GetIsInteractableWidgetOnViewport())
 		{
-			InteractableActorWidget->RemoveFromParent();
-			InteractableActorWidget = nullptr;
+			PlayerController->ToggleInteractWidgetFromViewport(true);
 		}
 	}
-	else if (InteractableActorWidget && InteractableActorWidget->IsInViewport())
+	else if (PlayerController->GetIsInteractableWidgetOnViewport())
 	{
-		InteractableActorWidget->RemoveFromParent();
-		InteractableActorWidget = nullptr;
+		PlayerController->ToggleInteractWidgetFromViewport(true);
 	}
 }
 
@@ -822,34 +586,28 @@ void APlayerCharacter_OM::UpdateMovementState()
 
 	LastPosition = CurrentPosition;
 }
-
 void APlayerCharacter_OM::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
+	
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	if (Controller)
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
-	}
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	AddMovementInput(RightDirection, MovementVector.X);
+	
 }
-
 void APlayerCharacter_OM::Look(const FInputActionValue& Value)
 {
 	const FVector2D LookAxisVector = Value.Get<FVector2D>();
 	
-	if (Controller)
-	{
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(-LookAxisVector.Y);
-	}
+	AddControllerYawInput(LookAxisVector.X);
+	AddControllerPitchInput(-LookAxisVector.Y);
+	
 }
 bool APlayerCharacter_OM::GetIsJumping()
 {
@@ -863,7 +621,7 @@ bool APlayerCharacter_OM::GetIsJumping()
 	
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, PlayerPosition, GroundPosition, ECC_Visibility, QueryParams))
 	{
-		if (UPrimitiveComponent* HitComponent = HitResult.GetComponent())
+		if (HitResult.GetComponent())
 		{
 			return false;
 		}
@@ -871,7 +629,6 @@ bool APlayerCharacter_OM::GetIsJumping()
 	}
 	return true;
 }
-
 void APlayerCharacter_OM::Jump()
 {
 	if (!GetCharacterMovement())
@@ -898,26 +655,7 @@ float APlayerCharacter_OM::CalculateJumpHeight(const float LowerBodyStat) const
 	
 	return FMath::Clamp(CalculatedHeight, MinJumpHeight, MaxJumpHeight);
 }
-void APlayerCharacter_OM::RefreshJumpSettings()
-{
-	if (!GetCharacterMovement())
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cant get character movement from Jump"));
-		return;
-	}
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cant get game instance from Jump"));
-		return;
-	}
-	FPlayerData PlayerData = GameInstance->GetPlayerData();
 
-
-	float CurrentJumpHeight = CalculateJumpHeight(PlayerData.LowerBody);
-	GetCharacterMovement()->JumpZVelocity = CurrentJumpHeight;
-
-	
-}
 
 float APlayerCharacter_OM::GetMaxMovementSpeed() const
 {
@@ -1017,8 +755,6 @@ void APlayerCharacter_OM::ShitReaction()
 	PlayerAudioComponent->GrumpySoundEffects();
 }
 
-
-
 /*
  *			Other
  *
@@ -1031,7 +767,6 @@ void APlayerCharacter_OM::ClearTimers()
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(SocialComponent);
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(ExerciseComponent);
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(InteractableActorWidget);
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 	if (!TodoManager)

@@ -8,6 +8,8 @@
 #include "InteractableActor_OM.generated.h"
 
 
+class APlayerController_OM;
+
 UCLASS(Blueprintable)
 class OPTIMIZEMAN_API AInteractableActor_OM : public AActor, public IInteractableInterface_OM
 {
@@ -22,7 +24,7 @@ public:
 
 protected:
 	UPROPERTY()
-	APlayerController* PlayerController;
+	APlayerController_OM* PlayerController;
 
 	UPROPERTY()
 	class APlayerCharacter_OM* Player;

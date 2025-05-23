@@ -4,6 +4,7 @@
 #include "Actors/Items/Mirror_OM.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Items/Shelf_OM.h"
 #include "Components/AudioComponent.h"
@@ -56,7 +57,7 @@ void AMirror_OM::Interact_Implementation()
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	}
 	//Stick character in mirror position
-	MirrorWidget = Cast<UMirrorWidget_OM>(Player->GetMirrorWidget());
+	MirrorWidget = Cast<UMirrorWidget_OM>(PlayerController->GetMirrorWidget());
 	Player->TogglePlayMode(EPlayModes::MirrorMode, Player->bInteractableOpen, this);
 	
 	//Player->SetCurrentPlayMode(EPlayModes::MirrorMode, this);

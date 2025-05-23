@@ -16,19 +16,20 @@ class OPTIMIZEMAN_API UNotificationAudio_OM : public UGameAudio_OM
 
 public:
 	UNotificationAudio_OM();
-
 	virtual void BeginPlay() override;
-	
-	
-	void PlayWritingSound();
-	void PlaySplatSound();
 
+	
+	UFUNCTION()
+	void PlaySplatSound();
+	UFUNCTION()
+	void PlayWritingSound();
+	UFUNCTION()
 	void PlayTodoCompletedSound();
-protected:
-	UPROPERTY()
-	APlayerCharacter_OM* Player;
+
 
 private:
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
 	UPROPERTY(EditAnywhere, Category = "NotifcationSounds")
 	USoundBase* TodoWritingSound;
 

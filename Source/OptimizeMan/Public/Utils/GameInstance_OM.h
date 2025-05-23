@@ -17,6 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAudioSettingsChanged,
 												float, InSfx);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQualitySettingsChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionalStateChanged, EPlayerEmotionalStates, NewState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGymStatsChanged);
 
 class APoster_OM;
 UCLASS(BlueprintType)
@@ -42,21 +43,33 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnDarkModeToggled OnDarkModeToggled;
-
+	
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnGymStatsChanged OnGymStatsChanged;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnEmotionalStateChanged OnEmotionalStateChanged;
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	FDayInfo DayInfo;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	FPlayerData PlayerData;
+
+	UPROPERTY(BlueprintReadOnly)
+	FGymResStats GymResStats;
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	FGameSettings GameSettings;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	FRandomEvents RandomEvents;
+
+	UFUNCTION()
+	void AddGymResStats(float& Stat, float Value);
+	UFUNCTION()
+	void SetGymResStats(float& Stat, float Value);
+
 
 	UFUNCTION(BlueprintCallable)
 	void DarkModeToggle();
@@ -70,7 +83,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentEmotionalState(const EPlayerEmotionalStates NewState);
 	
-
 	UFUNCTION(BlueprintCallable)
 	FGameSettings& GetGameSettings() { return GameSettings; }
 
@@ -78,7 +90,10 @@ public:
 	void SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx);
 
 	UFUNCTION(BlueprintCallable)
-	FPlayerData& GetPlayerData();
+	FPlayerData& GetPlayerData() { return PlayerData; };
+
+	UFUNCTION(BlueprintCallable)
+	FGymResStats& GetGymResStats() { return GymResStats; }
 
 	UFUNCTION(BlueprintCallable)
 	FRandomEvents& GetRandomEvents() { return RandomEvents; }

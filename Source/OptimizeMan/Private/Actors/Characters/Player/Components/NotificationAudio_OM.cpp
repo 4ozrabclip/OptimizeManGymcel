@@ -4,6 +4,8 @@
 #include "Actors/Characters/Player/Components/NotificationAudio_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Utils/GameInstance_OM.h"
+#include "Utils/TodoManagementSubsystem.h"
 #include "Utils/Structs/AudioTypes.h"
 
 UNotificationAudio_OM::UNotificationAudio_OM()
@@ -20,6 +22,14 @@ void UNotificationAudio_OM::BeginPlay()
 	Super::BeginPlay();
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
+	
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		if (UTodoManagementSubsystem* TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>()))
+		{
+			TodoManager->OnTodoComplete.AddDynamic(this, &UNotificationAudio_OM::PlayTodoCompletedSound);
+		}
+	}
 }
 
 void UNotificationAudio_OM::PlayWritingSound()
@@ -43,7 +53,6 @@ void UNotificationAudio_OM::PlaySplatSound()
 		UE_LOG(LogTemp, Error, TEXT("No Splat Sound"));
 		return;
 	}
-
 	SetSound(SplatSound);
 	if (!IsPlaying())
 	{

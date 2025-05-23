@@ -51,6 +51,9 @@ protected:
 	UPROPERTY()
 	class APlayerCharacter_OM* Player;
 
+	UPROPERTY()
+	class APlayerController_OM* PlayerController;
+
 
 	
 	FTimerHandle DelayTilFadeHandle;

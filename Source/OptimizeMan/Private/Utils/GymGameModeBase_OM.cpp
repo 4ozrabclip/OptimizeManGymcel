@@ -4,6 +4,7 @@
 #include "Utils/GymGameModeBase_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "OptimizeMan/Public/Utils/GameInstance_OM.h"
 
@@ -20,21 +21,26 @@ void AGymGameModeBase_OM::BeginPlay()
 	SetActorTickEnabled(false);
 	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 
-	if (GameInstance && !GameInstance->GetHasBeenToGymToday())
+	if (GameInstance)
 	{
-		GameInstance->SetHasBeenToGymToday(true);
+		if (!GameInstance->GetHasBeenToGymToday())
+		{
+			GameInstance->SetHasBeenToGymToday(true);
+		}
+		
+		FGymResStats& GymRes = GameInstance->GetGymResStats();
+
+		GameInstance->AddGymResStats(GymRes.Bladder, 0.f);
+		GameInstance->AddGymResStats(GymRes.Focus, 1.f);
+		GameInstance->AddGymResStats(GymRes.Energy, 1.f);
 	}
 
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
 
-	PlayerData.SetStat(PlayerData.Bladder, 0.f);
-	PlayerData.SetStat(PlayerData.Focus, 1.f);
-	PlayerData.SetStat(PlayerData.Energy, 1.f);
 	
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (Player)
+	if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(Player->GetController()))
 	{
-		Player->SetGymHud();
+		PlayerController->SetGymHud();
 		SetActorTickEnabled(true);
 	}
 }
@@ -54,20 +60,20 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 	
 	if (TimePassedSinceIdle < MaxTimeIdle) return;
 	
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 	constexpr float DecreaseValue = -0.001f;
 
 	
-	if (PlayerData.Focus < 0.5f)
-		PlayerData.AddStat(PlayerData.Energy, DecreaseValue);
+	if (GymResStats.Focus < 0.5f)
+		GameInstance->AddGymResStats(GymResStats.Energy, DecreaseValue);
+
+
+	GameInstance->AddGymResStats(GymResStats.Focus, DecreaseValue);
 
 	
-	PlayerData.AddStat(PlayerData.Focus, DecreaseValue);
-
-	
-	if (Player)
+	if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(Player->GetController()))
 	{
-		Player->UpdateGymHud();
+		PlayerController->UpdateGymHud();
 	}
 	else
 	{

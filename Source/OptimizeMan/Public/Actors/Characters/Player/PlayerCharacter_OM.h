@@ -10,6 +10,7 @@
 #include "Utils/Structs/PlayModes.h"
 #include "PlayerCharacter_OM.generated.h"
 
+class APlayerController_OM;
 class ULevelSequence;
 class AInteractableActor_OM;
 class ANpcBase_OM;
@@ -25,7 +26,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	bool GetIsJumping();
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 
 	bool GetIsDoingRep() const { return bIsDoingRep; };
 	void SetIsDoingRep(bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; };
@@ -52,83 +53,21 @@ protected: //Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BodyDeformer")
 	class UPlayerDeformationsComponent_OM* BodyDeformerComponent;
 	
-protected: //Widgets
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* InteractableActorWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* PauseMenuWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* MirrorWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* MuscleViewWidget;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* WorkoutWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* SocialWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* LaptopWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* TodoWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* WakeUpWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* HintWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* TodoCompleteWidget;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* ShelfWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* CalenderWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UUserWidget* GymHudWidget;
-
 
 public: //Input variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	class UInputMappingContext* DefaultMappingContext;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToMove;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToLook;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToJump;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToInteractClick;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToInteractToggle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToOpenTodo;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
-	UInputAction* InputToOpenPauseMenu;
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MuscleViewLocation")	
 	FVector PlayerFacingMuscleViewLocation;
 
 private: //Private Variables
-
+	bool bTodoOpen;
+	bool bPauseMenuOpen;
 	UPROPERTY()
-	APlayerController* PlayerController;
+	APlayerController_OM* PlayerController;
 
 	bool bIsWalking;
 	bool bIsJumping;
 
-	bool bTodoOpen;
-	bool bPauseMenuOpen;
+
 	
 	//Used for UpdateMovementState
 	FVector LastPosition;
@@ -140,8 +79,8 @@ private: //Private Variables
 	FTimerHandle SetMirrorModeTimerHandle;
 	FTimerHandle SetLaptopModeTimerHandle;
 	FTimerHandle SetShelfModeTimerHandle;
-	FTimerHandle TodoPopUpHandle;
-	FTimerHandle SetModeWidgetFadeInTimerHandle;
+
+
 
 	bool bIsDoingRep = false;
 
@@ -175,7 +114,6 @@ protected: //Protected Variables
 private:
 	TMap<EPlayModes, FPlayModeConfig> PlayModeConfigs;
 
-	TArray<UUserWidget*> ActiveWidgets;
 	void InitPlayModes();
 
 	//TSoftObjectPtr<USkeletalMesh DefaultSkeletalMeshRef;
@@ -191,35 +129,36 @@ public:
 	void ShitReaction();
 	void ClearTimers();
 	void ResetPlayer();
-	void ShowOrHideHint(const FString& HintText, float HintLength = 0.f, bool HideHint = false, bool RemoveFully = false) const;
-	void TodoCompletedPopUp();
+	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;
+	
 
 	void TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrClosedState, AInteractableActor_OM* InInteractableActor = nullptr);
 	UFUNCTION()
 	void TogglePauseMode() { TogglePlayMode(EPlayModes::PauseMode, bPauseMenuOpen);}
 	UFUNCTION()
-	void ToggleTodoMode() { TogglePlayMode(EPlayModes::TodoMode, bTodoOpen); }
+	void ToggleTodoMode() { TogglePlayMode(EPlayModes::TodoMode, bTodoOpen);}
 
 
-	// dont like how this bool is public, should suss it out later as passing it into as paramater from actor funcs
+	// Dont like how this bool is public, should suss it out later as passing it into as paramater from actor funcs
 	bool bInteractableOpen;
 
-
-
-
-	
-protected: //Input amd Locomotion 
+public: //Input amd Locomotion
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	virtual void Jump() override;
-	float CalculateJumpHeight(float LowerBodyStat) const;
-	void RefreshJumpSettings();
-	void Interact(const bool bToggleable);
-
 	UFUNCTION()
 	void InteractClick() { Interact(false);}
 	UFUNCTION()
 	void InteractToggle() { Interact(true);}
+
+protected:
+	void Interact(const bool bToggleable);
+	float CalculateJumpHeight(float LowerBodyStat) const;
+
+
+
+
+
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float BaseJumpHeight = 220.0f;
@@ -233,12 +172,8 @@ protected: //Input amd Locomotion
 	
 protected: //Update States and Playmodes
 	void UpdateMovementState();
+
 	void CheckInteractable();
-	void WidgetInteraction(const TScriptInterface<class IInteractableInterface_OM>& InteractedActorInterface);
-
-
-
-
 
 	
 public: //Getters and Setters
@@ -276,8 +211,7 @@ public: //Getters and Setters
 	void SetMinimumMovementThreshold(const float InMinimumMovementThreshold) { 	MinimumMovementThreshold = InMinimumMovementThreshold;}
 	float GetMinimumMovementThreshold() const { return MinimumMovementThreshold; }
 	
-	UUserWidget* GetMirrorWidget() const { return MirrorWidget; };
-	UUserWidget* GetLaptopWidget() const { return LaptopWidget; };
+
 
 protected: //Manage PlayModes
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
@@ -289,20 +223,6 @@ protected: //Manage PlayModes
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageTodoMode();
 
-	void FadeWidgets(UUserWidget* FadeOutWidget, UUserWidget* FadeInWidget);
-
-
-	
-public: // ui stuff
-	//UI gym hud
-	UFUNCTION()
-	void SetGymHud(const bool bLoad = true);
-	UFUNCTION()
-	void UpdateGymHud();
-	
-	void HideUnhideInteractableWidget(bool bHide);
-	void RemoveAllActiveWidgets();
-	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;
 
 
 private:
@@ -310,7 +230,5 @@ private:
 	void ManagePauseMode();
 
 	FVector HeadPosition;
-	
-
 	
 };

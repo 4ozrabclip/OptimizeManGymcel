@@ -3,6 +3,8 @@
 
 #include "Utils/TodoManagementSubsystem.h"
 
+#include <ThirdParty/ShaderConductor/ShaderConductor/External/DirectXShaderCompiler/include/dxc/DXIL/DxilConstants.h>
+
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/Components/NotificationAudio_OM.h"
 #include "Algo/RandomShuffle.h"
@@ -210,6 +212,7 @@ void UTodoManagementSubsystem::TryCasts()
 
 // ------------------------------------------------------------------------------------------------
 
+
 void UTodoManagementSubsystem::SetCurrentTodos(const FString& Todo1, const FString& Todo2, const FString& Todo3)
 {
 	CurrentTodoArray.Empty();
@@ -287,9 +290,9 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 {
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		UE_LOG(LogTemp, Display, TEXT("Player recasted in COMPLETETODO"));
 	
 	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 
 	for (FTodoItem& Item : CurrentTodoArray)
 	{
@@ -297,8 +300,8 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Item found in CompleteTodo"));
 			Item.bIsCompleted = true;
-			if (Player)
-				Player->TodoCompletedPopUp();
+
+			OnTodoComplete.Broadcast();
 
 			for (TPair<EPlayerStatTypes, float>& TodoStatBuffPair : Item.StatBuffs)
 			{
@@ -320,7 +323,8 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 						break;
 				}
 				constexpr float FocusIncrease = 0.005f;
-				PlayerData.AddStat(PlayerData.Focus, FocusIncrease);
+
+				GameInstance->AddGymResStats(GymResStats.Focus, FocusIncrease);
 			}
 			
 			UpdateTodoList();

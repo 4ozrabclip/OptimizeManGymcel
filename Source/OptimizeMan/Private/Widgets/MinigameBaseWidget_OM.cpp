@@ -34,7 +34,6 @@ void UMinigameBaseWidget_OM::SetWidgetUIDarkLightMode()
 	
 	if (GameInstance && bIsDarkMode)
 	{
-
 		DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
 		DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
 		DarkExitStyle.Pressed.SetResourceObject(WhiteExitButton);
@@ -42,7 +41,6 @@ void UMinigameBaseWidget_OM::SetWidgetUIDarkLightMode()
 	}
 	else
 	{
-
 		LightExitStyle.Normal.SetResourceObject(BlackExitButton);
 		LightExitStyle.Hovered.SetResourceObject(BlackHoveredExitButton);
 		LightExitStyle.Pressed.SetResourceObject(BlackExitButton);

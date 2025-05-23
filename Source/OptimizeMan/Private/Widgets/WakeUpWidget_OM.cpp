@@ -46,7 +46,7 @@ void UWakeUpWidget_OM::NativeConstruct()
 
 void UWakeUpWidget_OM::OnExitButtonClicked()
 {
-	if (TodoManager->CurrentTodoArray.Num() < 3)
+	if (TodoManager->GetCurrentTodoArray().Num() < 3)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Havent set all todos yet"));
 		return;
@@ -69,7 +69,7 @@ void UWakeUpWidget_OM::SetTodoOptions()
 
 void UWakeUpWidget_OM::HandleOptionSelected(const int InOption)
 {
-	TArray<FTodoItem>& Options = TodoManager->PotentialTodos;
+	TArray<FTodoItem>& Options = TodoManager->GetPotentialTodos();
 
 	if (!Options.IsValidIndex(InOption))
 	{
@@ -107,9 +107,9 @@ void UWakeUpWidget_OM::HandleOptionSelected(const int InOption)
 
 void UWakeUpWidget_OM::UpdateFakeTodoList()
 {
-	if (TodoManager->CurrentTodoArray.IsValidIndex(0))
+	if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
 	{
-		const FString SelectedTaskString = FString::Format(TEXT("- {0}"), {TodoManager->CurrentTodoArray[0].Name});
+		const FString SelectedTaskString = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[0].Name});
 		SelectedTask->SetText(FText::FromString(SelectedTaskString));
 	}
 	else
@@ -117,9 +117,9 @@ void UWakeUpWidget_OM::UpdateFakeTodoList()
 		SelectedTask->SetText(FText::FromString(TEXT("- ")));
 	}
 	
-	if (TodoManager->CurrentTodoArray.IsValidIndex(1))
+	if (TodoManager->GetCurrentTodoArray().IsValidIndex(1))
 	{
-		const FString SelectedTask1String = FString::Format(TEXT("- {0}"), {TodoManager->CurrentTodoArray[1].Name});
+		const FString SelectedTask1String = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[1].Name});
 		SelectedTask_1->SetText(FText::FromString(SelectedTask1String));
 	}
 	else
@@ -127,9 +127,9 @@ void UWakeUpWidget_OM::UpdateFakeTodoList()
 		SelectedTask_1->SetText(FText::FromString(TEXT("- ")));
 	}
 	
-	if (TodoManager->CurrentTodoArray.IsValidIndex(2))
+	if (TodoManager->GetCurrentTodoArray().IsValidIndex(2))
 	{
-		const FString SelectedTask2String = FString::Format(TEXT("- {0}"), {TodoManager->CurrentTodoArray[2].Name});
+		const FString SelectedTask2String = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[2].Name});
 		SelectedTask_2->SetText(FText::FromString(SelectedTask2String));
 	}
 	else
@@ -147,7 +147,7 @@ void UWakeUpWidget_OM::AssignOptionsToWidget()
 		return;
 	}
 
-	TArray<FTodoItem>& Options = TodoManager->PotentialTodos;
+	TArray<FTodoItem>& Options = TodoManager->GetPotentialTodos();
 	
 	if (Options.IsValidIndex(0))
 	{

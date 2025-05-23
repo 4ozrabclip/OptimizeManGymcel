@@ -19,7 +19,6 @@
 void UExerciseInteractWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
 	if (MiniGameClickButton)
 	{
 		MiniGameClickButton->OnClicked.RemoveAll(this);
@@ -277,7 +276,6 @@ void UExerciseInteractWidget_OM::SetInjuryRisk()
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	
 	FPlayerData& PlayerData = GameInstance->GetPlayerData();
-	
 }
 
 void UExerciseInteractWidget_OM::MiniGame(float InDeltaTime)
@@ -542,8 +540,7 @@ void UExerciseInteractWidget_OM::DisableEnableUnusableButtonsHelper()
 }
 void UExerciseInteractWidget_OM::UpdateStats()
 {
-	Player->UpdateGymHud();
-	EnergyLevel->SetPercent(GameInstance->GetPlayerData().GetEnergy());
+	EnergyLevel->SetPercent(GameInstance->GetGymResStats().Energy);
 	if (EnergyLevel->GetPercent() <= 0.f)
 	{
 		NotificationTextPopUp();

@@ -97,6 +97,19 @@ void UGameInstance_OM::ResetAllSaves()
 	}
 }
 
+void UGameInstance_OM::AddGymResStats(float& Stat, float Value)
+{	
+	Stat = FMath::Clamp(Stat + Value, -1.f, 1.0f);
+
+	OnGymStatsChanged.Broadcast();
+}
+void UGameInstance_OM::SetGymResStats(float& Stat, float Value)
+{
+	Stat = FMath::Clamp(Value, -1.f, 1.0f);
+
+	OnGymStatsChanged.Broadcast();
+}
+
 void UGameInstance_OM::DarkModeToggle()
 {
 	GameSettings.bDarkMode = !GameSettings.bDarkMode;
@@ -131,11 +144,6 @@ void UGameInstance_OM::SetAudioSettings(const float InMaster, const float InVoic
 		GameSettings.SfxVolume = InSfx;
 
 	OnAudioSettingsChanged.Broadcast(InMaster, InVoice, InMusic, InNotification, InSfx);
-}
-
-FPlayerData& UGameInstance_OM::GetPlayerData()
-{
-	return PlayerData;
 }
 
 void UGameInstance_OM::SetRandomEventAsWitnessed(const ERandomEvents InRandomEvent, const bool InWitnessed)
@@ -201,7 +209,7 @@ void UGameInstance_OM::IncrementDay()
 	IncrementMonth();
 	
 	// Clear Current Todo Array
-	TodoManagement->CurrentTodoArray.Empty();
+	TodoManagement->GetCurrentTodoArray().Empty();
 	
 	
 	HandleDayEvents();

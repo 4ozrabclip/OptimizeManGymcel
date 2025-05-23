@@ -382,8 +382,6 @@ void USocialInteractionSystem_OM::LeaveConversation()
 void USocialInteractionSystem_OM::AddFocus(const float InFocus)
 {
 	Super::AddFocus(InFocus);
-
-	Player->UpdateGymHud();
 }
 
 void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()

@@ -3,6 +3,7 @@
 
 #include "Utils/BedroomGameModeBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "OptimizeMan/Public/Widgets/DisplayDayWidget_OM.h"
 #include "OptimizeMan/Public/Utils/GameInstance_OM.h"
@@ -42,7 +43,10 @@ void ABedroomGameModeBase_OM::BeginPlay()
 		return;
 	}
 
-	Player->SetGymHud(false);
+	PlayerController = Cast<APlayerController_OM>(Player->GetController());
+
+	if (PlayerController)
+		PlayerController->SetGymHud(false);
 
 	
 	if (!GameInstance->GetHasBeenToGymToday())
@@ -71,7 +75,7 @@ void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 		UE_LOG(LogTemp, Error, TEXT("GameInstance needs to be recasted in bedroom game mode base"));
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	}
-	TArray<FTodoItem>& CurrentTodos = TodoManager->CurrentTodoArray;
+	TArray<FTodoItem>& CurrentTodos = TodoManager->GetCurrentTodoArray();
 	FPlayerData& PlayerData = GameInstance->GetPlayerData();
 	bool bPlayerUpset = false;
 	for (FTodoItem& Todo: CurrentTodos)
@@ -134,11 +138,11 @@ void ABedroomGameModeBase_OM::ShowInteractHint()
 	{
 		const FString TodoHintText = TEXT("Left Click or press E to Interact with objects");
 		
-		Player->ShowOrHideHint(TodoHintText);
+		PlayerController->ShowOrHideHint(TodoHintText);
 	}
 	else  //CLEAR TODOLIST TIMER
 	{
-		Player->ShowOrHideHint(TEXT(""), 0.f,  true);
+		PlayerController->ShowOrHideHint(TEXT(""), 0.f,  true);
 		GetWorld()->GetTimerManager().ClearTimer(ShowInteractTimerHandle);
 		
 		GetWorld()->GetTimerManager().SetTimer(
@@ -160,11 +164,11 @@ void ABedroomGameModeBase_OM::ShowTodoHint()
 	{
 		const FString TodoHintText = TEXT("Press T to open Todo List");
 		
-		Player->ShowOrHideHint(TodoHintText);
+		PlayerController->ShowOrHideHint(TodoHintText);
 	}
 	else  //CLEAR TODOLIST TIMER
 	{
-		Player->ShowOrHideHint(TEXT(""), 0.f,  true);
+		PlayerController->ShowOrHideHint(TEXT(""), 0.f,  true);
 		GetWorld()->GetTimerManager().ClearTimer(ShowTodoTimerHandle);
 		
 		GetWorld()->GetTimerManager().SetTimer(
@@ -187,11 +191,11 @@ void ABedroomGameModeBase_OM::ShowPauseMenuHint()
 	{
 		const FString PauseMenuHintText = TEXT("Press Esc to open settings");
 		
-		Player->ShowOrHideHint(PauseMenuHintText);
+		PlayerController->ShowOrHideHint(PauseMenuHintText);
 	}
 	else  //CLEAR TODOLIST TIMER
 	{
-		Player->ShowOrHideHint(TEXT(""), 0.f,  true);
+		PlayerController->ShowOrHideHint(TEXT(""), 0.f,  true);
 		GetWorld()->GetTimerManager().ClearTimer(ShowPauseMenuTimerHandle);
 		
 	}

@@ -4,6 +4,7 @@
 #include "Actors/Items/Speaker_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Audio/GameAudio_OM.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
@@ -59,7 +60,7 @@ void ASpeaker_OM::Interact_Implementation()
 		UE_LOG(LogTemp, Error, TEXT("%s: AudioComponent is invalid"), *GetName());
 		return;
 	}
-	Player->HideUnhideInteractableWidget(true);
+	PlayerController->HideUnhideInteractableWidget(true);
 	SpeakerWidget->SetVisibility(true);
 	//InteractableInterfaceProperties.bIsInteractable = false;
 	Player->SetToUIMode(true, true);
@@ -95,7 +96,7 @@ void ASpeaker_OM::TurnOffWidget()
 	SpeakerWidget->SetVisibility(false);
 	//InteractableInterfaceProperties.bIsInteractable = true;
 	Player->SetToUIMode(false);
-	Player->HideUnhideInteractableWidget(false);
+	PlayerController->HideUnhideInteractableWidget(false);
 	SetActorTickEnabled(false);
 }
 

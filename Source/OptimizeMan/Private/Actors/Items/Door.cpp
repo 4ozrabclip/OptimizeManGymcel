@@ -5,6 +5,7 @@
 
 #include "Actors/Items/Gym/GymGate_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/PointLightComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/BedroomGameModeBase_OM.h"

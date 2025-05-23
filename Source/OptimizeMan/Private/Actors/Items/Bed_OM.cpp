@@ -4,6 +4,7 @@
 #include "OptimizeMan/Public/Actors/Items/Bed_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "OptimizeMan/Public/Utils/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/BedroomGameModeBase_OM.h"
@@ -91,6 +92,7 @@ void ABed_OM::Interact_Implementation()
 void ABed_OM::SleepDelay(const float FadeDuration)
 {
 	const FName LevelToChangeTo = FName("/Game/Levels/Home");
+
 	GetWorld()->GetTimerManager().SetTimer(
 			SleepTimerHandle,
 			[this, LevelToChangeTo]()
@@ -98,7 +100,8 @@ void ABed_OM::SleepDelay(const float FadeDuration)
 				constexpr float MaxEnergy = 1.f;
 				Player->SetMaxMovementSpeed(Player->GetOriginalMovementSpeed());
 				GameInstance->IncrementDay();
-				GameInstance->GetPlayerData().SetEnergy(MaxEnergy, true); //Reset energy levels
+				FGymResStats& GymResStats = GameInstance->GetGymResStats();
+				GameInstance->SetGymResStats(GymResStats.Energy, MaxEnergy);	
 				GameInstance->SetHasBeenToGymToday(false);
 				UGameplayStatics::OpenLevel(this, LevelToChangeTo);
 			},

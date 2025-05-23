@@ -80,7 +80,7 @@ void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 
 void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 {
-	if (GameInstance && GameInstance->GetPlayerData().GetEnergy() <= 0.f)
+	if (GameInstance && GameInstance->GetGymResStats().Energy <= 0.f)
 	{
 		if (CurrentExerciseType != EExerciseType::None)
 		{
@@ -221,7 +221,8 @@ void UExercise_OM::MinorInjury()
 	default:
 		break;
 	}
-	GameInstance->GetPlayerData().SetEnergy(MinorInjuryEnergyUse);
+	FGymResStats& GymResStats = GameInstance->GetGymResStats();
+	GameInstance->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
 	AddFocus(InjuryFocusDecrease);
 }
 
@@ -267,13 +268,14 @@ void UExercise_OM::SetRep()
 	
 
 	FPlayerData& PlayerData = GameInstance->GetPlayerData();
-
+	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 
 	if (!TodoManager)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Todomanager is null in exercise SetRep"));
 		return;
 	}
+	
 	PlayerData.AddStat(PlayerData.Ego, EgoIncrease);
 	
 	switch (CurrentExerciseType)
@@ -343,7 +345,7 @@ void UExercise_OM::DoRep(const TFunction<void()>& AnimFunction, const TFunction<
 		[this]()
 		{
 			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
-			if (GameInstance->GetPlayerData().GetEnergy() <= 0.f)
+			if (GameInstance->GetGymResStats().Energy <= 0.f)
 			{
 				LeaveExercise();
 			}
@@ -359,11 +361,10 @@ void UExercise_OM::DoRep(const TFunction<void()>& AnimFunction, const TFunction<
 	{
 		UE_LOG(LogTemp, Error, TEXT("Can't find modify muscle value func"));
 	}
-	GameInstance->GetPlayerData().SetEnergy(EnergyUse, false);
+	FGymResStats& GymRes = GameInstance->GetGymResStats();
+	GameInstance->AddGymResStats(GymRes.Energy, EnergyUse);
 	AudioComponent->WorkoutGruntSoundEffects(CurrentExerciseType);
 	CheckForExerciseAchievements();
-
-
 }
 
 void UExercise_OM::CheckForExerciseAchievements()
@@ -444,5 +445,5 @@ void UExercise_OM::SetCurrentWorkoutState(const EWorkoutStates InWorkoutState)
 
 bool UExercise_OM::GetHasEnergy()
 {
-	return GameInstance->GetPlayerData().GetEnergy() > 0;
+	return GameInstance->GetGymResStats().Energy > 0;
 }

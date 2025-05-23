@@ -4,6 +4,7 @@
 #include "Actors/InteractableActor_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/PointLightComponent.h"
 #include "Utils/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,7 +31,7 @@ AInteractableActor_OM::AInteractableActor_OM()
 void AInteractableActor_OM::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
 	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 	if (!GameInstance)
 	{
@@ -39,8 +40,9 @@ void AInteractableActor_OM::BeginPlay()
 	}
 	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-	
+	if (!Player) return;
+	PlayerController = Cast<APlayerController_OM>(Player->GetController());
+	if (!PlayerController) return;
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 }
