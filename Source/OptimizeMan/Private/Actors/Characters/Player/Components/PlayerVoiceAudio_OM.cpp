@@ -4,6 +4,7 @@
 #include "Actors/Characters/Player/Components/PlayerVoiceAudio_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Utils/GameInstance_OM.h"
 #include "Utils/Structs/AudioTypes.h"
 #include "Utils/Structs/PlayerData.h"
 
@@ -35,8 +36,11 @@ void UPlayerVoiceAudio_OM::InjurySoundEffects(const EExerciseType CurrentExercis
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 	
-	EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
-
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
+	}
 	TArray<USoundBase*>* SoundsToUse;
 
 	switch (CurrentEmotionalState)
@@ -79,7 +83,11 @@ void UPlayerVoiceAudio_OM::MinorInjurySoundEffects(const EExerciseType CurrentEx
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
+	}
 	TArray<USoundBase*>* SoundsToUse;
 
 	switch (CurrentEmotionalState)
@@ -122,7 +130,11 @@ void UPlayerVoiceAudio_OM::WorkoutGruntSoundEffects(const EExerciseType CurrentE
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
+	}
 	TArray<USoundBase*>* SoundsToUse;
 
 	switch (CurrentEmotionalState)
@@ -164,7 +176,11 @@ void UPlayerVoiceAudio_OM::UpsetSoundEffects()
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
+	}
 	TArray<USoundBase*>* SoundsToUse;
 
 	switch (CurrentEmotionalState)
@@ -200,7 +216,11 @@ void UPlayerVoiceAudio_OM::GrumpySoundEffects()
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
+	}
 	TArray<USoundBase*>* SoundsToUse;
 
 	switch (CurrentEmotionalState)

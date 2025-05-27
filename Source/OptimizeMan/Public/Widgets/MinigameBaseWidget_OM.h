@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class OPTIMIZEMAN_API UMinigameBaseWidget_OM : public UParentWidget_OM
 {
 	GENERATED_BODY()

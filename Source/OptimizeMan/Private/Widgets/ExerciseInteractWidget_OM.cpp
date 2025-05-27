@@ -274,8 +274,7 @@ void UExerciseInteractWidget_OM::SetInjuryRisk()
 {
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+
 }
 
 void UExerciseInteractWidget_OM::MiniGame(float InDeltaTime)

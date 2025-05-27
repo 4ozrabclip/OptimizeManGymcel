@@ -642,8 +642,8 @@ void APlayerCharacter_OM::Jump()
 		return;
 	}
 
-	FPlayerData PlayerData = GameInstance->GetPlayerData();
-	float CurrentJumpHeight = CalculateJumpHeight(PlayerData.LowerBody);
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	float CurrentJumpHeight = CalculateJumpHeight(BodyStatus.LowerBody);
 	GetCharacterMovement()->JumpZVelocity = CurrentJumpHeight;
 	Super::Jump();
 }
@@ -685,16 +685,15 @@ void APlayerCharacter_OM::SetEmotionalState()
 	if (!GameInstance)
 		return;
 	
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
-	
+
 	constexpr float ChadThreshold = 0.7f;
 	constexpr float GrindsetThreshold = 0.35f;
 	constexpr float DoomerThreshold = -0.3f;
 	constexpr float GoblinThreshold = -0.2f;
 
-	const float Ego = PlayerData.GetEgo();
-	const float SexAppeal = PlayerData.GetSexAppeal();
-	const float Social = PlayerData.GetSocial();
+	const float Ego = GameInstance->GetEgo();
+	const float SexAppeal = GameInstance->GetSexAppeal();
+	const float Social = GameInstance->GetSocial();
 	
 	EPlayerEmotionalStates NewState;
 	UE_LOG(LogTemp, Error, TEXT("Ego: %f \n SexAppeal: %f \n Social: %f "), Ego, SexAppeal, Social);
@@ -728,22 +727,6 @@ void APlayerCharacter_OM::SetEmotionalState()
 	
 	GameInstance->SetCurrentEmotionalState(NewState);
 }
-EPlayerEmotionalStates APlayerCharacter_OM::GetCurrentEmotionalState()
-{
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cant Cast GI in GetEmotionalState, just return doomer"));
-		return EPlayerEmotionalStates::Doomer;
-	}
-
-	const FPlayerData& PlayerData = GameInstance->GetPlayerData();
-
-	return PlayerData.CurrentEmotionalState;
-	
-}
 
 
 void APlayerCharacter_OM::ShitDay()
@@ -771,7 +754,11 @@ void APlayerCharacter_OM::ClearTimers()
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 	if (!TodoManager)
 		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
+	if (!PlayerController)
+		PlayerController = Cast<APlayerController_OM>(GetController());
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(TodoManager);
+	if (PlayerController)
+		GetWorld()->GetTimerManager().ClearAllTimersForObject(PlayerController);
 }
 
 void APlayerCharacter_OM::ResetPlayer()

@@ -401,8 +401,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 }
 void ULaptopWidget_OM::UpdateBank()
 {
-	const FPlayerData& PlayerData = GameInstance->GetPlayerData();
-	const FString MoneyStringNumeral = FString::FromInt(PlayerData.GetMoney());
+	const FString MoneyStringNumeral = FString::FromInt(GameInstance->GetMoney());
 	const FString MoneyString = FString::Format(TEXT("${0}"), {MoneyStringNumeral});
 
 	MoneyTextBlock->SetText(FText::FromString(MoneyString));
@@ -525,9 +524,8 @@ void ULaptopWidget_OM::SetForSkanState()
 {
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
 
-	switch (PlayerData.CurrentEmotionalState)
+	switch (GameInstance->GetCurrentEmotionalState())
 	{
 	case EPlayerEmotionalStates::Doomer:
 		CurrentForSkanState = EForSkanType::Bad;

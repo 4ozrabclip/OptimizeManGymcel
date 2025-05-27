@@ -59,6 +59,11 @@ void UCharacterComponentBase_OM::AddFocus(const float InFocus)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
-	GameInstance->AddGymResStats(GymResStats.Focus, InFocus);
+
+	const float DifficultyMultiplier = GameInstance->GetDifficultyMultiplier();
+
+	const float FocusAdd = InFocus * DifficultyMultiplier;
+	
+	GameInstance->AddGymResStats(GymResStats.Focus, FocusAdd);
 }
 

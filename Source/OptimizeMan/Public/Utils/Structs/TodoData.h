@@ -29,7 +29,8 @@ struct FTodoItem
 	CompletedName(""),
 	Desc(""),
 	Tag(FGameplayTag::EmptyTag),
-	bIsCompleted(false)
+	bIsCompleted(false),
+	Points(0)
 	{}
 
 	UPROPERTY()
@@ -51,4 +52,7 @@ struct FTodoItem
 	
 	UPROPERTY()
 	bool bIsCompleted;
+
+	UPROPERTY()
+	int Points;
 };

@@ -86,7 +86,7 @@ void UPauseMenuWidget_OM::NativeConstruct()
 	{
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	}
-	CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
 }
 
 void UPauseMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -234,7 +234,8 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 		return;
 	}
 
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 
 	const float JawValue = JawStat_Slider->GetValue();
 	const float LeftArmValue = LeftArmStat_Slider->GetValue();
@@ -245,18 +246,18 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	const float EgoValue = EgoStat_Slider->GetValue();
 	const float SexAppealValue = SexAppealStat_Slider->GetValue();
 
-	PlayerData.SetStat(PlayerData.Jaw, JawValue);
-	PlayerData.SetStat(PlayerData.LeftArm, LeftArmValue);
-	PlayerData.SetStat(PlayerData.RightArm, RightArmValue);
-	PlayerData.SetStat(PlayerData.LowerBody, ThighsValue);
-	PlayerData.SetStat(PlayerData.Calves, CalvesValue);
-	PlayerData.SetStat(PlayerData.Social, SocialValue);
-	PlayerData.SetStat(PlayerData.Ego, EgoValue);
-	PlayerData.SetStat(PlayerData.SexAppeal, SexAppealValue);
+	GameInstance->SetStat(BodyStatus.Jaw, JawValue);
+	GameInstance->SetStat(BodyStatus.LeftArm, LeftArmValue);
+	GameInstance->SetStat(BodyStatus.RightArm, RightArmValue);
+	GameInstance->SetStat(BodyStatus.LowerBody, ThighsValue);
+	GameInstance->SetStat(BodyStatus.Calves, CalvesValue);
+	GameInstance->SetStat(InnerStatus.Social, SocialValue);
+	GameInstance->SetStat(InnerStatus.Ego, EgoValue);
+	GameInstance->SetStat(InnerStatus.SexAppeal, SexAppealValue);
 
 
 
-	if (Player->GetCurrentEmotionalState() != NewEmotionalState)
+	if (GameInstance->GetCurrentEmotionalState() != NewEmotionalState)
 	{
 		GameInstance->SetCurrentEmotionalState(NewEmotionalState);
 	}
@@ -303,16 +304,17 @@ void UPauseMenuWidget_OM::OpenChangeStats()
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	}
 
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
-	JawStat_Slider->SetValue(PlayerData.Jaw);
-	LeftArmStat_Slider->SetValue(PlayerData.LeftArm);
-	RightArmStat_Slider->SetValue(PlayerData.RightArm);
-	ThighsStat_Slider->SetValue(PlayerData.LowerBody);
-	CalvesStat_Slider->SetValue(PlayerData.Calves);
-	SocialStat_Slider->SetValue(PlayerData.Social);
-	EgoStat_Slider->SetValue(PlayerData.Ego);
-	SexAppealStat_Slider->SetValue(PlayerData.SexAppeal);
+	JawStat_Slider->SetValue(BodyStatus.Jaw);
+	LeftArmStat_Slider->SetValue(BodyStatus.LeftArm);
+	RightArmStat_Slider->SetValue(BodyStatus.RightArm);
+	ThighsStat_Slider->SetValue(BodyStatus.LowerBody);
+	CalvesStat_Slider->SetValue(BodyStatus.Calves);
+	SocialStat_Slider->SetValue(InnerStatus.Social);
+	EgoStat_Slider->SetValue(InnerStatus.Ego);
+	SexAppealStat_Slider->SetValue(InnerStatus.SexAppeal);
 
 	if (UTexture2D* Image = EmotionalState_Wojak.FindRef(CurrentEmotionalState))
 	{

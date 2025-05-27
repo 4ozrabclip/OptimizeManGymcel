@@ -36,11 +36,7 @@ protected:
 	UTextBlock* Task3;
 	UPROPERTY(meta = (BindWidget))
 	UCheckBox* Task3CheckBox;
-	
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Task4;
-	UPROPERTY(meta = (BindWidget))
-	UCheckBox* Task4CheckBox;
+
 
 private:
 	bool bHasBeenOpened;

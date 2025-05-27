@@ -11,6 +11,7 @@
 /**
  * 
  */
+DECLARE_MULTICAST_DELEGATE(FOnPointsChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTodoComplete);
 UCLASS()
 class OPTIMIZEMAN_API UTodoManagementSubsystem : public UGameInstanceSubsystem
@@ -43,6 +44,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnTodoComplete OnTodoComplete;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnTodoComplete OnPointsChanged;
 protected:
 
 

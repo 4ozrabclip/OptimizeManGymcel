@@ -53,12 +53,10 @@ void UMirrorWidget_OM::CheckAndSetWarningText()
 		UE_LOG(LogTemp, Error, TEXT("Game instance is null in mirror widget"));
 		return;
 	}
-	
-	const FPlayerData& PlayerData = GameInstance->GetPlayerData();
 
 	FString WarningText_String = TEXT("");
 	
-	if (PlayerData.GetCurrentlyOnSteroids())
+	if (GameInstance->GetCurrentlyOnSteroids())
 		WarningText_String = TEXT("You have gyno");
 
 	WarningText->SetText(FText::FromString(WarningText_String));
@@ -75,13 +73,13 @@ void UMirrorWidget_OM::UpdateStats()
 		return;
 	}
 	
-	const FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	const FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
 
 	
-	UpdateStatBar(PlayerData.Ego, EgoPositiveBar, EgoNegativeBar);
-	UpdateStatBar(PlayerData.Social, SocialPositiveBar, SocialNegativeBar);
-	UpdateStatBar(PlayerData.SexAppeal, SexPositiveBar, SexNegativeBar);
+	UpdateStatBar(InnerStatus.Ego, EgoPositiveBar, EgoNegativeBar);
+	UpdateStatBar(InnerStatus.Social, SocialPositiveBar, SocialNegativeBar);
+	UpdateStatBar(InnerStatus.SexAppeal, SexPositiveBar, SexNegativeBar);
 	
 }
 void UMirrorWidget_OM::UpdateStatBar(const float InTypeStat, UProgressBar* InPositiveBar, UProgressBar* InNegativeBar)

@@ -263,11 +263,10 @@ EExerciseType UExercise_OM::GetCurrentExerciseType()
 }
 void UExercise_OM::SetRep()
 {
-	
 	constexpr float EgoIncrease = 0.07f;
 	
-
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 
 	if (!TodoManager)
@@ -276,7 +275,7 @@ void UExercise_OM::SetRep()
 		return;
 	}
 	
-	PlayerData.AddStat(PlayerData.Ego, EgoIncrease);
+	GameInstance->AddStat(InnerStatus.Ego, EgoIncrease);
 	
 	switch (CurrentExerciseType)
 	{
@@ -284,35 +283,35 @@ void UExercise_OM::SetRep()
 		break;
 	case EExerciseType::Squat:
 		DoRep([this]{AnimInstance->DoSquatRep();},
-			[this, &PlayerData](float Increase)  {PlayerData.AddStat(PlayerData.LowerBody, Increase);},
+			[this, &BodyStatus](float Increase)  {GameInstance->AddStat(BodyStatus.LowerBody, Increase);},
 			ExerciseParameters.LowerBodyIncrease,
 			ExerciseParameters.SquatsEnergyUse,
 			SquatDuration);
 		break;
 	case EExerciseType::BicepCurl:
 		DoRep([this] {AnimInstance->DoCurlRep();},
-			[this, &PlayerData](float Increase){PlayerData.AddStat(PlayerData.LeftArm, Increase); PlayerData.AddStat(PlayerData.RightArm, Increase);},
+			[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.LeftArm, Increase); GameInstance->AddStat(BodyStatus.RightArm, Increase);},
 			ExerciseParameters.ArmIncrease,
 			ExerciseParameters.BicepCurlEnergyUse*2,
 			BicepCurlDuration);
 		break;
 	case EExerciseType::OverheadPress:
 		DoRep([this]{AnimInstance->DoOverheadPressRep();},
-			[this, &PlayerData](float Increase){PlayerData.AddStat(PlayerData.Shoulders, Increase);},
+			[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.Shoulders, Increase);},
 			ExerciseParameters.ShoulderIncrease,
 			ExerciseParameters.OverheadPressEnergyUse,
 			OverheadPressDuration);
 		break;
 	case EExerciseType::LeftCurl:
 		DoRep([this]{AnimInstance->DoLeftCurlRep();},
-			[this, &PlayerData](float Increase){PlayerData.AddStat(PlayerData.LeftArm, Increase);},
+			[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.LeftArm, Increase);},
 			ExerciseParameters.ArmIncrease,
 			ExerciseParameters.BicepCurlEnergyUse,
 			BicepCurlDuration);
 		break;
 		case EExerciseType::RightCurl:
 		DoRep([this]{AnimInstance->DoRightCurlRep();},
-[this, &PlayerData](float Increase){PlayerData.AddStat(PlayerData.RightArm, Increase);},
+[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.RightArm, Increase);},
 			ExerciseParameters.ArmIncrease,
 			ExerciseParameters.BicepCurlEnergyUse,
 			BicepCurlDuration);

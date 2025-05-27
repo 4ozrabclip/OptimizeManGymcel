@@ -24,21 +24,21 @@ void UShelfWidget_OM::InitButtons()
 		UE_LOG(LogTemp, Error, TEXT("No game instance in shelf widget"));
 		return;
 	}
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FInventoryData& InventoryData = GameInstance->GetInventoryData();
 	
 	if (UseBabyCrackButton)
 	{
 		UseBabyCrackButton->OnClicked.RemoveAll(this);
 		UseBabyCrackButton->OnClicked.AddDynamic(this, &UShelfWidget_OM::OnUseBabyCrackClicked);
 
-		CheckItemForButtonVisibility(PlayerData.bOwnsPreWorkout, UseBabyCrackButton);
+		CheckItemForButtonVisibility(InventoryData.bOwnsPreWorkout, UseBabyCrackButton);
 	}
 	if (UseSteroidsButton)
 	{
 		UseSteroidsButton->OnClicked.RemoveAll(this);
 		UseSteroidsButton->OnClicked.AddDynamic(this, &UShelfWidget_OM::OnUseSteroidsClicked);
 
-		CheckItemForButtonVisibility(PlayerData.bOwnsSteroids, UseSteroidsButton);
+		CheckItemForButtonVisibility(InventoryData.bOwnsSteroids, UseSteroidsButton);
 	}
 }
 
@@ -68,7 +68,8 @@ void UShelfWidget_OM::OnItemUsed(EShopAndBook InItem)
 		return;
 	}
 	
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FInventoryData& InventoryData = GameInstance->GetInventoryData();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 
 	AShelf_OM* Shelf = Cast<AShelf_OM>(Player->GetCurrentInteractedActor());
 
@@ -83,17 +84,17 @@ void UShelfWidget_OM::OnItemUsed(EShopAndBook InItem)
 	case EShopAndBook::None:
 		return;
 	case EShopAndBook::Steroids:
-		if (PlayerData.bOwnsSteroids)
+		if (InventoryData.bOwnsSteroids)
 		{
-			PlayerData.SetPossesion(PlayerData.bOwnsSteroids, false);
-			PlayerData.SetPossesion(PlayerData.bCurrentlyOnSteroids, true);
+			GameInstance->SetPossesion(InventoryData.bOwnsSteroids, false);
+			GameInstance->SetPossesion(BodyStatus.bCurrentlyOnSteroids, true);
 			UseSteroidsButton->SetVisibility(ESlateVisibility::Hidden);
 		}
 		break;
 	case EShopAndBook::PreWorkout:
-		if (PlayerData.bOwnsPreWorkout)
+		if (InventoryData.bOwnsPreWorkout)
 		{
-			PlayerData.SetPossesion(PlayerData.bOwnsPreWorkout, false);
+			GameInstance->SetPossesion(InventoryData.bOwnsPreWorkout, false);
 			UseBabyCrackButton->SetVisibility(ESlateVisibility::Hidden);
 		}
 		break;

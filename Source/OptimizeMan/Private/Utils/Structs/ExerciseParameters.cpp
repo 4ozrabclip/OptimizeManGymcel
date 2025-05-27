@@ -6,9 +6,9 @@ void FExerciseParameters::UpdateParameters(UGameInstance_OM* GameInstance)
 {
 	if (!GameInstance) return;
 
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 
-	if (PlayerData.bCurrentlyOnSteroids)
+	if (BodyStatus.bCurrentlyOnSteroids)
 	{
 		LowerBodyIncrease = 0.09f;
 		ArmIncrease = 0.09f;

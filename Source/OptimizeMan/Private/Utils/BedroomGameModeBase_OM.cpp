@@ -76,7 +76,7 @@ void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	}
 	TArray<FTodoItem>& CurrentTodos = TodoManager->GetCurrentTodoArray();
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 	bool bPlayerUpset = false;
 	for (FTodoItem& Todo: CurrentTodos)
 	{
@@ -84,7 +84,7 @@ void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 		if (!Todo.bIsCompleted)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Incomplete Todo Found"));
-			PlayerData.AddStat(PlayerData.Ego, -1.f);
+			GameInstance->AddStat(InnerStatus.Ego, -1.f);
 			bPlayerUpset = true;
 		}
 	}

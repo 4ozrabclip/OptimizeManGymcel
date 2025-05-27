@@ -43,8 +43,7 @@ void USocialInteractionSystem_OM::InitConversation()
 	LoadNpcFriendshipData();
 	
 	CurrentNpcMood = CurrentInteractedNpc->GetCurrentMood();
-	
-	PlayerData = GameInstance->GetPlayerData();
+
 
 	SetComponentTickEnabled(true);
 }
@@ -117,7 +116,6 @@ void USocialInteractionSystem_OM::ProcessConversationData()
 
 	CurrentNpcMood = CurrentInteractedNpc->GetCurrentMood();
 	
-	PlayerData = GameInstance->GetPlayerData();
 
 	ProcessFriendshipLevel();
 	CheckForSocialAchievements();
@@ -221,7 +219,7 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
 	if (!NpcAnimInstance)
 		NpcAnimInstance = CurrentInteractedNpc->GetAnimInstance();
 
-	const EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	const EPlayerEmotionalStates CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
 	
 	const ENpcRelationshipState Relationship = CurrentInteractedNpc->GetCurrentRelationshipState();
 	const bool bHatesYou = Relationship == ENpcRelationshipState::Enemy;

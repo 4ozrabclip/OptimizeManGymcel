@@ -123,7 +123,7 @@ void USocialInteractionWidget_OM::InitializeButtonStyles()
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-	EPlayerEmotionalStates CurrentEmotionalState = Player->GetCurrentEmotionalState();
+	EPlayerEmotionalStates CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
 	
 	auto SetupButtonStyle = [this, CurrentEmotionalState](FButtonStyle& Style, int Index)
 	{

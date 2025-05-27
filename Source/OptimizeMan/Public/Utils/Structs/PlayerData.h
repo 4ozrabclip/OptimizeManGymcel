@@ -37,23 +37,15 @@ struct FGymResStats
 	float Bladder;
 	
 };
+
+
 USTRUCT(BlueprintType)
-struct FPlayerData
+struct FBodyStatus
 {
 	GENERATED_USTRUCT_BODY()
 
-	FPlayerData()
-	: CurrentEmotionalState(EPlayerEmotionalStates::Cope),
-	Ego(0.f),
-	SexAppeal(0.f),
-	Social(0.f),
-	bIsDelusional(false),
-	bCurrentlyOnSteroids(false),
-	Money(30),
-	bOwnsSteroids(false),
-	bOwnsPreWorkout(false),
-	bIsBulking(false),
-	OverallStrength(0.f),
+	FBodyStatus()
+	: OverallStrength(0.f),
 	Jaw(0.f),
 	LowerBody(0.f),
 	Calves(0.f),
@@ -61,35 +53,11 @@ struct FPlayerData
 	RightArm(0.f),
 	Shoulders(0.f),
 	bHasJawSurgery(false),
-	bHasLegLengtheningSurgery(false)
+	bHasLegLengtheningSurgery(false),
+	bCurrentlyOnSteroids(false),
+	bIsBulking(false)
 	{}
 
-	EPlayerEmotionalStates CurrentEmotionalState;
-
-	/*
-	 *	Mental Stats
-	 */
-	UPROPERTY(BlueprintReadWrite)
-	float Ego;
-	UPROPERTY(BlueprintReadWrite)
-	float SexAppeal;
-	UPROPERTY(BlueprintReadWrite)
-	float Social;
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsDelusional;
-	UPROPERTY(BlueprintReadWrite)
-	bool bCurrentlyOnSteroids;
-	/*
-	 * Energy, Money, Possesions
-	 */
-	UPROPERTY(BlueprintReadWrite)
-	int Money;
-	UPROPERTY(BlueprintReadWrite)
-	bool bOwnsSteroids;
-	UPROPERTY(BlueprintReadWrite)
-	bool bOwnsPreWorkout;
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsBulking;
 	/*
 	 *	Physical Stats
 	 */
@@ -114,36 +82,65 @@ struct FPlayerData
 	bool bHasJawSurgery;
 	UPROPERTY(BlueprintReadWrite)
 	bool bHasLegLengtheningSurgery;
+	UPROPERTY(BlueprintReadWrite)
+	bool bCurrentlyOnSteroids;
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsBulking;
+};
+USTRUCT(BlueprintType)
+struct FInnerStatus
+{
+	GENERATED_USTRUCT_BODY()
+	FInnerStatus()
+		: CurrentEmotionalState(EPlayerEmotionalStates::Cope),
+		Ego(0.f),
+		SexAppeal(0.f),
+		Social(0.f),
+		bIsDelusional(false)
+	{}
+
+	EPlayerEmotionalStates CurrentEmotionalState;
+
+	UPROPERTY(BlueprintReadWrite)
+	float Ego;
+	UPROPERTY(BlueprintReadWrite)
+	float SexAppeal;
+	UPROPERTY(BlueprintReadWrite)
+	float Social;
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsDelusional;
 
 
-	
-	void SetStat(float& Stat, float Value)
-	{
-		Stat = FMath::Clamp(Value, -1.f, 1.0f);
-	}
-	void AddStat(float& Stat, float Value)
-	{
-		Stat = FMath::Clamp(Stat + Value, -1.f, 1.0f);
-	}
-	void SetPossesion(bool& bPossesable, const bool bInPossesion)
-	{
-		bPossesable = bInPossesion;
-	}
-	
-	
-	bool GetOwnsSteroids() const { return bOwnsSteroids; }
-	bool GetOwnsPreWorkout() const { return bOwnsPreWorkout; }
-	int GetMoney() const { return Money; }
-	void SetMoney(const int InMoney)
-	{
-		Money += InMoney;
-	}
-	
-	bool GetIsDelusional() const { return bIsDelusional; }
-	bool GetCurrentlyOnSteroids() const { return bCurrentlyOnSteroids; }
-	float GetEgo() const { return Ego; }
-	float GetSexAppeal() const { return SexAppeal; }
-	float GetSocial() const { return Social; }
+
+};
+USTRUCT(BlueprintType)
+struct FGamePointsData
+{
+	GENERATED_USTRUCT_BODY()
+
+	FGamePointsData()
+		: GamePoints(0.f)
+	{}
+	UPROPERTY(BlueprintReadWrite)
+	int GamePoints;
 
 	
+};
+USTRUCT(BlueprintType)
+struct FInventoryData
+{
+	GENERATED_USTRUCT_BODY()
+
+	FInventoryData()
+		: Money(30),
+		bOwnsSteroids(false),
+		bOwnsPreWorkout(false)
+	{}
+
+	UPROPERTY(BlueprintReadWrite)
+	int Money;
+	UPROPERTY(BlueprintReadWrite)
+	bool bOwnsSteroids;
+	UPROPERTY(BlueprintReadWrite)
+	bool bOwnsPreWorkout;
 };

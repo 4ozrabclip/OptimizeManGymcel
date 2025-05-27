@@ -46,9 +46,7 @@ protected:
 
 	UPROPERTY()
 	ENpcMood CurrentNpcMood;
-
-	UPROPERTY()
-	FPlayerData PlayerData;
+	
 
 	UPROPERTY()
 	class UNpcBaseAnimInstance_OM* NpcAnimInstance;

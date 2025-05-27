@@ -44,8 +44,8 @@ void AShelf_OM::UpdateShelfItems() const
 		UE_LOG(LogTemp, Error, TEXT("No game instance in shelf"));
 		return;
 	}
-	const FPlayerData& PlayerData = GameInstance->GetPlayerData();
-	if (PlayerData.GetOwnsSteroids())
+	const FInventoryData& Inventory = GameInstance->GetInventoryData();
+	if (Inventory.bOwnsSteroids)
 	{
 		SteroidsMesh->SetVisibility(true);
 	}
@@ -53,7 +53,7 @@ void AShelf_OM::UpdateShelfItems() const
 	{
 		SteroidsMesh->SetVisibility(false);
 	}
-	if (PlayerData.GetOwnsPreWorkout())
+	if (Inventory.bOwnsPreWorkout)
 	{
 		PreWorkoutMesh->SetVisibility(true);
 	}

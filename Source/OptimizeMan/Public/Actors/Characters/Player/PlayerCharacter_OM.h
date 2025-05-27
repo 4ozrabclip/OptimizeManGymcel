@@ -59,16 +59,15 @@ public: //Input variables
 	FVector PlayerFacingMuscleViewLocation;
 
 private: //Private Variables
-	bool bTodoOpen;
-	bool bPauseMenuOpen;
 	UPROPERTY()
 	APlayerController_OM* PlayerController;
-
+	
+	bool bTodoOpen;
+	bool bPauseMenuOpen;
 	bool bIsWalking;
 	bool bIsJumping;
+	bool bIsDoingRep = false;
 
-
-	
 	//Used for UpdateMovementState
 	FVector LastPosition;
 	float MinimumMovementThreshold;
@@ -80,9 +79,7 @@ private: //Private Variables
 	FTimerHandle SetLaptopModeTimerHandle;
 	FTimerHandle SetShelfModeTimerHandle;
 
-
-
-	bool bIsDoingRep = false;
+	
 
 
 protected: //Protected Variables
@@ -155,11 +152,7 @@ protected:
 	void Interact(const bool bToggleable);
 	float CalculateJumpHeight(float LowerBodyStat) const;
 
-
-
-
-
-
+	
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float BaseJumpHeight = 220.0f;
 	UPROPERTY(EditAnywhere, Category = "Movement")
@@ -201,8 +194,7 @@ public: //Getters and Setters
 	
 	void SetMaxMovementSpeed(const float InMaxMovementSpeed);
 	void SetEmotionalState();
-	UFUNCTION(BlueprintCallable)
-	EPlayerEmotionalStates GetCurrentEmotionalState();
+
 	float GetMaxMovementSpeed() const;
 	
 	void SetOriginalMovementSpeed(const float InOriginalMovementSpeed) { OriginalMovementSpeed = InOriginalMovementSpeed; };

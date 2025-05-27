@@ -54,7 +54,7 @@ void AGymGameModeBase_OM::Tick(float DeltaTime)
 void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 {
 	//Decrease focus because your idle
-	constexpr float MaxTimeIdle = 5.f;
+	const float MaxTimeIdle = 5.f / GameInstance->GetDifficultyMultiplier();
 
 	TimePassedSinceIdle += (DeltaTime / 2);
 	
@@ -85,8 +85,6 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 }
 void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 {
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
-
 	switch (Player->GetCurrentPlayMode())
 	{
 	case EPlayModes::RegularMode: 

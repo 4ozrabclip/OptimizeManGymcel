@@ -16,6 +16,8 @@ void UGameInstance_OM::FirstDay()
 		TodoManagement = GetSubsystem<UTodoManagementSubsystem>();
 	}
 	TodoManagement->SetCurrentTodos(FirstDayTodo1);
+
+	CurrentWaveType = EDifficultyWaveType::RestWave;
 }
 
 void UGameInstance_OM::Init()
@@ -77,16 +79,21 @@ void UGameInstance_OM::InitializeGameSettings()
 }
 void UGameInstance_OM::InitializePlayerData()
 {
-	UE_LOG(LogTemp, Error, TEXT("InitializePlayerDataCalled"));
-	PlayerData.SetStat(PlayerData.Ego, 0.f);
-	PlayerData.SetStat(PlayerData.SexAppeal, 0.f);
-	PlayerData.SetStat(PlayerData.Social, 0.f);
-	PlayerData.bIsDelusional = false;
-	
-	PlayerData.SetStat(PlayerData.Calves, 0.f);
-	PlayerData.SetStat(PlayerData.LowerBody, 0.f);
-	PlayerData.SetStat(PlayerData.LeftArm, 0.f);
-	PlayerData.SetStat(PlayerData.RightArm, 0.f);
+	SetStat(InnerStatus.Ego, 0.f);
+	SetStat(InnerStatus.Social, 0.f);
+	SetStat(InnerStatus.SexAppeal, 0.f);
+	SetPossesion(InnerStatus.bIsDelusional, false);
+
+	SetStat(BodyStatus.Calves, 0.f);
+	SetStat(BodyStatus.Jaw, 0.f);
+	SetStat(BodyStatus.Shoulders, 0.f);
+	SetStat(BodyStatus.LeftArm, 0.f);
+	SetStat(BodyStatus.RightArm, 0.f);
+	SetStat(BodyStatus.LowerBody, 0.f);
+	SetStat(BodyStatus.OverallStrength, 0.f);
+	SetPossesion(BodyStatus.bIsBulking, false);
+	SetPossesion(BodyStatus.bHasJawSurgery, false);
+	SetPossesion(BodyStatus.bCurrentlyOnSteroids, false);
 }
 
 void UGameInstance_OM::ResetAllSaves()
@@ -110,6 +117,11 @@ void UGameInstance_OM::SetGymResStats(float& Stat, float Value)
 	OnGymStatsChanged.Broadcast();
 }
 
+void UGameInstance_OM::AddGamePoints(const int InPoints)
+{
+	GamePointsData.GamePoints += InPoints;
+}
+
 void UGameInstance_OM::DarkModeToggle()
 {
 	GameSettings.bDarkMode = !GameSettings.bDarkMode;
@@ -125,7 +137,7 @@ void UGameInstance_OM::SetDarkMode(const bool InDarkMode)
 void UGameInstance_OM::SetCurrentEmotionalState(const EPlayerEmotionalStates NewState)
 {
 	UE_LOG(LogTemp, Display, TEXT("SetCurrentEMOTIONAL STATE GI"));
-	PlayerData.CurrentEmotionalState = NewState;
+	InnerStatus.CurrentEmotionalState = NewState;
 	OnEmotionalStateChanged.Broadcast(NewState);
 }
 
@@ -146,7 +158,7 @@ void UGameInstance_OM::SetAudioSettings(const float InMaster, const float InVoic
 	OnAudioSettingsChanged.Broadcast(InMaster, InVoice, InMusic, InNotification, InSfx);
 }
 
-void UGameInstance_OM::SetRandomEventAsWitnessed(const ERandomEvents InRandomEvent, const bool InWitnessed)
+void UGameInstance_OM::SetRandomEventAsWitnessed(const EEventAndGPData InRandomEvent, const bool InWitnessed)
 {
 	if (bool* bWitnessed = RandomEvents.RandomEventsWitnessedMap.Find(InRandomEvent))
 		*bWitnessed = InWitnessed;
@@ -214,7 +226,56 @@ void UGameInstance_OM::IncrementDay()
 	
 	HandleDayEvents();
 }
+void UGameInstance_OM::SetWaveDetails()
+{
+	constexpr int IntenseWaveMultiplier = 1.5f;
+	constexpr int HardWaveMultiplier = 1.25f;
+	switch (CurrentWaveType)
+	{
+	case EDifficultyWaveType::IntenseWave:
+		{
+			SetTempWaveDifficultyMultiplier(IntenseWaveMultiplier);
+			break;
+		}
+	case EDifficultyWaveType::HardWave:
+		{
+			SetTempWaveDifficultyMultiplier(HardWaveMultiplier);
+			break;
+		}
+	case EDifficultyWaveType::RestWave:
+		{
+			break;
+		}
+	default:
+		break;
+	}
+}
+void UGameInstance_OM::Check3DayScore()
+{
+	const int MediumScoreMin = GameScoreSincePreviousCheck + 5;
+	const int MediumScoreMax = GameScoreSincePreviousCheck + 9;
+	const int HighScoreMin = GameScoreSincePreviousCheck + 10;
+	const int HighScoreMax = GameScoreSincePreviousCheck + 14;
+	
+	if (GamePointsData.GamePoints > HighScoreMax)
+	{
+		CurrentWaveType = EDifficultyWaveType::IntenseWave;
+	}
+	else if (GamePointsData.GamePoints >= HighScoreMin && GamePointsData.GamePoints <= HighScoreMax)
+	{
+		CurrentWaveType = EDifficultyWaveType::RestWave;
+	}
+	else if (GamePointsData.GamePoints >= MediumScoreMin && GamePointsData.GamePoints <= MediumScoreMax)
+	{
+		CurrentWaveType = EDifficultyWaveType::RestWave;
+	}
+	else if (GamePointsData.GamePoints < MediumScoreMin)
+	{
+		CurrentWaveType = EDifficultyWaveType::HardWave;
+	}
 
+	SetWaveDetails();
+}
 
 
 void UGameInstance_OM::HandleDayEvents()
@@ -242,11 +303,30 @@ void UGameInstance_OM::HandleDayEvents()
 		case EWeekDay::Sunday:
 			break;
 	}
+	if (DaysSinceScoreChecked >= 3)
+	{
+		Check3DayScore();
+		DaysSinceScoreChecked = 0;
+	}
+	else
+	{
+		DaysSinceScoreChecked++;
+	}
+	
+	if (DaysSinceBaseDifficultyIncreased > 7)
+	{
+		SetBaseDifficultyMultiplier(BaseDifficultyMultiplier + 0.2f);
+		DaysSinceBaseDifficultyIncreased = 0;
+	}
+	else
+	{
+		DaysSinceBaseDifficultyIncreased++;
+	}
 }
 
 void UGameInstance_OM::Payday(const int InMoney)
 {
-	PlayerData.SetMoney(InMoney);
+	SetMoney(InMoney);
 }
 
 FString UGameInstance_OM::GetCurrentDayName() const

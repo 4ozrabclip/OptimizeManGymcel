@@ -24,6 +24,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	};
 	CompleteWorkout.CompletedName = TEXT("Workout FIN :D");
 	CompleteWorkout.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.Workout");
+	CompleteWorkout.Points = 0;
 	TodoArray.Add(CompleteWorkout);
 
 	FTodoItem BuySomething; 
@@ -35,6 +36,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	};
 	BuySomething.CompletedName = TEXT("Buy Something DONE");
 	BuySomething.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething");
+	BuySomething.Points = 0;
 	TodoArray.Add(BuySomething);
 
 	FTodoItem TalkToAGirl;
@@ -46,6 +48,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 		};
 	TalkToAGirl.CompletedName = TEXT("Talked To Girl!!");
 	TalkToAGirl.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.TalkToAGirl");
+	TalkToAGirl.Points = 0;
 	TodoArray.Add(TalkToAGirl);
 
 	FTodoItem BuySteroids;
@@ -57,7 +60,20 @@ void UTodoManagementSubsystem::InitializeTodos()
 	};
 	BuySteroids.CompletedName = TEXT("Buy Steroids DONE");
 	BuySteroids.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySteroids");
+	BuySteroids.Points = 0;
 	TodoArray.Add(BuySteroids);
+
+	FTodoItem StartBulking; // ----- Awaiting Win Condition
+	StartBulking.Name = TEXT("Start a bulk");
+	StartBulking.Level = TEXT("Bedroom");
+	StartBulking.Desc = TEXT("+1 Ego");
+	StartBulking.StatBuffs = {
+		{EPlayerStatTypes::Ego, 0.1f}
+	};
+	StartBulking.CompletedName = TEXT("Started my bulk");
+	StartBulking.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.StartBulking");
+	StartBulking.Points = 0;
+	TodoArray.Add(StartBulking);
 
 	FTodoItem MakeSomeoneLikeYou; 
 	MakeSomeoneLikeYou.Name = TEXT("Make Someone Like You");
@@ -69,8 +85,9 @@ void UTodoManagementSubsystem::InitializeTodos()
 	};
 	MakeSomeoneLikeYou.CompletedName = TEXT("Make Someone Like You DONE");
 	MakeSomeoneLikeYou.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.MakeSomeoneLikeYou");
+	MakeSomeoneLikeYou.Points = 2;
 	TodoArray.Add(MakeSomeoneLikeYou);
-
+	
 	FTodoItem HitTenSquats;
 	HitTenSquats.Name = TEXT("Hit 10 squats in a set");
 	HitTenSquats.Level = TEXT("Gym");
@@ -80,19 +97,22 @@ void UTodoManagementSubsystem::InitializeTodos()
 	};
 	HitTenSquats.CompletedName = TEXT("HIT TEN SQUATS!!");
 	HitTenSquats.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.HitTenSquats");
+	HitTenSquats.Points = 2;
 	TodoArray.Add(HitTenSquats);
 
-	FTodoItem StartBulking; // ----- Awaiting Win Condition
-	StartBulking.Name = TEXT("Start a bulk");
-	StartBulking.Level = TEXT("Bedroom");
-	StartBulking.Desc = TEXT("+1 Ego");
-	StartBulking.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f}
+	FTodoItem IncreaseSquatLift; // --------- Awaiting Win Condition
+	IncreaseSquatLift.Name = TEXT("Increase Squat Lift");
+	IncreaseSquatLift.Level = TEXT("Gym");
+	IncreaseSquatLift.Desc = TEXT("+1 Ego, +1 SexAppeal");
+	IncreaseSquatLift.StatBuffs = {
+		{EPlayerStatTypes::Ego, 0.1f},
+		{EPlayerStatTypes::SexAppeal, 0.1f},
 	};
-	StartBulking.CompletedName = TEXT("Started my bulk");
-	StartBulking.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.StartBulking");
-	TodoArray.Add(StartBulking);
-
+	IncreaseSquatLift.CompletedName = TEXT("INCREASED");
+	IncreaseSquatLift.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.IncreaseSquatLift");
+	IncreaseSquatLift.Points = 2;
+	TodoArray.Add(IncreaseSquatLift);
+	
 	FTodoItem GetARealGirlfriend; // ----- Awaiting Win Condition
 	GetARealGirlfriend.Name = TEXT("Get a real girlfriend");
 	GetARealGirlfriend.Level = TEXT("Gym");
@@ -102,6 +122,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	};
 	GetARealGirlfriend.CompletedName = TEXT("OMG");
 	GetARealGirlfriend.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.GetARealGirlfriend");
+	GetARealGirlfriend.Points = 4;
 	TodoArray.Add(GetARealGirlfriend);
 }
 
@@ -119,7 +140,9 @@ void UTodoManagementSubsystem::AddToPotentialTodos(const ETodoArrayList InTodo)
 }
 void UTodoManagementSubsystem::ProcessPotentialTodos()
 {
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	FInventoryData& InventoryData = GameInstance->GetInventoryData();
+	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
 	PotentialTodos.Empty();
 
@@ -128,32 +151,32 @@ void UTodoManagementSubsystem::ProcessPotentialTodos()
 	AddToPotentialTodos(GetARealGirlfriend);
 
 
-	if (!PlayerData.bIsBulking && GameInstance->GetDayNumber() > 3)
+	if (!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3)
 	{
 		AddToPotentialTodos(StartBulking);
 		
 	}
 
 	// WORKOUT STUFF
-	if (PlayerData.LowerBody > 0 && PlayerData.LowerBody < 0.5)
+	if (BodyStatus.LowerBody > 0 && BodyStatus.LowerBody < 0.5)
 	{
 		AddToPotentialTodos(HitTenSquats);
 	}
 
 
 	// MONEY STUFF
-	if (PlayerData.Money > 5 && !PlayerData.bOwnsSteroids)
+	if (InventoryData.Money > 5 && !InventoryData.bOwnsSteroids)
 	{
 		AddToPotentialTodos(BuySteroids);
 	}
-	else if (PlayerData.Money > 5)
+	else if (InventoryData.Money > 5)
 	{
 		AddToPotentialTodos(BuySomething);
 	}
 
 	
 	//SOCIAL STUFF
-	if (PlayerData.Social <= 0)
+	if (InnerStatus.Social <= 0)
 	{
 		AddToPotentialTodos(TalkToAGirl);
 	}
@@ -291,7 +314,7 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 
 	for (FTodoItem& Item : CurrentTodoArray)
@@ -303,6 +326,8 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 
 			OnTodoComplete.Broadcast();
 
+			if (Item.Points > 0) OnPointsChanged.Broadcast();
+
 			for (TPair<EPlayerStatTypes, float>& TodoStatBuffPair : Item.StatBuffs)
 			{
 				EPlayerStatTypes BuffType = TodoStatBuffPair.Key;
@@ -311,13 +336,13 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 				switch (BuffType)
 				{
 					case EPlayerStatTypes::Ego:
-						PlayerData.AddStat(PlayerData.Ego, BuffAmount);
+						GameInstance->AddStat(InnerStatus.Ego, BuffAmount);
 						break;
 					case EPlayerStatTypes::Social:
-						PlayerData.AddStat(PlayerData.Social, BuffAmount);
+						GameInstance->AddStat(InnerStatus.Social, BuffAmount);
 						break;
 					case EPlayerStatTypes::SexAppeal:
-						PlayerData.AddStat(PlayerData.SexAppeal, BuffAmount);
+						GameInstance->AddStat(InnerStatus.SexAppeal, BuffAmount);
 						break;
 					default:
 						break;

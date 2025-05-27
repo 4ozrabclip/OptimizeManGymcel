@@ -110,7 +110,8 @@ void ALaptop_OM::BuyItem()
 		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	}
 	
-	FPlayerData& PlayerData = GameInstance->GetPlayerData();
+	FInventoryData& InventoryData = GameInstance->GetInventoryData();
+	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 
 
 	constexpr int JawSurgeryPrice = 20;
@@ -132,11 +133,11 @@ void ALaptop_OM::BuyItem()
 	switch (CurrentShopAndBook)
 	{
 	case EShopAndBook::JawSurgery:
-		if ((PlayerData.GetMoney() >= JawSurgeryPrice) && (PlayerData.Jaw <= 1.f - JawSurgeryIncrease))
+		if ((GameInstance->GetMoney() >= JawSurgeryPrice) && (BodyStatus.Jaw <= 1.f - JawSurgeryIncrease))
 		{
-			PlayerData.SetMoney(-JawSurgeryPrice);
-			PlayerData.AddStat(PlayerData.Jaw, JawSurgeryIncrease);
-			PlayerData.SetPossesion(PlayerData.bHasJawSurgery, true);
+			GameInstance->SetMoney(-JawSurgeryPrice);
+			GameInstance->AddStat(BodyStatus.Jaw, JawSurgeryIncrease);
+			GameInstance->SetPossesion(BodyStatus.bHasJawSurgery, true);
 
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
@@ -145,13 +146,13 @@ void ALaptop_OM::BuyItem()
 		}
 		break;
 	case EShopAndBook::Steroids:
-		if ((PlayerData.GetMoney() >= SteroidsPrice) && (!PlayerData.GetOwnsSteroids()))
+		if ((GameInstance->GetMoney() >= SteroidsPrice) && (!InventoryData.bOwnsSteroids))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Buy steroids"));
 			constexpr float SteroidsEgoIncrease = 0.9f;
 			constexpr float SteroidsSexIncrease = 0.9f;
-			PlayerData.SetMoney(-SteroidsPrice);
-			PlayerData.SetPossesion(PlayerData.bOwnsSteroids,true);
+			GameInstance->SetMoney(-SteroidsPrice);
+			GameInstance->SetPossesion(InventoryData.bOwnsSteroids,true);
 
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySteroids"));
@@ -161,11 +162,10 @@ void ALaptop_OM::BuyItem()
 		}
 		break;
 	case EShopAndBook::PreWorkout:
-		if ((PlayerData.GetMoney() >= PreWorkoutPrice) && (!PlayerData.GetOwnsPreWorkout()))
+		if ((GameInstance->GetMoney() >= PreWorkoutPrice) && (!InventoryData.bOwnsPreWorkout))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Buy babycrack"));
-			PlayerData.SetMoney(-PreWorkoutPrice);
-			PlayerData.SetPossesion(PlayerData.bOwnsPreWorkout, true);
+			GameInstance->SetMoney(-PreWorkoutPrice);
+			GameInstance->SetPossesion(InventoryData.bOwnsPreWorkout, true);
 
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
@@ -173,24 +173,24 @@ void ALaptop_OM::BuyItem()
 		}
 		break;
 	case EShopAndBook::ChadPoster:
-		if ((PlayerData.GetMoney() < ChadPosterPrice)) return;
+		if ((GameInstance->GetMoney() < ChadPosterPrice)) return;
 		DoesOwnPosterArray.Empty();
 		DoesOwnPosterArray = GameInstance->GetOwnedChadPosters();
 		if (BuyPoster(DoesOwnPosterArray, ChadPosterType_String))
 		{
-			PlayerData.SetMoney(-ChadPosterPrice);
+			GameInstance->SetMoney(-ChadPosterPrice);
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
 			PlaySound(BuySound);
 		}
 		break;
 	case EShopAndBook::WaifuPoster:
-		if ((PlayerData.GetMoney() < WaifuPosterPrice)) return;
+		if ((GameInstance->GetMoney() < WaifuPosterPrice)) return;
 		DoesOwnPosterArray.Empty();
 		DoesOwnPosterArray = GameInstance->GetOwnedWaifuPosters();
 		if (BuyPoster(DoesOwnPosterArray, WaifuPosterType_String))
 		{
-			PlayerData.SetMoney(-WaifuPosterPrice);
+			GameInstance->SetMoney(-WaifuPosterPrice);
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
 			PlaySound(BuySound);
