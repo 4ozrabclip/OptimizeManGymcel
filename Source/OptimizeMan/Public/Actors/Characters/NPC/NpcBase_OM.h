@@ -13,23 +13,35 @@
 #include "NpcBase_OM.generated.h"
 
 
+class AGymSpeaker_OM;
+class UNPCBodyDeformationsComponent_OM;
+class UPointLightComponent;
 class UBlackboardComponent;
 class UGameAudio_OM;
 class UBehaviorTree;
 class UNpcBaseAnimInstance_OM;
 
-UCLASS(Blueprintable)
+UCLASS(Abstract, Blueprintable)
 class OPTIMIZEMAN_API ANpcBase_OM : public ACharacter, public IInteractableInterface_OM
 {
 	GENERATED_BODY()
 public:
 	ANpcBase_OM();
+	virtual void Interact_Implementation() override;
+protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void Interact_Implementation() override;
 
-	UPROPERTY(EditAnywhere)
-	FString NpcID;
+
+public:
+	void ToggleNpcLookStates();
+	void Talk(USoundBase* InChatAudio) const;
+	void PlayRandomTalkingAnimForMood();
+	FVector LookAtLocation(const float DeltaTime);
+	
+	//Helpers
+	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
+
 
 	//UFUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "NPC Dialogue")
@@ -38,50 +50,82 @@ public:
 	virtual void EndDialog();
 	UFUNCTION(BlueprintCallable)
 	void SayHello() { PlayRandomTalkingHelper(FriendlyHello); }
-	void Talk(USoundBase* InChatAudio) const;
-	
-	
-	void ToggleNpcLookStates();
-	FVector LookAtLocation(const float DeltaTime);
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void CheckAndSetDarkMode();
-	void PlayRandomTalkingAnimForMood();
-	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
+
+protected:
 	
-	UFUNCTION()
-	FName GetUniqueNpcID() const { return FName(NpcID); }
-	UFUNCTION()
-	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; }
-	UFUNCTION()
-	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; }
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
-	EExerciseType CurrentExerciseType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
-	ENpcState CurrentState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
-	ENpcLookStates CurrentLookState;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC Social")
-	ENpcMood CurrentMood;
-	UPROPERTY(EditAnywhere, Category = "NPC Social")
-	FNpcRelationship PlayerRelationship;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerLookAt")
-	FVector DefaultLookAtOffset = FVector::ZeroVector;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerRange")
-	float MaxPlayerLookAtRange;
+	//Widgets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	FText InteractableText;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> InteractableWidget;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
-	class AGymSpeaker_OM* GymSpeaker;
+
+	//Locomation Params
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Walk Speed")
 	float WalkSpeed;
-
+	
+	//Unique ID
+	UPROPERTY(EditAnywhere)
+	FString NpcID;
+	
+	//Level Streaming
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
 	TArray<TSoftObjectPtr<class AExerciseEquipment_OM>> EquipmentInLevel;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
+	TArray<TSoftObjectPtr<ANpcBase_OM>> NpcsInLevel;
+	
+	
+	//Objects
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	AGymSpeaker_OM* GymSpeaker;
 
-protected: //Audio Stuff
+	//Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AuraLight")
+	UPointLightComponent* AuraLight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	UGameAudio_OM* TalkingAudioComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deformation")
+	UNPCBodyDeformationsComponent_OM* DeformationComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
+	UNpcBaseAnimInstance_OM* AnimInstance;
+
+	//AI
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta=(AllowPrivateAccess=true))
+	UBehaviorTree* Tree;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta=(AllowPrivateAccess=true))
+	UBlackboardComponent* Blackboard;
+
+
+	//States
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
+	ENpcState CurrentState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
+	ENpcLookStates CurrentLookState;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta=(AllowPrivateAccess=true))
+	ENpcState ExitDialogueState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC Social")
+	ENpcMood CurrentMood;
+	UPROPERTY(EditAnywhere, Category = "NPC Social")
+	FNpcRelationship PlayerRelationship;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NPC State")
+	EExerciseType CurrentExerciseType;
+
+	//LookState
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerRange")
+	float MaxPlayerLookAtRange;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerLookAt")
+	FVector DefaultLookAtOffset = FVector::ZeroVector;
+
+	
+	// Gameplay Tags
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameplayTags")
+	FGameplayTagContainer ActiveTags;
+
+
+
+	// Audio And Animation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conversation")
 	TMap<USoundBase*, UAnimMontage*> AngryChats;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conversation")
@@ -109,37 +153,14 @@ protected: //Audio Stuff
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 	TArray<USoundBase*> HelloTalking_Sounds;
 
-protected: //Anim stuff
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-	UNpcBaseAnimInstance_OM* AnimInstance;
-
-protected: //AI stuff
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta=(AllowPrivateAccess=true))
-	UBehaviorTree* Tree;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta=(AllowPrivateAccess=true))
-	UBlackboardComponent* Blackboard;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta=(AllowPrivateAccess=true))
-	ENpcState ExitDialogueState;
-
-protected: //Components
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AuraLight")
-	class UPointLightComponent* AuraLight;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
-	UGameAudio_OM* TalkingAudioComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deformation")
-	class UNPCBodyDeformationsComponent_OM* DeformationComponent;
-
-
-protected: // Gameplay Tags
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameplayTags")
-	FGameplayTagContainer ActiveTags;
-
-public: //Getters and Setters
-
-	UFUNCTION()
+public:
+	//GETTERS AND SETTERS
+	UFUNCTION(BlueprintCallable)
+	FName GetUniqueNpcID() const { return FName(NpcID); }
+	UFUNCTION(BlueprintCallable)
 	TArray<TSoftObjectPtr<AExerciseEquipment_OM>> GetEquipmentInLevel() { return EquipmentInLevel; };
-
+	UFUNCTION(BlueprintCallable)
+	TArray<TSoftObjectPtr<ANpcBase_OM>> GetNpcsInLevel() { return NpcsInLevel; };
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	bool GetPlayerCanInteract() const { return bCanInteract; }
 	UFUNCTION(BlueprintCallable)
@@ -148,32 +169,33 @@ public: //Getters and Setters
 	ENpcRelationshipState GetCurrentRelationshipState();
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	ENpcMood GetCurrentMood() const { return CurrentMood;};
-	UFUNCTION()
-	float GetCurrentTalkTime() const { return CurrentTalkTime; }
-	UFUNCTION()
-	UBehaviorTree* GetBehaviorTree() const { return Tree; };
-	UFUNCTION()
-	UNpcBaseAnimInstance_OM* GetAnimInstance();
-	UFUNCTION()
-	EExerciseType GetCurrentExerciseType() const { return CurrentExerciseType; };
-	UFUNCTION()
-	ENpcState GetCurrentState() const { return CurrentState; };
-
-	UFUNCTION()
-	void SetCurrentExerciseType(const EExerciseType InExerciseType) { CurrentExerciseType = InExerciseType; }
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	virtual void SetCurrentMood(ENpcMood InMood) { CurrentMood = InMood;};
 	UFUNCTION(BlueprintCallable, Category = "NPC States")
 	void SetCurrentState(const ENpcState InState);
-	UFUNCTION()
-	virtual void SetFriendshipLevel(const float InAmount, const bool bReset = false);
-	UFUNCTION()
-	void SetHasMetPlayer(const bool InHasMet) { PlayerRelationship.bHasMetPlayer = InHasMet; }
+	UFUNCTION(BlueprintCallable, Category = "NPC States")
+	ENpcState GetCurrentState() const { return CurrentState; };
+	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; }
+	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; }
+	float GetCurrentTalkTime() const { return CurrentTalkTime; }
+	UBehaviorTree* GetBehaviorTree() const { return Tree; };
+	UNpcBaseAnimInstance_OM* GetAnimInstance();
+	EExerciseType GetCurrentExerciseType() const { return CurrentExerciseType; };
+	bool GetIsOpenForConversation() const { return bOpenForConversationWithOtherNpcs; }
+	bool GetIsInConversationWithNpc() const { return bIsInConversationWithOtherNpc;}
 
-	UFUNCTION()
+	void SetIsInConversationWithNpc(const bool bIsInConvo) { bIsInConversationWithOtherNpc = bIsInConvo; };
+	void SetIsOpenForConversation(const bool bInOpenForConversation) { bOpenForConversationWithOtherNpcs = bInOpenForConversation; }
+	
+	void SetCurrentExerciseType(const EExerciseType InExerciseType) { CurrentExerciseType = InExerciseType; }
+	virtual void SetFriendshipLevel(const float InAmount, const bool bReset = false);
+	void SetHasMetPlayer(const bool InHasMet) { PlayerRelationship.bHasMetPlayer = InHasMet; }
 	AActor* GetCurrentInteractedItem() const { return CurrentInteractedItem; }
-	UFUNCTION()
 	void SetCurrentInteractedItem(AActor* InItem) { CurrentInteractedItem = InItem; }
+
+	TSoftObjectPtr<ANpcBase_OM> GetCurrentInteractedNpc() const { return CurrentInteractedNpc; }
+	void SetCurrentInteractedNpc(ANpcBase_OM* InNpc);
+
 
 private:
 	UPROPERTY()
@@ -184,23 +206,28 @@ private:
 	APlayerController* PlayerController;
 	UPROPERTY()
 	FVector SmoothedLookAtLocation;
+	UPROPERTY()
 	FVector DistanceFromPlayerVector;
-
 	UPROPERTY()
 	AActor* CurrentInteractedItem;
+	UPROPERTY()
+	TSoftObjectPtr<ANpcBase_OM> CurrentInteractedNpc;
 	
 	bool bCanInteract;
 	bool bIsInDialogue;
 	bool bHasMogFace = false;
 	bool bIsMoving = false;
 	bool bLookStateToggleOpen = true;
+	bool bOpenForConversationWithOtherNpcs = false;
+	bool bIsInConversationWithOtherNpc = false;
 
+	int CurrentBiquadFrequency = 20000;
 	
 	float DistanceFromPlayerValue;
 	float CurrentTalkTime = 3.f;
 	float CurrentMusicPitch = 0.f;
-	
-	int CurrentBiquadFrequency = 20000;
+
+
 	
 };
 

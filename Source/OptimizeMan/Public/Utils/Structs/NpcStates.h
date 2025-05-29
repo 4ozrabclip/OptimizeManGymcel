@@ -20,6 +20,7 @@ enum class ENpcState : uint8
 	Walking UMETA(DisplayName = "Walking"),
 	Talking UMETA(DisplayName = "Talking"),
 	GoingToWorkout UMETA(DisplayName = "GoingToWorkout"),
-	WorkingOut UMETA(DisplayName = "WorkingOut")
+	WorkingOut UMETA(DisplayName = "WorkingOut"),
+	TalkingWithNpc UMETA(DisplayName = "TalkingWithNpc")
 };
 

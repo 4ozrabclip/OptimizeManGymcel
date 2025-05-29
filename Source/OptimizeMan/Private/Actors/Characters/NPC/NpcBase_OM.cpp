@@ -114,9 +114,9 @@ void ANpcBase_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	ToggleNpcLookStates();
-	
 
-	if (Player && bIsInDialogue)
+	if (!Player) return;
+	if (bIsInDialogue)
 	{
 		if (PlayerRelationship.RelationshipState == ENpcRelationshipState::HatesYou && !bHasMogFace && DeformationComponent)
 		{
@@ -134,8 +134,12 @@ void ANpcBase_OM::Tick(float DeltaTime)
 			GymSpeaker->ChangePitch(CurrentMusicPitch);
 		}
 	}
-	
+	else if (bOpenForConversationWithOtherNpcs && GetCurrentState() != ENpcState::TalkingWithNpc)
+	{
+		SetCurrentState(ENpcState::TalkingWithNpc);
+	}
 }
+
 UNpcBaseAnimInstance_OM* ANpcBase_OM::GetAnimInstance()
 {
 	return AnimInstance;
@@ -281,6 +285,7 @@ void ANpcBase_OM::EndDialog()
 	//SetActorTickEnabled(false);
 }
 
+
 void ANpcBase_OM::SetFriendshipLevel(const float InAmount, const bool bReset)
 {
 	if (bReset)
@@ -292,6 +297,26 @@ void ANpcBase_OM::SetFriendshipLevel(const float InAmount, const bool bReset)
 		PlayerRelationship.FriendshipLevel = FMath::Clamp(PlayerRelationship.FriendshipLevel + InAmount, -1.f, 1.f);
 	}
 
+}
+
+void ANpcBase_OM::SetCurrentInteractedNpc(ANpcBase_OM* InNpc)
+{
+	CurrentInteractedNpc = InNpc;
+
+	if (auto* AICont = Cast<ANPC_AIController_OM>(GetController()))
+	{
+		if (UBlackboardComponent* BB = AICont->GetBlackboardComponent())
+		{
+			BB->SetValueAsObject(FName("Current Interacted Npc"), CurrentInteractedNpc.Get());
+
+			FVector TargetLocation = FVector(
+								static_cast<int16>(CurrentInteractedNpc->GetActorLocation().X),
+								static_cast<int16>(CurrentInteractedNpc->GetActorLocation().Y),
+								9.65f);
+			
+			BB->SetValueAsVector(FName("Target Location"), TargetLocation);
+		}
+	}
 }
 
 void ANpcBase_OM::SetCurrentState(const ENpcState InState)
@@ -308,6 +333,7 @@ void ANpcBase_OM::SetCurrentState(const ENpcState InState)
 		}
 	}
 }
+
 
 void ANpcBase_OM::Talk(USoundBase* InChatAudio) const
 {

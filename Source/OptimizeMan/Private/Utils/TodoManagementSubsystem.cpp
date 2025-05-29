@@ -149,43 +149,25 @@ void UTodoManagementSubsystem::ProcessPotentialTodos()
 	AddToPotentialTodos(CompleteWorkout);
 
 	AddToPotentialTodos(GetARealGirlfriend);
-
-
-	if (!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3)
-	{
-		AddToPotentialTodos(StartBulking);
-		
-	}
-
-	// WORKOUT STUFF
-	if (BodyStatus.LowerBody > 0 && BodyStatus.LowerBody < 0.5)
-	{
-		AddToPotentialTodos(HitTenSquats);
-	}
-
-
-	// MONEY STUFF
-	if (InventoryData.Money > 5 && !InventoryData.bOwnsSteroids)
-	{
-		AddToPotentialTodos(BuySteroids);
-	}
-	else if (InventoryData.Money > 5)
-	{
-		AddToPotentialTodos(BuySomething);
-	}
-
 	
-	//SOCIAL STUFF
-	if (InnerStatus.Social <= 0)
-	{
-		AddToPotentialTodos(TalkToAGirl);
-	}
-	else
-	{
-		AddToPotentialTodos(MakeSomeoneLikeYou);
-	}
+	ProcessTodoHelper(!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3, StartBulking);
+	
+	ProcessTodoHelper(BodyStatus.LowerBody > 0 && BodyStatus.LowerBody < 0.5, HitTenSquats);
+	
+	ProcessTodoHelper(InventoryData.Money > 5 && !InventoryData.bOwnsSteroids, BuySteroids);
+	ProcessTodoHelper(InventoryData.Money > 0 && InventoryData.bOwnsSteroids, BuySomething);
+	
+
+	ProcessTodoHelper(InnerStatus.Social <= 0, TalkToAGirl);
+	ProcessTodoHelper(InnerStatus.Social >0, MakeSomeoneLikeYou);
 
 	Algo::RandomShuffle(PotentialTodos);
+}
+
+void UTodoManagementSubsystem::ProcessTodoHelper(bool bTodoCondition, const ETodoArrayList InTodo)
+{
+	if (bTodoCondition)
+		AddToPotentialTodos(InTodo);
 }
 
 void UTodoManagementSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -198,12 +180,10 @@ void UTodoManagementSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 }
 
   
-// ------- THIS WHOLE THING IS SUS.   SUSS IT OUT!!!!! <---------------------------------------------
+// ------- THIS WHOLE THING IS SUS.   SUSS IT OUT!!!!! <-------------------------------------------------
 void UTodoManagementSubsystem::TimerToTryCasts()
 {
 	GetWorld()->GetTimerManager().ClearTimer(InitializeVariablesHandle);
-
-	UE_LOG(LogTemp, Warning, TEXT("Timer to Try Casts CALLED!~!!!!!~!~"));
 	
 	GetWorld()->GetTimerManager().SetTimer(
 		InitializeVariablesHandle,
@@ -218,22 +198,17 @@ void UTodoManagementSubsystem::TryCasts()
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!Player)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Player NUll in Todomanagement init"));
 		TimerToTryCasts();
 		return;
 	}
 	
-
 	NotificationAudio = Cast<UNotificationAudio_OM>(Player->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
 	if (!NotificationAudio)
 	{
-		UE_LOG(LogTemp, Error, TEXT("No Notification Audio in TodoManagement Init"));
 		TimerToTryCasts();
 		return;
 	}
 }
-
-// ------------------------------------------------------------------------------------------------
 
 
 void UTodoManagementSubsystem::SetCurrentTodos(const FString& Todo1, const FString& Todo2, const FString& Todo3)
@@ -267,8 +242,7 @@ void UTodoManagementSubsystem::AddToCurrentTodos(const FString& InTodo, const bo
 		UE_LOG(LogTemp, Error, TEXT("Cant add anymore to current todo array.  Just clear it with the boolean parameter? "));
 		return;
 	}
-	
-	// ELSE JUST ADD IT TO THE CURRENT TODO ARRAY IF IT IS IN THE TODO ARRAY
+
 	
 	for (const FTodoItem& Item : TodoArray)
 	{
@@ -356,8 +330,6 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 			break;
 		}
 	}
-	
-	UE_LOG(LogTemp, Display, TEXT("CompleteTodo Func finished"));
 
 	
 }
@@ -386,10 +358,8 @@ bool UTodoManagementSubsystem::CurrentTodoListContainsLayer(const FString& InLay
 	{
 		if (Item.Level == InLayer && Item.bIsCompleted == InIsComplete)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Function called boolean success CTLCL"));
 			return true;
 		}
 	}
-	UE_LOG(LogTemp, Error, TEXT("Function called boolean failed CTLCL"));
 	return false;
 }

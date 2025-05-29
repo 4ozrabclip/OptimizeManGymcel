@@ -21,7 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGymStatsChanged);
 
 class APoster_OM;
 UCLASS(BlueprintType)
-class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance
+class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance 
 {
 	GENERATED_BODY()
 	
@@ -32,10 +32,6 @@ public: // Initialization
 	void InitializePostersOwned();
 	void InitializeGameSettings();
 	void InitializePlayerData();
-
-
-
-
 
 
 public: //delegates
@@ -72,10 +68,6 @@ protected:
 	FDayInfo DayInfo;
 
 public:
-	
-
-
-
 //General Non-UFUNCS
 	void SetWaveDetails();
 	void Check3DayScore();
@@ -91,7 +83,6 @@ public:
 	void Payday(const int InMoney);
 	UFUNCTION(Category = "Save System")
 	void ResetAllSaves();
-
 
 //Day Info
 	UFUNCTION()
@@ -120,10 +111,8 @@ public:
 	{
 		bPossesable = bInPossesion;
 	}
+
 	
-
-
-
 //General Getters/Setters
 	float GetBaseDifficultyMultiplier() const { return BaseDifficultyMultiplier; }
 	void SetBaseDifficultyMultiplier(const float InMultiplier) { BaseDifficultyMultiplier = InMultiplier; }
@@ -152,8 +141,6 @@ public:
 	void SetHasInteractedInitial(const bool InHasInteractedInitial) { bHasInteractedInitial = InHasInteractedInitial; }
 
 	
-
-
 //Game Settings
 	UFUNCTION(BlueprintCallable)
 	FGameSettings& GetGameSettings() { return GameSettings; }
@@ -170,7 +157,7 @@ public:
 //Gym Res Stats
 	UFUNCTION(BlueprintCallable)
 	FGymResStats& GetGymResStats() { return GymResStats; }
-		
+	
 	UFUNCTION()
 	void AddGymResStats(float& Stat, float Value);
 	UFUNCTION()
@@ -247,12 +234,10 @@ private:
 	bool bHasInteractedInitial;
 
 	float BaseDifficultyMultiplier = 1.f;
-
 	float TempWaveDifficultyMultiplier = 1.f;
 
 	int DaysSinceBaseDifficultyIncreased = 0;
 	int DaysSinceScoreChecked = 0;
-
 	int GameScoreSincePreviousCheck = 0;
 	
 
