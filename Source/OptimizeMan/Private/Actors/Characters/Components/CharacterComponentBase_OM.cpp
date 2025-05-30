@@ -5,6 +5,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
+#include "Kismet/GameplayStatics.h"
 #include "Utils/GameInstance_OM.h"
 #include "Utils/TodoManagementSubsystem.h"
 
@@ -37,7 +38,7 @@ void UCharacterComponentBase_OM::BeginPlay()
 		return;
 	}
 	
-	Player = Cast<APlayerCharacter_OM>(GetOwner());
+	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!Player)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player is NULL in Character Component base"));

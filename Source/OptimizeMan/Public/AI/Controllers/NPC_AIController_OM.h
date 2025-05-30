@@ -24,13 +24,11 @@ public:
 private:
 	void ActivityChangeDiceRoll();
 
-protected:
-
-
 
 private:
 	UPROPERTY()
 	ANpcBase_OM* Npc;
 
 	float TimeSinceLastActivityChange = 0.f;
+	float RandDurationBetweenRolls = 10.f;
 };

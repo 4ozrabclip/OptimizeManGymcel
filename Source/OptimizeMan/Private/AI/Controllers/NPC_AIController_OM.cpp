@@ -7,21 +7,26 @@
 ANPC_AIController_OM::ANPC_AIController_OM(const FObjectInitializer& ObjectInitializer)
 {
 	Npc = nullptr;
+
+	PrimaryActorTick.bCanEverTick = true;
+	
 	
 }
 
 void ANPC_AIController_OM::BeginPlay()
 {
 	Super::BeginPlay();
-
-	SetActorTickEnabled(false);
+	
 }
 
 void ANPC_AIController_OM::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (!Npc) return;
+	if (!Npc)
+	{
+		UE_LOG(LogTemp, Error, TEXT("NPC_AIController_OM::Tick No NPC"));
+	}
 
 	UE_LOG(LogTemp, Warning, TEXT("%.2f"), TimeSinceLastActivityChange);
 
@@ -30,7 +35,7 @@ void ANPC_AIController_OM::Tick(float DeltaSeconds)
 	{
 		TimeSinceLastActivityChange += DeltaSeconds;
 
-		if (TimeSinceLastActivityChange >= 5.f)
+		if (TimeSinceLastActivityChange >= RandDurationBetweenRolls)
 		{
 			ActivityChangeDiceRoll();
 		}
@@ -44,41 +49,44 @@ void ANPC_AIController_OM::Tick(float DeltaSeconds)
 
 void ANPC_AIController_OM::ActivityChangeDiceRoll()
 {
-	int DiceRoll = FMath::RandRange(1, 3);
-	
+	int DiceRoll = FMath::RandRange(1, 8);
 
+	UE_LOG(LogTemp, Display, TEXT("DiceRoll: %d"), DiceRoll);
+	
 	switch (DiceRoll)
 	{
 		case 1:
-			UE_LOG(LogTemp, Warning, TEXT("DICE ROLL WALKING"));
+		case 2:
+		case 3:
+		case 4:
+		case 5:
 			Npc->SetCurrentState(ENpcState::Walking);
 			break;
-		case 2:
-			UE_LOG(LogTemp, Warning, TEXT("DICE ROLL Talking"));
+		case 6:
 			Npc->SetIsOpenForConversation(true);
 			Npc->SetCurrentState(ENpcState::TalkingWithNpc);
 			break;
-		case 3:
-			UE_LOG(LogTemp, Warning, TEXT("DICE ROLL Working Out"));
-			Npc->SetCurrentState(ENpcState::WorkingOut);
+		case 7:
+		case 8:
+			if (Npc->GetCurrentState() == ENpcState::TalkingWithNpc)
+				Npc->SetCurrentState(ENpcState::Walking);
+			else
+				Npc->SetCurrentState(ENpcState::WorkingOut);
 			break;
 		default:
 			break;
 	}
 	TimeSinceLastActivityChange = 0.f;
-	
+	RandDurationBetweenRolls = FMath::RandRange(10.f, 20.f);
 }
 void ANPC_AIController_OM::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	UE_LOG(LogTemp, Error, TEXT("POSSESS CALLED"));
 	Npc = Cast<ANpcBase_OM>(InPawn);
 	if (Npc)
 	{
-		UE_LOG(LogTemp, Error, TEXT("NPC CASTED ON POSSESS "));
 		if (auto* Tree = Npc->GetBehaviorTree())
 		{
-			UE_LOG(LogTemp, Error, TEXT("BB COMPONENT FOUND"));
 			UBlackboardComponent* b;
 			UseBlackboard(Tree->BlackboardAsset, b);
 			Blackboard = b;

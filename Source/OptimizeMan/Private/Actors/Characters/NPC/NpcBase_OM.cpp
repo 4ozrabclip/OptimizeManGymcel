@@ -21,6 +21,7 @@
 ANpcBase_OM::ANpcBase_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 	CurrentState = ENpcState::Idle;
 	CurrentLookState = ENpcLookStates::Idle;
 	CurrentMood = ENpcMood::Neutral;
@@ -133,10 +134,6 @@ void ANpcBase_OM::Tick(float DeltaTime)
 			CurrentMusicPitch = FMath::Clamp(CurrentMusicPitch, -1.f, 1.f);
 			GymSpeaker->ChangePitch(CurrentMusicPitch);
 		}
-	}
-	else if (bOpenForConversationWithOtherNpcs && GetCurrentState() != ENpcState::TalkingWithNpc)
-	{
-		SetCurrentState(ENpcState::TalkingWithNpc);
 	}
 }
 

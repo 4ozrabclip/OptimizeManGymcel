@@ -21,7 +21,7 @@ class UGameAudio_OM;
 class UBehaviorTree;
 class UNpcBaseAnimInstance_OM;
 
-UCLASS(Abstract, Blueprintable)
+UCLASS(Blueprintable)
 class OPTIMIZEMAN_API ANpcBase_OM : public ACharacter, public IInteractableInterface_OM
 {
 	GENERATED_BODY()
@@ -197,7 +197,7 @@ public:
 	void SetCurrentInteractedNpc(ANpcBase_OM* InNpc);
 
 
-private:
+protected:
 	UPROPERTY()
 	class APlayerCharacter_OM* Player;
 	UPROPERTY()
@@ -212,6 +212,8 @@ private:
 	AActor* CurrentInteractedItem;
 	UPROPERTY()
 	TSoftObjectPtr<ANpcBase_OM> CurrentInteractedNpc;
+
+private:
 	
 	bool bCanInteract;
 	bool bIsInDialogue;
