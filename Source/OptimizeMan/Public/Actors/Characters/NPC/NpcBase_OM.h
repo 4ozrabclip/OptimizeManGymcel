@@ -21,7 +21,9 @@ class UGameAudio_OM;
 class UBehaviorTree;
 class UNpcBaseAnimInstance_OM;
 
-UCLASS(Blueprintable)
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNpcStateChanged);
+
+UCLASS(Abstract, Blueprintable)
 class OPTIMIZEMAN_API ANpcBase_OM : public ACharacter, public IInteractableInterface_OM
 {
 	GENERATED_BODY()
@@ -52,6 +54,11 @@ public:
 	void SayHello() { PlayRandomTalkingHelper(FriendlyHello); }
 	UFUNCTION(BlueprintCallable)
 	void CheckAndSetDarkMode();
+
+
+	//Delegates
+	//UPROPERTY(BlueprintAssignable, Category = "Events")
+	//FOnNpcStateChanged OnNpcStateChanged;
 
 protected:
 	

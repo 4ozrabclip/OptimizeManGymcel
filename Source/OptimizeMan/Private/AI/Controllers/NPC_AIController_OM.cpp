@@ -27,8 +27,7 @@ void ANPC_AIController_OM::Tick(float DeltaSeconds)
 	{
 		UE_LOG(LogTemp, Error, TEXT("NPC_AIController_OM::Tick No NPC"));
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("%.2f"), TimeSinceLastActivityChange);
+	
 
 	// ---- This will not be walking in the future
 	if (Npc->GetCurrentState() == ENpcState::Walking)
@@ -58,16 +57,18 @@ void ANPC_AIController_OM::ActivityChangeDiceRoll()
 		case 1:
 		case 2:
 		case 3:
-		case 4:
-		case 5:
+			Npc->SetIsOpenForConversation(false);
 			Npc->SetCurrentState(ENpcState::Walking);
 			break;
+		case 4:
+		case 5:
 		case 6:
 			Npc->SetIsOpenForConversation(true);
 			Npc->SetCurrentState(ENpcState::TalkingWithNpc);
 			break;
 		case 7:
 		case 8:
+			Npc->SetIsOpenForConversation(false);
 			if (Npc->GetCurrentState() == ENpcState::TalkingWithNpc)
 				Npc->SetCurrentState(ENpcState::Walking);
 			else

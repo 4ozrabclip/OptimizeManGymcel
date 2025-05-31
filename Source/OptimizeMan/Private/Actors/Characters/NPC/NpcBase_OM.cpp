@@ -92,7 +92,6 @@ void ANpcBase_OM::BeginPlay()
 	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OM::CheckAndSetDarkMode);
 
 	CheckAndSetDarkMode();
-
 	
 
 	InteractableInterfaceProperties.InteractableText = InteractableText;
@@ -137,10 +136,6 @@ void ANpcBase_OM::Tick(float DeltaTime)
 	}
 }
 
-UNpcBaseAnimInstance_OM* ANpcBase_OM::GetAnimInstance()
-{
-	return AnimInstance;
-}
 void ANpcBase_OM::ToggleNpcLookStates()
 {
 	ENpcLookStates NewState = ENpcLookStates::LookingAtPlayer;
@@ -162,6 +157,10 @@ void ANpcBase_OM::ToggleNpcLookStates()
 		{
 			NewState = ENpcLookStates::LookingAtItem;
 		}
+	}
+	else if (CurrentState == ENpcState::TalkingWithNpc && CurrentInteractedNpc)
+	{
+		NewState = ENpcLookStates::LookingAtNpc;
 	}
 	else if (GetFriendshipLevel() < -0.6f && GetFriendshipLevel() > -1.f)
 	{
@@ -203,6 +202,10 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 		case ENpcLookStates::LookingAtItem:
 			if (CurrentInteractedItem)
 				TargetLookAtLocation = CurrentInteractedItem->GetActorLocation();
+			break;
+		case ENpcLookStates::LookingAtNpc:
+			if (CurrentInteractedNpc)
+				TargetLookAtLocation = CurrentInteractedNpc->GetActorLocation();
 			break;
 		default:
 			TargetLookAtLocation = GetActorLocation() + DefaultLookAtOffset;
@@ -319,6 +322,11 @@ void ANpcBase_OM::SetCurrentInteractedNpc(ANpcBase_OM* InNpc)
 void ANpcBase_OM::SetCurrentState(const ENpcState InState)
 {
 	CurrentState = InState;
+
+	if (CurrentState != ENpcState::Talking)
+	{
+		SetIsOpenForConversation(false);
+	}
 	
 	if (auto* AICont = Cast<ANPC_AIController_OM>(GetController()))
 	{
@@ -329,6 +337,7 @@ void ANpcBase_OM::SetCurrentState(const ENpcState InState)
 			BB->ClearValue(FName("TargetLocation"));
 		}
 	}
+	//OnNpcStateChanged.Broadcast();
 }
 
 
@@ -421,4 +430,9 @@ void ANpcBase_OM::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InCh
 	{
 		Talk(AudioToPlay);
 	}
+}
+
+UNpcBaseAnimInstance_OM* ANpcBase_OM::GetAnimInstance()
+{
+	return AnimInstance;
 }

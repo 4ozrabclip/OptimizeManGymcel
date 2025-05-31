@@ -36,13 +36,16 @@ void AGymGameModeBase_OM::BeginPlay()
 	}
 
 
-	
-	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(Player->GetController()))
+	if (GetWorld()->IsGameWorld())
 	{
-		PlayerController->SetGymHud();
-		SetActorTickEnabled(true);
+		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(Player->GetController()))
+		{
+			PlayerController->SetGymHud();
+			SetActorTickEnabled(true);
+		}
 	}
+
 }
 
 void AGymGameModeBase_OM::Tick(float DeltaTime)

@@ -8,7 +8,7 @@
 /*
  * Parent of all exercise equipment
  */
-UCLASS()
+UCLASS(Abstract)
 class OPTIMIZEMAN_API AExerciseEquipment_OM : public AInteractableActor_OM
 {
 	GENERATED_BODY()

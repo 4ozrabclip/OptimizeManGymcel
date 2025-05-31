@@ -93,14 +93,12 @@ void UNpcBaseAnimInstance_OM::SetIsInSquatPosition(const bool InIsInSquatPositio
 		bIsInOverheadPressPosition = false;
 		bIsInLeftCurlPosition = false;
 		bIsInRightCurlPosition = false;
-		
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Set is in squat position false"));
 	}
 	bIsInSquatPosition = InIsInSquatPosition;
-
 }
 
 void UNpcBaseAnimInstance_OM::SetIsInCurlPosition(bool InIsInCurlPosition)
