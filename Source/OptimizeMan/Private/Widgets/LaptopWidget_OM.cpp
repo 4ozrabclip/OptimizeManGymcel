@@ -82,14 +82,15 @@ void ULaptopWidget_OM::InitButtons()
     YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
     BuyDickPumpBackButton->OnClicked.RemoveAll(this);
     BuyDickPumpBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
+	
     GeneralStoreBackButton->OnClicked.RemoveAll(this);
     GeneralStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
 	MusicStoreBackButton->OnClicked.RemoveAll(this);
-	MusicStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
+	MusicStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreChildBackButtonClicked);
 	SupplyStoreBackButton->OnClicked.RemoveAll(this);
-	SupplyStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
+	SupplyStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreChildBackButtonClicked);
 	PosterStoreBackButton->OnClicked.RemoveAll(this);
-	PosterStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
+	PosterStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreChildBackButtonClicked);
 
 
 	if (!BuySteroidsButton || !BuyBabyCrackButton || !JawSurgeryButton ||
@@ -112,14 +113,14 @@ void ULaptopWidget_OM::InitButtons()
 	AnimeGirlPosterBuyButton->OnClicked.RemoveAll(this);
 	AnimeGirlPosterBuyButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::WaifuPosterBuyButtonClicked);
 }
-void ULaptopWidget_OM::OpenPage(const EWebsites InWebsite, UOverlay* PageToOpenOverlay, UGridPanel* PageToOpenGrid)
+void ULaptopWidget_OM::OpenPage(const EWebsites InWebsite, UOverlay* PageToOpenOverlay, UGridPanel* PageToOpenGrid, bool bLog)
 {
 	OpenPageHelper(InWebsite, PageToOpenOverlay, PageToOpenGrid);
 	if (InWebsite == EWebsites::Bank)
 	{
 		WebsiteHistoryLog.Empty();
 	}
-	if (InWebsite != EWebsites::SupplyStore && InWebsite != EWebsites::PosterStore && InWebsite != EWebsites::MusicStore)
+	if (InWebsite != EWebsites::SupplyStore && InWebsite != EWebsites::PosterStore && InWebsite != EWebsites::MusicStore && bLog)
 	{
 		WebsiteHistoryLog.Add(InWebsite);
 	}
@@ -279,7 +280,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		{
 			/*SupplementsShopBackButton->OnClicked.RemoveAll(this);
 			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);*/
-			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
+			//SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
 			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
 			GenrAdv_H_Text->SetText(FText::FromString("Bank"));

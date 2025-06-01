@@ -47,6 +47,15 @@ void AInteractableActor_OM::BeginPlay()
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 }
 
+void AInteractableActor_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearAllTimersForObject(this);
+	}
+}
+
 void AInteractableActor_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

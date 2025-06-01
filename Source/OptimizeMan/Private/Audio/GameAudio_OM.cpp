@@ -24,6 +24,16 @@ void UGameAudio_OM::BeginPlay()
 	}
 }
 
+void UGameAudio_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearAllTimersForObject(this);
+	}
+}
+
 void UGameAudio_OM::GetAndSetVolume()
 {
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))

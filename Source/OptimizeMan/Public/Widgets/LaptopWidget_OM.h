@@ -27,7 +27,7 @@ public:
 	void InitButtons();
 
 private:
-	void OpenPage(const EWebsites InWebsite, UOverlay* PageToOpenOverlay = nullptr, UGridPanel* PageToOpenGrid = nullptr);
+	void OpenPage(const EWebsites InWebsite, UOverlay* PageToOpenOverlay = nullptr, UGridPanel* PageToOpenGrid = nullptr, bool bLog = true);
 	void OpenPageHelper(EWebsites InWebsite, UOverlay* PageToOpenOverlay, UGridPanel* PageToOpenGrid);
 	void OpenPageFromBackButton(const EWebsites InWebsite, UOverlay* PageToOpenOverlay = nullptr, UGridPanel* PageToOpenGrid = nullptr);
 
@@ -49,17 +49,19 @@ protected: //UFUNCS
 	UFUNCTION()
 	void BackButtonClicked();
 	UFUNCTION()
-    void PlasticSurgeryButtonClicked() { OpenPage(PlasticSurgeryShop, PlasticSurgeryLayers); }
-    UFUNCTION()
-    void BankButtonClicked() { OpenPage(Bank, BankLayers); }
-    UFUNCTION()
-    void ForSkanButtonClicked() { OpenPage(ForSkanForum, ForSkanLayers); }
-    UFUNCTION()
-    void SupplementsShopButtonClicked() { OpenPage(SupplementsShop, SupplementsShopLayers); }
-    UFUNCTION()
-    void YourHeavenXButtonClicked() { OpenPage(CornSite, YourHeavenXLayers, YourHeavenXHomeGrid); }
+	void PlasticSurgeryButtonClicked() { OpenPage(PlasticSurgeryShop, PlasticSurgeryLayers); }
+	UFUNCTION()
+	void BankButtonClicked() { OpenPage(Bank, BankLayers); }
+	UFUNCTION()
+	void ForSkanButtonClicked() { OpenPage(ForSkanForum, ForSkanLayers); }
+	UFUNCTION()
+	void SupplementsShopButtonClicked() { OpenPage(SupplementsShop, SupplementsShopLayers); }
+	UFUNCTION()
+	void YourHeavenXButtonClicked() { OpenPage(CornSite, YourHeavenXLayers, YourHeavenXHomeGrid); }
 	UFUNCTION()
 	void DickPumpSiteButtonClicked() { OpenPage(CornSite, YourHeavenXLayers, BuyDickPumpGrid); }
+	UFUNCTION()
+	void GeneralStoreChildBackButtonClicked() { OpenPage(GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid, false);}
     UFUNCTION()
     void GeneralStoreButtonClicked() { OpenPage(GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid); }
     UFUNCTION()

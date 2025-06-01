@@ -11,14 +11,17 @@ enum class EAudioTypes : uint8;
 /**
  * 
  */
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class OPTIMIZEMAN_API UGameAudio_OM : public UAudioComponent
 {
 	GENERATED_BODY()
-
 public:
 	UGameAudio_OM();
+protected:
 	virtual void BeginPlay() override;
+public:
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 	void GetAndSetVolume();
 
 	UFUNCTION()

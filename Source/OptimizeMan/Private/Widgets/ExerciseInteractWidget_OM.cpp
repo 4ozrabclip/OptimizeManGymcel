@@ -285,10 +285,10 @@ void UExerciseInteractWidget_OM::MiniGame(float InDeltaTime)
 	}
 
 	float ScaledSpeed = Speed * InDeltaTime;
-	FString MinAndMaxVals = FString::Printf(TEXT("RightMin: %.2f RightMax: %.2f\n LeftMin: %.2f LeftMax: %.2f\n"
-											  "LeftVal: %.2f RightVal: %.2f"), RightMin, RightMax, LeftMin, LeftMax, InjuryBoundsLeftValue, InjuryBoundsRightValue);
+//	FString MinAndMaxVals = FString::Printf(TEXT("RightMin: %.2f RightMax: %.2f\n LeftMin: %.2f LeftMax: %.2f\n"
+//											  "LeftVal: %.2f RightVal: %.2f"), RightMin, RightMax, LeftMin, LeftMax, InjuryBoundsLeftValue, InjuryBoundsRightValue);
 	
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, MinAndMaxVals);
+//	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, MinAndMaxVals);
 
 	
 	if (bMovingRight)

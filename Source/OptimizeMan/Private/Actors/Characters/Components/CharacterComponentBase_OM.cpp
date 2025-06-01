@@ -54,6 +54,15 @@ void UCharacterComponentBase_OM::BeginPlay()
 	}
 }
 
+void UCharacterComponentBase_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearAllTimersForObject(this);
+	}
+}
+
 void UCharacterComponentBase_OM::AddFocus(const float InFocus)
 {
 	if (!GameInstance)

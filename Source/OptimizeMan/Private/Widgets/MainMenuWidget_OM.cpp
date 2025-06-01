@@ -174,6 +174,7 @@ void UMainMenuWidget_OM::UpdateImagesForDarkMode()
 		PlayLightModeStyle.Normal.SetResourceObject(PlayButtonBlack);
 		PlayLightModeStyle.Hovered.SetResourceObject(PlayButtonBlackHover);
 		PlayLightModeStyle.Pressed.SetResourceObject(PlayButtonBlack);
+		
 		FButtonStyle SettingsLightModeStyle;
 		SettingsLightModeStyle.Normal.SetResourceObject(SettingsButtonBlack);
 		SettingsLightModeStyle.Hovered.SetResourceObject(SettingsButtonBlackHover);
@@ -208,6 +209,7 @@ void UMainMenuWidget_OM::UpdateImagesForDarkMode()
 		NewGameButton->SetStyle(NewGameLightModeStyle);
 		LoadGameButton->SetStyle(LoadGameLightModeStyle);
 		ToggleDarkMode->SetStyle(ToggleDarkModeStyle);
+		AudioQualitySettingsButton->SetStyle(AudioQualityLightModeStyle);
 	}
 }
 

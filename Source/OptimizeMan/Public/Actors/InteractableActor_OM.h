@@ -19,6 +19,7 @@ public:
 	// Sets default values for this actor's properties
 	AInteractableActor_OM();
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 
 

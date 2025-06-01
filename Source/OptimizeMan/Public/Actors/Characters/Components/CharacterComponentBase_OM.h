@@ -8,19 +8,15 @@
 #include "CharacterComponentBase_OM.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Abstract )
 class OPTIMIZEMAN_API UCharacterComponentBase_OM : public UActorComponent
 {
 	GENERATED_BODY()
-
 public:	
-	// Sets default values for this component's properties
 	UCharacterComponentBase_OM();
-
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void AddFocus(const float InFocus);
 
 	UPROPERTY()

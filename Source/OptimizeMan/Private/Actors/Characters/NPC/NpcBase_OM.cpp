@@ -21,14 +21,14 @@
 ANpcBase_OM::ANpcBase_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	GetCharacterMovement()->bOrientRotationToMovement = true;
+	//GetCharacterMovement()->bOrientRotationToMovement = true;
 	CurrentState = ENpcState::Idle;
 	CurrentLookState = ENpcLookStates::Idle;
 	CurrentMood = ENpcMood::Neutral;
 	CurrentExerciseType = EExerciseType::None;
 	bCanInteract = true;
 	bIsInDialogue = false;
-
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	AuraLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("AuraLight"));
 	AuraLight->SetupAttachment(RootComponent);
 	AuraLight->SetVisibility(true);
