@@ -44,8 +44,9 @@ void ASpeaker_OM::BeginPlay()
 		return;
 	}
 
-	USpeakerWidget_OM* Widg = Cast<USpeakerWidget_OM>(SpeakerWidget->GetWidget());
-	if (Widg) Widg->InitSpeaker(this);
+	
+	if (USpeakerWidget_OM* Widg = Cast<USpeakerWidget_OM>(SpeakerWidget->GetWidget()))
+		Widg->InitSpeaker(this);
 	
 	SetActorTickEnabled(false);
 	SongIndex = Songs.Num();

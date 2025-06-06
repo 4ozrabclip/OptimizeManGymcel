@@ -80,6 +80,19 @@ void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 
 void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 {
+
+	if (CurrentExerciseType != InExerciseType)
+	{
+		SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
+	
+	}
+	//need exercise type to be stated before EnterExercisePosition
+	CurrentExerciseType = InExerciseType;
+	
+
+}
+void UExercise_OM::PrepareExercise()
+{
 	if (GameInstance && GameInstance->GetGymResStats().Energy <= 0.f)
 	{
 		if (CurrentExerciseType != EExerciseType::None)
@@ -89,20 +102,7 @@ void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 		return;
 	}
 	
-	if (CurrentExerciseType != InExerciseType)
-	{
-		SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
-	
-	}
 
-	if (CurrentExerciseType != EExerciseType::None && InExerciseType != EExerciseType::None)
-	{
-		DetachEquipment();
-	}
-
-	//need exercise type to be stated before EnterExercisePosition
-	CurrentExerciseType = InExerciseType;
-	
 	if (CurrentWorkoutState == EWorkoutStates::NotInExercisePosition)
 	{
 		EnterExercisePosition();

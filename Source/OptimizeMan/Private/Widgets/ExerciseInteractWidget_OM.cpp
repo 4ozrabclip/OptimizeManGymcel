@@ -24,21 +24,7 @@ void UExerciseInteractWidget_OM::NativeConstruct()
 		MiniGameClickButton->OnClicked.RemoveAll(this);
 		MiniGameClickButton->OnClicked.AddDynamic(this, &UExerciseInteractWidget_OM::OnMiniGameClick);
 	}
-	if (WorkoutOptionButton_1)
-	{
-		WorkoutOptionButton_1->OnClicked.RemoveAll(this);
-		WorkoutOptionButton_1->OnClicked.AddDynamic(this, &UExerciseInteractWidget_OM::OnWorkoutOptionButton_1Clicked);
-	}
-	if (WorkoutOptionButton_2)
-	{
-		WorkoutOptionButton_2->OnClicked.RemoveAll(this);
-		WorkoutOptionButton_2->OnClicked.AddDynamic(this, &UExerciseInteractWidget_OM::OnWorkoutOptionButton_2Clicked);
-	}
-	if (ChangeWorkoutButton)
-	{
-		ChangeWorkoutButton->OnClicked.RemoveAll(this);
-		ChangeWorkoutButton->OnClicked.AddDynamic(this, &UExerciseInteractWidget_OM::OnChangeButtonClicked);
-	}
+	
 	if (BloodSplatter->GetVisibility() != ESlateVisibility::Hidden)
 	{
 		BloodSplatter->SetVisibility(ESlateVisibility::Hidden);
@@ -61,64 +47,21 @@ void UExerciseInteractWidget_OM::NativeConstruct()
 
 
 	UpdateStats();
-	SetMiniGameOn(false);
-
-	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
-	{
-		CheckAndSetEquipmentType();
-	});
+	SetMiniGameOn(true);
 	
-	if (ExerciseComponent->GetHasEnergy())
-	{
-		WorkoutOptionButton_1->SetIsEnabled(true);
-		WorkoutOptionButton_2->SetIsEnabled(true);
-	}
-	else
-	{
-		WorkoutOptionButton_1->SetIsEnabled(false);
-		WorkoutOptionButton_2->SetIsEnabled(false);
-	}
-
 	if (SetCountTextBlock && RepCountTextBlock)
 	{
 		SetCountTextBlock->SetText(FText::FromString(TEXT("")));
 		RepCountTextBlock->SetText(FText::FromString(TEXT("")));
 	}
 
-	SetChangeWorkoutOption(false);
-	
-}
 
-
-
-void UExerciseInteractWidget_OM::CheckAndSetEquipmentType()
-{
-	AExerciseEquipment_OM* Equipment = Cast<AExerciseEquipment_OM>(Player->GetCurrentInteractedActor());
-
-	if (Equipment->IsA<ABarbell_OM>())
-	{
-		CurrentEquipmentType = EEquipmentTypes::Barbell;
-	}
-	else if (Equipment->IsA<ADumbell_OM>())
-	{
-		CurrentEquipmentType = EEquipmentTypes::Dumbell;
-	}
-	if (CurrentEquipmentType == EEquipmentTypes::None) return;
-	
-	CheckAndSetStyles();
+	ExerciseComponent->PrepareExercise();
 	
 }
 
 void UExerciseInteractWidget_OM::CheckAndSetStyles()
 {
-	if (!SquatWhite) UE_LOG(LogTemp, Warning, TEXT("SquatWhite is null"));
-	if (!SquatBlack) UE_LOG(LogTemp, Warning, TEXT("SquatBlack is null"));
-	if (!CurlWhite) UE_LOG(LogTemp, Warning, TEXT("CurlWhite is null"));
-	if (!CurlBlack) UE_LOG(LogTemp, Warning, TEXT("CurlBlack is null"));
-	if (!LeftCurlWhite) UE_LOG(LogTemp, Warning, TEXT("LeftCurlWhite is null"));
-	if (!LeftCurlBlack) UE_LOG(LogTemp, Warning, TEXT("LeftCurlBlack is null"));
-	if (!RightCurlWhite) UE_LOG(LogTemp, Warning, TEXT("RightCurlWhite is null"));
-	if (!RightCurlBlack) UE_LOG(LogTemp, Warning, TEXT("RightCurlBlack is null"));
 
 	auto SetupButtonStyle = [this](FButtonStyle& Style, UMaterial* Image, UMaterial* HoverImage)
 	{
@@ -138,10 +81,7 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		Style.NormalPadding = FMargin(15);
 		Style.PressedPadding = FMargin(15);
 	};
-
-	if (CurrentEquipmentType == EEquipmentTypes::None) return;
-
-
+	
 	const bool bDarkMode = GameInstance->GetDarkMode();
 
 	if (bDarkMode)
@@ -194,44 +134,6 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		RepCountTextBlock->SetColorAndOpacity(Black);
 	}
 	
-	switch (CurrentEquipmentType)
-	{
-	case EEquipmentTypes::Barbell:
-		if (bDarkMode)
-		{
-			SetupButtonStyle(SquatDarkStyle, SquatWhite, SquatHoverWhite);
-			SetupButtonStyle(CurlDarkStyle, CurlWhite, CurlHoverWhite);
-			WorkoutOptionButton_1->SetStyle(SquatDarkStyle);
-			WorkoutOptionButton_2->SetStyle(CurlDarkStyle);
-		}
-		else
-		{
-			SetupButtonStyle(SquatLightStyle, SquatBlack, SquatHoverBlack);
-			SetupButtonStyle(CurlLightStyle, CurlBlack, CurlHoverBlack);
-			WorkoutOptionButton_1->SetStyle(SquatLightStyle);
-			WorkoutOptionButton_2->SetStyle(CurlLightStyle);
-		}
-		break;
-	case EEquipmentTypes::Dumbell:
-		if (bDarkMode)
-		{
-			SetupButtonStyle(LeftCurlDarkStyle, LeftCurlWhite, LeftCurlHoverWhite);
-			SetupButtonStyle(RightCurlDarkStyle, RightCurlWhite, RightCurlHoverWhite);
-			WorkoutOptionButton_1->SetStyle(LeftCurlDarkStyle);
-			WorkoutOptionButton_2->SetStyle(RightCurlDarkStyle);
-		}
-		else
-		{
-			SetupButtonStyle(LeftCurlLightStyle, LeftCurlBlack, LeftCurlHoverBlack);
-			SetupButtonStyle(RightCurlLightStyle, RightCurlBlack, RightCurlHoverBlack);
-			WorkoutOptionButton_1->SetStyle(RightCurlLightStyle);
-			WorkoutOptionButton_2->SetStyle(LeftCurlLightStyle);
-		}
-		break;
-	default:
-		break;
-	}
-
 }
 
 void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -241,7 +143,6 @@ void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float I
 	if (CurrentWorkoutState == EWorkoutStates::SetComplete)
 	{
 		NotificationTextPopUp();
-		SetChangeWorkoutOption(true);
 		SetWorkoutState(EWorkoutStates::InExercisePosition);
 	}
 	
@@ -443,100 +344,6 @@ void UExerciseInteractWidget_OM::SetSpecialSliderOn(const bool InSpecialSliderOn
 	}
 }
 
-void UExerciseInteractWidget_OM::OnChangeButtonClicked()
-{
-	SetMiniGameOn(false);
-}
-
-void UExerciseInteractWidget_OM::OnExerciseButtonClicked(const EButtonOptions InButton)
-{
-	if (!ExerciseComponent->GetHasEnergy())
-	{
-		WorkoutOptionButton_1->SetIsEnabled(false);
-		WorkoutOptionButton_2->SetIsEnabled(false);
-		WorkoutOptionButton_3->SetIsEnabled(false);
-		return;
-	}
-	
-	EExerciseType CurrentExerciseType = EExerciseType::None;
-
-	switch (CurrentEquipmentType)
-	{
-	case EEquipmentTypes::Barbell:
-		if (InButton == EButtonOptions::ButtonOne)
-		{
-			CurrentExerciseType = EExerciseType::Squat;
-		}
-		else if (InButton == EButtonOptions::ButtonTwo)
-		{
-			CurrentExerciseType = EExerciseType::BicepCurl;
-		}
-		else if (InButton == EButtonOptions::ButtonThree)
-		{
-			CurrentExerciseType = EExerciseType::OverheadPress;
-		}
-		break;
-	case EEquipmentTypes::Dumbell:
-		if (InButton == EButtonOptions::ButtonOne)
-		{
-			CurrentExerciseType = EExerciseType::LeftCurl;
-		}
-		else if (InButton == EButtonOptions::ButtonTwo)
-		{
-			CurrentExerciseType = EExerciseType::RightCurl;
-		}
-		break;
-	default:
-		break;
-	}
-
-	if (CurrentExerciseType == EExerciseType::None) return;
-	
-	UpdateStats();
-	ExerciseComponent->SetExerciseType(CurrentExerciseType);
-	DisableEnableUnusableButtonsHelper();
-	SetMiniGameOn(true);
-
-}
-void UExerciseInteractWidget_OM::DisableEnableUnusableButtonsHelper()
-{
-	// NEED BETTER SYSTEM FOR IDENTIFYING WHICH WORKOUT BUTTONS ARE CORRELATED WITH WHICH WORKOUT
-	// UButton* SquatButton = WorkoutOptionButton_1; <---- keep this in mind
-
-	
-	switch (ExerciseComponent->GetCurrentExerciseType())
-	{
-	case EExerciseType::None: // ????
-		return;
-	case EExerciseType::Squat:
-		WorkoutOptionButton_1->SetIsEnabled(false);
-		WorkoutOptionButton_2->SetIsEnabled(true);
-		WorkoutOptionButton_3->SetIsEnabled(true);
-		break;
-	case EExerciseType::BicepCurl:
-		WorkoutOptionButton_1->SetIsEnabled(true);
-		WorkoutOptionButton_2->SetIsEnabled(false);
-		WorkoutOptionButton_3->SetIsEnabled(true);
-		break;
-	case EExerciseType::OverheadPress:
-		WorkoutOptionButton_1->SetIsEnabled(true);
-		WorkoutOptionButton_2->SetIsEnabled(true);
-		WorkoutOptionButton_3->SetIsEnabled(false);
-		break;
-	case EExerciseType::LeftCurl:
-		WorkoutOptionButton_1->SetIsEnabled(false);
-		WorkoutOptionButton_2->SetIsEnabled(true);
-		WorkoutOptionButton_3->SetIsEnabled(true);
-		break;
-	case EExerciseType::RightCurl:
-		WorkoutOptionButton_1->SetIsEnabled(true);
-		WorkoutOptionButton_2->SetIsEnabled(false);
-		WorkoutOptionButton_3->SetIsEnabled(true);
-		break;
-	default:
-		break;
-	}
-}
 void UExerciseInteractWidget_OM::UpdateStats()
 {
 	EnergyLevel->SetPercent(GameInstance->GetGymResStats().Energy);
@@ -551,11 +358,6 @@ void UExerciseInteractWidget_OM::UpdateStats()
 
 void UExerciseInteractWidget_OM::OnMiniGameClick()
 {
-	if (!MiniGameClickButton)
-	{
-		UE_LOG(LogTemp, Error, TEXT("MiniGameClickButton is NULL"));
-		return;
-	}
 	if (!Player)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player Pointer is NULL"));
@@ -566,13 +368,8 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		UE_LOG(LogTemp, Error, TEXT("ExerciseComponent Pointer is NULL"));
 		return;
 	}
-	
-	if (!MiniGameClickButton || !WorkoutOptionButton_1 || !WorkoutOptionButton_3 || !WorkoutOptionButton_2) return;
-	
+
 	MiniGameClickButton->SetIsEnabled(false);
-	WorkoutOptionButton_1->SetIsEnabled(false);
-	WorkoutOptionButton_2->SetIsEnabled(false);
-	WorkoutOptionButton_3->SetIsEnabled(false);
 
 	bDoingRep = true;
 	if (Player)
@@ -642,7 +439,6 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		bDoingRep = false;
 		if (Player)
 			Player->SetIsDoingRep(bDoingRep);
-		DisableEnableUnusableButtonsHelper();
 		SetSetAndRepCountTextBlocks();
 	
 	}, RepDuration, false);
@@ -690,25 +486,7 @@ void UExerciseInteractWidget_OM::NotificationTextPopUp()
 			false 
 		);
 }
-void UExerciseInteractWidget_OM::SetChangeWorkoutOption(const bool InChangeWorkoutOn)
-{
-	if (InChangeWorkoutOn)
-	{
-		ChangeWorkoutButton->SetVisibility(ESlateVisibility::Visible);
-		constexpr int ShowButtonDuration = 4;
-		GetWorld()->GetTimerManager().ClearTimer(ChangeWorkoutButtonHandle);
-		GetWorld()->GetTimerManager().SetTimer(ChangeWorkoutButtonHandle, [this]()
-		{
-			ChangeWorkoutButton->SetVisibility(ESlateVisibility::Hidden);
-		}, ShowButtonDuration, false);
-	}
-	else
-	{
-		GetWorld()->GetTimerManager().ClearTimer(ChangeWorkoutButtonHandle);
-		ChangeWorkoutButton->SetVisibility(ESlateVisibility::Hidden);
-		UE_LOG(LogTemp, Error, TEXT("Set visibility to Hidden for CHange Workout Button"));
-	}
-}
+
 void UExerciseInteractWidget_OM::SetMiniGameOn(const bool InMiniGameOn)
 {
 	bMiniGameOn = InMiniGameOn;
@@ -725,10 +503,6 @@ void UExerciseInteractWidget_OM::SetMiniGameOn(const bool InMiniGameOn)
 		
 		MiniGameClickButton->SetVisibility(ESlateVisibility::Visible);
 
-		ExerciseTypesGrid->SetVisibility(ESlateVisibility::Hidden);
-
-		ChangeWorkoutButton->SetVisibility(ESlateVisibility::Hidden);
-
 		SetSetAndRepCountTextBlocks();
 	}
 	else
@@ -744,8 +518,6 @@ void UExerciseInteractWidget_OM::SetMiniGameOn(const bool InMiniGameOn)
 		
 		
 		MiniGameClickButton->SetVisibility(ESlateVisibility::Hidden);
-
-		ExerciseTypesGrid->SetVisibility(ESlateVisibility::Visible);
 
 		
 	}

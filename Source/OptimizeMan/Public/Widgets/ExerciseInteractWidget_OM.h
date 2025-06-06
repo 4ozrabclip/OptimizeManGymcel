@@ -9,6 +9,8 @@
 #include "Utils/Structs/ExerciseData.h"
 #include "ExerciseInteractWidget_OM.generated.h"
 
+class UProgressBar;
+class UTextBlock;
 /**
  * 
  */
@@ -17,52 +19,37 @@ UCLASS()
 class OPTIMIZEMAN_API UExerciseInteractWidget_OM : public UMinigameBaseWidget_OM
 {
 	GENERATED_BODY()
-	
 public:
-
 	virtual void NativeConstruct() override;
-	UFUNCTION()
-	void SetWorkoutState(EWorkoutStates NewWorkoutState) { CurrentWorkoutState = NewWorkoutState; };
-	void CheckAndSetEquipmentType();
-	UFUNCTION()
-	void CheckAndSetStyles();
-
-	void SetNotificationText();
-
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 	virtual void OnExitButtonClicked() override;
-	void SetInjuryRisk();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateStats();
-
-	UFUNCTION(BlueprintCallable)
-	void OnMiniGameClick();
-
-	UFUNCTION(BlueprintCallable)
-	void NotificationTextPopUp();
-	void SetChangeWorkoutOption(bool InChangeWorkoutOn);
-
-	UFUNCTION(BlueprintCallable)
-	bool GetMiniGameOn() const { return bMiniGameOn; }
-
-	UFUNCTION(BlueprintCallable)
-	void SetMiniGameOn(const bool InMiniGameOn);
 
 	void MiniGame(float InDeltaTime);
+
+	void SetNotificationText();
+	void SetInjuryRisk();
 	void SetSetAndRepCountTextBlocks();
 
+	UFUNCTION()
+	void SetWorkoutState(EWorkoutStates NewWorkoutState) { CurrentWorkoutState = NewWorkoutState; };
+	UFUNCTION()
+	void CheckAndSetStyles();
+	UFUNCTION(BlueprintCallable)
+	void UpdateStats();
+	UFUNCTION(BlueprintCallable)
+	void OnMiniGameClick();
+	UFUNCTION(BlueprintCallable)
+	void NotificationTextPopUp();
+	UFUNCTION(BlueprintCallable)
+	bool GetMiniGameOn() const { return bMiniGameOn; }
+	UFUNCTION(BlueprintCallable)
+	void SetMiniGameOn(const bool InMiniGameOn);
 	UFUNCTION(BlueprintCallable)
 	void SetSpecialSliderOn(const bool InSpecialSliderOn);
-	UFUNCTION()
-	void OnChangeButtonClicked();
-
 	UFUNCTION(BlueprintCallable)
 	bool GetSpecialSliderOn() const { return bSpecialSliderOn; };
 
 protected:
-
 	EWorkoutStates CurrentWorkoutState;
 
 	UPROPERTY(EditAnywhere, Category = "MiniGameSpeed")
@@ -77,7 +64,7 @@ protected:
 
 	
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* EnergyLevel;
+	UProgressBar* EnergyLevel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
 	UMaterial* EnergyLevelLightFill;
@@ -89,22 +76,13 @@ protected:
 	UMaterial* EnergyLevelBorderDark;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* EnergyText;
+	UTextBlock* EnergyText;
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* NotificationText;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* MiniGameClickButton;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UButton* WorkoutOptionButton_1;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UButton* WorkoutOptionButton_2;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UButton* WorkoutOptionButton_3;
-	UPROPERTY(meta = (BindWidget))
-	UButton* ChangeWorkoutButton;
+	UButton* MiniGameClickButton;
 	
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -139,7 +117,7 @@ protected:
 	
 	
 	UPROPERTY()
-	class UExercise_OM* ExerciseComponent;
+	UExercise_OM* ExerciseComponent;
 
 // --- images for dark/light mode
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
@@ -151,72 +129,8 @@ protected:
 	UMaterial* SigmaWhite;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
 	UMaterial* SigmaBlack;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* SquatWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* SquatBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* SquatHoverWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* SquatHoverBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* CurlWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* CurlBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* CurlHoverWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* CurlHoverBlack;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* LeftCurlWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* LeftCurlHoverWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* LeftCurlBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* LeftCurlHoverBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* RightCurlWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* RightCurlHoverWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* RightCurlBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* RightCurlHoverBlack;
-
-	
-	FButtonStyle SquatDarkStyle;
-	FButtonStyle CurlDarkStyle;
-	FButtonStyle LeftCurlDarkStyle;
-	FButtonStyle RightCurlDarkStyle;
-	
-	FButtonStyle SquatLightStyle;
-	FButtonStyle CurlLightStyle;
-	FButtonStyle LeftCurlLightStyle;
-	FButtonStyle RightCurlLightStyle;
-
-
-
-	UPROPERTY()
-	class UGridPanel* ExerciseTypesGrid;
-
 	
 
-
-private:
-	void OnExerciseButtonClicked(const EButtonOptions InButton);
-	void DisableEnableUnusableButtonsHelper();
-
-	UFUNCTION()
-	void OnWorkoutOptionButton_1Clicked() { OnExerciseButtonClicked(EButtonOptions::ButtonOne); }
-	UFUNCTION()
-	void OnWorkoutOptionButton_2Clicked() { OnExerciseButtonClicked(EButtonOptions::ButtonTwo); }
-
-protected:
-	UPROPERTY()
-	EEquipmentTypes CurrentEquipmentType;
 
 private: //Priv variables
 	bool bSpecialSliderOn = false;

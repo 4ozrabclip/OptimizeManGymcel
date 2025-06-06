@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "OptimizeMan/Public/Actors/InteractableActor_OM.h"
+#include "Utils/Structs/ExerciseData.h"
 #include "ExerciseEquipment_OM.generated.h"
+class UWidgetComponent;
+class AGymCamera;
 /*
  * Parent of all exercise equipment
  */
@@ -15,17 +18,31 @@ class OPTIMIZEMAN_API AExerciseEquipment_OM : public AInteractableActor_OM
 	
 public:	
 	AExerciseEquipment_OM();
+	virtual void Tick(float DeltaTime) override;
+protected:
 	virtual void BeginPlay() override;
+public:
+	UFUNCTION()
+	void TurnOffWidget();
+	
 	virtual void Interact_Implementation() override;
+	void StartWorkoutMode();
+	virtual void ChangeWeight(float InWeight);
+	virtual void SetWeightClass();
 
+
+	
 	FRotator GetLookAtCameraRotation() const;
 	FVector GetLookAtCameraPosition() const;
 	FTransform GetOriginalPosition() const;
 	AActor* GetGymCamera() const;
 	
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	UWidgetComponent* SelectWorkoutWidget;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	class AGymCamera* Camera;
+	AGymCamera* Camera;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Position")
 	FRotator LookAtCameraRotation;
@@ -33,7 +50,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Position")
 	FVector LookAtCameraPosition;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weights")
+	TArray<FEquipmentData> Equipment;
+
+
+
+	EWeightClass CurrentWeightClass;
+	float CurrentWeight;
+	
 	FTransform OriginalPosition;
+
+	
 
 	
 	

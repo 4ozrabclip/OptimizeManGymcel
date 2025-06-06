@@ -12,7 +12,6 @@
 #include "Components/Slider.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
-#include "Kismet/BlueprintTypeConversions.h"
 #include "Kismet/GameplayStatics.h"
 
 

@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ExerciseEquipment_OM.h"
+#include "CompoundEquipment_OM.h"
 #include "Barbell_OM.generated.h"
 
 UCLASS()
-class OPTIMIZEMAN_API ABarbell_OM : public AExerciseEquipment_OM
+class OPTIMIZEMAN_API ABarbell_OM : public ACompoundEquipment_OM
 {
 	GENERATED_BODY()
 	

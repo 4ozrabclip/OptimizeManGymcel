@@ -4,6 +4,35 @@
 #include "ExerciseData.generated.h"
 
 UENUM()
+enum class EWeightClass
+{
+	Light_A UMETA(DisplayName = "Light_A"),
+	Light_B UMETA(DisplayName = "Light_B"),
+	Light_C UMETA(DisplayName = "Light_C"),
+	Medium_A UMETA(DisplayName = "Medium_A"),
+	Medium_B UMETA(DisplayName = "Medium_B"),
+	Medium_C UMETA(DisplayName = "Medium_C"),
+	Heavy_A UMETA(DisplayName = "Heavy_A"),
+	Heavy_B UMETA(DisplayName = "Heavy_B"),
+	Heavy_C UMETA(DisplayName = "Heavy_C")
+};
+
+USTRUCT(Blueprintable)
+struct FEquipmentData
+{
+	GENERATED_USTRUCT_BODY()
+	FEquipmentData() :
+	WeightClass(EWeightClass::Light_A),
+	EquipmentMesh(nullptr)
+	{}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EWeightClass WeightClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMesh* EquipmentMesh;
+};
+UENUM()
 enum class EEquipmentTypes : uint8
 {
 	None = 0,

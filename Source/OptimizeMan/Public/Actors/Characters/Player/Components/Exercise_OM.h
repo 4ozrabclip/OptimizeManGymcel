@@ -39,6 +39,7 @@ public: // Exercise Management
 	
 	UFUNCTION(BlueprintCallable, Category="Exercise")
 	void SetExerciseType(const EExerciseType InExerciseType);
+	void PrepareExercise();
 
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void DoASquat();

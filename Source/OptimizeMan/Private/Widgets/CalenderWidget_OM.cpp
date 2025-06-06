@@ -72,12 +72,12 @@ void UCalenderWidget_OM::SetCalenderText()
 
 	EMonth CurrentMonth = GameInstance->GetCurrentMonth();
 	
-	const UEnum* MonthEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMonth"), true);
+	const UEnum* MonthEnum = StaticEnum<EMonth>();
 	if (!MonthEnum) return;
 
 	FString MonthNameString = MonthEnum->GetNameStringByValue(static_cast<int64>(CurrentMonth));
 	
-	CurrentMonthTextBlock->SetText(FText::FromString(MonthNameString));
+	CurrentMonthTextBlock->SetText(FText::FromString(MonthNameString));  
 }
 
 void UCalenderWidget_OM::SetCompletedDays()
