@@ -40,9 +40,6 @@ public:
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* SelectWorkout_Button;
-
-	UPROPERTY(meta = (BindWidget))
 	UGridPanel* SelectWorkout_Grid;
 
 	UPROPERTY(meta = (BindWidget))

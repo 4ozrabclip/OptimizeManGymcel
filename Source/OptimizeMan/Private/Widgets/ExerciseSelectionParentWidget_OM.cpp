@@ -17,11 +17,6 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 	Super::NativeConstruct();
 
 	
-	if (SelectWeight_Button)
-	{
-		SelectWeight_Button->OnClicked.Clear();
-		SelectWeight_Button->OnClicked.AddDynamic(this, &UExerciseSelectionParentWidget_OM::OnSelectWeightButtonClicked);
-	}
 	if (BackFromWeightSelect_Button)
 	{
 		BackFromWeightSelect_Button->OnClicked.Clear();
@@ -38,13 +33,21 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 		ConfirmWeight_Button->OnClicked.AddDynamic(this, &UExerciseSelectionParentWidget_OM::OnWeightConfirmed);
 	}
 
-	if (WeightSelect_Slider)
+	if (ExerciseEquipment && WeightSelect_Slider)
 	{
+		WeightSelect_Slider->MouseUsesStep = true;
 		WeightSelect_Slider->SetStepSize(0.25f);
 
 		WeightSelect_Slider->OnValueChanged.Clear();
-		WeightSelect_Slider->OnValueChanged.AddDynamic(this, &UExerciseSelectionParentWidget_OM::UpdateWeightSelectText);
+		WeightSelect_Slider->OnValueChanged.AddDynamic(this, &UExerciseSelectionParentWidget_OM::UpdateWeightSelect);
+
+		EquipmentMaxWeight = ExerciseEquipment->GetMaxWeight();
+		EquipmentMinWeight = ExerciseEquipment->GetMinWeight();
+
+		WeightSelect_Slider->SetMaxValue(EquipmentMaxWeight);
+		WeightSelect_Slider->SetMinValue(EquipmentMinWeight);
 	}
+
 
 	if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
@@ -53,29 +56,40 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 			return;
 	}
 
+	CheckAndSetDarkMode();
+	
 	InitialOpen();
 }
 
-void UExerciseSelectionParentWidget_OM::InitialOpen()
+void UExerciseSelectionParentWidget_OM::CheckAndSetDarkMode()
 {
-	OpenLayer(Main_Grid);
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	if (GameInstance->GetDarkMode())
+	{
+		WeightSelect_Text->SetColorAndOpacity(White);
+	}
+	else
+	{
+		WeightSelect_Text->SetColorAndOpacity(Black);
+	}
 }
 
-void UExerciseSelectionParentWidget_OM::UpdateWeightSelectText(float InValue)
+void UExerciseSelectionParentWidget_OM::UpdateWeightSelect(float InValue)
 {
 	WeightSelectText_String = FString::Printf(TEXT("%.2f"), InValue);
 	WeightSelect_Text->SetText(FText::FromString(WeightSelectText_String));
-}
+	
+	const float NormalizedInput = FMath::Clamp((InValue - EquipmentMinWeight) / (EquipmentMaxWeight - EquipmentMinWeight), 0.0f, 1.0f);
+	const float MuscleExertionRatio = FMath::Clamp((NormalizedInput - MuscleGroupCurrentStrength) * 5.f, 0.f, 1.f);
 
-void UExerciseSelectionParentWidget_OM::OnSelectWeightButtonClicked()
-{
-	OpenLayer(WeightSelect_Grid);
+	
 
-}
+	const FLinearColor SafeColour = FLinearColor::Green;
+	const FLinearColor DangerColour = FLinearColor::Red;
+	const FLinearColor ResultColour = FLinearColor::LerpUsingHSV(SafeColour, DangerColour, MuscleExertionRatio);
 
-void UExerciseSelectionParentWidget_OM::OnBackFromWeightSelectClicked()
-{
-	OpenLayer(Main_Grid);
+	WeightSelect_Slider->SetSliderBarColor(ResultColour);
 }
 
 void UExerciseSelectionParentWidget_OM::OnWeightConfirmed()
@@ -85,9 +99,10 @@ void UExerciseSelectionParentWidget_OM::OnWeightConfirmed()
 	if (ExerciseEquipment)
 	{
 		ExerciseEquipment->ChangeWeight(SelectedWeight);
+		ExerciseEquipment->TurnOffWidget();
+		ExerciseEquipment->StartWorkoutMode();
 	}
 }
-
 void UExerciseSelectionParentWidget_OM::OpenLayer(UGridPanel* InGrid) const
 {
 	if (InGrid == nullptr) return;
@@ -95,4 +110,27 @@ void UExerciseSelectionParentWidget_OM::OpenLayer(UGridPanel* InGrid) const
 	WeightSelect_Grid->SetVisibility(ESlateVisibility::Hidden);
 
 	InGrid->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UExerciseSelectionParentWidget_OM::InitialOpen()
+{
+	OpenLayer(Main_Grid);
+}
+
+void UExerciseSelectionParentWidget_OM::OnSelectWeightButtonClicked()
+{
+	OpenLayer(WeightSelect_Grid);
+}
+
+void UExerciseSelectionParentWidget_OM::OnBackFromWeightSelectClicked()
+{
+	OpenLayer(Main_Grid);
+}
+
+void UExerciseSelectionParentWidget_OM::SetMuscleGroupCurrentStrength(const float InStrength)
+{
+	//if (InStrength == 0.f)
+	//	MuscleGroupCurrentStrength = InStrength + 0.05f;
+	//else
+	MuscleGroupCurrentStrength = InStrength;
 }

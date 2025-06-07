@@ -14,11 +14,10 @@ void UCompoundSelectionWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	
-	if (SelectWorkout_Button)
+	if (SelectWeight_Button)
 	{
-		SelectWorkout_Button->OnClicked.Clear();
-		SelectWorkout_Button->OnClicked.AddDynamic(this, &UCompoundSelectionWidget_OM::OnSelectWorkoutButtonClicked);
+		SelectWeight_Button->OnClicked.Clear();
+		SelectWeight_Button->OnClicked.AddDynamic(this, &UCompoundSelectionWidget_OM::OnSelectWorkoutButtonClicked);
 	}
 
 	CheckAndSetEquipmentType();
@@ -27,9 +26,7 @@ void UCompoundSelectionWidget_OM::NativeConstruct()
 void UCompoundSelectionWidget_OM::CheckAndSetEquipmentType()
 {
 	if (!ExerciseEquipment) return;
-
-
-
+	
 	if (ExerciseEquipment->IsA<ABarbell_OM>())
 	{
 		CurrentEquipmentType = EEquipmentTypes::Barbell;
@@ -84,13 +81,11 @@ void UCompoundSelectionWidget_OM::AssignWorkoutButtons()
 	}
 }
 
-
 void UCompoundSelectionWidget_OM::InitialOpen()
 {
 	Super::InitialOpen();
 
-	SelectWeight_Button->SetVisibility(ESlateVisibility::Hidden);
-	SelectWorkout_Button->SetVisibility(ESlateVisibility::Visible);
+	SelectWeight_Button->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UCompoundSelectionWidget_OM::OpenLayer(UGridPanel* InGrid) const
@@ -99,17 +94,34 @@ void UCompoundSelectionWidget_OM::OpenLayer(UGridPanel* InGrid) const
 	Super::OpenLayer(InGrid);
 }
 
-
 void UCompoundSelectionWidget_OM::SetExerciseType(EExerciseType InExerciseType)
 {
 	if (ExerciseComponent)
 	{
 		ExerciseComponent->SetExerciseType(InExerciseType);
 	}
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	if (ExerciseEquipment)
+	const FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	switch (InExerciseType)
 	{
-		ExerciseEquipment->TurnOffWidget();
-		ExerciseEquipment->StartWorkoutMode();
+	case EExerciseType::Squat:
+		SetMuscleGroupCurrentStrength(BodyStatus.LowerBody);
+		break;
+	case EExerciseType::BicepCurl:
+		SetMuscleGroupCurrentStrength((BodyStatus.LeftArm + BodyStatus.RightArm) / 2);
+		break;
+	case EExerciseType::LeftCurl:
+		SetMuscleGroupCurrentStrength(BodyStatus.LeftArm);
+		break;
+	case EExerciseType::RightCurl:
+		SetMuscleGroupCurrentStrength(BodyStatus.RightArm);
+		break;
+	default:
+		SetMuscleGroupCurrentStrength(BodyStatus.OverallStrength);
+		break;
 	}
+
+	OpenLayer(WeightSelect_Grid);
 }

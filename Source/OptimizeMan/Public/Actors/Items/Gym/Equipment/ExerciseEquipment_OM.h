@@ -36,6 +36,9 @@ public:
 	FVector GetLookAtCameraPosition() const;
 	FTransform GetOriginalPosition() const;
 	AActor* GetGymCamera() const;
+
+	float GetMaxWeight() const { return MaxWeight; }
+	float GetMinWeight() const { return MinWeight; }
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
@@ -52,16 +55,20 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weights")
 	TArray<FEquipmentData> Equipment;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weights")
+	float MaxWeight = 120.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weights")
+	float MinWeight = 20.f;
+	
+	
 
 
 	EWeightClass CurrentWeightClass;
 	float CurrentWeight;
 	
 	FTransform OriginalPosition;
-
 	
 
-	
-	
 };

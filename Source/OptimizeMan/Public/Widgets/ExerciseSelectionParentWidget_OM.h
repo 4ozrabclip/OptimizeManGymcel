@@ -21,6 +21,7 @@ class OPTIMIZEMAN_API UExerciseSelectionParentWidget_OM : public UParentWidget_O
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	void CheckAndSetDarkMode();
 
 	UFUNCTION()
 	virtual void InitialOpen();
@@ -31,14 +32,13 @@ public:
 	UFUNCTION()
 	void OnWeightConfirmed();
 	UFUNCTION()
-	void UpdateWeightSelectText(float InValue);
+	void UpdateWeightSelect(float InValue);
 	UFUNCTION()
 	void InitEquipment(AExerciseEquipment_OM* InEquipment) { ExerciseEquipment = InEquipment;}
 	
 	virtual void OpenLayer(UGridPanel* InGrid) const;
+	void SetMuscleGroupCurrentStrength(float InStrength);
 
-
-	
 protected:
 //Widget properties
 	UPROPERTY(meta = (BindWidget))
@@ -67,8 +67,14 @@ protected:
 	UPROPERTY()
 	UExercise_OM* ExerciseComponent;
 
+
+	float EquipmentMaxWeight;
+	float EquipmentMinWeight;
+
 	
-	float SelectedWeight;
+	float SelectedWeight = 0.f;
+
+	float MuscleGroupCurrentStrength = 0.f;
 
 
 

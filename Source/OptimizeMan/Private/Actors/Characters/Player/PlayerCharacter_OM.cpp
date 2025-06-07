@@ -141,8 +141,6 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 	}
 }
 
-
-
 /*
  *			GameModes
  *

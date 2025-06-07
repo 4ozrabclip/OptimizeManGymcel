@@ -63,8 +63,6 @@ void AExerciseEquipment_OM::TurnOffWidget()
 	SetActorTickEnabled(false);
 }
 
-
-
 void AExerciseEquipment_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
@@ -78,7 +76,6 @@ void AExerciseEquipment_OM::Interact_Implementation()
 	SelectWorkoutWidget->SetVisibility(true);
 	//InteractableInterfaceProperties.bIsInteractable = false;
 	Player->SetToUIMode(true, true);
-	
 }
 
 void AExerciseEquipment_OM::StartWorkoutMode()
