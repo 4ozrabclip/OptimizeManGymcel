@@ -107,19 +107,19 @@ void UCompoundSelectionWidget_OM::SetExerciseType(EExerciseType InExerciseType)
 	switch (InExerciseType)
 	{
 	case EExerciseType::Squat:
-		SetMuscleGroupCurrentStrength(BodyStatus.LowerBody);
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh));
 		break;
 	case EExerciseType::BicepCurl:
-		SetMuscleGroupCurrentStrength((BodyStatus.LeftArm + BodyStatus.RightArm) / 2);
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Arm));
 		break;
 	case EExerciseType::LeftCurl:
-		SetMuscleGroupCurrentStrength(BodyStatus.LeftArm);
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(Arm, Left));
 		break;
 	case EExerciseType::RightCurl:
-		SetMuscleGroupCurrentStrength(BodyStatus.RightArm);
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(Arm, Right));
 		break;
 	default:
-		SetMuscleGroupCurrentStrength(BodyStatus.OverallStrength);
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(Abdominal, Center));
 		break;
 	}
 

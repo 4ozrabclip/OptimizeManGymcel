@@ -261,6 +261,14 @@ EExerciseType UExercise_OM::GetCurrentExerciseType()
 {
 	return CurrentExerciseType;
 }
+void UExercise_OM::AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const
+{
+	if (!GameInstance) return;
+	if (FBodyPartData* Data = GameInstance->FindBodyPart(Part, Side))
+	{
+		GameInstance->AddStat(Data->Strength, Increase);
+	}
+}
 void UExercise_OM::SetRep()
 {
 	constexpr float EgoIncrease = 0.07f;
@@ -276,45 +284,67 @@ void UExercise_OM::SetRep()
 	}
 	
 	GameInstance->AddStat(InnerStatus.Ego, EgoIncrease);
-	
+
+
 	switch (CurrentExerciseType)
 	{
 	case EExerciseType::None:
 		break;
 	case EExerciseType::Squat:
-		DoRep([this]{AnimInstance->DoSquatRep();},
-			[this, &BodyStatus](float Increase)  {GameInstance->AddStat(BodyStatus.LowerBody, Increase);},
-			ExerciseParameters.LowerBodyIncrease,
-			ExerciseParameters.SquatsEnergyUse,
-			SquatDuration);
+		DoRep([this] { AnimInstance->DoSquatRep(); },
+			  [this](float Increase)
+			  {
+				  AddMuscleStat(EBodyPart::Thigh, EBodyPartSide::Left, Increase);
+				  AddMuscleStat(EBodyPart::Thigh, EBodyPartSide::Right, Increase);
+			  },
+			  ExerciseParameters.LowerBodyIncrease,
+			  ExerciseParameters.SquatsEnergyUse,
+			  SquatDuration);
 		break;
+
 	case EExerciseType::BicepCurl:
-		DoRep([this] {AnimInstance->DoCurlRep();},
-			[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.LeftArm, Increase); GameInstance->AddStat(BodyStatus.RightArm, Increase);},
-			ExerciseParameters.ArmIncrease,
-			ExerciseParameters.BicepCurlEnergyUse*2,
-			BicepCurlDuration);
+		DoRep([this] { AnimInstance->DoCurlRep(); },
+			  [this](float Increase)
+			  {
+				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Left, Increase);
+				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Right, Increase);
+			  },
+			  ExerciseParameters.ArmIncrease,
+			  ExerciseParameters.BicepCurlEnergyUse * 2,
+			  BicepCurlDuration);
 		break;
+
 	case EExerciseType::OverheadPress:
-		DoRep([this]{AnimInstance->DoOverheadPressRep();},
-			[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.Shoulders, Increase);},
-			ExerciseParameters.ShoulderIncrease,
-			ExerciseParameters.OverheadPressEnergyUse,
-			OverheadPressDuration);
+		DoRep([this] { AnimInstance->DoOverheadPressRep(); },
+			  [this](float Increase)
+			  {
+				  AddMuscleStat(EBodyPart::Shoulder, EBodyPartSide::Center, Increase);
+			  },
+			  ExerciseParameters.ShoulderIncrease,
+			  ExerciseParameters.OverheadPressEnergyUse,
+			  OverheadPressDuration);
 		break;
+
 	case EExerciseType::LeftCurl:
-		DoRep([this]{AnimInstance->DoLeftCurlRep();},
-			[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.LeftArm, Increase);},
-			ExerciseParameters.ArmIncrease,
-			ExerciseParameters.BicepCurlEnergyUse,
-			BicepCurlDuration);
+		DoRep([this] { AnimInstance->DoLeftCurlRep(); },
+			  [this](float Increase)
+			  {
+				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Left, Increase);
+			  },
+			  ExerciseParameters.ArmIncrease,
+			  ExerciseParameters.BicepCurlEnergyUse,
+			  BicepCurlDuration);
 		break;
-		case EExerciseType::RightCurl:
-		DoRep([this]{AnimInstance->DoRightCurlRep();},
-[this, &BodyStatus](float Increase){GameInstance->AddStat(BodyStatus.RightArm, Increase);},
-			ExerciseParameters.ArmIncrease,
-			ExerciseParameters.BicepCurlEnergyUse,
-			BicepCurlDuration);
+
+	case EExerciseType::RightCurl:
+		DoRep([this] { AnimInstance->DoRightCurlRep(); },
+			  [this](float Increase)
+			  {
+				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Right, Increase);
+			  },
+			  ExerciseParameters.ArmIncrease,
+			  ExerciseParameters.BicepCurlEnergyUse,
+			  BicepCurlDuration);
 		break;
 	default:
 		break;
@@ -432,6 +462,7 @@ void UExercise_OM::DetachEquipment() const
 
 	Equipment->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	Equipment->SetActorTransform(Equipment->GetOriginalPosition());
+	Equipment->SetIsInteractable(true);
 }
 
 void UExercise_OM::SetCurrentWorkoutState(const EWorkoutStates InWorkoutState)

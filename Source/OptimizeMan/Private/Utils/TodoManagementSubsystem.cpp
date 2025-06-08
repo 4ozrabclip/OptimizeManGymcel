@@ -151,8 +151,9 @@ void UTodoManagementSubsystem::ProcessPotentialTodos()
 	AddToPotentialTodos(GetARealGirlfriend);
 	
 	ProcessTodoHelper(!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3, StartBulking);
-	
-	ProcessTodoHelper(BodyStatus.LowerBody > 0 && BodyStatus.LowerBody < 0.5, HitTenSquats);
+
+	float ThighStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
+	ProcessTodoHelper(ThighStrength > 0 && ThighStrength < 0.5, HitTenSquats);
 	
 	ProcessTodoHelper(InventoryData.Money > 5 && !InventoryData.bOwnsSteroids, BuySteroids);
 	ProcessTodoHelper(InventoryData.Money > 0 && InventoryData.bOwnsSteroids, BuySomething);
@@ -178,7 +179,6 @@ void UTodoManagementSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	TimerToTryCasts();
 }
-
   
 // ------- THIS WHOLE THING IS SUS.   SUSS IT OUT!!!!! <-------------------------------------------------
 void UTodoManagementSubsystem::TimerToTryCasts()

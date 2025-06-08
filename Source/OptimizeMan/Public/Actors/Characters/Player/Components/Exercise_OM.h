@@ -6,6 +6,7 @@
 #include "Actors/Characters/Components/CharacterComponentBase_OM.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/ExerciseParameters.h"
+#include "Utils/Structs/PlayerData.h"
 #include "Exercise_OM.generated.h"
 
 
@@ -45,6 +46,7 @@ public: // Exercise Management
 	void DoASquat();
 	float GetRepDuration();
 	EExerciseType GetCurrentExerciseType();
+	void AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const;
 	bool GetHasEnergy();
 
 	UFUNCTION(BlueprintCallable, Category = "Exercise")

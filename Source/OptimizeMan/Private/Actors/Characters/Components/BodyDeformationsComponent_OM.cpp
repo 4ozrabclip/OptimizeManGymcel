@@ -24,42 +24,32 @@ void UBodyDeformationsComponent_OM::LoadDeformations(const bool bResetPlayer)
 		return;
 	}
 }
-void UBodyDeformationsComponent_OM::ClearDeformationForBodyPart(const EBodyParts BodyPart)
+void UBodyDeformationsComponent_OM::ClearDeformationForBodyPart(const FBodyPartData BodyPart)
 {
 	if (FBodyPartSequence* BodyPartSequence = ActiveSequences.Find(BodyPart))
 	{
-		UE_LOG(LogTemp, Display, TEXT("Found bodypartsequence for bodypart"));
 		if (BodyPartSequence->SequencePlayer)
 		{
-			UE_LOG(LogTemp, Display, TEXT("Stop Sequence"));
 			BodyPartSequence->SequencePlayer->Stop();
 		}
         
 		if (BodyPartSequence->SequenceActor)
 		{
-			UE_LOG(LogTemp, Display, TEXT("body part sequence has sequence actor"));
 			for (const FMovieSceneObjectBindingID& BindingID : BodyPartSequence->BindingIDs)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Removed binding"));
 				BodyPartSequence->SequenceActor->RemoveBinding(BindingID, GetOwner());
 			}
-			UE_LOG(LogTemp, Warning, TEXT("destroyed sequence actor"));
 			BodyPartSequence->SequenceActor->Destroy();
 		}
-        
 		ActiveSequences.Remove(BodyPart);
-		UE_LOG(LogTemp, Warning, TEXT("Remooved body part from active sequences"));
 	}
 }
 
 void UBodyDeformationsComponent_OM::SetDeformation(ULevelSequence* InDeformationSequence)
 {
-	UE_LOG(LogTemp, Error, TEXT("SetDeformation called"));
 	if (!InDeformationSequence)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Sequence that you inputted is null"));
 		return;
-	}
+	
 	FMovieSceneSequencePlaybackSettings PlaybackSettings;
 	PlaybackSettings.bAutoPlay = true;
 
@@ -72,15 +62,9 @@ void UBodyDeformationsComponent_OM::SetDeformation(ULevelSequence* InDeformation
 	);
 
 	if (!SequencePlayer)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Sequence Player failed to build"));
 		return;
-	}
 	if (!SequenceActor)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Sequence Actor failed to init"));
 		return;
-	}
 
 	FName CharacterBindingTag = FName(*CharacterTag);
 	TArray<FMovieSceneObjectBindingID> BindingIDArray = InDeformationSequence->FindBindingsByTag(CharacterBindingTag);
@@ -89,24 +73,21 @@ void UBodyDeformationsComponent_OM::SetDeformation(ULevelSequence* InDeformation
 	{
 		for (FMovieSceneObjectBindingID BindingID : BindingIDArray)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Found binding"));
 			SequenceActor->AddBinding(BindingID, GetOwner(), true);
 		}
 		SequencePlayer->Play();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Havent set binding id on the sequence"));
 		return;
 	}
-
 	if (SequencePlayer->IsPlaying())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Sequence playing"));
 	}
 }
 
-void UBodyDeformationsComponent_OM::SetDeformationForBodyPart(ULevelSequence* InDeformationSequence, const EBodyParts BodyPart)
+void UBodyDeformationsComponent_OM::SetDeformationForBodyPart(ULevelSequence* InDeformationSequence, const FBodyPartData BodyPart)
 {
 	ClearDeformationForBodyPart(BodyPart);
     

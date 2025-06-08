@@ -161,6 +161,8 @@ void UExerciseInteractWidget_OM::OnExitButtonClicked()
 	}
 	ExerciseComponent->LeaveExercise();
 
+	
+
 
 	Super::OnExitButtonClicked();
 

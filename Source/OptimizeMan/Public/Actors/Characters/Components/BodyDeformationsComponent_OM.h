@@ -5,19 +5,11 @@
 #include "CoreMinimal.h"
 #include "MovieSceneObjectBindingID.h"
 #include "Actors/Characters/Components/CharacterComponentBase_OM.h"
+#include "Utils/Structs/PlayerData.h"
 #include "BodyDeformationsComponent_OM.generated.h"
 
 class ULevelSequence;
 
-UENUM()
-enum class EBodyParts : uint8
-{
-	Jaw,
-	LeftArm,
-	RightArm,
-	LowerBody,
-	Calves
-};
 /**
  * 
  */
@@ -30,8 +22,8 @@ public:
 
 protected:
 	virtual void LoadDeformations(const bool bResetPlayer = false);
-	void ClearDeformationForBodyPart(EBodyParts BodyPart);
-	virtual void SetDeformationForBodyPart(ULevelSequence* InDeformationSequence, EBodyParts BodyPart);
+	void ClearDeformationForBodyPart(FBodyPartData BodyPart);
+	virtual void SetDeformationForBodyPart(ULevelSequence* InDeformationSequence, FBodyPartData BodyPart);
 	virtual void SetDeformation(ULevelSequence* InDeformationSequence);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Sequence Tag")
@@ -46,5 +38,5 @@ private:
 		TArray<FMovieSceneObjectBindingID> BindingIDs;
 	};
 	
-	TMap<EBodyParts, FBodyPartSequence> ActiveSequences;
+	TMap<FBodyPartData, FBodyPartSequence> ActiveSequences;
 };

@@ -42,6 +42,8 @@ public:
 	bool GetIsLaughing() const { return bIsLaughing; }
 	bool GetIsConfused() const { return bIsConfused; }
 	bool GetIsInSquatPosition() const;
+	bool GetIsSquatting() const { return bIsSquatting; }
+	
 
 	
 

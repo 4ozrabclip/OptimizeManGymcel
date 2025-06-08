@@ -31,6 +31,12 @@ public: // Initialization
 
 	void InitializePostersOwned();
 	void InitializeGameSettings();
+	FBodyPartData* FindBodyPart(EBodyPart Part, EBodyPartSide Side);
+	float GetBodyPartStrengthValue(EBodyPart Part, EBodyPartSide Side);
+	float GetBodyPartLeftRightCombinedStrengthValue(EBodyPart Part);
+
+	float* GetBodyPartStrengthPtr(EBodyPart Part, EBodyPartSide Side);
+
 	void InitializePlayerData();
 
 

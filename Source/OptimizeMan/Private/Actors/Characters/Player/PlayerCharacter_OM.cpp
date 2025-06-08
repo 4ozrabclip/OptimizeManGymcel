@@ -640,8 +640,8 @@ void APlayerCharacter_OM::Jump()
 		return;
 	}
 
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
-	float CurrentJumpHeight = CalculateJumpHeight(BodyStatus.LowerBody);
+	//FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	float CurrentJumpHeight = CalculateJumpHeight(0.2f);
 	GetCharacterMovement()->JumpZVelocity = CurrentJumpHeight;
 	Super::Jump();
 }
@@ -653,7 +653,6 @@ float APlayerCharacter_OM::CalculateJumpHeight(const float LowerBodyStat) const
 	
 	return FMath::Clamp(CalculatedHeight, MinJumpHeight, MaxJumpHeight);
 }
-
 
 float APlayerCharacter_OM::GetMaxMovementSpeed() const
 {

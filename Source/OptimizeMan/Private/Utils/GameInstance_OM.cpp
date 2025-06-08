@@ -77,20 +77,51 @@ void UGameInstance_OM::InitializeGameSettings()
 {
 	GameSettings.bDarkMode = false;
 }
+FBodyPartData* UGameInstance_OM::FindBodyPart(EBodyPart Part, EBodyPartSide Side)
+{
+	for (FBodyPartData& PartData : BodyStatus.BodyParts)
+	{
+		if (PartData.Part == Part && PartData.Side == Side)
+		{
+			return &PartData;
+		}
+	}
+	return nullptr;
+}
+float UGameInstance_OM::GetBodyPartStrengthValue(EBodyPart Part, EBodyPartSide Side)
+{
+	if (FBodyPartData* PartData = FindBodyPart(Part, Side))
+	{
+		return PartData->Strength;
+	}
+	return 0.f;
+}
+float UGameInstance_OM::GetBodyPartLeftRightCombinedStrengthValue(EBodyPart Part)
+{
+	float LeftPartStrength = GetBodyPartStrengthValue(Part, Left);
+	float RightPartStrength = GetBodyPartStrengthValue(Part, Right);
+	
+	return LeftPartStrength + RightPartStrength / 2.f;
+	
+}
+
+float* UGameInstance_OM::GetBodyPartStrengthPtr(EBodyPart Part, EBodyPartSide Side)
+{
+	if (FBodyPartData* PartData = FindBodyPart(Part, Side))
+	{
+		return &PartData->Strength;
+	}
+	return nullptr;
+}
+
+
 void UGameInstance_OM::InitializePlayerData()
 {
 	SetStat(InnerStatus.Ego, 0.f);
 	SetStat(InnerStatus.Social, 0.f);
 	SetStat(InnerStatus.SexAppeal, 0.f);
 	SetPossesion(InnerStatus.bIsDelusional, false);
-
-	SetStat(BodyStatus.Calves, 0.f);
-	SetStat(BodyStatus.Jaw, 0.f);
-	SetStat(BodyStatus.Shoulders, 0.f);
-	SetStat(BodyStatus.LeftArm, 0.f);
-	SetStat(BodyStatus.RightArm, 0.f);
-	SetStat(BodyStatus.LowerBody, 0.f);
-	SetStat(BodyStatus.OverallStrength, 0.f);
+	
 	SetPossesion(BodyStatus.bIsBulking, false);
 	SetPossesion(BodyStatus.bHasJawSurgery, false);
 	SetPossesion(BodyStatus.bCurrentlyOnSteroids, false);

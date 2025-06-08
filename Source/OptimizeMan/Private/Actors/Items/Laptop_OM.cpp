@@ -129,14 +129,14 @@ void ALaptop_OM::BuyItem()
 	const FString ChadPosterType_String = "Chad";
 	const FString WaifuPosterType_String = "Waifu";
 	
-	
+	FBodyPartData* Jaw = GameInstance->FindBodyPart(EBodyPart::Jaw, Center);
 	switch (CurrentShopAndBook)
 	{
 	case EShopAndBook::JawSurgery:
-		if ((GameInstance->GetMoney() >= JawSurgeryPrice) && (BodyStatus.Jaw <= 1.f - JawSurgeryIncrease))
+		if ((GameInstance->GetMoney() >= JawSurgeryPrice) && (Jaw->Strength <= 1.f - JawSurgeryIncrease))
 		{
 			GameInstance->SetMoney(-JawSurgeryPrice);
-			GameInstance->AddStat(BodyStatus.Jaw, JawSurgeryIncrease);
+			GameInstance->AddStat(Jaw->Strength, JawSurgeryIncrease);
 			GameInstance->SetPossesion(BodyStatus.bHasJawSurgery, true);
 
 			CompletedTodosCheckList.Empty();

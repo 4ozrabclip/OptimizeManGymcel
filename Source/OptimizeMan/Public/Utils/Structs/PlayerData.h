@@ -37,47 +37,97 @@ struct FGymResStats
 	float Bladder;
 	
 };
+UENUM(BlueprintType)
+enum EBodyPart
+{
+	Jaw			UMETA(DisplayName = "Jaw"),
+	Shoulder	UMETA(DisplayName = "Shoulder"),
+	Arm			UMETA(DisplayName = "Arm"),
+	Chest		UMETA(DisplayName = "Chest"),
+	Back		UMETA(DisplayName = "Back"),
+	Abdominal	UMETA(DisplayName = "Abdominal"),
+	Thigh		UMETA(DisplayName = "Thigh"),
+	Calve		UMETA(DisplayName = "Calve")
+};
+UENUM(BlueprintType)
+enum EBodyPartSide : uint8
+{
+	Left	UMETA(DisplayName = "Left"),
+	Right	UMETA(DisplayName = "Right"),
+	Center	UMETA(DisplayName = "Center")
+};
+UENUM(BlueprintType)
+enum EInjuryLevel : uint8
+{
+	None	UMETA(DisplayName = "None"),
+	Minor	UMETA(DisplayName = "Minor Injury"),
+	Medium	UMETA(DisplayName = "Medium Injury"),
+	Major	UMETA(DisplayName = "Major Injury"),
+};
+USTRUCT(BlueprintType)
+struct FBodyPartData
+{
+	GENERATED_USTRUCT_BODY()
+	FBodyPartData() :
+	Strength(0.f),
+	Part(EBodyPart::Abdominal),
+	Side(EBodyPartSide::Center),
+	InjuryLevel(EInjuryLevel::None)
+	{}
+	FBodyPartData(const EBodyPart InPart, const EBodyPartSide InSide) :
+	Strength(0.f),
+	Part(InPart),
+	Side(InSide),
+	InjuryLevel(EInjuryLevel::None)
+	{}
+	
+	UPROPERTY(BlueprintReadOnly)
+	float Strength;
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EBodyPart> Part;
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EBodyPartSide> Side;
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EInjuryLevel> InjuryLevel;
 
+	bool operator==(const FBodyPartData& Other) const
+	{
+		return Part == Other.Part && Side == Other.Side;
+	}
+};
 
+FORCEINLINE uint32 GetTypeHash(const FBodyPartData& PartData)
+{
+	return HashCombine(GetTypeHash(PartData.Part), GetTypeHash(PartData.Side));
+}
 USTRUCT(BlueprintType)
 struct FBodyStatus
 {
 	GENERATED_USTRUCT_BODY()
 
-	FBodyStatus()
-	: OverallStrength(0.f),
-	Jaw(0.f),
-	LowerBody(0.f),
-	Calves(0.f),
-	LeftArm(0.f),
-	RightArm(0.f),
-	Shoulders(0.f),
+	FBodyStatus() :
 	bHasJawSurgery(false),
 	bHasLegLengtheningSurgery(false),
 	bCurrentlyOnSteroids(false),
 	bIsBulking(false)
-	{}
+	{
+		BodyParts.Add(FBodyPartData(EBodyPart::Jaw, EBodyPartSide::Center));
+		BodyParts.Add(FBodyPartData(EBodyPart::Arm, EBodyPartSide::Left));
+		BodyParts.Add(FBodyPartData(EBodyPart::Arm, EBodyPartSide::Right));
+		BodyParts.Add(FBodyPartData(EBodyPart::Chest, EBodyPartSide::Center));
+		BodyParts.Add(FBodyPartData(EBodyPart::Back, EBodyPartSide::Center));
+		BodyParts.Add(FBodyPartData(EBodyPart::Thigh, EBodyPartSide::Left));
+		BodyParts.Add(FBodyPartData(EBodyPart::Thigh, EBodyPartSide::Right));
+		BodyParts.Add(FBodyPartData(EBodyPart::Calve, EBodyPartSide::Left));
+		BodyParts.Add(FBodyPartData(EBodyPart::Calve, EBodyPartSide::Right));
+	}
 
 	/*
 	 *	Physical Stats
 	 */
-	UPROPERTY(BlueprintReadWrite)
-	float OverallStrength;
-	// Face
-	UPROPERTY(BlueprintReadWrite)
-	float Jaw;
-	//	Lower
-	UPROPERTY(BlueprintReadWrite)
-	float LowerBody;
-	UPROPERTY(BlueprintReadWrite)
-	float Calves;
-	// Arms
-	UPROPERTY(BlueprintReadWrite)
-	float LeftArm;
-	UPROPERTY(BlueprintReadWrite)
-	float RightArm;
-	UPROPERTY(BlueprintReadWrite)
-	float Shoulders;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FBodyPartData> BodyParts;
+	
 	UPROPERTY(BlueprintReadWrite)
 	bool bHasJawSurgery;
 	UPROPERTY(BlueprintReadWrite)
@@ -110,8 +160,7 @@ struct FInnerStatus
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsDelusional;
 
-
-
+	
 };
 USTRUCT(BlueprintType)
 struct FGamePointsData

@@ -3,6 +3,7 @@
 
 #include "Widgets/PauseMenuWidget_OM.h"
 
+#include "VREditorBaseActor.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/Components/NotificationAudio_OM.h"
 #include "Actors/Characters/Player/Components/PlayerDeformationsComponent_OM.h"
@@ -234,8 +235,8 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	}
 
 	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 
+	
 	const float JawValue = JawStat_Slider->GetValue();
 	const float LeftArmValue = LeftArmStat_Slider->GetValue();
 	const float RightArmValue = RightArmStat_Slider->GetValue();
@@ -245,17 +246,26 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	const float EgoValue = EgoStat_Slider->GetValue();
 	const float SexAppealValue = SexAppealStat_Slider->GetValue();
 
-	GameInstance->SetStat(BodyStatus.Jaw, JawValue);
-	GameInstance->SetStat(BodyStatus.LeftArm, LeftArmValue);
-	GameInstance->SetStat(BodyStatus.RightArm, RightArmValue);
-	GameInstance->SetStat(BodyStatus.LowerBody, ThighsValue);
-	GameInstance->SetStat(BodyStatus.Calves, CalvesValue);
+	float* JawStrength = GameInstance->GetBodyPartStrengthPtr(Jaw, Center);
+	float* LeftArmStrength = GameInstance->GetBodyPartStrengthPtr(Arm, Left);
+	float* RightArmStrength = GameInstance->GetBodyPartStrengthPtr(Arm, Right);
+	float* LeftThighStrength = GameInstance->GetBodyPartStrengthPtr(Thigh, Left);
+	float* RightThighStrength = GameInstance->GetBodyPartStrengthPtr(Thigh, Right);
+	float* LeftCalveStrength = GameInstance->GetBodyPartStrengthPtr(Calve, Left);
+	float* RightCalveStrength = GameInstance->GetBodyPartStrengthPtr(Calve, Right);
+
+	GameInstance->SetStat(*JawStrength, JawValue);
+	GameInstance->SetStat(*LeftArmStrength, LeftArmValue);
+	GameInstance->SetStat(*RightArmStrength, RightArmValue);
+	GameInstance->SetStat(*LeftThighStrength, ThighsValue);
+	GameInstance->SetStat(*RightThighStrength, ThighsValue);
+	GameInstance->SetStat(*LeftCalveStrength, CalvesValue);
+	GameInstance->SetStat(*RightCalveStrength, CalvesValue);
+	
 	GameInstance->SetStat(InnerStatus.Social, SocialValue);
 	GameInstance->SetStat(InnerStatus.Ego, EgoValue);
 	GameInstance->SetStat(InnerStatus.SexAppeal, SexAppealValue);
-
-
-
+	
 	if (GameInstance->GetCurrentEmotionalState() != NewEmotionalState)
 	{
 		GameInstance->SetCurrentEmotionalState(NewEmotionalState);
@@ -306,11 +316,17 @@ void UPauseMenuWidget_OM::OpenChangeStats()
 	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
-	JawStat_Slider->SetValue(BodyStatus.Jaw);
-	LeftArmStat_Slider->SetValue(BodyStatus.LeftArm);
-	RightArmStat_Slider->SetValue(BodyStatus.RightArm);
-	ThighsStat_Slider->SetValue(BodyStatus.LowerBody);
-	CalvesStat_Slider->SetValue(BodyStatus.Calves);
+	const float JawStrength = GameInstance->GetBodyPartStrengthValue(Jaw, Center);
+	const float LeftArmStrength = GameInstance->GetBodyPartStrengthValue(Arm, Left);
+	const float RightArmStrength = GameInstance->GetBodyPartStrengthValue(Arm, Right);
+	const float ThighsStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
+	const float CalvesStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Calve);
+
+	JawStat_Slider->SetValue(JawStrength);
+	LeftArmStat_Slider->SetValue(LeftArmStrength);
+	RightArmStat_Slider->SetValue(RightArmStrength);
+	ThighsStat_Slider->SetValue(ThighsStrength);
+	CalvesStat_Slider->SetValue(CalvesStrength);
 	SocialStat_Slider->SetValue(InnerStatus.Social);
 	EgoStat_Slider->SetValue(InnerStatus.Ego);
 	SexAppealStat_Slider->SetValue(InnerStatus.SexAppeal);

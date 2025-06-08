@@ -25,7 +25,6 @@ AExerciseEquipment_OM::AExerciseEquipment_OM()
 	SelectWorkoutWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	SelectWorkoutWidget->SetupAttachment(RootComponent);
 	SelectWorkoutWidget->SetVisibility(false);
-
 }
 
 void AExerciseEquipment_OM::BeginPlay()
@@ -74,6 +73,7 @@ void AExerciseEquipment_OM::Interact_Implementation()
 	
 	PlayerController->HideUnhideInteractableWidget(true);
 	SelectWorkoutWidget->SetVisibility(true);
+	SetIsInteractable(false);
 	//InteractableInterfaceProperties.bIsInteractable = false;
 	Player->SetToUIMode(true, true);
 }
