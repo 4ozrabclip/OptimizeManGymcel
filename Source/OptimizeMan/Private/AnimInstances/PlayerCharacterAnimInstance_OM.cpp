@@ -7,7 +7,7 @@
 void UPlayerCharacterAnimInstance_OM::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
-	
+	bUseMultiThreadedAnimationUpdate = false;
 	Player = Cast<APlayerCharacter_OM>(TryGetPawnOwner());
 
 	bIsWalking = false;
@@ -20,6 +20,8 @@ void UPlayerCharacterAnimInstance_OM::NativeInitializeAnimation()
 	bIsInRightCurlPosition = false;
 	bIsLeftCurling = false;
 	bIsRightCurling = false;
+
+
 }
 
 void UPlayerCharacterAnimInstance_OM::NativeUpdateAnimation(float DeltaSeconds)

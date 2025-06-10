@@ -79,8 +79,6 @@ private: //Private Variables
 	FTimerHandle SetLaptopModeTimerHandle;
 	FTimerHandle SetShelfModeTimerHandle;
 
-	
-
 
 protected: //Protected Variables
 

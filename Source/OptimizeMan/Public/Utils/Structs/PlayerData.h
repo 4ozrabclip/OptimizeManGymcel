@@ -57,7 +57,7 @@ enum EBodyPartSide : uint8
 	Center	UMETA(DisplayName = "Center")
 };
 UENUM(BlueprintType)
-enum EInjuryLevel : uint8
+enum class EInjuryLevel : uint8
 {
 	None	UMETA(DisplayName = "None"),
 	Minor	UMETA(DisplayName = "Minor Injury"),
@@ -74,7 +74,7 @@ struct FBodyPartData
 	Side(EBodyPartSide::Center),
 	InjuryLevel(EInjuryLevel::None)
 	{}
-	FBodyPartData(const EBodyPart InPart, const EBodyPartSide InSide) :
+	FBodyPartData(const EBodyPart& InPart, const EBodyPartSide& InSide) :
 	Strength(0.f),
 	Part(InPart),
 	Side(InSide),
@@ -88,7 +88,12 @@ struct FBodyPartData
 	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<EBodyPartSide> Side;
 	UPROPERTY(BlueprintReadOnly)
-	TEnumAsByte<EInjuryLevel> InjuryLevel;
+	EInjuryLevel InjuryLevel;
+
+	void SetInjury(const EInjuryLevel& InInjuryLevel)
+	{
+		InjuryLevel = InInjuryLevel;
+	}
 
 	bool operator==(const FBodyPartData& Other) const
 	{

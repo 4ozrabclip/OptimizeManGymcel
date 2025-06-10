@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "Utils/Structs/ExerciseData.h"
+#include "Utils/Structs/PlayerData.h"
 #include "PlayerCharacterAnimInstance_OM.generated.h"
 
 /**
@@ -38,6 +39,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
 	void SetHasSquatInjury(const bool InHasSquatInjury) { bHasSquatInjury1 = InHasSquatInjury; }
+
+	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
+	void SetInjuryLevel(const EInjuryLevel InInjuryLevel) { InjuryLevel = InInjuryLevel; };
+	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
+	EInjuryLevel GetInjuryLevel() const { return InjuryLevel; };
 
 	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
 	void SetHasMinorSquatInjury(const bool InHasSquatInjuryMinor) { bHasSquatInjuryMinor = InHasSquatInjuryMinor; }
@@ -80,6 +86,7 @@ protected:
 	bool bIsWalking;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	bool bIsJumping;
+	
 
 
 	//Exercises
@@ -107,12 +114,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
 	bool bIsRightCurling;
 
-
 	
-	
-
 
 	//Injuries
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Injury", meta = (AllowPrivateAccess = "true"))
+	EInjuryLevel InjuryLevel;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Injury", meta = (AllowPrivateAccess = "true"))
 	bool bHasSquatInjury1;
 

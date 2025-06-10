@@ -78,6 +78,13 @@ void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	}
 }
 
+void UExercise_OM::SetBodyPartInUse(const FBodyPartData& InBodyPart, const int Index)
+{
+	if (BodyParts[Index] != nullptr) return;
+
+	*BodyParts[Index] = InBodyPart;
+}
+
 void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 {
 
@@ -177,23 +184,27 @@ void UExercise_OM::MiniGame()
 }
 
 
-
-void UExercise_OM::Injury()
+void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 {
+	AnimInstance->SetInjuryLevel(InInjuryLevel);
 	switch (CurrentExerciseType)
 	{
-		case EExerciseType::None:
-			break;
-		case EExerciseType::Squat:
-			AnimInstance->SetHasSquatInjury(true);
-			AudioComponent->InjurySoundEffects(CurrentExerciseType);
-		
-			break;
-		default:
-			break;
+	case EExerciseType::None:
+		break;
+	case EExerciseType::Squat:
+		AnimInstance->SetHasSquatInjury(true);
+		AudioComponent->InjurySoundEffects(CurrentExerciseType);
+		break;
+	default:
+		break;
 	}
-}
 
+	if (BodyParts.IsEmpty()) return;
+	
+	for (FBodyPartData* Part : BodyParts)
+		Part->SetInjury(InInjuryLevel);
+	
+}
 void UExercise_OM::MinorInjury()
 {
 	constexpr float InjuryFocusDecrease = -0.2f;

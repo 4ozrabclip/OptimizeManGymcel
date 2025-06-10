@@ -410,7 +410,7 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 	{
 		ExerciseComponent->MiniGame();
 
-		ExerciseComponent->MinorInjury();
+		ExerciseComponent->Injury(EInjuryLevel::Minor);
 
 		UpdateStats();
 		
@@ -418,7 +418,7 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 	else   //			M A J O R  I N J U R Y 
 	{
 		BloodSplatter->SetVisibility(ESlateVisibility::HitTestInvisible);
-		ExerciseComponent->Injury();
+		ExerciseComponent->Injury(EInjuryLevel::Major);
 		
 		SetMiniGameOn(false);
 	}

@@ -77,7 +77,7 @@ void UGameInstance_OM::InitializeGameSettings()
 {
 	GameSettings.bDarkMode = false;
 }
-FBodyPartData* UGameInstance_OM::FindBodyPart(EBodyPart Part, EBodyPartSide Side)
+FBodyPartData* UGameInstance_OM::FindBodyPart(const EBodyPart& Part, const EBodyPartSide& Side)
 {
 	for (FBodyPartData& PartData : BodyStatus.BodyParts)
 	{
@@ -88,7 +88,7 @@ FBodyPartData* UGameInstance_OM::FindBodyPart(EBodyPart Part, EBodyPartSide Side
 	}
 	return nullptr;
 }
-float UGameInstance_OM::GetBodyPartStrengthValue(EBodyPart Part, EBodyPartSide Side)
+float UGameInstance_OM::GetBodyPartStrengthValue(const EBodyPart& Part, const EBodyPartSide& Side)
 {
 	if (FBodyPartData* PartData = FindBodyPart(Part, Side))
 	{
@@ -96,7 +96,7 @@ float UGameInstance_OM::GetBodyPartStrengthValue(EBodyPart Part, EBodyPartSide S
 	}
 	return 0.f;
 }
-float UGameInstance_OM::GetBodyPartLeftRightCombinedStrengthValue(EBodyPart Part)
+float UGameInstance_OM::GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part)
 {
 	float LeftPartStrength = GetBodyPartStrengthValue(Part, Left);
 	float RightPartStrength = GetBodyPartStrengthValue(Part, Right);
@@ -105,7 +105,7 @@ float UGameInstance_OM::GetBodyPartLeftRightCombinedStrengthValue(EBodyPart Part
 	
 }
 
-float* UGameInstance_OM::GetBodyPartStrengthPtr(EBodyPart Part, EBodyPartSide Side)
+float* UGameInstance_OM::GetBodyPartStrengthPtr(const EBodyPart& Part, const EBodyPartSide& Side)
 {
 	if (FBodyPartData* PartData = FindBodyPart(Part, Side))
 	{

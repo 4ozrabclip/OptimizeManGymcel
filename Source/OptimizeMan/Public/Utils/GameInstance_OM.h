@@ -31,11 +31,11 @@ public: // Initialization
 
 	void InitializePostersOwned();
 	void InitializeGameSettings();
-	FBodyPartData* FindBodyPart(EBodyPart Part, EBodyPartSide Side);
-	float GetBodyPartStrengthValue(EBodyPart Part, EBodyPartSide Side);
-	float GetBodyPartLeftRightCombinedStrengthValue(EBodyPart Part);
+	FBodyPartData* FindBodyPart(const EBodyPart& Part, const EBodyPartSide& Side);
+	float GetBodyPartStrengthValue(const EBodyPart& Part, const EBodyPartSide& Side);
+	float GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part);
 
-	float* GetBodyPartStrengthPtr(EBodyPart Part, EBodyPartSide Side);
+	float* GetBodyPartStrengthPtr(const EBodyPart& Part, const EBodyPartSide& Side);
 
 	void InitializePlayerData();
 

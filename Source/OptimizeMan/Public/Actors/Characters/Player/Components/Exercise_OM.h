@@ -10,6 +10,7 @@
 #include "Exercise_OM.generated.h"
 
 
+class AExerciseEquipment_OM;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorkoutStateChanged, EWorkoutStates, NewWorkoutState);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class OPTIMIZEMAN_API UExercise_OM : public UCharacterComponentBase_OM
@@ -18,7 +19,12 @@ class OPTIMIZEMAN_API UExercise_OM : public UCharacterComponentBase_OM
 
 public:	
 	UExercise_OM();
+protected:
 	virtual void BeginPlay() override;
+public:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void ClearBodyPartsInUse() {BodyParts.Empty(); }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exercise")
@@ -26,28 +32,31 @@ protected:
 
 	EWorkoutStates CurrentWorkoutState;
 
-
+	TArray<FBodyPartData*> BodyParts;
 	
 	UPROPERTY()
-	class AExerciseEquipment_OM* Equipment;
-
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	AExerciseEquipment_OM* Equipment;
 
 public: // Exercise Management
-
+	
+// Events
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWorkoutStateChanged OnWorkoutStateChanged;
-	
+
+	//Getters and Setters
+	UFUNCTION()
+	void SetBodyPartInUse(const FBodyPartData& InBodyPart, const int Index = 0);
 	UFUNCTION(BlueprintCallable, Category="Exercise")
 	void SetExerciseType(const EExerciseType InExerciseType);
-	void PrepareExercise();
 
+	EExerciseType GetCurrentExerciseType();
+	float GetRepDuration();
+	bool GetHasEnergy();
+	// Functional
+	void PrepareExercise();
+	void AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const;
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void DoASquat();
-	float GetRepDuration();
-	EExerciseType GetCurrentExerciseType();
-	void AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const;
-	bool GetHasEnergy();
 
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void LeaveExercise();
@@ -58,7 +67,7 @@ public: // Exercise Management
 	           float MuscleIncrease, float EnergyUse, float RepDuration);
 	void CheckForExerciseAchievements();
 
-	void Injury();
+	void Injury(const EInjuryLevel& InInjuryLevel);
 	void MinorInjury();
 
 	UFUNCTION(BlueprintCallable, Category = "Exercise")

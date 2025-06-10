@@ -76,7 +76,7 @@ protected:
 
 	float MuscleGroupCurrentStrength = 0.f;
 
-
+	
 
 private:
 
