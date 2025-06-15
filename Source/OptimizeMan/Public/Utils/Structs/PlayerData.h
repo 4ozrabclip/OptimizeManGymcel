@@ -105,6 +105,7 @@ FORCEINLINE uint32 GetTypeHash(const FBodyPartData& PartData)
 {
 	return HashCombine(GetTypeHash(PartData.Part), GetTypeHash(PartData.Side));
 }
+
 USTRUCT(BlueprintType)
 struct FBodyStatus
 {
@@ -164,16 +165,14 @@ struct FInnerStatus
 	float Social;
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsDelusional;
-
-	
 };
 USTRUCT(BlueprintType)
 struct FGamePointsData
 {
 	GENERATED_USTRUCT_BODY()
 
-	FGamePointsData()
-		: GamePoints(0.f)
+	FGamePointsData() :
+		GamePoints(0.f)
 	{}
 	UPROPERTY(BlueprintReadWrite)
 	int GamePoints;

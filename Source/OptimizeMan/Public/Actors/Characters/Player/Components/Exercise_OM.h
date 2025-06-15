@@ -21,6 +21,8 @@ public:
 	UExercise_OM();
 protected:
 	virtual void BeginPlay() override;
+	void InitInjurys() const;
+
 public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

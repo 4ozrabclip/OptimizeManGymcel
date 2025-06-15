@@ -31,7 +31,7 @@ void UExercise_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AnimInstance->SetHasSquatInjury(false);
+	InitInjurys();
 	
 	AudioComponent = Player->FindComponentByClass<UPlayerVoiceAudio_OM>();
 	if (!AudioComponent)
@@ -45,6 +45,12 @@ void UExercise_OM::BeginPlay()
 	}
 
 	SetComponentTickEnabled(false);
+}
+void UExercise_OM::InitInjurys() const
+{
+	if (!AnimInstance) return;
+
+	AnimInstance->SetHasSquatInjury(false);
 }
 void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
@@ -203,7 +209,6 @@ void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 	
 	for (FBodyPartData* Part : BodyParts)
 		Part->SetInjury(InInjuryLevel);
-	
 }
 void UExercise_OM::MinorInjury()
 {
