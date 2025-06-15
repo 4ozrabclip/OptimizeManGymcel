@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Characters/NPC/NpcBase_OM.h"
+#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Animation/AnimInstance.h"
 #include "NpcBaseAnimInstance_OM.generated.h"
 
@@ -134,7 +134,7 @@ protected:
 	
 	
 	UPROPERTY()
-	class ANpcBase_OM* OwningNpc;
+	ANpcBase_OM* OwningNpc;
 
 
 private:

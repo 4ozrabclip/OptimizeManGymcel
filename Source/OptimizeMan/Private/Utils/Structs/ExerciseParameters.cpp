@@ -1,6 +1,6 @@
 #include "Utils/Structs/ExerciseParameters.h"
 
-#include "Utils/GameInstance_OM.h"
+#include "Game/Persistent/GameInstance_OM.h"
 
 void FExerciseParameters::UpdateParameters(UGameInstance_OM* GameInstance)
 {

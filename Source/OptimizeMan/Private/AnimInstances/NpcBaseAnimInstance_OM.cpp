@@ -2,7 +2,6 @@
 
 
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
-#include "Actors/Characters/NPC/NpcBase_OM.h"
 #include "Chaos/Character/CharacterGroundConstraintContainer.h"
 
 void UNpcBaseAnimInstance_OM::NativeInitializeAnimation()

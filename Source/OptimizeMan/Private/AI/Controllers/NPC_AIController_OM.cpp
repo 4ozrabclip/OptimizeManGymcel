@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AI/Controllers/NPC_AIController_OM.h"
-#include "Actors/Characters/NPC/NpcBase_OM.h"
+#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "BehaviorTree/BehaviorTree.h"
 
 ANPC_AIController_OM::ANPC_AIController_OM(const FObjectInitializer& ObjectInitializer)

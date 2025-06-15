@@ -5,23 +5,23 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
-#include "Actors/InteractableActor_OM.h"
+#include "Actors/Other/Abstract/InteractableActor_OM.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Actors/Items/Gym/Equipment/Barbell_OM.h"
+#include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Actors/Characters/NPC/NpcBase_OM.h"
+#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
-#include "Actors/Characters/Player/Components/PlayerDeformationsComponent_OM.h"
-#include "OptimizeMan/Public/Utils/BedroomGameModeBase_OM.h"
-#include "OptimizeMan/Public/Utils/GymGameModeBase_OM.h"
-#include "Actors/Characters/Player/Components/Exercise_OM.h"
-#include "Actors/Characters/Player/Components/FootstepAudio_OM.h"
-#include "Actors/Characters/Player/Components/NotificationAudio_OM.h"
-#include "Utils/GameInstance_OM.h"
-#include "Actors/Characters/Player/Components/PlayerVoiceAudio_OM.h"
-#include "Actors/Characters/Player/Components/SocialInteractionSystem_OM.h"
+#include "Components/Character/Concrete/PlayerDeformationsComponent_OM.h"
+#include "OptimizeMan/Public/Game/GMB/BedroomGameModeBase_OM.h"
+#include "OptimizeMan/Public/Game/GMB/GymGameModeBase_OM.h"
+#include "Components/Character/Concrete/Exercise_OM.h"
+#include "Components/Audio/Concrete/FootstepAudio_OM.h"
+#include "Components/Audio/Concrete/NotificationAudio_OM.h"
+#include "Game/Persistent/GameInstance_OM.h"
+#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
+#include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
-#include "Utils/TodoManagementSubsystem.h"
+#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 APlayerCharacter_OM::APlayerCharacter_OM()
 {
@@ -214,7 +214,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	ShelfModeConfig.bHasAFadeIn = false;
 	ShelfModeConfig.bNeedsPreSteps = false;
 	PlayModeConfigs.Add(EPlayModes::ShelfMode, ShelfModeConfig);
-
+  
 	FPlayModeConfig LaptopModeConfig;
 	LaptopModeConfig.bSetToUiMode = true;
 	LaptopModeConfig.bAllowGameMovement = false;

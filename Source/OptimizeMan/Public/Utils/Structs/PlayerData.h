@@ -142,6 +142,8 @@ struct FBodyStatus
 	bool bCurrentlyOnSteroids;
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsBulking;
+
+	
 };
 USTRUCT(BlueprintType)
 struct FInnerStatus

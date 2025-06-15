@@ -119,6 +119,9 @@ private:
 	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OM> CachedAnimInstance;
 
 
+	
+
+
 public:
 	void ShitDay();
 	void ShitReaction();
