@@ -49,9 +49,16 @@ void UVendingMachineWidget_OM::SetConsumables()
 
 	if (VendingMachine)
 	{
-		for (AConsumable_OM* Item : VendingMachine->GetVendorInventory())
+		for (TSubclassOf<AConsumable_OM> Item : VendingMachine->GetVendorInventory())
 		{
-			Consumables.Add(Item->GetConsumableType());
+			if (Item)
+			{
+				if (AConsumable_OM* DefaultObject = Item->GetDefaultObject<AConsumable_OM>())
+				{
+					Consumables.Add(DefaultObject->GetConsumableType());
+				}
+			}
+
 		}
 	}
 	SetConsumablesText();
@@ -62,11 +69,11 @@ void UVendingMachineWidget_OM::SetConsumablesText()
 	if (Consumables.Num() <= 0) return;
 
 	if (Consumables.IsValidIndex(0))
-		SetConsumablesTextHelper(Option1Name_Text, FText::FromName(Consumables[0].Name));
+		SetConsumablesTextHelper(Option1Name_Text, FText::FromString(Consumables[0].NameString));
 	if (Consumables.IsValidIndex(1))
-		SetConsumablesTextHelper(Option2Name_Text, FText::FromName(Consumables[1].Name));
+		SetConsumablesTextHelper(Option2Name_Text, FText::FromString(Consumables[1].NameString));
 	if (Consumables.IsValidIndex(2))
-		SetConsumablesTextHelper(Option3Name_Text, FText::FromName(Consumables[2].Name));
+		SetConsumablesTextHelper(Option3Name_Text, FText::FromString(Consumables[2].NameString));
 		
 }
 

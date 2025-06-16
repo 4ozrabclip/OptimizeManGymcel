@@ -3,7 +3,13 @@
 #include "CoreMinimal.h"
 #include "ConsumableData.generated.h"
 
-
+UENUM(Blueprintable)
+enum class EConsumableName : uint8
+{
+	None		UMETA(DisplayName = "None"),
+	EnergyDrink UMETA(DisplayName = "EnergyDrink"),
+	Nicotine	UMETA(DisplayName = "Nicotine"),
+};
 UENUM()
 enum class EConsumableEffectTypes : uint8
 {
@@ -19,11 +25,21 @@ struct FConsumableType
 	GENERATED_USTRUCT_BODY()
 
 	FConsumableType() :
-		Name(FName("")),
+		Name(EConsumableName::None),
+		NameString(""),
 		LifeTime(0)
 	{}
+
+	FConsumableType(const EConsumableName InName, const FString& InNameString, const int InLifeTime) :
+		Name(InName),
+		NameString(InNameString),
+		LifeTime(InLifeTime)
+	{}
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Consumable)
-	FName Name;
+	EConsumableName Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Consumable)
+	FString NameString;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EConsumableEffectTypes, int> ConsumableEffects;

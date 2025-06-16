@@ -27,7 +27,7 @@ public:
 	void ExitVendor();
 
 public:
-	TArray<AConsumable_OM*> GetVendorInventory() { return VendingInventory;};
+	TArray<TSubclassOf<AConsumable_OM>> GetVendorInventory() { return VendingInventory;};
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
@@ -35,7 +35,7 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-	TArray<TObjectPtr<AConsumable_OM>> VendingInventory;
+	TArray<TSubclassOf<AConsumable_OM>> VendingInventory;
 
 private:
 
