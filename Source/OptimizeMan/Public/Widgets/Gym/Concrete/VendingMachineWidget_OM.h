@@ -7,6 +7,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
+class UOverlay;
 class UTextBlock;
 class UButton;
 /**
@@ -33,11 +34,13 @@ protected:
 	void OnOption2Clicked();
 	UFUNCTION()
 	void OnOption3Clicked();
-
+	void ShowNoMoneyWindow();
 
 private:
 	UPROPERTY()
 	AVendingMachine_OM* VendingMachine;
+
+	FTimerHandle NoMoneyTimer;
 
 public:
 	void InitVendingMachine(const TSoftObjectPtr<AVendingMachine_OM>& InVendingMachine) { VendingMachine = InVendingMachine.Get(); };
@@ -76,5 +79,8 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* YourMoney_Text;
+	
+	UPROPERTY(meta = (BindWidget))
+	UOverlay* NoMoneyOverlay;
 };
 

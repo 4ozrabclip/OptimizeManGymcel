@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Other/Abstract/Consumable_OM.h"
+#include "Actors/Other/Consumables/Abstract/Consumable_OM.h"
 #include "Actors/Other/Abstract/InteractableActor_OM.h"
 #include "VendingMachine_OM.generated.h"
 
@@ -21,22 +21,43 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void Interact_Implementation() override;
+	void PlaySound(USoundBase* InSound) const;
+
+
 
 public:
 	UFUNCTION()
 	void ExitVendor();
 
+	void SpawnItem(const FConsumableType& ItemToSpawn);
+
+	void PlayBuySound() const { PlaySound(BuySound); }
+	void PlayNoMoneySound() const { PlaySound(NoMoneySound); }
+
 public:
 	TArray<TSubclassOf<AConsumable_OM>> GetVendorInventory() { return VendingInventory;};
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	//Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UWidgetComponent* VendorWidgetComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UGameAudio_OM* VendorAudio;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Spawn Params")
+	USceneComponent* SpawnLocation;
 
-
+	//Other
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<TSubclassOf<AConsumable_OM>> VendingInventory;
 
+
+
+	//Sounds
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundBase* BuySound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundBase* NoMoneySound;
+	
 private:
 
 	

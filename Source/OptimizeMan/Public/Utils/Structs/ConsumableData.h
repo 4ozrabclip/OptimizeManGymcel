@@ -27,13 +27,15 @@ struct FConsumableType
 	FConsumableType() :
 		Name(EConsumableName::None),
 		NameString(""),
-		LifeTime(0)
+		LifeTime(0),
+		Price(0)
 	{}
 
-	FConsumableType(const EConsumableName InName, const FString& InNameString, const int InLifeTime) :
+	FConsumableType(const EConsumableName InName, const FString& InNameString, const int InLifeTime, const int InPrice) :
 		Name(InName),
 		NameString(InNameString),
-		LifeTime(InLifeTime)
+		LifeTime(InLifeTime),
+		Price(InPrice)
 	{}
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Consumable)
 	EConsumableName Name;
@@ -46,6 +48,9 @@ struct FConsumableType
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int LifeTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Price;
 
 	bool operator==(const FConsumableType& Other) const
 	{

@@ -174,8 +174,8 @@ public: //Getters and Setters
 	UFUNCTION()
 	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
 
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	void SetCurrentPlayMode(const EPlayModes InPlayMode, AInteractableActor_OM* InInteractedActor = nullptr, ANpcBase_OM* InInteractedCharacter = nullptr);
+	UFUNCTION(Category = "Gameplay")
+	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	EPlayModes GetCurrentPlayMode() const { return CurrentPlayMode; }

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Other/Abstract/Consumable_OM.h"
+#include "Actors/Other/Consumables/Abstract/Consumable_OM.h"
 #include "EnergyDrink_OM.generated.h"
 
 UCLASS()

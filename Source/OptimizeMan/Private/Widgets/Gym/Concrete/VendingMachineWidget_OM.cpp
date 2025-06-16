@@ -4,6 +4,7 @@
 #include "Widgets/Gym/Concrete/VendingMachineWidget_OM.h"
 
 #include "Components/Button.h"
+#include "Components/Overlay.h"
 #include "Components/TextBlock.h"
 
 void UVendingMachineWidget_OM::NativeConstruct()
@@ -31,6 +32,12 @@ void UVendingMachineWidget_OM::NativeConstruct()
 		Exit_Button->OnClicked.AddDynamic(VendingMachine, &AVendingMachine_OM::ExitVendor);
 	}
 
+	if (NoMoneyOverlay)
+	{
+		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+
 	SetConsumables();
 	
 }
@@ -38,8 +45,12 @@ void UVendingMachineWidget_OM::NativeConstruct()
 void UVendingMachineWidget_OM::NativeDestruct()
 {
 	Super::NativeDestruct();
-
+	
+	GetWorld()->GetTimerManager().ClearTimer(NoMoneyTimer);
+	
 	Consumables.Empty();
+
+
 }
 
 void UVendingMachineWidget_OM::SetConsumables()
@@ -58,7 +69,6 @@ void UVendingMachineWidget_OM::SetConsumables()
 					Consumables.Add(DefaultObject->GetConsumableType());
 				}
 			}
-
 		}
 	}
 	SetConsumablesText();
@@ -90,7 +100,20 @@ void UVendingMachineWidget_OM::BuyConsumable(const FConsumableType& InConsumable
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	GameInstance->AddConsumable(InConsumable);
+	int PlayerMoney = GameInstance->GetMoney();
+
+	if (PlayerMoney >= InConsumable.Price)
+	{
+		VendingMachine->PlayBuySound();
+		VendingMachine->SpawnItem(InConsumable);
+		GameInstance->SetMoney(-InConsumable.Price);
+	}
+	else
+	{
+		VendingMachine->PlayNoMoneySound();
+		ShowNoMoneyWindow();
+	}
+	
 }
 
 
@@ -108,4 +131,14 @@ void UVendingMachineWidget_OM::OnOption3Clicked()
 {
 	if (Consumables.IsValidIndex(2))
 		BuyConsumable(Consumables[2]);
+}
+void UVendingMachineWidget_OM::ShowNoMoneyWindow()
+{
+	NoMoneyOverlay->SetVisibility(ESlateVisibility::Visible);
+	GetWorld()->GetTimerManager().ClearTimer(NoMoneyTimer);
+	GetWorld()->GetTimerManager().SetTimer(NoMoneyTimer, [this]()
+	{
+		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
+	}, 2.5f, false);
+	
 }

@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableActor_OM.h"
+#include "Actors/Other/Abstract/InteractableActor_OM.h"
 #include "Utils/Structs/ConsumableData.h"
 #include "Consumable_OM.generated.h"
 
+
+class UGameAudio_OM;
 
 UCLASS(Abstract)
 class OPTIMIZEMAN_API AConsumable_OM : public AInteractableActor_OM
@@ -18,11 +20,22 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	virtual void Interact_Implementation() override;
+	void PlayConsumeSound();
 
 	FConsumableType& GetConsumableType() { return ConsumableType; }
+
+	
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consumable Type")
 	FConsumableType ConsumableType;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UGameAudio_OM* AudioComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	TArray<USoundBase*> ConsumeSounds;
+	
 	
 };

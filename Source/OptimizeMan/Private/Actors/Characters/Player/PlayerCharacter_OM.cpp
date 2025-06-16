@@ -266,10 +266,12 @@ void APlayerCharacter_OM::InitPlayModes()
 	PlayModeConfigs.Add(EPlayModes::SpeakerMode, SpeakerModeConfig);
 }
 
-void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, AInteractableActor_OM* InInteractedActor, ANpcBase_OM* InInteractedCharacter)
+void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter)
 {
 	// dont allow to switch between playmode unless its regular to x or x to regular 
 	if (CurrentPlayMode != EPlayModes::RegularMode && InPlayMode != EPlayModes::RegularMode) return;
+
+	if (!PlayerController) return;
 	
 	CurrentPlayMode = InPlayMode;
 
@@ -278,8 +280,8 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, AInter
 		ManageRegularMode();
 		return;
 	}
-	CurrentInteractedActor = InInteractedActor;
-	CurrentInteractedCharacter = InInteractedCharacter;
+	CurrentInteractedActor = InInteractedActor.Get();
+	CurrentInteractedCharacter = InInteractedCharacter.Get();
 
 	if (!PlayModeConfigs.Contains(InPlayMode))
 	{
