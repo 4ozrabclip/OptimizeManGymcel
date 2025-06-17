@@ -6,6 +6,7 @@
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
 #include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "Components/Border.h"
 #include "Components/ProgressBar.h"
@@ -21,6 +22,10 @@ void USocialInteractionWidget_OM::NativeConstruct()
 	if (!GameInstance)
 	{
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	}
+	if (!PlayerController)
+	{
+		PlayerController = Cast<APlayerController_OM>(Player->GetController());
 	}
 	//if (GameInstance)
 	//{
@@ -78,10 +83,26 @@ void USocialInteractionWidget_OM::NativeConstruct()
 	SetDesiredSizeInViewport(FVector2D(1920, 1080));
 	
 }
-USocialInteractionWidget_OM::~USocialInteractionWidget_OM()
+
+void USocialInteractionWidget_OM::NativeDestruct()
 {
+	Super::NativeDestruct();
 	InteractionMap.Empty();
 	SocialInteractionTypes.Empty();
+}
+
+void USocialInteractionWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (Npc && PlayerController)
+	{
+		FVector WorldLoc = Npc->GetActorLocation() + Offset;
+		FVector2D ScreenPos;
+		UGameplayStatics::ProjectWorldToScreen(PlayerController, WorldLoc, ScreenPos);
+		SocialOptionsBorder->SetRenderTranslation(ScreenPos);
+	}
+		
 }
 
 void USocialInteractionWidget_OM::CheckAndSetDarkMode()

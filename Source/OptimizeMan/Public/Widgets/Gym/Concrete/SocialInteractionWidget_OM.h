@@ -13,6 +13,7 @@
  */
 
 
+class UBorder;
 class UImage;
 class UButton;
 enum class ENpcMood : uint8;
@@ -53,8 +54,10 @@ public:
 	TArray<FSocialInteractionTypes> SocialInteractionTypes;
 
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
-	virtual ~USocialInteractionWidget_OM() override;
 	void CheckAndSetDarkMode();
 
 	UFUNCTION()
@@ -69,8 +72,11 @@ public:
 
 	void ManageInteraction(const UButton* ClickedButton);
 
+	UPROPERTY(EditAnywhere, Category = "Offset")
+	FVector Offset;
+
 	UPROPERTY(meta = (BindWidget))
-	class UBorder* SocialOptionsBorder;
+	UBorder* SocialOptionsBorder;
 
 	
 

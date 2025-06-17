@@ -457,6 +457,7 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		InputMode.SetWidgetToFocus(nullptr); 
        
 		PlayerController->SetInputMode(InputMode);
+		PlayerController->SetIgnoreLookInput(true);
 		PlayerController->SetShowMouseCursor(true);
 
 		int32 ViewportSizeX, ViewportSizeY;
@@ -465,7 +466,6 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
        
 		if (!bAllowGameMovement)
 		{
-			PlayerController->SetIgnoreLookInput(true);
 
 			if (GetCharacterMovement())
 			{
@@ -474,7 +474,7 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		}
 		else
 		{
-			PlayerController->SetIgnoreLookInput(false);
+
            
 			if (GetCharacterMovement())
 			{

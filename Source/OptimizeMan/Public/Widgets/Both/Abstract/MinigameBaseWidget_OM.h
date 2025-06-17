@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "MinigameBaseWidget_OM.generated.h"
 
+class APlayerController_OM;
+class APlayerCharacter_OM;
 /**
  * 
  */
@@ -38,7 +40,10 @@ protected:
 	class UButton* ExitButton;
 
 	UPROPERTY()
-	class APlayerCharacter_OM* Player;
+	APlayerCharacter_OM* Player;
+
+	UPROPERTY()
+	APlayerController_OM* PlayerController;
 
 
 

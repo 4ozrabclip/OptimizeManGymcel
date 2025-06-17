@@ -54,7 +54,10 @@ protected:
 	TArray<FGameplayTag> CompletedTodosCheckList;
 
 private:
+	FRotator TargetRotation;
+	bool bShouldRotateToNPC = false;
 
+	
 	float CharismaFactor = 0.5;
 	
 	const float NeutralThreshold = 0.f;

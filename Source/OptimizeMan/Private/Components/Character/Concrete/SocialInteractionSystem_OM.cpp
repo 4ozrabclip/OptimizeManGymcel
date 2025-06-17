@@ -46,7 +46,67 @@ void USocialInteractionSystem_OM::InitConversation()
 	CurrentNpcMood = CurrentInteractedNpc->GetCurrentMood();
 
 
-	SetComponentTickEnabled(true);
+	// TICK???????
+
+	
+	if (Player && CurrentInteractedNpc)
+	{
+		FVector PlayerLocation = Player->GetActorLocation();
+		FVector NpcLocation = CurrentInteractedNpc->GetActorLocation();
+
+		FVector Direction = (NpcLocation - PlayerLocation);
+		Direction.Z = 0.0f;
+
+		TargetRotation = Direction.Rotation();
+		bShouldRotateToNPC = true;
+		Player->bUseControllerRotationYaw = true;
+		SetComponentTickEnabled(true);
+	}
+
+
+
+}
+
+void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick");
+
+	if (Player && bShouldRotateToNPC)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick 2");
+		FRotator CurrentRot = Player->GetActorRotation();
+		FRotator NewRot = FMath::RInterpTo(CurrentRot, TargetRotation, DeltaTime, 5.0f);
+		Player->SetActorRotation(NewRot);
+
+		if (CurrentRot.Equals(TargetRotation, 1.0f)) 
+		{
+			bShouldRotateToNPC = false;
+			Player->bUseControllerRotationYaw = false;
+		}
+	}
+	
+	if (CurrentInteractedNpc)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick 3");
+		FVector2D Delta = FVector2D(CurrentInteractedNpc->GetActorLocation()) - FVector2D(Player->GetActorLocation());
+		if (Delta.Size() > 300)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick 4");
+			LeaveConversationOnWalkingOff();
+		}
+	}
+	else if (Player)
+	{
+		CurrentInteractedNpc = Player->GetCurrentInteractedCharacter();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player null needs to be recasted"));
+		Player = Cast<APlayerCharacter_OM>(GetOwner());
+	}
 }
 
 void USocialInteractionSystem_OM::SaveNpcFriendshipData()
@@ -177,30 +237,6 @@ void USocialInteractionSystem_OM::CheckForSocialAchievements()
 		
 	}
 	TodoManager->DelayForPlayerAchievements(CompletedTodosCheckList);
-}
-
-void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
-	FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	if (CurrentInteractedNpc)
-	{
-		FVector2D Delta = FVector2D(CurrentInteractedNpc->GetActorLocation()) - FVector2D(Player->GetActorLocation());
-		if (Delta.Size() > 300)
-		{
-			LeaveConversationOnWalkingOff();
-		}
-	}
-	else if (Player)
-	{
-		CurrentInteractedNpc = Player->GetCurrentInteractedCharacter();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player null needs to be recasted"));
-		Player = Cast<APlayerCharacter_OM>(GetOwner());
-	}
 }
 
 void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialType)
