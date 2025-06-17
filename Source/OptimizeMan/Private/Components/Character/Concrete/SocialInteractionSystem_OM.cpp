@@ -48,8 +48,10 @@ void USocialInteractionSystem_OM::InitConversation()
 
 	// TICK???????
 
+	SetComponentTickEnabled(true);
+
 	
-	if (Player && CurrentInteractedNpc)
+	/*if (Player && CurrentInteractedNpc)
 	{
 		FVector PlayerLocation = Player->GetActorLocation();
 		FVector NpcLocation = CurrentInteractedNpc->GetActorLocation();
@@ -59,9 +61,9 @@ void USocialInteractionSystem_OM::InitConversation()
 
 		TargetRotation = Direction.Rotation();
 		bShouldRotateToNPC = true;
-		Player->bUseControllerRotationYaw = true;
-		SetComponentTickEnabled(true);
-	}
+		//Player->bUseControllerRotationYaw = true;
+
+	}*/
 
 
 
@@ -72,9 +74,9 @@ void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick");
+	//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick");
 
-	if (Player && bShouldRotateToNPC)
+	/*if (Player && bShouldRotateToNPC)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick 2");
 		FRotator CurrentRot = Player->GetActorRotation();
@@ -84,9 +86,9 @@ void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick
 		if (CurrentRot.Equals(TargetRotation, 1.0f)) 
 		{
 			bShouldRotateToNPC = false;
-			Player->bUseControllerRotationYaw = false;
+			//Player->bUseControllerRotationYaw = false;
 		}
-	}
+	}*/
 	
 	if (CurrentInteractedNpc)
 	{
