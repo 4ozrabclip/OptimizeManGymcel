@@ -83,9 +83,9 @@ void UMainMenuWidget_OM::InitButtons()
 	QuitButton->OnClicked.AddDynamic(this, &UMainMenuWidget_OM::QuitGameNow);
 
 	NewGameButton->OnClicked.RemoveAll(this);
-	NewGameButton->OnClicked.AddDynamic(this, &UMainMenuWidget_OM::PlayGameNow);
+	NewGameButton->OnClicked.AddDynamic(this, &UMainMenuWidget_OM::StartNewGame);
 	LoadGameButton->OnClicked.RemoveAll(this);
-	LoadGameButton->OnClicked.AddDynamic(this, &UMainMenuWidget_OM::PlayGameNow); // load game not working yet
+	LoadGameButton->OnClicked.AddDynamic(this, &UMainMenuWidget_OM::StartNewGame); // load game not working yet
 	PlayGameBackButton->OnClicked.RemoveAll(this);
 	PlayGameBackButton->OnClicked.AddDynamic(this, &UMainMenuWidget_OM::BackButtonClicked);
 	
@@ -227,8 +227,11 @@ void UMainMenuWidget_OM::ToggleDarkModeFunction()
 	UpdateImagesForDarkMode();
 }
 
-void UMainMenuWidget_OM::PlayGameNow() 
+void UMainMenuWidget_OM::StartNewGame() 
 {
+	GameInstance->ResetGame();
+
+	
 	const FString HomeLevelString = "/Game/Levels/Home";
 	const FName LevelToChangeTo = FName(*HomeLevelString);
 	UGameplayStatics::OpenLevel(this, LevelToChangeTo);

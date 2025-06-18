@@ -53,16 +53,11 @@ void ABedroomGameModeBase_OM::BeginPlay()
 	{
 		ShowCurrentDay();
 		
-		if (GameInstance->GetDayNumber() > 1) WakeUp();
+		WakeUp();
 	}
-	if (GameInstance->GetDayNumber() == 1)
-	{
-		TutorialDay();
-	}
-	else
-	{
+	if (GameInstance->GetDayNumber() > 1)
 		ProcessIncompleteTodos();
-	}
+	
 }
 void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 {
@@ -116,7 +111,7 @@ void ABedroomGameModeBase_OM::TutorialDay()
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	}
 	//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tutorial sequence begin");
-	GameInstance->FirstDay();
+	//GameInstance->FirstDay();
 	
 	GetWorld()->GetTimerManager().SetTimer(
 		ShowInteractTimerHandle,

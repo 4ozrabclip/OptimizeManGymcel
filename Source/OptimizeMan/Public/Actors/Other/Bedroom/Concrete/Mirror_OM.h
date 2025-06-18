@@ -30,8 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MirrorAudio")
 	UGameAudio_OM* MirrorAudio;
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateStats();
 
 
 protected:

@@ -16,9 +16,21 @@ void UGameInstance_OM::FirstDay()
 	}
 	TodoManagement->SetCurrentTodos(FirstDayTodo1);
 
-	CurrentWaveType = EDifficultyWaveType::RestWave;
-}
 
+}
+void UGameInstance_OM::ResetGame()
+{
+	InitializePlayerData();
+	InitializePostersOwned();
+	SetHasBeenToGymToday(false);
+	SetHasOpenedTodoListInitial(false);
+	SetHasInteractedInitial(false);
+	SetHasOpenedPauseMenuInitial(false);
+
+	CurrentWaveType = EDifficultyWaveType::RestWave;
+	
+	ResetAllSaves();
+}
 void UGameInstance_OM::Init()
 {
 	Super::Init();

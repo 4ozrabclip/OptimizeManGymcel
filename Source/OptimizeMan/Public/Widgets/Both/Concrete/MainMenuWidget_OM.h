@@ -26,7 +26,7 @@ public:
 	void InitButtons();
 
 	UFUNCTION()
-	void PlayGameNow();
+	void StartNewGame();
 	UFUNCTION()
 	void QuitGameNow();
 	void UpdateImagesForDarkMode();

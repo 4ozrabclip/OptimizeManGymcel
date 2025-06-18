@@ -28,6 +28,7 @@ class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance
 	
 public: // Initialization
 	void FirstDay();
+	void ResetGame();
 	virtual void Init() override;
 
 	void InitializePostersOwned();

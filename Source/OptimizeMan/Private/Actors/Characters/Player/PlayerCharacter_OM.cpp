@@ -282,6 +282,7 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	}
 	CurrentInteractedActor = InInteractedActor.Get();
 	CurrentInteractedCharacter = InInteractedCharacter.Get();
+	
 
 	if (!PlayModeConfigs.Contains(InPlayMode))
 	{
@@ -290,9 +291,8 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	}
 	const FPlayModeConfig& Config = PlayModeConfigs[InPlayMode];
 
-	PlayerController->RemoveAllActiveWidgets();
 	
-	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
+
 	
 	if (!Config.ForcedLocation.IsZero())
 	{
@@ -310,6 +310,8 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	{
 		PlayerController->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
 	}
+
+	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
 	
 	
 	if (!Config.bNeedsPreSteps)
@@ -423,7 +425,7 @@ void APlayerCharacter_OM::ManageWorkoutMode()
 			PlayerController->SetViewTargetWithBlend(EquipmentActor->GetGymCamera(), 0.5f);
 		}
 
-		PlayerController->PlaymodeWidgetManagement(EPlayModes::WorkoutMode, false);
+		//PlayerController->PlaymodeWidgetManagement(EPlayModes::WorkoutMode, false);
 
 	}
 }
@@ -451,11 +453,22 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
     
 	if (bSetToUiMode)
 	{
-		FInputModeGameAndUI InputMode;
+		FInputModeUIOnly InputMode;
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
 		
-		InputMode.SetWidgetToFocus(nullptr); 
-       
+		UUserWidget* WidgetInstanceToFocus = PlayerController->GetCurrentPlayModeWidgetInstance();
+
+		if (WidgetInstanceToFocus)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Setting focus to widget: %s"), *WidgetInstanceToFocus->GetName());
+			InputMode.SetWidgetToFocus(WidgetInstanceToFocus->TakeWidget());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No widget instance to focus. Input may not be correctly handled."));
+		}
+
+
 		PlayerController->SetInputMode(InputMode);
 		PlayerController->SetIgnoreLookInput(true);
 		PlayerController->SetShowMouseCursor(true);
@@ -474,8 +487,6 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		}
 		else
 		{
-
-           
 			if (GetCharacterMovement())
 			{
 				GetCharacterMovement()->SetMovementMode(MOVE_Walking);

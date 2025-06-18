@@ -53,24 +53,28 @@ void AMirror_OM::BeginPlay()
 void AMirror_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
+	if (!PlayerController)
+	{
+		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		if (!PlayerController)
+		{
+			UE_LOG(LogTemp, Error, TEXT("AMirror_OM: PlayerController is null!"));
+			return;
+		}
+	}
+
 	if (!Player)
 	{
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+		Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn()); 
+		if (!Player)
+		{
+			UE_LOG(LogTemp, Error, TEXT("AMirror_OM: PlayerCharacter is null!"));
+			return;
+		}
 	}
-	//Stick character in mirror position
-	MirrorWidget = Cast<UMirrorWidget_OM>(PlayerController->GetMirrorWidget());
-	Player->TogglePlayMode(EPlayModes::MirrorMode, Player->bInteractableOpen, this);
-	
-	//Player->SetCurrentPlayMode(EPlayModes::MirrorMode, this);
-	
-}
 
-void AMirror_OM::UpdateStats() 
-{
-	if (!MirrorWidget)
-	{
-		return;
-	}
-	MirrorWidget->UpdateStats();
+	Player->TogglePlayMode(EPlayModes::MirrorMode, Player->bInteractableOpen, this);
+	;
+	
 }
 
