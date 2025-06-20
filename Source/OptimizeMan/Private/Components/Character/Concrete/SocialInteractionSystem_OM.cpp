@@ -92,11 +92,9 @@ void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick
 	
 	if (CurrentInteractedNpc)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick 3");
 		FVector2D Delta = FVector2D(CurrentInteractedNpc->GetActorLocation()) - FVector2D(Player->GetActorLocation());
 		if (Delta.Size() > 300)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "Tick 4");
 			LeaveConversationOnWalkingOff();
 		}
 	}

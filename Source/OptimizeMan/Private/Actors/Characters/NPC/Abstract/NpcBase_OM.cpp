@@ -28,7 +28,10 @@ ANpcBase_OM::ANpcBase_OM()
 	CurrentExerciseType = EExerciseType::None;
 	bCanInteract = true;
 	bIsInDialogue = false;
+	
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+	
 	AuraLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("AuraLight"));
 	AuraLight->SetupAttachment(RootComponent);
 	AuraLight->SetVisibility(true);
@@ -418,13 +421,11 @@ void ANpcBase_OM::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InCh
 	
 	if (UAnimMontage* MontageToPlay = ChatMapIterator.Value())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Play random Talker Helper working with array correct"));
 		if (AnimInstance)
 			AnimInstance->Montage_Play(MontageToPlay);
 
 		CurrentTalkTime = MontageToPlay->GetPlayLength();
-		
-		UE_LOG(LogTemp, Warning, TEXT("Current talk time = %f"), CurrentTalkTime);
+
 	}
 	if (USoundBase* AudioToPlay = ChatMapIterator.Key())
 	{

@@ -95,13 +95,13 @@ void USocialInteractionWidget_OM::NativeTick(const FGeometry& MyGeometry, float 
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (Npc && PlayerController)
+	/*if (Npc && PlayerController)
 	{
 		FVector WorldLoc = Npc->GetActorLocation() + Offset;
 		FVector2D ScreenPos;
 		UGameplayStatics::ProjectWorldToScreen(PlayerController, WorldLoc, ScreenPos);
 		SocialOptionsBorder->SetRenderTranslation(ScreenPos);
-	}
+	}*/
 		
 }
 

@@ -17,7 +17,6 @@ class OPTIMIZEMAN_API UShelfWidget_OM : public UMinigameBaseWidget_OM
 	GENERATED_BODY()
 
 public:
-
 	virtual void NativeConstruct() override;
 	void InitButtons();
 	void CheckItemForButtonVisibility(bool InHasItem, UButton* InButton);

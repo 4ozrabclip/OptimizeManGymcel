@@ -47,7 +47,7 @@ struct FDayInfo
 	{}
 	
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 DayNumber;
 	
 	UPROPERTY(BlueprintReadWrite)

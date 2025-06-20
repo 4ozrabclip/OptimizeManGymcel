@@ -11,6 +11,7 @@ void UVendingMachineWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	SetIsFocusable(true);
 	if (Option1_Button)
 	{
 		Option1_Button->OnClicked.Clear();

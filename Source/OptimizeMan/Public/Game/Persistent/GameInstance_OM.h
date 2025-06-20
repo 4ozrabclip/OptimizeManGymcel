@@ -70,7 +70,7 @@ protected:
 	FInnerStatus InnerStatus;
 	UPROPERTY(BlueprintReadOnly)
 	FInventoryData InventoryData;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Day info")
 	FDayInfo DayInfo;
 
 public:

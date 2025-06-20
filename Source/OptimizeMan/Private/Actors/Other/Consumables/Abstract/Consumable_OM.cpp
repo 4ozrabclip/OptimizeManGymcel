@@ -4,6 +4,7 @@
 
 #include "Actors/Other/Consumables/Abstract/Consumable_OM.h"
 
+#include "Components/BoxComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Utils/Structs/AudioTypes.h"
@@ -16,11 +17,22 @@ AConsumable_OM::AConsumable_OM()
 	AudioComponent->SetupAttachment(RootComponent);
 	AudioComponent->SetAudioType(EAudioTypes::SfxAudio);
 	AudioComponent->bAutoActivate = true;
+
+
+	ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	ItemMesh->SetSimulatePhysics(false);
+
+	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit Box"));
+	HitBox->SetupAttachment(RootComponent);
+	HitBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	
 }
 
 void AConsumable_OM::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ItemMesh->SetSimulatePhysics(true);
 	
 }
 
@@ -32,8 +44,11 @@ void AConsumable_OM::Interact_Implementation()
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
 	GameInstance->AddConsumable(ConsumableType);
-}
 
+	PlayConsumeSound();
+
+	Destroy();
+}
 
 void AConsumable_OM::PlayConsumeSound()
 {

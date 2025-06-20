@@ -61,9 +61,9 @@ void ASpeaker_OM::Interact_Implementation()
 		UE_LOG(LogTemp, Error, TEXT("%s: AudioComponent is invalid"), *GetName());
 		return;
 	}
-	PlayerController->HideUnhideInteractableWidget(true);
+	PlayerController->ToggleInteractWidgetFromViewport(true);
 	SpeakerWidget->SetVisibility(true);
-	//InteractableInterfaceProperties.bIsInteractable = false;
+	InteractableInterfaceProperties.bIsInteractable = false;
 	Player->SetToUIMode(true, true);
 	
 	if (Songs.Num() <= 0)
@@ -95,9 +95,9 @@ void ASpeaker_OM::Tick(float DeltaSeconds)
 void ASpeaker_OM::TurnOffWidget()
 {
 	SpeakerWidget->SetVisibility(false);
-	//InteractableInterfaceProperties.bIsInteractable = true;
+	InteractableInterfaceProperties.bIsInteractable = true;
 	Player->SetToUIMode(false);
-	PlayerController->HideUnhideInteractableWidget(false);
+	PlayerController->ToggleInteractWidgetFromViewport(false);
 	SetActorTickEnabled(false);
 }
 

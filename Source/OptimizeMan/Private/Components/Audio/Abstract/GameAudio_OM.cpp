@@ -80,7 +80,6 @@ void UGameAudio_OM::GetAndSetVolume()
 void UGameAudio_OM::UpdateAudioSettings(const float InMasterVolume, const float InVoiceVolume,
 	const float InMusicVolume, const float InNotificationVolume, const float InSfxVolume)
 {
-	UE_LOG(LogTemp, Display, TEXT("Update Audio Settings Changed"));
 
 	OnAudioFinished.RemoveAll(this);
 

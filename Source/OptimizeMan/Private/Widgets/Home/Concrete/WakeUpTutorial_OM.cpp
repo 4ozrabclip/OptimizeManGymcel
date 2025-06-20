@@ -5,8 +5,10 @@
 
 #include "Animation/WidgetAnimation.h"
 #include "Components/Button.h"
+#include "Components/GridPanel.h"
 #include "Components/Overlay.h"
 #include "Game/GMB/BedroomGameModeBase_OM.h"
+#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 UWakeUpTutorial_OM::UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializer)
 {
@@ -16,7 +18,13 @@ UWakeUpTutorial_OM::UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializ
 void UWakeUpTutorial_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-
+	TaskOptionPanel_0->SetVisibility(ESlateVisibility::Visible);
+	TaskOptionPanel_1->SetVisibility(ESlateVisibility::Visible);
+	TaskOptionPanel_2->SetVisibility(ESlateVisibility::Visible);
+	TaskOptionPanel_3->SetVisibility(ESlateVisibility::Visible);
+	TaskOptionPanel_4->SetVisibility(ESlateVisibility::Visible);
+	SetTodoOptions();
+	UpdateFakeTodoList();
 	InitiateTutorialSequence();
 	CurrentTutorialStep = 0;
 	bWaitingForInput = false;
@@ -117,9 +125,11 @@ void UWakeUpTutorial_OM::AdvanceTutorial()
 }
 void UWakeUpTutorial_OM::FinishTutorial()
 {
+
 	TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
 	ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
 
+	
 	ExitButton->SetVisibility(ESlateVisibility::Visible);
 }
 
@@ -127,6 +137,8 @@ void UWakeUpTutorial_OM::OnExitButtonClicked()
 {
 	Super::OnExitButtonClicked();
 
+	if (TodoManager->GetCurrentTodoArray().Num() < 3) return;
+	
 	if (ABedroomGameModeBase_OM* Gm = Cast<ABedroomGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
 	{
 		Gm->TutorialDay();

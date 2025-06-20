@@ -8,6 +8,7 @@
 #include "Consumable_OM.generated.h"
 
 
+class UBoxComponent;
 class UGameAudio_OM;
 
 UCLASS(Abstract)
@@ -36,6 +37,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 	TArray<USoundBase*> ConsumeSounds;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	UBoxComponent* HitBox;
 	
 };

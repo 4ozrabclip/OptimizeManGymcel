@@ -68,10 +68,11 @@ void AVendingMachine_OM::Tick(float DeltaTime)
 void AVendingMachine_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
-
+	
+	PlayerController->ToggleInteractWidgetFromViewport(true);
+	InteractableInterfaceProperties.bIsInteractable = false;
 	VendorWidgetComponent->SetVisibility(true);
-	Player->SetToUIMode(true);
-	PlayerController->HideUnhideInteractableWidget(true);
+	Player->SetToUIMode(true, true);
 	SetActorTickEnabled(true);
 }
 
@@ -91,7 +92,8 @@ void AVendingMachine_OM::ExitVendor()
 {
 	VendorWidgetComponent->SetVisibility(false);
 	Player->SetToUIMode(false);
-	PlayerController->HideUnhideInteractableWidget(false);
+	PlayerController->ToggleInteractWidgetFromViewport(false);
+	InteractableInterfaceProperties.bIsInteractable = true;
 	SetActorTickEnabled(false);
 }
 
@@ -103,18 +105,11 @@ void AVendingMachine_OM::SpawnItem(const FConsumableType& ItemToSpawn)
 
 	for (const TSubclassOf<AConsumable_OM> Item : VendingInventory)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Item->GetName());
 		if (AConsumable_OM* Consumable = Item->GetDefaultObject<AConsumable_OM>())
 		{
 			if (Consumable->GetConsumableType() == ItemToSpawn)
 			{
-
 				FTransform SpawnTransform = SpawnLocation->GetComponentTransform();
-				UE_LOG(LogTemp, Warning, TEXT("Spawning: %s At Location X: %f, Y: %f, Z: %f"),
-					*Consumable->GetName(),
-					SpawnTransform.GetLocation().X,
-					SpawnTransform.GetLocation().Y,
-					SpawnTransform.GetLocation().Z);
 				if (AConsumable_OM* SpawnedItem = GetWorld()->SpawnActor<AConsumable_OM>(Item, SpawnTransform, SpawnParams))
 				{
 					SpawnedItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);

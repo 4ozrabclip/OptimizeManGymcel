@@ -50,21 +50,15 @@ class OPTIMIZEMAN_API USocialInteractionWidget_OM : public UMinigameBaseWidget_O
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Social Interaction Types")
-	TArray<FSocialInteractionTypes> SocialInteractionTypes;
-
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-	
-	void CheckAndSetDarkMode();
-
-	UFUNCTION()
-	void OnEmotionalStateChanged(EPlayerEmotionalStates InEmotionalState);
 
 	virtual void OnExitButtonClicked() override;
-
+	
+	void CheckAndSetDarkMode();
+	
 	void SetButton(UButton* InButton, const ESocialType InSocialType) const;
 	
 	void SetSocialOptions();
@@ -72,6 +66,14 @@ public:
 
 	void ManageInteraction(const UButton* ClickedButton);
 
+	UFUNCTION()
+	void OnEmotionalStateChanged(EPlayerEmotionalStates InEmotionalState);
+	
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Social Interaction Types")
+	TArray<FSocialInteractionTypes> SocialInteractionTypes;
+
+	
 	UPROPERTY(EditAnywhere, Category = "Offset")
 	FVector Offset;
 
@@ -79,7 +81,6 @@ public:
 	UBorder* SocialOptionsBorder;
 
 	
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* Option1Button;
 	UPROPERTY(meta = (BindWidget))

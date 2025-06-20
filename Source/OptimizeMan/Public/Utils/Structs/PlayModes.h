@@ -16,8 +16,7 @@ enum class EPlayModes : uint8
 	PauseMode,
 	ShelfMode,
 	CalenderMode,
-	MuscleViewMode,
-	SpeakerMode
+	MuscleViewMode
 };
 
 USTRUCT(BlueprintType)

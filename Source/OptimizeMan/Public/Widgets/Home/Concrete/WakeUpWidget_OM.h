@@ -18,28 +18,7 @@ class OPTIMIZEMAN_API UWakeUpWidget_OM : public UWakeUpBase_OM
 public:
 	virtual void NativeConstruct() override;
 	
-	virtual void OnExitButtonClicked() override;
 
-	
-	void SetTodoOptions();
-	
-	void AssignOptionsToWidget();
-	void HandleOptionSelected(int InOption);
-	
-	UFUNCTION()
-	void HandleOption0Selected() { HandleOptionSelected(0); }
-	
-	UFUNCTION()
-	void HandleOption1Selected() { HandleOptionSelected(1); }
-	UFUNCTION()
-	void HandleOption2Selected() { HandleOptionSelected(2); }
-	UFUNCTION()
-	void HandleOption3Selected() { HandleOptionSelected(3); }
-	UFUNCTION()
-	void HandleOption4Selected() { HandleOptionSelected(4); }
-
-	UFUNCTION()
-	void UpdateFakeTodoList();
 
 protected: // TASK OPTIONS
 
