@@ -211,14 +211,7 @@ public:
 	}
 
 //Consumable Status
-private:
-	TArray<FConsumableType> CurrentConsumables;
-public:
-	TArray<FConsumableType> GetCurrentConsumables() const { return CurrentConsumables; }
-	void AddConsumable(const FConsumableType& InConsumable) { CurrentConsumables.Add(InConsumable); }
-	void RemoveConsumable(const FConsumableType& InConsumable);
-	void ClearConsumables() { CurrentConsumables.Empty(); }
-	
+
 	
 //Game Points Data
 	UFUNCTION()

@@ -6,6 +6,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "GymGameModeBase_OM.generated.h"
 
+class APlayerController_OM;
+class APlayerCharacter_OM;
+class UGameInstance_OM;
+class UConsumablesSubsystem;
 /**
  * 
  */
@@ -13,7 +17,6 @@ UCLASS()
 class OPTIMIZEMAN_API AGymGameModeBase_OM : public AGameModeBase
 {
 	GENERATED_BODY()
-	
 
 public:
 	AGymGameModeBase_OM();
@@ -24,9 +27,14 @@ public:
 
 protected:
 	UPROPERTY()
-	class UGameInstance_OM* GameInstance;
+	UGameInstance_OM* GameInstance;
 	UPROPERTY()
-	class APlayerCharacter_OM* Player;
+	UConsumablesSubsystem* ConsumableManager;
+
+	UPROPERTY()
+	APlayerController_OM* PlayerController;
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
 
 private:
 	float TimePassedSinceIdle = 0.f;

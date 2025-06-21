@@ -5,22 +5,28 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 
 AGymGameModeBase_OM::AGymGameModeBase_OM()
 {
-	GameInstance = nullptr;
-	Player = nullptr;
 	PrimaryActorTick.bCanEverTick = true;
+	
+	PlayerController = nullptr;
+	Player = nullptr;
+	GameInstance = nullptr;
+	ConsumableManager = nullptr;
 }
 
 void AGymGameModeBase_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActorTickEnabled(false);
-	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 
+	if (!GetWorld()->IsGameWorld()) return;
+
+	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 	if (GameInstance)
 	{
 		if (!GameInstance->GetHasBeenToGymToday())
@@ -36,17 +42,16 @@ void AGymGameModeBase_OM::BeginPlay()
 	}
 
 
-	if (GetWorld()->IsGameWorld())
+	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GameInstance, 0));
+	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
+	if (PlayerController && Player)
 	{
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(Player->GetController()))
-		{
-			PlayerController->SetGymHud();
-			SetActorTickEnabled(true);
-		}
+		PlayerController->SetGymHud();
+		SetActorTickEnabled(true);
 	}
-
 }
+
+
 
 void AGymGameModeBase_OM::Tick(float DeltaTime)
 {
@@ -72,22 +77,69 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 
 
 	GameInstance->AddGymResStats(GymResStats.Focus, DecreaseValue);
-
-	
-	if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(Player->GetController()))
-	{
-		PlayerController->UpdateGymHud();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Null in gym gm tick"));
-	}
-
 	
 
 }
+
 void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 {
+	if (!ConsumableManager)
+		ConsumableManager = Cast<UConsumablesSubsystem>(GameInstance->GetSubsystem<UConsumablesSubsystem>());
+
+	FGymResStats& GymResStats = GameInstance->GetGymResStats();
+
+	if (ConsumableManager)
+	{
+		for (int Index = ConsumableManager->GetCurrentConsumables().Num() - 1; Index >= 0; --Index)
+		{
+			FConsumableType& Consumable = ConsumableManager->GetCurrentConsumables()[Index];
+			if (Consumable.LifeTime <= 0.f)
+			{
+				ConsumableManager->RemoveConsumable(Consumable);
+				continue;
+			}
+			
+			Consumable.LifeTime -= DeltaTime;
+			for (TPair<EConsumableEffectTypes, int> Effect : Consumable.ConsumableEffects)
+			{
+				float BaseLineBladderIncrease = 0.00005f;
+				switch (Effect.Key())
+				{
+				case EConsumableEffectTypes::Bladder:
+					{
+						if (GymResStats.Bladder > 0.35f && GymResStats.Bladder < 0.7f)
+							BaseLineBladderIncrease *= 2;
+						GameInstance->AddGymResStats(GymResStats.Bladder, BaseLineBladderIncrease * Effect.Value());
+						break;
+					}
+				case EConsumableEffectTypes::Focus:
+					{
+						
+						break;
+					}
+				case EConsumableEffectTypes::Energy:
+					{
+						break;
+					}
+				default:
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/*
+	*	ConsumableType.NameString = FString("EnergyDrink");
+	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Bladder, 5);
+	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Energy, 5);
+	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Focus, 3);
+	ConsumableType.LifeTime = 60*3;
+	ConsumableType.Price = 5;
+	 * 
+	 */
+	
 	switch (Player->GetCurrentPlayMode())
 	{
 	case EPlayModes::RegularMode: 
@@ -101,4 +153,7 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 			break;
 		}
 	}
+	if (PlayerController = Cast<APlayerController_OM>(Player->GetController()))
+		PlayerController->UpdateGymHud();
+	
 }

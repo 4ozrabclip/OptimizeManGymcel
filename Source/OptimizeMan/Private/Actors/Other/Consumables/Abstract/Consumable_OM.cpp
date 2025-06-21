@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
+#include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
 #include "Utils/Structs/AudioTypes.h"
 
 AConsumable_OM::AConsumable_OM()
@@ -43,8 +44,12 @@ void AConsumable_OM::Interact_Implementation()
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	GameInstance->AddConsumable(ConsumableType);
-
+	if (!ConsumableManager)
+		ConsumableManager = Cast<UConsumablesSubsystem>(GameInstance->GetSubsystem<UConsumablesSubsystem>());
+		
+	if (ConsumableManager)
+		ConsumableManager->AddConsumable(ConsumableType);
+	
 	PlayConsumeSound();
 
 	Destroy();

@@ -8,6 +8,7 @@
 #include "Consumable_OM.generated.h"
 
 
+class UConsumablesSubsystem;
 class UBoxComponent;
 class UGameAudio_OM;
 
@@ -40,5 +41,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* HitBox;
+
+
+	UPROPERTY()
+	UConsumablesSubsystem* ConsumableManager;
 	
 };

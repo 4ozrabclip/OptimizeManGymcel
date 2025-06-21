@@ -159,13 +159,7 @@ void UGameInstance_OM::SetGymResStats(float& Stat, float Value)
 	OnGymStatsChanged.Broadcast();
 }
 
-void UGameInstance_OM::RemoveConsumable(const FConsumableType& InConsumable)
-{
-	if (CurrentConsumables.Contains(InConsumable))
-	{
-		CurrentConsumables.Remove(InConsumable);
-	}
-}
+
 
 void UGameInstance_OM::AddGamePoints(const int InPoints)
 {
