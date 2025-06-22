@@ -69,18 +69,35 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 	if (TimePassedSinceIdle < MaxTimeIdle) return;
 	
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
-	constexpr float DecreaseValue = -0.001f;
+	
+	float CurrentFocusDecrease = FocusDecreaseValue * (bFocusBoostActive ? FocusDecreaseSlowMultiplier : 1.0f);
+	float CurrentEnergyDecrease = EnergyDecreaseValue * (bEnergyBoostActive ? EnergyDecreaseSlowMultiplier : 1.0f);
 
 	
+	
 	if (GymResStats.Focus < 0.5f)
-		GameInstance->AddGymResStats(GymResStats.Energy, DecreaseValue);
+		GameInstance->AddGymResStats(GymResStats.Energy, EnergyDecreaseValue);
 
 
-	GameInstance->AddGymResStats(GymResStats.Focus, DecreaseValue);
+	GameInstance->AddGymResStats(GymResStats.Focus, FocusDecreaseValue);
 	
 
 }
 
+void AGymGameModeBase_OM::ApplyGymResStatBoost(const EConsumableEffectTypes EffectType)
+{
+	
+	if (EffectType == EConsumableEffectTypes::Focus)
+	{
+		bFocusBoostActive = true;
+		FocusDecreaseSlowMultiplier = 0.2f; 
+	}
+	else if (EffectType == EConsumableEffectTypes::Energy)
+	{
+		bEnergyBoostActive = true;
+		EnergyDecreaseSlowMultiplier = 0.2f; 
+	}
+}
 void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 {
 	if (!ConsumableManager)
@@ -88,37 +105,38 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 
+	bFocusBoostActive = false;
+	bEnergyBoostActive = false;
+	FocusDecreaseSlowMultiplier = 1.f;
+	EnergyDecreaseSlowMultiplier = 1.f;
+
 	if (ConsumableManager)
 	{
 		for (int Index = ConsumableManager->GetCurrentConsumables().Num() - 1; Index >= 0; --Index)
 		{
 			FConsumableType& Consumable = ConsumableManager->GetCurrentConsumables()[Index];
-			if (Consumable.LifeTime <= 0.f)
-			{
-				ConsumableManager->RemoveConsumable(Consumable);
-				continue;
-			}
-			
 			Consumable.LifeTime -= DeltaTime;
+			
 			for (TPair<EConsumableEffectTypes, int> Effect : Consumable.ConsumableEffects)
 			{
 				float BaseLineBladderIncrease = 0.00005f;
-				switch (Effect.Key())
+				switch (Effect.Key)
 				{
 				case EConsumableEffectTypes::Bladder:
 					{
 						if (GymResStats.Bladder > 0.35f && GymResStats.Bladder < 0.7f)
 							BaseLineBladderIncrease *= 2;
-						GameInstance->AddGymResStats(GymResStats.Bladder, BaseLineBladderIncrease * Effect.Value());
+						GameInstance->AddGymResStats(GymResStats.Bladder, BaseLineBladderIncrease * Effect.Value);
 						break;
 					}
 				case EConsumableEffectTypes::Focus:
 					{
-						
+						ApplyGymResStatBoost(Effect.Key);
 						break;
 					}
 				case EConsumableEffectTypes::Energy:
 					{
+						ApplyGymResStatBoost(Effect.Key);
 						break;
 					}
 				default:
@@ -127,18 +145,14 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 					}
 				}
 			}
+			if (Consumable.LifeTime <= 0.f)
+			{
+				ConsumableManager->RemoveConsumable(Consumable);
+				continue;
+			}
 		}
 	}
-
-	/*
-	*	ConsumableType.NameString = FString("EnergyDrink");
-	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Bladder, 5);
-	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Energy, 5);
-	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Focus, 3);
-	ConsumableType.LifeTime = 60*3;
-	ConsumableType.Price = 5;
-	 * 
-	 */
+	
 	
 	switch (Player->GetCurrentPlayMode())
 	{
@@ -153,7 +167,9 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 			break;
 		}
 	}
-	if (PlayerController = Cast<APlayerController_OM>(Player->GetController()))
+	if (!PlayerController)
+		PlayerController = Cast<APlayerController_OM>(Player->GetController());
+	if (PlayerController)
 		PlayerController->UpdateGymHud();
 	
 }

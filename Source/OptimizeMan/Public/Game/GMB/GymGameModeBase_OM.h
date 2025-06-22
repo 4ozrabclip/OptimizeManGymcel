@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Utils/Structs/ConsumableData.h"
 #include "GymGameModeBase_OM.generated.h"
 
 class APlayerController_OM;
@@ -23,6 +24,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void CheckIdleStats(float DeltaTime);
+	void ApplyGymResStatBoost(EConsumableEffectTypes EffectType);
 	void CheckGymStats(float DeltaTime);
 
 protected:
@@ -38,5 +40,16 @@ protected:
 
 private:
 	float TimePassedSinceIdle = 0.f;
+
+	float EnergyDecreaseValue = -0.001f;
+	float FocusDecreaseValue = -0.001f;
+
+	float FocusDecreaseSlowMultiplier = 1.f;
+	float EnergyDecreaseSlowMultiplier = 1.f;
+	
+	bool bFocusBoostActive = false;
+	bool bEnergyBoostActive = false;
+
+	
 	
 };
