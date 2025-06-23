@@ -8,6 +8,7 @@
 #include "Components/GridPanel.h"
 #include "Components/TextBlock.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
+#include "Game/GMB/BedroomGameModeBase_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 void UWakeUpBase_OM::NativeConstruct()
@@ -35,12 +36,12 @@ void UWakeUpBase_OM::NativeConstruct()
 
 void UWakeUpBase_OM::OnExitButtonClicked()
 {
-	if (TodoManager->GetCurrentTodoArray().Num() < 3)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Havent set all todos yet"));
-		return;
-	}
+	if (TodoManager->GetCurrentTodoArray().Num() < 3) return;
+	if (ABedroomGameModeBase_OM* Gm = Cast<ABedroomGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
+		Gm->ShowCurrentDay();
+	
 	Super::OnExitButtonClicked();
+	
 }
 
 void UWakeUpBase_OM::SetTodoOptions()

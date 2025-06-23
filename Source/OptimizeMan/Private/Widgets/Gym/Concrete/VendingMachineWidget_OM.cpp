@@ -37,8 +37,7 @@ void UVendingMachineWidget_OM::NativeConstruct()
 	{
 		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
 	}
-
-
+	
 	SetConsumables();
 	
 }
@@ -50,8 +49,7 @@ void UVendingMachineWidget_OM::NativeDestruct()
 	GetWorld()->GetTimerManager().ClearTimer(NoMoneyTimer);
 	
 	Consumables.Empty();
-
-
+	
 }
 
 void UVendingMachineWidget_OM::SetConsumables()
@@ -114,9 +112,7 @@ void UVendingMachineWidget_OM::BuyConsumable(const FConsumableType& InConsumable
 		VendingMachine->PlayNoMoneySound();
 		ShowNoMoneyWindow();
 	}
-	
 }
-
 
 void UVendingMachineWidget_OM::OnOption1Clicked()
 {

@@ -24,7 +24,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void CheckIdleStats(float DeltaTime);
-	void ApplyGymResStatBoost(EConsumableEffectTypes EffectType);
 	void CheckGymStats(float DeltaTime);
 
 protected:

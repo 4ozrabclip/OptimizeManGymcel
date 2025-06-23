@@ -22,17 +22,16 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	virtual void Interact_Implementation() override;
+
 	void PlayConsumeSound();
-
+	UFUNCTION()
+	void DestroyConsumable() { Destroy(); }
 	FConsumableType& GetConsumableType() { return ConsumableType; }
-
-	
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Consumable Type")
 	FConsumableType ConsumableType;
-
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UGameAudio_OM* AudioComponent;
 
@@ -45,5 +44,8 @@ protected:
 
 	UPROPERTY()
 	UConsumablesSubsystem* ConsumableManager;
+
+
+	FTimerHandle TimerTilInteractableHandle;
 	
 };

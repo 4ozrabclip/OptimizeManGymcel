@@ -12,7 +12,8 @@
 				"Engine",
 				"UMG",
 				"AIModule",
-				"MetasoundEngine"
+				"MetasoundEngine",
+				"GameplayAbilities"
 			]
 		}
 	],
@@ -49,6 +50,10 @@
 		{
 			"Name": "Bridge",
 			"Enabled": false
+		},
+		{
+			"Name": "GameplayAbilities",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [

@@ -27,6 +27,8 @@ AConsumable_OM::AConsumable_OM()
 	HitBox->SetupAttachment(RootComponent);
 	HitBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	
+	InteractableInterfaceProperties.bIsInteractable = false;
+	
 }
 
 void AConsumable_OM::BeginPlay()
@@ -34,6 +36,15 @@ void AConsumable_OM::BeginPlay()
 	Super::BeginPlay();
 
 	ItemMesh->SetSimulatePhysics(true);
+
+	AudioComponent->OnAudioFinished.Clear();
+	AudioComponent->OnAudioFinished.AddDynamic(this, &AConsumable_OM::DestroyConsumable);
+
+	GetWorld()->GetTimerManager().ClearTimer(TimerTilInteractableHandle);
+	GetWorld()->GetTimerManager().SetTimer(TimerTilInteractableHandle,[this]()
+	{
+		InteractableInterfaceProperties.bIsInteractable = true;
+	}, 2.f, false);
 	
 }
 
@@ -46,15 +57,13 @@ void AConsumable_OM::Interact_Implementation()
 
 	if (!ConsumableManager)
 		ConsumableManager = Cast<UConsumablesSubsystem>(GameInstance->GetSubsystem<UConsumablesSubsystem>());
-		
+	
 	if (ConsumableManager)
 		ConsumableManager->AddConsumable(ConsumableType);
 	
 	PlayConsumeSound();
 
-	Destroy();
 }
-
 void AConsumable_OM::PlayConsumeSound()
 {
 	if (!AudioComponent) return;

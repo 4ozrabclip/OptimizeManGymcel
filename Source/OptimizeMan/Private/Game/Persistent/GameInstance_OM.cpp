@@ -149,7 +149,7 @@ void UGameInstance_OM::ResetAllSaves()
 void UGameInstance_OM::AddGymResStats(float& Stat, float Value)
 {	
 	Stat = FMath::Clamp(Stat + Value, -1.f, 1.0f);
-
+	
 	OnGymStatsChanged.Broadcast();
 }
 void UGameInstance_OM::SetGymResStats(float& Stat, float Value)
@@ -158,8 +158,6 @@ void UGameInstance_OM::SetGymResStats(float& Stat, float Value)
 
 	OnGymStatsChanged.Broadcast();
 }
-
-
 
 void UGameInstance_OM::AddGamePoints(const int InPoints)
 {

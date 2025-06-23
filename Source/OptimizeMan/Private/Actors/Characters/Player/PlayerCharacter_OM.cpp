@@ -21,6 +21,7 @@
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 APlayerCharacter_OM::APlayerCharacter_OM()
@@ -51,6 +52,9 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 
 	BodyDeformerComponent = CreateDefaultSubobject<UPlayerDeformationsComponent_OM>(TEXT("BodyDeformer"));
 	BodyDeformerComponent->bAutoActivate = true;
+
+	AbSysComp = CreateDefaultSubobject<UAbilitySystemComponent_OM>(TEXT("AbilitySystemComponent"));
+
 	
 	SetMinimumMovementThreshold(0.5f);
 	SetIsWalking(false);
@@ -77,40 +81,27 @@ void APlayerCharacter_OM::BeginPlay()
 	LastPosition = GetActorLocation();
 	
 	if (UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement()))
-	{
 		SetOriginalMovementSpeed(PlayerMovement->MaxWalkSpeed);
-	}
+	
+	
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No Game Instance found in player class beginplay"));
-		return;
-	}
+	if (!GameInstance) return;
+
 	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager)
+	if (!TodoManager) return;
+
+
+
+	if (IsValid(AbSysComp))
 	{
-		UE_LOG(LogTemp, Error, TEXT("TODO MANAGER IS NULL IN PLAYER CHARACTER BEGINOPLAY"));
-		return;
+		MentalHealthStats = AbSysComp->GetSet<UMentalHealthStats_OM>();
+		GymSpecificStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
 	}
+	
+
 	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
 	{
 		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
-	}
-	
-	 //THIS IS SUPER MESSY, FIX THIS.  ITS JUST TO PLAY THE SPLAT SOUND
-	if (GameInstance && NotificationAudioComponent)
-	{
-		if (GameInstance->GetDayNumber() == 1 && !GameInstance->GetHasBeenToGymToday())
-		{
-			// Only try to use the bedroom game mode if needed
-			if (Cast<ABedroomGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
-			{
-				NotificationAudioComponent->PlaySplatSound();
-			}
-		}
-	}
-	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
-	{
 		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(SkeletalMeshComponent->GetAnimInstance());
 
 		if (!CachedAnimInstance.IsValid())

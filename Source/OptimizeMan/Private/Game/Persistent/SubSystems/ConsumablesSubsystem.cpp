@@ -17,13 +17,12 @@ void UConsumablesSubsystem::AddConsumable(const FConsumableType& InConsumable)
 
 	OnConsumableAdded.Broadcast(InConsumable);
 
-	
-	if (GetWorld()->GetAuthGameMode()->IsA<AGymGameModeBase_OM>)
+	if (AGymGameModeBase_OM* GM = Cast<AGymGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
 	{
 		UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 		FGymResStats& GymResStats = GameInstance->GetGymResStats();
-	
-		for (TPair<EConsumableEffectTypes, float> InstantEffect : InConsumable.ConsumableEffects)
+		
+		for (const TPair InstantEffect : InConsumable.ConsumableEffects)
 		{
 			const float BoostValue = InstantEffect.Value / 10.f;
 			switch (InstantEffect.Key)
@@ -39,7 +38,6 @@ void UConsumablesSubsystem::AddConsumable(const FConsumableType& InConsumable)
 			}
 		}
 	}
-
 }
 
 void UConsumablesSubsystem::RemoveConsumable(const FConsumableType& InConsumable)

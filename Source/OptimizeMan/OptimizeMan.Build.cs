@@ -15,10 +15,11 @@ public class OptimizeMan : ModuleRules
 			"EnhancedInput" , 
 			"SlateCore", 
 			"GameplayTags",
+			"GameplayAbilities",
+			"GameplayTasks",
 			"LevelSequence",
 			"MovieScene",
 			"AIModule",
-			"GameplayTasks",
 			"NavigationSystem",
 			"MetasoundEngine"
 		});

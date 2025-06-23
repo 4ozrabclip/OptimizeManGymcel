@@ -51,8 +51,6 @@ void AGymGameModeBase_OM::BeginPlay()
 	}
 }
 
-
-
 void AGymGameModeBase_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -72,8 +70,6 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 	
 	float CurrentFocusDecrease = FocusDecreaseValue * (bFocusBoostActive ? FocusDecreaseSlowMultiplier : 1.0f);
 	float CurrentEnergyDecrease = EnergyDecreaseValue * (bEnergyBoostActive ? EnergyDecreaseSlowMultiplier : 1.0f);
-
-	
 	
 	if (GymResStats.Focus < 0.5f)
 		GameInstance->AddGymResStats(GymResStats.Energy, EnergyDecreaseValue);
@@ -81,23 +77,9 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 
 	GameInstance->AddGymResStats(GymResStats.Focus, FocusDecreaseValue);
 	
-
 }
 
-void AGymGameModeBase_OM::ApplyGymResStatBoost(const EConsumableEffectTypes EffectType)
-{
-	
-	if (EffectType == EConsumableEffectTypes::Focus)
-	{
-		bFocusBoostActive = true;
-		FocusDecreaseSlowMultiplier = 0.2f; 
-	}
-	else if (EffectType == EConsumableEffectTypes::Energy)
-	{
-		bEnergyBoostActive = true;
-		EnergyDecreaseSlowMultiplier = 0.2f; 
-	}
-}
+
 void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 {
 	if (!ConsumableManager)
@@ -131,12 +113,14 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 					}
 				case EConsumableEffectTypes::Focus:
 					{
-						ApplyGymResStatBoost(Effect.Key);
+						bFocusBoostActive = true;
+						FocusDecreaseSlowMultiplier = 0.2f; 
 						break;
 					}
 				case EConsumableEffectTypes::Energy:
 					{
-						ApplyGymResStatBoost(Effect.Key);
+						bEnergyBoostActive = true;
+						EnergyDecreaseSlowMultiplier = 0.2f; 
 						break;
 					}
 				default:
@@ -152,7 +136,6 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 			}
 		}
 	}
-	
 	
 	switch (Player->GetCurrentPlayMode())
 	{
@@ -171,5 +154,4 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 		PlayerController = Cast<APlayerController_OM>(Player->GetController());
 	if (PlayerController)
 		PlayerController->UpdateGymHud();
-	
 }

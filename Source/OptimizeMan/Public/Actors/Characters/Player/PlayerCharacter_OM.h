@@ -10,6 +10,8 @@
 #include "Utils/Structs/PlayModes.h"
 #include "PlayerCharacter_OM.generated.h"
 
+class UMentalHealthStats_OM;
+class UGymSpecificStats_OM;
 class APlayerController_OM;
 class ULevelSequence;
 class AInteractableActor_OM;
@@ -25,33 +27,35 @@ public:
 	APlayerCharacter_OM();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	
 	bool GetIsJumping();
-
-
 	bool GetIsDoingRep() const { return bIsDoingRep; };
-	void SetIsDoingRep(bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; };
+	void SetIsDoingRep(const bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; };
 	
 protected: //Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCameraComponent* Camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	class UPlayerVoiceAudio_OM* PlayerAudioComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	class UFootstepAudio_OM* FootstepAudioComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	class UNotificationAudio_OM* NotificationAudioComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exercise")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	class UExercise_OM* ExerciseComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SocialSystem")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	class USocialInteractionSystem_OM* SocialComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BodyDeformer")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	class UPlayerDeformationsComponent_OM* BodyDeformerComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	class UAbilitySystemComponent_OM* AbSysComp;
 	
 
 public: //Input variables
@@ -206,7 +210,8 @@ public: //Getters and Setters
 	
 
 
-protected: //Manage PlayModes
+protected:
+	//Manage PlayModes
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageWorkoutMode();
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
@@ -215,6 +220,12 @@ protected: //Manage PlayModes
 	void ManageSocialMode();
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageTodoMode();
+
+	//Attributes/Stats
+	UPROPERTY()
+	const UGymSpecificStats_OM* GymSpecificStats;
+	UPROPERTY()
+	const UMentalHealthStats_OM* MentalHealthStats;
 
 
 

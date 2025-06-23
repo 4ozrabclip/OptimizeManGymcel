@@ -4,6 +4,7 @@
 #include "Game/GMB/BedroomGameModeBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Widgets/Home/Concrete/DisplayDayWidget_OM.h"
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
@@ -24,39 +25,37 @@ ABedroomGameModeBase_OM::ABedroomGameModeBase_OM()
 void ABedroomGameModeBase_OM::BeginPlay()
 {
 	Super::BeginPlay();
-	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (!Player)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Player is null"));
-		return;
-	}
+	
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GameInstance is null"));
-		return;
-	}
+	if (!GameInstance) return;
+	
+	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (!PlayerController) return;
+	
+	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
+	if (!Player) return;
+	
 	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager)
-	{
-		UE_LOG(LogTemp, Error, TEXT("TodoManager is null in bedroom gamemode base"));
-		return;
-	}
+	if (!TodoManager) return;
 
-	PlayerController = Cast<APlayerController_OM>(Player->GetController());
-
-	if (PlayerController)
-		PlayerController->SetGymHud(false);
+	
+	PlayerController->SetGymHud(false);
 
 	
 	if (!GameInstance->GetHasBeenToGymToday())
 	{
-		ShowCurrentDay();
-		
 		WakeUp();
 	}
 	if (GameInstance->GetDayNumber() > 1)
 		ProcessIncompleteTodos();
+	else
+	{
+		if (!GameInstance) return;
+		if (GameInstance->GetHasBeenToGymToday()) return;
+		if (UNotificationAudio_OM* Not = Cast<UNotificationAudio_OM>(Player->GetComponentByClass<UNotificationAudio_OM>()))
+			Not->PlaySplatSound();
+	}
+	
 	
 }
 void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
@@ -90,12 +89,8 @@ void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 }
 void ABedroomGameModeBase_OM::WakeUp()
 {
-	if (!Player)
-	{
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		return;
-	}
-	UE_LOG(LogTemp, Error, TEXT("Waking up"));
+	if (!Player) return;
+	
 	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
 	{
 		Player->SetCurrentPlayMode(EPlayModes::WakeUpMode);
