@@ -8,6 +8,8 @@
 #include "Consumable_OM.generated.h"
 
 
+class UAbilitySystemComponent_OM;
+class UGameplayEffect;
 class UConsumablesSubsystem;
 class UBoxComponent;
 class UGameAudio_OM;
@@ -41,9 +43,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* HitBox;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<UGameplayEffect> EffectToApply;
 
+
+	
+	
 	UPROPERTY()
-	UConsumablesSubsystem* ConsumableManager;
+	UAbilitySystemComponent_OM* AbSysComp;
 
 
 	FTimerHandle TimerTilInteractableHandle;

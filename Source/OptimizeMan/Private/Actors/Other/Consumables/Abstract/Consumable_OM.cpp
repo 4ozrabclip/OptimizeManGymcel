@@ -4,8 +4,11 @@
 
 #include "Actors/Other/Consumables/Abstract/Consumable_OM.h"
 
+#include "GameplayEffect.h"
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/BoxComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
 #include "Utils/Structs/AudioTypes.h"
@@ -37,6 +40,9 @@ void AConsumable_OM::BeginPlay()
 
 	ItemMesh->SetSimulatePhysics(true);
 
+	AbSysComp = Player->FindComponentByClass<UAbilitySystemComponent_OM>();
+	if (!AbSysComp) return;
+
 	AudioComponent->OnAudioFinished.Clear();
 	AudioComponent->OnAudioFinished.AddDynamic(this, &AConsumable_OM::DestroyConsumable);
 
@@ -55,14 +61,25 @@ void AConsumable_OM::Interact_Implementation()
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	if (!ConsumableManager)
-		ConsumableManager = Cast<UConsumablesSubsystem>(GameInstance->GetSubsystem<UConsumablesSubsystem>());
+	//if (!ConsumableManager)
+	//	ConsumableManager = Cast<UConsumablesSubsystem>(GameInstance->GetSubsystem<UConsumablesSubsystem>());
 	
-	if (ConsumableManager)
-		ConsumableManager->AddConsumable(ConsumableType);
+	//if (ConsumableManager)
+	//	ConsumableManager->AddConsumable(ConsumableType);
+
+	if (EffectToApply)
+	{
+		FGameplayEffectContextHandle Context = AbSysComp->MakeEffectContext();
+		Context.AddSourceObject(this);
+
+		const FGameplayEffectSpecHandle SpecHandle = AbSysComp->MakeOutgoingSpec(EffectToApply, 1.f, Context);
+		if (SpecHandle.IsValid())
+		{
+			AbSysComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
 	
 	PlayConsumeSound();
-
 }
 void AConsumable_OM::PlayConsumeSound()
 {

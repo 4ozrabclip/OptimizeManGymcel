@@ -14,6 +14,8 @@ UCLASS()
 class OPTIMIZEMAN_API UMentalHealthStats_OM : public UPlayerAttributeSet_OM
 {
 	GENERATED_BODY()
+public:
+	UMentalHealthStats_OM();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayAttributeData Ego;
@@ -23,19 +25,7 @@ protected:
 	FGameplayAttributeData SexAppeal;
 
 public:
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UMentalHealthStats_OM, Ego);
-	float GetEgo() const;
-	void SetEgo(const float InEgo);
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(Ego);
-
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UMentalHealthStats_OM, Social);
-	float GetSocial() const;
-	void SetSocial(const float InSocial);
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(Social);
-
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UMentalHealthStats_OM, SexAppeal);
-	float GetSexAppeal() const;
-	void SetSexAppeal(const float InSexAppeal);
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(SexAppeal);
-	
+	ATTRIBUTE_ACCESSORS_BASIC(UMentalHealthStats_OM, Ego);
+	ATTRIBUTE_ACCESSORS_BASIC(UMentalHealthStats_OM, Social);
+	ATTRIBUTE_ACCESSORS_BASIC(UMentalHealthStats_OM, SexAppeal);
 };

@@ -5,52 +5,56 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
+#include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 
 AGymGameModeBase_OM::AGymGameModeBase_OM()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	
 	PlayerController = nullptr;
 	Player = nullptr;
 	GameInstance = nullptr;
 	ConsumableManager = nullptr;
 }
-
 void AGymGameModeBase_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActorTickEnabled(false);
-
-	if (!GetWorld()->IsGameWorld()) return;
-
-	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	if (GameInstance)
-	{
-		if (!GameInstance->GetHasBeenToGymToday())
-		{
-			GameInstance->SetHasBeenToGymToday(true);
-		}
-		
-		FGymResStats& GymRes = GameInstance->GetGymResStats();
-
-		GameInstance->AddGymResStats(GymRes.Bladder, 0.f);
-		GameInstance->AddGymResStats(GymRes.Focus, 1.f);
-		GameInstance->AddGymResStats(GymRes.Energy, 1.f);
-	}
-
-
-	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GameInstance, 0));
-	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
-	if (PlayerController && Player)
-	{
-		PlayerController->SetGymHud();
-		SetActorTickEnabled(true);
-	}
 }
 
+void AGymGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+	
+	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
+	if (GameInstance && !GameInstance->GetHasBeenToGymToday())
+		GameInstance->SetHasBeenToGymToday(true);
+	
+	PlayerController = Cast<APlayerController_OM>(NewPlayer);
+	if (!PlayerController) return;
+	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
+	if (!Player) return;
+
+	AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent());
+	if (!AbSysComp) return;
+	MentalHealth = AbSysComp->GetSet<UMentalHealthStats_OM>();
+	if (!MentalHealth) return;
+	GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
+	if (!GymStats) return;
+
+	PlayerController->SetGymHud();
+	
+}
+void AGymGameModeBase_OM::InitializeConstantEffects()
+{
+
+}
+
+/*
 void AGymGameModeBase_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -72,19 +76,14 @@ void AGymGameModeBase_OM::CheckIdleStats(float DeltaTime)
 	float CurrentEnergyDecrease = EnergyDecreaseValue * (bEnergyBoostActive ? EnergyDecreaseSlowMultiplier : 1.0f);
 	
 	if (GymResStats.Focus < 0.5f)
-		GameInstance->AddGymResStats(GymResStats.Energy, EnergyDecreaseValue);
+		AbSysComp->SetVal
 
-
-	GameInstance->AddGymResStats(GymResStats.Focus, FocusDecreaseValue);
+	AbSysComp->SetFocus(CurrentFocusDecrease);
 	
 }
 
-
-void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
+/*void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 {
-	if (!ConsumableManager)
-		ConsumableManager = Cast<UConsumablesSubsystem>(GameInstance->GetSubsystem<UConsumablesSubsystem>());
-
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 
 	bFocusBoostActive = false;
@@ -108,7 +107,9 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 					{
 						if (GymResStats.Bladder > 0.35f && GymResStats.Bladder < 0.7f)
 							BaseLineBladderIncrease *= 2;
-						GameInstance->AddGymResStats(GymResStats.Bladder, BaseLineBladderIncrease * Effect.Value);
+						
+						AbSysComp->SetBladder(BaseLineBladderIncrease * Effect.Value);
+						//GameInstance->AddGymResStats(GymResStats.Bladder, BaseLineBladderIncrease * Effect.Value);
 						break;
 					}
 				case EConsumableEffectTypes::Focus:
@@ -154,4 +155,4 @@ void AGymGameModeBase_OM::CheckGymStats(float DeltaTime)
 		PlayerController = Cast<APlayerController_OM>(Player->GetController());
 	if (PlayerController)
 		PlayerController->UpdateGymHud();
-}
+}*/

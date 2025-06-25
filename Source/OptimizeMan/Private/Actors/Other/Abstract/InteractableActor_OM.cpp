@@ -32,16 +32,14 @@ void AInteractableActor_OM::BeginPlay()
 	Super::BeginPlay();
 
 	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Game instance null in interactable actor"));
-		return;
-	}
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (!Player) return;
-	PlayerController = Cast<APlayerController_OM>(Player->GetController());
+	if (!GameInstance) return;
+	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (!PlayerController) return;
+	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
+	if (!Player) return;
+
+	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
+	if (!TodoManager) return;
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 }

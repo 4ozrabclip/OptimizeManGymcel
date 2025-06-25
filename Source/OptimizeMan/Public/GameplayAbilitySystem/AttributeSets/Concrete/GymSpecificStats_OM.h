@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "GameplayAbilitySystem/AttributeSets/Abstract/PlayerAttributeSet_OM.h"
 #include "GymSpecificStats_OM.generated.h"
 
@@ -13,7 +14,8 @@ UCLASS()
 class OPTIMIZEMAN_API UGymSpecificStats_OM : public UPlayerAttributeSet_OM
 {
 	GENERATED_BODY()
-
+public:
+	UGymSpecificStats_OM();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gym Stats")
 	FGameplayAttributeData Focus;
@@ -25,22 +27,8 @@ protected:
 	FGameplayAttributeData Bladder;
 
 public:
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UGymSpecificStats_OM, Focus)
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(Focus)
+	ATTRIBUTE_ACCESSORS_BASIC(UGymSpecificStats_OM, Focus);
+	ATTRIBUTE_ACCESSORS_BASIC(UGymSpecificStats_OM, Energy);
+	ATTRIBUTE_ACCESSORS_BASIC(UGymSpecificStats_OM, Bladder);
 
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UGymSpecificStats_OM, Energy)
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(Energy)
-
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UGymSpecificStats_OM, Bladder)
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(Bladder)
-
-
-	float GetFocus() const { return Focus.GetCurrentValue(); }
-	void SetFocus(const float InFocus) { Focus.SetCurrentValue(InFocus); }
-	
-	float GetEnergy() const { return Energy.GetCurrentValue(); }
-	void SetEnergy(const float InEnergy) { Energy.SetCurrentValue(InEnergy); }
-	
-	float GetBladder() const { return Bladder.GetCurrentValue(); }
-	void SetBladder(float InBladder) { Bladder.SetCurrentValue(InBladder); }
 };

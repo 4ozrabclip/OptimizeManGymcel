@@ -23,6 +23,7 @@
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 
 APlayerCharacter_OM::APlayerCharacter_OM()
 {
@@ -54,6 +55,8 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	BodyDeformerComponent->bAutoActivate = true;
 
 	AbSysComp = CreateDefaultSubobject<UAbilitySystemComponent_OM>(TEXT("AbilitySystemComponent"));
+	//MentalHealthStats = CreateDefaultSubobject<UMentalHealthStats_OM>(TEXT("Mental Health Attributes"));
+	//GymSpecificStats = CreateDefaultSubobject<UGymSpecificStats_OM>(TEXT("Gym Stats"));
 
 	
 	SetMinimumMovementThreshold(0.5f);
@@ -70,6 +73,26 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 
 	DefaultSkeletalMesh = nullptr;
 	
+}
+void APlayerCharacter_OM::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	AbSysComp->AddSet<UMentalHealthStats_OM>();
+	AbSysComp->AddSet<UGymSpecificStats_OM>();
+
+	InitializeEffects();
+	
+}
+
+void APlayerCharacter_OM::InitializeEffects()
+{
+	FGameplayEffectContextHandle ContextHandle = AbSysComp->MakeEffectContext();
+	
+	FGameplayEffectSpecHandle FocusDrainGymHandle = AbSysComp->MakeOutgoingSpec(UFocusTick_OM::StaticClass(), 1.0f, ContextHandle);
+	if (FocusDrainGymHandle.IsValid())
+	{
+		FocusDrainEffectHandle = AbSysComp->ApplyGameplayEffectSpecToSelf(*FocusDrainGymHandle.Data.Get());
+	}
 }
 
 void APlayerCharacter_OM::BeginPlay()
@@ -91,12 +114,8 @@ void APlayerCharacter_OM::BeginPlay()
 	if (!TodoManager) return;
 
 
+	InitializeAttributes();
 
-	if (IsValid(AbSysComp))
-	{
-		MentalHealthStats = AbSysComp->GetSet<UMentalHealthStats_OM>();
-		GymSpecificStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
-	}
 	
 
 	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
@@ -130,9 +149,27 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 	{
 		CheckInteractable();
 	}
-
-
+	
 }
+void APlayerCharacter_OM::InitializeAttributes()
+{
+	if (!GameInstance) return;
+	if (!AbSysComp) return;
+	if (MentalHealthStats)
+	{
+		const float EgoVal = GameInstance->GetInnerStatus().Ego;
+		const float SocialVal = GameInstance->GetInnerStatus().Social;
+		const float SexAppealVal = GameInstance->GetInnerStatus().SexAppeal;
+		MentalHealthStats->SetEgo(EgoVal);
+		MentalHealthStats->SetSocial(SocialVal);
+		MentalHealthStats->SetSexAppeal(SexAppealVal);
+	}
+	if (GetWorld()->GetAuthGameMode<AGymGameModeBase_OM>())
+	{
+		// Do i need to initialize shit here?  
+	}
+}
+
 
 /*
  *			GameModes
@@ -598,7 +635,7 @@ void APlayerCharacter_OM::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(-LookAxisVector.Y);
 	
 }
-bool APlayerCharacter_OM::GetIsJumping()
+bool APlayerCharacter_OM::GetIsJumping() const
 {
 	constexpr float LengthToFloor = 100.f;
 	FHitResult HitResult;
@@ -618,6 +655,13 @@ bool APlayerCharacter_OM::GetIsJumping()
 	}
 	return true;
 }
+UAbilitySystemComponent* APlayerCharacter_OM::GetAbilitySystemComponent() const
+{
+	return AbSysComp;
+}
+
+
+
 void APlayerCharacter_OM::Jump()
 {
 	if (!GetCharacterMovement())
