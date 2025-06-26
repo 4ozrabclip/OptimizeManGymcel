@@ -13,5 +13,5 @@ UUseEnergyDrink_OM::UUseEnergyDrink_OM()
 	Executions.Add(ExecDef);
 	
 	DurationPolicy = EGameplayEffectDurationType::Instant;
-	Period = 1.f;
+	Period = 0.f;
 }

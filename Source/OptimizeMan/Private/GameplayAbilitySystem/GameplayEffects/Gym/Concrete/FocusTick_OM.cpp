@@ -4,6 +4,7 @@
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTickExecCalc_OM.h"
+#include "GameplayEffectComponents/TargetTagRequirementsGameplayEffectComponent.h"
 
 UFocusTick_OM::UFocusTick_OM()
 {
@@ -12,5 +13,25 @@ UFocusTick_OM::UFocusTick_OM()
 	Executions.Add(ExecDef);
 	
 	DurationPolicy = EGameplayEffectDurationType::Infinite;
-	Period = 1.f;
+	Period = 0.25f;
+
+
+
+	TagReqComp = CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(TEXT("TargetTagRequirements"));
+
+}
+
+void UFocusTick_OM::PostInitProperties()
+{
+	Super::PostInitProperties();
+	FGameplayTagRequirements RequiredTags;
+	RequiredTags.RequireTags.AddTag(FGameplayTag::RequestGameplayTag("State.Idle"));
+	RequiredTags.RequireTags.AddTag(FGameplayTag::RequestGameplayTag("Level.Gym"));
+
+	if (TagReqComp)
+		TagReqComp->OngoingTagRequirements = RequiredTags;
+
+
+
+	
 }

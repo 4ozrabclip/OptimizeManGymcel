@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameplayAbilitySystem/GameplayEffects/Both/Abstract/GameplayEffect_OM.h"
+
 #include "FocusTick_OM.generated.h"
 
+class UTargetTagRequirementsGameplayEffectComponent;
 /**
  * 
  */
@@ -15,4 +17,11 @@ class OPTIMIZEMAN_API UFocusTick_OM : public UGameplayEffect_OM
 	GENERATED_BODY()
 public:
 	UFocusTick_OM();
+
+	virtual void PostInitProperties() override;
+
+protected:
+	UPROPERTY()
+	UTargetTagRequirementsGameplayEffectComponent* TagReqComp;
+	
 };

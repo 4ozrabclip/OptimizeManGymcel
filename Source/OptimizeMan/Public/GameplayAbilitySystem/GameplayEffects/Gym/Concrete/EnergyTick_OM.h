@@ -6,6 +6,7 @@
 #include "GameplayAbilitySystem/GameplayEffects/Both/Abstract/GameplayEffect_OM.h"
 #include "EnergyTick_OM.generated.h"
 
+class UTargetTagRequirementsGameplayEffectComponent;
 /**
  * 
  */
@@ -15,5 +16,11 @@ class OPTIMIZEMAN_API UEnergyTick_OM : public UGameplayEffect_OM
 	GENERATED_BODY()
 public:
 	UEnergyTick_OM();
+
+	virtual void PostInitProperties() override;
+
+protected:
+	UPROPERTY()
+	UTargetTagRequirementsGameplayEffectComponent* TagReqComp;
 	
 };

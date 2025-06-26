@@ -3,6 +3,8 @@
 
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/UseEnergyDrinkExecCalc_OM.h"
 
+#include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
+
 UUseEnergyDrinkExecCalc_OM::UUseEnergyDrinkExecCalc_OM()
 {
 }
@@ -11,7 +13,12 @@ void UUseEnergyDrinkExecCalc_OM::Execute_Implementation(const FGameplayEffectCus
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
-
+	
+	
+	OutExecutionOutput.AddOutputModifier(
+	FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetFocusAttribute(), EGameplayModOp::Override, 1.f));
+	OutExecutionOutput.AddOutputModifier(
+		FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetEnergyAttribute(), EGameplayModOp::Override, 1.f));
 		
 	/*FGameplayModifierInfo Mod;
 	Mod.Attribute = UGymSpecificStats_OM::GetFocusAttribute();

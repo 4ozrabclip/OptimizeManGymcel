@@ -14,24 +14,8 @@ void UEnergyTickExecCalc_OM::Execute_Implementation(const FGameplayEffectCustomE
 {
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
 	
-	FGameplayTagContainer AggregatedTags;
-	//ExecutionParams.GetOwningSpec().GetAllAssetTags(AggregatedTags);
-	AggregatedTags = ExecutionParams.GetPassedInTags();
 
-
-	const FGameplayTag IdleStateTag = FGameplayTag::RequestGameplayTag(TEXT("State.Idle"));
-	const FGameplayTag GymLevelTag  = FGameplayTag::RequestGameplayTag(TEXT("Level.Gym"));
-	const FGameplayTag FocusHighTag = FGameplayTag::RequestGameplayTag(TEXT("Stats.Gym.Focus.High"));
-
-	if (!AggregatedTags.HasTag(IdleStateTag) || !AggregatedTags.HasTag(GymLevelTag))
-		return;
-	
-	if (AggregatedTags.HasTag(FocusHighTag))
-		return;
-
-	
-
-	constexpr float EnergyDrainPerSecond = -0.00005f;
+	constexpr float EnergyDrainPerSecond = -0.001f;
 
 	OutExecutionOutput.AddOutputModifier(
 		FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetEnergyAttribute(), EGameplayModOp::Additive, EnergyDrainPerSecond));
