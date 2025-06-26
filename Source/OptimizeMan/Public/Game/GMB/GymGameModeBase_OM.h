@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/EnergyTick_OM.h"
+#include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Utils/Structs/ConsumableData.h"
 #include "GymGameModeBase_OM.generated.h"
 
@@ -50,6 +52,8 @@ protected:
 	const UGymSpecificStats_OM* GymStats;
 	UPROPERTY()
 	const UMentalHealthStats_OM* MentalHealth;
+
+	
 
 
 private:

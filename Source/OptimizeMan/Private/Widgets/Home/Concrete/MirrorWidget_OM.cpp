@@ -8,6 +8,7 @@
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 
 
@@ -76,10 +77,17 @@ void UMirrorWidget_OM::UpdateStats()
 	const FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
 
-	
-	UpdateStatBar(InnerStatus.Ego, EgoPositiveBar, EgoNegativeBar);
-	UpdateStatBar(InnerStatus.Social, SocialPositiveBar, SocialNegativeBar);
-	UpdateStatBar(InnerStatus.SexAppeal, SexPositiveBar, SexNegativeBar);
+	const UAbilitySystemComponent_OM* AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent());
+	if (!AbSysComp) return;
+	if (const UMentalHealthStats_OM* Ment = AbSysComp->GetSet<UMentalHealthStats_OM>())
+	{
+		const float EgoValue = Ment->GetEgo();
+		const float SocialValue = Ment->GetSocial();
+		const float SexAppealValue = Ment->GetSexAppeal();
+		UpdateStatBar(EgoValue, EgoPositiveBar, EgoNegativeBar);
+		UpdateStatBar(SocialValue, SocialPositiveBar, SocialNegativeBar);
+		UpdateStatBar(SexAppealValue, SexPositiveBar, SexNegativeBar);
+	}
 	
 }
 void UMirrorWidget_OM::UpdateStatBar(const float InTypeStat, UProgressBar* InPositiveBar, UProgressBar* InNegativeBar)

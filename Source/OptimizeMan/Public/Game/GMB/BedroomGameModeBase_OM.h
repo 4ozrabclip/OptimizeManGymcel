@@ -16,7 +16,11 @@ class OPTIMIZEMAN_API ABedroomGameModeBase_OM : public AGameModeBase
 
 public:
 	ABedroomGameModeBase_OM();
+protected:
 	virtual void BeginPlay() override;
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
+public:
 	void ProcessIncompleteTodos();
 	void WakeUp();
 	void TutorialDay();

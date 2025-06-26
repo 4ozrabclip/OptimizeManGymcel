@@ -10,6 +10,8 @@
 
 #include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
 #include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
+#include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/EnergyTick_OM.h"
+#include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Utils/Structs/PlayerData.h"
 #include "Utils/Structs/PlayModes.h"
 
@@ -35,9 +37,10 @@ protected:
 	virtual void PostInitializeComponents() override;
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-protected:
+	
 	/***** GAS Funcs *****/
 	void InitializeAttributes();
+protected:
 	void InitializeEffects();
 
 	
@@ -127,11 +130,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	float ShouldersSize = 0.f;
 
-	/**** GAS Attribute Sets ****/
-	UPROPERTY()
-	TObjectPtr<UGymSpecificStats_OM> GymSpecificStats;
-	UPROPERTY()
-	TObjectPtr<UMentalHealthStats_OM> MentalHealthStats;
+	/**** GAS effects ****/
+	UPROPERTY(EditAnywhere, Category = "Constant Effects")
+	TSubclassOf<UFocusTick_OM> FocusTickClass;
+	UPROPERTY(EditAnywhere, Category = "Constant Effects")
+	TSubclassOf<UEnergyTick_OM> EnergyTickClass;
+	
 
 	/**** Timers + Head Location ****/
 	FTimerHandle SetMirrorModeTimerHandle;
@@ -186,9 +190,12 @@ public:
 	UFUNCTION()
 	void ToggleTodoMode() { TogglePlayMode(EPlayModes::TodoMode, bTodoOpen); }
 
+	void SyncStatsToGameInstance();
+
 protected:
 	void InitPlayModes();
 	void ManageCurrentPlayMode();
+	void InitializeConstantEffects();
 	void ManagePauseMode();
 
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
@@ -196,6 +203,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageRegularMode();
+	void SwitchTag(FGameplayTag InTag, FGameplayTag RootTag);
+public:
+	void SwitchStateTag(const FGameplayTag NewState) { SwitchTag(NewState, FGameplayTag::RequestGameplayTag("State")); }
+	void SwitchLevelTag(const FGameplayTag NewLevel) { SwitchTag(NewLevel, FGameplayTag::RequestGameplayTag("Level")); }
+protected:
 
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageSocialMode();

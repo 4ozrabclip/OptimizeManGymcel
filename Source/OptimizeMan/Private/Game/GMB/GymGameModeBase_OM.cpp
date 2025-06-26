@@ -39,14 +39,20 @@ void AGymGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerControll
 	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
 	if (!Player) return;
 
+	Player->SwitchLevelTag(FGameplayTag::RequestGameplayTag("Level.Gym"));
+
 	AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent());
-	if (!AbSysComp) return;
+	/*if (!AbSysComp) return;
 	MentalHealth = AbSysComp->GetSet<UMentalHealthStats_OM>();
 	if (!MentalHealth) return;
 	GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
-	if (!GymStats) return;
+	if (!GymStats) return;*/
 
 	PlayerController->SetGymHud();
+
+	InitializeConstantEffects();
+
+	
 	
 }
 void AGymGameModeBase_OM::InitializeConstantEffects()

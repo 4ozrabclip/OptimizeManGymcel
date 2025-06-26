@@ -13,11 +13,11 @@ void UEnergyTickExecCalc_OM::Execute_Implementation(const FGameplayEffectCustomE
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
-
-	
 	
 	FGameplayTagContainer AggregatedTags;
-	ExecutionParams.GetOwningSpec().GetAllAssetTags(AggregatedTags);
+	//ExecutionParams.GetOwningSpec().GetAllAssetTags(AggregatedTags);
+	AggregatedTags = ExecutionParams.GetPassedInTags();
+
 
 	const FGameplayTag IdleStateTag = FGameplayTag::RequestGameplayTag(TEXT("State.Idle"));
 	const FGameplayTag GymLevelTag  = FGameplayTag::RequestGameplayTag(TEXT("Level.Gym"));

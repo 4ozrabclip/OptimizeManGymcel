@@ -3,6 +3,9 @@
 
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -15,8 +18,7 @@ void UGameInstance_OM::FirstDay()
 		TodoManagement = GetSubsystem<UTodoManagementSubsystem>();
 	}
 	TodoManagement->SetCurrentTodos(FirstDayTodo1);
-
-
+	
 }
 void UGameInstance_OM::ResetGame()
 {
@@ -131,7 +133,6 @@ void UGameInstance_OM::InitializePlayerData()
 	SetStat(InnerStatus.Ego, 0.f);
 	SetStat(InnerStatus.Social, 0.f);
 	SetStat(InnerStatus.SexAppeal, 0.f);
-	SetPossesion(InnerStatus.bIsDelusional, false);
 	
 	SetPossesion(BodyStatus.bIsBulking, false);
 	SetPossesion(BodyStatus.bHasJawSurgery, false);
@@ -252,6 +253,33 @@ void UGameInstance_OM::IncrementMonth()
 		}
 	}
 }
+
+
+/*
+void UGameInstance_OM::SetMentalStat(const EPlayerStatTypes InStat, float Value)
+{
+	if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(),0)))
+	{
+		if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn()))
+		{
+			if (UAbilitySystemComponent_OM* AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent()))
+			{
+				const UMentalHealthStats_OM* Mental = AbSysComp->GetSet<UMentalHealthStats_OM>();
+
+				switch (InStat)
+				{
+				case EPlayerStatTypes::Ego:
+					{
+						Mental->SetEgo()
+						break;
+					}
+					
+				}
+			}
+		}
+	}
+}*/
+
 void UGameInstance_OM::IncrementDay()
 {
 	DayInfo.DayNumber++;;

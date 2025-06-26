@@ -261,10 +261,14 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	GameInstance->SetStat(*RightThighStrength, ThighsValue);
 	GameInstance->SetStat(*LeftCalveStrength, CalvesValue);
 	GameInstance->SetStat(*RightCalveStrength, CalvesValue);
+
 	
 	GameInstance->SetStat(InnerStatus.Social, SocialValue);
 	GameInstance->SetStat(InnerStatus.Ego, EgoValue);
 	GameInstance->SetStat(InnerStatus.SexAppeal, SexAppealValue);
+
+	Player->InitializeAttributes();
+
 	
 	if (GameInstance->GetCurrentEmotionalState() != NewEmotionalState)
 	{

@@ -153,8 +153,7 @@ struct FInnerStatus
 		: CurrentEmotionalState(EPlayerEmotionalStates::Cope),
 		Ego(0.f),
 		SexAppeal(0.f),
-		Social(0.f),
-		bIsDelusional(false)
+		Social(0.f)
 	{}
 
 	EPlayerEmotionalStates CurrentEmotionalState;
@@ -165,8 +164,6 @@ struct FInnerStatus
 	float SexAppeal;
 	UPROPERTY(BlueprintReadWrite)
 	float Social;
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsDelusional;
 };
 USTRUCT(BlueprintType)
 struct FGamePointsData

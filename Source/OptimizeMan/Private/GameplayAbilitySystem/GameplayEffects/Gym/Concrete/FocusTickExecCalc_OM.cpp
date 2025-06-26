@@ -13,9 +13,10 @@ void UFocusTickExecCalc_OM::Execute_Implementation(const FGameplayEffectCustomEx
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
-
+	
 	FGameplayTagContainer AggregatedTags;
 	ExecutionParams.GetOwningSpec().GetAllAssetTags(AggregatedTags);
+	
 
 	const FGameplayTag IdleStateTag = FGameplayTag::RequestGameplayTag(TEXT("State.Idle"));
 	const FGameplayTag GymLevelTag  = FGameplayTag::RequestGameplayTag(TEXT("Level.Gym"));
@@ -23,7 +24,7 @@ void UFocusTickExecCalc_OM::Execute_Implementation(const FGameplayEffectCustomEx
 	if (!AggregatedTags.HasTag(IdleStateTag) || !AggregatedTags.HasTag(GymLevelTag))
 		return;
 	
-	constexpr float FocusDrainPerSecond = -0.00005f;
+	constexpr float FocusDrainPerSecond = -0.1f;
 
 	OutExecutionOutput.AddOutputModifier(
 		FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetFocusAttribute(), EGameplayModOp::Additive, FocusDrainPerSecond));

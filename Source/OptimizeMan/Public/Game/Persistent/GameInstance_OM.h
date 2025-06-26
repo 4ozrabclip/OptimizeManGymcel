@@ -27,19 +27,23 @@ class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance
 	GENERATED_BODY()
 	
 public: // Initialization
-	void FirstDay();
-	void ResetGame();
 	virtual void Init() override;
 
+
+	void FirstDay();
+	void ResetGame();
+
+	
+	void InitializePlayerData();
 	void InitializePostersOwned();
 	void InitializeGameSettings();
+
+	
 	FBodyPartData* FindBodyPart(const EBodyPart& Part, const EBodyPartSide& Side);
 	float GetBodyPartStrengthValue(const EBodyPart& Part, const EBodyPartSide& Side);
 	float GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part);
-
 	float* GetBodyPartStrengthPtr(const EBodyPart& Part, const EBodyPartSide& Side);
 
-	void InitializePlayerData();
 
 
 public: //delegates
@@ -120,6 +124,11 @@ public:
 
 	
 //General Getters/Setters
+
+	/*** GAS ***/
+	void SetInnerStatus(const FInnerStatus& InInnerStatus) {InnerStatus = InInnerStatus;}
+
+	
 	float GetBaseDifficultyMultiplier() const { return BaseDifficultyMultiplier; }
 	void SetBaseDifficultyMultiplier(const float InMultiplier) { BaseDifficultyMultiplier = InMultiplier; }
 	float GetTempWaveDifficultyMultiplier() const { return TempWaveDifficultyMultiplier; }
@@ -191,7 +200,6 @@ public:
 	float GetSexAppeal() const { return InnerStatus.SexAppeal; }
 	float GetSocial() const { return InnerStatus.Social; }
 	
-	bool GetIsDelusional() const { return InnerStatus.bIsDelusional; }
 	
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentEmotionalState(const EPlayerEmotionalStates NewState);

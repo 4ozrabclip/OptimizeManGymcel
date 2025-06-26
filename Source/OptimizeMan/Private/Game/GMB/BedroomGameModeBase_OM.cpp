@@ -26,18 +26,24 @@ void ABedroomGameModeBase_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
+	
+}
+
+void ABedroomGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+	
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	if (!GameInstance) return;
-	
-	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	PlayerController = Cast<APlayerController_OM>(NewPlayer);
 	if (!PlayerController) return;
-	
 	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
 	if (!Player) return;
-	
 	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	if (!TodoManager) return;
 
+	Player->SwitchLevelTag(FGameplayTag::RequestGameplayTag("Level.Home"));
 	
 	PlayerController->SetGymHud(false);
 
@@ -55,9 +61,8 @@ void ABedroomGameModeBase_OM::BeginPlay()
 		if (UNotificationAudio_OM* Not = Cast<UNotificationAudio_OM>(Player->GetComponentByClass<UNotificationAudio_OM>()))
 			Not->PlaySplatSound();
 	}
-	
-	
 }
+
 void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 {
 	if (!TodoManager)

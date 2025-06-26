@@ -74,6 +74,7 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	DefaultSkeletalMesh = nullptr;
 	
 }
+
 void APlayerCharacter_OM::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -81,7 +82,6 @@ void APlayerCharacter_OM::PostInitializeComponents()
 	AbSysComp->AddSet<UGymSpecificStats_OM>();
 
 	InitializeEffects();
-	
 }
 
 void APlayerCharacter_OM::InitializeEffects()
@@ -113,11 +113,7 @@ void APlayerCharacter_OM::BeginPlay()
 	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	if (!TodoManager) return;
 
-
-	InitializeAttributes();
-
 	
-
 	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
 	{
 		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
@@ -134,6 +130,8 @@ void APlayerCharacter_OM::BeginPlay()
 	SetCurrentPlayMode(EPlayModes::RegularMode);
 	SetEmotionalState();
 	
+	InitializeAttributes();
+	InitializeConstantEffects();
 }
 
 void APlayerCharacter_OM::Tick(float DeltaTime)
@@ -155,19 +153,68 @@ void APlayerCharacter_OM::InitializeAttributes()
 {
 	if (!GameInstance) return;
 	if (!AbSysComp) return;
-	if (MentalHealthStats)
+	
+	const FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+
+	UGameplayEffect* CurrentMentalStatsGE = NewObject<UGameplayEffect>(GetTransientPackage(), TEXT("CurrentMentalStats"));
+	CurrentMentalStatsGE->DurationPolicy = EGameplayEffectDurationType::Instant;
+
 	{
-		const float EgoVal = GameInstance->GetInnerStatus().Ego;
-		const float SocialVal = GameInstance->GetInnerStatus().Social;
-		const float SexAppealVal = GameInstance->GetInnerStatus().SexAppeal;
-		MentalHealthStats->SetEgo(EgoVal);
-		MentalHealthStats->SetSocial(SocialVal);
-		MentalHealthStats->SetSexAppeal(SexAppealVal);
+		FGameplayModifierInfo Mod;
+		Mod.Attribute = UMentalHealthStats_OM::GetEgoAttribute();
+		Mod.ModifierOp = EGameplayModOp::Override;
+		Mod.ModifierMagnitude = FScalableFloat(InnerStatus.Ego);
+		CurrentMentalStatsGE->Modifiers.Add(Mod);
 	}
-	if (GetWorld()->GetAuthGameMode<AGymGameModeBase_OM>())
 	{
-		// Do i need to initialize shit here?  
+		FGameplayModifierInfo Mod;
+		Mod.Attribute = UMentalHealthStats_OM::GetSocialAttribute();
+		Mod.ModifierOp = EGameplayModOp::Override;
+		Mod.ModifierMagnitude = FScalableFloat(InnerStatus.Social);
+		CurrentMentalStatsGE->Modifiers.Add(Mod);
 	}
+	{
+		FGameplayModifierInfo Mod;
+		Mod.Attribute = UMentalHealthStats_OM::GetSexAppealAttribute();
+		Mod.ModifierOp = EGameplayModOp::Override;
+		Mod.ModifierMagnitude = FScalableFloat(InnerStatus.SexAppeal);
+		CurrentMentalStatsGE->Modifiers.Add(Mod);
+	}
+	AbSysComp->ApplyGameplayEffectToSelf(CurrentMentalStatsGE, 1.f, AbSysComp->MakeEffectContext());
+}
+
+void APlayerCharacter_OM::InitializeConstantEffects()
+{
+	if (AbSysComp)
+	{
+		FGameplayEffectContextHandle EffectContext = AbSysComp->MakeEffectContext();
+		EffectContext.AddSourceObject(this); 
+
+		FGameplayEffectSpecHandle FocusSpecHandle = AbSysComp->MakeOutgoingSpec(FocusTickClass, 1.0f, EffectContext);
+		if (FocusSpecHandle.IsValid())
+		{
+			AbSysComp->ApplyGameplayEffectSpecToSelf(*FocusSpecHandle.Data.Get());
+		}
+		FGameplayEffectSpecHandle EnergySpecHandle = AbSysComp->MakeOutgoingSpec(EnergyTickClass, 1.0f, EffectContext);
+		if (EnergySpecHandle.IsValid())
+		{
+			AbSysComp->ApplyGameplayEffectSpecToSelf(*EnergySpecHandle.Data.Get());
+		}
+	}
+}
+
+void APlayerCharacter_OM::SyncStatsToGameInstance()
+{
+	if (!AbSysComp) return;
+	const UMentalHealthStats_OM* MentalStats = AbSysComp->GetSet<UMentalHealthStats_OM>();
+	if (!MentalStats) return;
+
+	FInnerStatus NewInnerStatus;
+	NewInnerStatus.Ego = MentalStats->GetEgo();
+	NewInnerStatus.Social = MentalStats->GetSocial();
+	NewInnerStatus.SexAppeal = MentalStats->GetSexAppeal();
+
+	GameInstance->SetInnerStatus(NewInnerStatus);
 }
 
 
@@ -188,6 +235,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	PauseModeConfig.ForcedRotation = FRotator();
 	PauseModeConfig.bHasAFadeIn = false;
 	PauseModeConfig.bNeedsPreSteps = false;
+	PauseModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Paused");
 	PlayModeConfigs.Add(EPlayModes::PauseMode, PauseModeConfig);
 
 	FPlayModeConfig SocialModeConfig;
@@ -198,6 +246,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	SocialModeConfig.ForcedRotation = FRotator();
 	SocialModeConfig.bHasAFadeIn = false;
 	SocialModeConfig.bNeedsPreSteps = false;
+	SocialModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Social");
 	PlayModeConfigs.Add(EPlayModes::SocialMode, SocialModeConfig);
 
 	FPlayModeConfig WorkoutModeConfig;
@@ -208,6 +257,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	WorkoutModeConfig.ForcedRotation = FRotator();
 	WorkoutModeConfig.bHasAFadeIn = false;
 	WorkoutModeConfig.bNeedsPreSteps = true;
+	WorkoutModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Workout");
 	PlayModeConfigs.Add(EPlayModes::WorkoutMode, WorkoutModeConfig);
 
 	const FVector PlayerFacingMirrorLoc = FVector(423.42f,-256.31f,91.501f);
@@ -220,6 +270,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	MirrorModeConfig.ForcedRotation = FRotator(1, 1, 0);
 	MirrorModeConfig.bHasAFadeIn = false;
 	MirrorModeConfig.bNeedsPreSteps = false;
+	MirrorModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::MirrorMode, MirrorModeConfig);
 
 	FPlayModeConfig MuscleViewModeConfig;
@@ -230,6 +281,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	MuscleViewModeConfig.ForcedRotation = FRotator::ZeroRotator;
 	MuscleViewModeConfig.bHasAFadeIn = false;
 	MuscleViewModeConfig.bNeedsPreSteps = false;
+	MuscleViewModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::MuscleViewMode, MuscleViewModeConfig);
 	
 	const FVector PlayerFacingShelfLoc = FVector(508.4f, -202.3f, 90.1f);
@@ -243,6 +295,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	ShelfModeConfig.ForcedRotation = PlayerFacingShelfRot;
 	ShelfModeConfig.bHasAFadeIn = false;
 	ShelfModeConfig.bNeedsPreSteps = false;
+	ShelfModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::ShelfMode, ShelfModeConfig);
   
 	FPlayModeConfig LaptopModeConfig;
@@ -253,6 +306,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	LaptopModeConfig.ForcedRotation = FRotator();
 	LaptopModeConfig.bHasAFadeIn = false;
 	LaptopModeConfig.bNeedsPreSteps = false;
+	LaptopModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::LaptopMode, LaptopModeConfig);
 
 	FPlayModeConfig CalenderModeConfig;
@@ -263,6 +317,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	CalenderModeConfig.ForcedRotation = FRotator();
 	CalenderModeConfig.bHasAFadeIn = false;
 	CalenderModeConfig.bNeedsPreSteps = false;
+	CalenderModeConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::CalenderMode, CalenderModeConfig);
 
 	FPlayModeConfig WakeUpConfig;
@@ -273,6 +328,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	WakeUpConfig.ForcedRotation = FRotator();
 	WakeUpConfig.bHasAFadeIn = false;
 	WakeUpConfig.bNeedsPreSteps = false;
+	WakeUpConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::WakeUpMode, WakeUpConfig);
 
 	FPlayModeConfig TodoConfig;
@@ -283,6 +339,7 @@ void APlayerCharacter_OM::InitPlayModes()
 	TodoConfig.ForcedRotation = FRotator();
 	TodoConfig.bHasAFadeIn = false;
 	TodoConfig.bNeedsPreSteps = false;
+	TodoConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::TodoMode, TodoConfig);
 
 }
@@ -313,7 +370,7 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	const FPlayModeConfig& Config = PlayModeConfigs[InPlayMode];
 
 	
-
+	SwitchStateTag(Config.StateTag);
 	
 	if (!Config.ForcedLocation.IsZero())
 	{
@@ -383,6 +440,7 @@ void APlayerCharacter_OM::ManageCurrentPlayMode()
 	}
 }
 
+
 void APlayerCharacter_OM::ManageRegularMode()
 {
 	if (!PlayerController) return;
@@ -403,12 +461,31 @@ void APlayerCharacter_OM::ManageRegularMode()
 	
 	SetMaxMovementSpeed(GetOriginalMovementSpeed());
 
+	SwitchStateTag(FGameplayTag::RequestGameplayTag("State.Idle"));
+
 	
 	if (!PlayerController->GetIsInteractableWidgetOnViewport())
 	{
 		PlayerController->ToggleInteractWidgetFromViewport(false);
 	}
 }
+
+void APlayerCharacter_OM::SwitchTag(const FGameplayTag InTag, const FGameplayTag RootTag)
+{
+	TArray<FGameplayTag> CurrentTags;
+	AbSysComp->GetOwnedGameplayTags().GetGameplayTagArray(CurrentTags);
+	
+
+	for (const FGameplayTag& Tag : CurrentTags)
+	{
+		if (Tag.MatchesTag(RootTag))
+		{
+			AbSysComp->RemoveLooseGameplayTag(Tag);
+		}
+	}
+	AbSysComp->AddLooseGameplayTag(InTag);
+}
+
 
 void APlayerCharacter_OM::ManagePauseMode()
 {

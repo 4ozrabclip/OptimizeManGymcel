@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "PlayModes.generated.h"
 
 UENUM(BlueprintType)
@@ -19,7 +20,7 @@ enum class EPlayModes : uint8
 	MuscleViewMode
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType) // Will need to do some more setup on the gameplay tag state manager here
 struct FPlayModeConfig
 {
 	GENERATED_USTRUCT_BODY()
@@ -54,5 +55,8 @@ struct FPlayModeConfig
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bNeedsPreSteps;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag StateTag;
 	
 };

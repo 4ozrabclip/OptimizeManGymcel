@@ -37,7 +37,7 @@ void ADoor::Interact_Implementation()
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	}
 
-	
+	Player->SyncStatsToGameInstance();
 	
 }
 
