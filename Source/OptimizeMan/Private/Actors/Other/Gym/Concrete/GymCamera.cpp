@@ -7,6 +7,7 @@
 
 AGymCamera::AGymCamera()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	Camera->SetupAttachment(RootComponent);
 	
@@ -25,6 +26,14 @@ void AGymCamera::BeginPlay()
 		GameInstance->OnEmotionalStateChanged.AddDynamic(this, &AGymCamera::OnEmotionalStateChanged);
 	}
 }
+
+void AGymCamera::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+}
+
+
 
 void AGymCamera::OnEmotionalStateChanged(EPlayerEmotionalStates NewState)
 {

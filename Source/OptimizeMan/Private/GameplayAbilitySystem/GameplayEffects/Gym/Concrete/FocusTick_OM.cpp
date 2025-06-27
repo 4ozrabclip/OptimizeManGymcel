@@ -17,21 +17,6 @@ UFocusTick_OM::UFocusTick_OM()
 
 
 
-	TagReqComp = CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(TEXT("TargetTagRequirements"));
+	//TagReqComp = CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(TEXT("TargetTagRequirements"));
 
-}
-
-void UFocusTick_OM::PostInitProperties()
-{
-	Super::PostInitProperties();
-	FGameplayTagRequirements RequiredTags;
-	RequiredTags.RequireTags.AddTag(FGameplayTag::RequestGameplayTag("State.Idle"));
-	RequiredTags.RequireTags.AddTag(FGameplayTag::RequestGameplayTag("Level.Gym"));
-
-	if (TagReqComp)
-		TagReqComp->OngoingTagRequirements = RequiredTags;
-
-
-
-	
 }

@@ -21,6 +21,7 @@
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
+#include "Camera/CameraActor.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
@@ -58,6 +59,10 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	//MentalHealthStats = CreateDefaultSubobject<UMentalHealthStats_OM>(TEXT("Mental Health Attributes"));
 	//GymSpecificStats = CreateDefaultSubobject<UGymSpecificStats_OM>(TEXT("Gym Stats"));
 
+	SelfieCameraLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SelfieCameraLocation"));
+	SelfieCameraLocation->SetupAttachment(RootComponent);
+	SelfieCameraLocation->SetVisibility(false);
+
 	
 	SetMinimumMovementThreshold(0.5f);
 	SetIsWalking(false);
@@ -92,6 +97,20 @@ void APlayerCharacter_OM::InitializeEffects()
 	if (FocusDrainGymHandle.IsValid())
 	{
 		FocusDrainEffectHandle = AbSysComp->ApplyGameplayEffectSpecToSelf(*FocusDrainGymHandle.Data.Get());
+	}
+}
+
+void APlayerCharacter_OM::SpawnSelfieCamera()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	FTransform SpawnTransform = SelfieCameraLocation->GetComponentTransform();
+	FRotator SpawnRotator = SpawnTransform.Rotator();
+	
+	if (ACameraActor* Cam = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), SpawnTransform.GetLocation(), SpawnRotator, SpawnParams))
+	{
+		PlayerController->SetViewTargetWithBlend(Cam, 2, VTBlend_Linear);
 	}
 }
 
@@ -556,9 +575,16 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		
 		
 		if (UUserWidget* WidgetInstanceToFocus = PlayerController->GetCurrentPlayModeWidgetInstance())
+		{
+			UE_LOG(LogTemp, Display, TEXT("Setting up UI Widget to Focus: %s"), *WidgetInstanceToFocus->GetName());
 			InputModeUI.SetWidgetToFocus(WidgetInstanceToFocus->TakeWidget());
+		}
 		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("No widget to focus"));
 			InputModeUI.SetWidgetToFocus(nullptr);
+		}
+
 
 		
 		PlayerController->SetInputMode(InputModeUI);

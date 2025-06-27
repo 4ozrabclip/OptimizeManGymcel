@@ -50,31 +50,30 @@ void ABed_OM::Interact_Implementation()
 	if (bIsSleeping) return;
 	if (GameMode->GetWidgetIsVisible()) return;
 	if (!GameInstance)
-	{
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to recast gi in bed"));
-		return;
-	}
-
+	if (!GameInstance) return;
+	
 	if (!GameInstance->GetHasBeenToGymToday())
 	{
 		Player->ShitReaction();
 		return;
 	}
 	
-	SetIsSleeping(true);
-
 	if (!Player)
-	{
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	}
 	Player->SetMaxMovementSpeed(0.f);
 	
 	const FInputModeUIOnly Input;
 	PlayerController->SetInputMode(Input);
+	if (GameInstance->GetDayNumber() == 1)
+	{
+		GameInstance->FinishDemo();
+		return;
+	}
+	
+	SetIsSleeping(true);
+
+
 	if (APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager)
 	{
 		constexpr float FadeDuration = 2.f;

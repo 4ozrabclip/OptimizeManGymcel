@@ -14,6 +14,19 @@
 
 void UTodoManagementSubsystem::InitializeTodos()
 {
+	/** Tutorial Todos **/
+	FTodoItem TakeColdShower;
+	TakeColdShower.Name = TEXT("Take a cold shower");
+	TakeColdShower.Level = TEXT("Home");
+	TakeColdShower.Desc = TEXT("1 Game Point.  +1 SexAppeal");
+	TakeColdShower.StatBuffs = {
+		{EPlayerStatTypes::SexAppeal, 0.1f}
+	};
+	TakeColdShower.CompletedName = TEXT("Took a cold shower!");
+	TakeColdShower.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.TakeColdShower");
+	TakeColdShower.Points = 1;
+	TodoArray.Add(TakeColdShower);
+	
 	FTodoItem CompleteWorkout;
 	CompleteWorkout.Name = TEXT("Complete Workout");
 	CompleteWorkout.Level = TEXT("Gym");

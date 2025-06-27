@@ -18,10 +18,8 @@ class OPTIMIZEMAN_API UFocusTick_OM : public UGameplayEffect_OM
 public:
 	UFocusTick_OM();
 
-	virtual void PostInitProperties() override;
 
 protected:
-	UPROPERTY()
-	UTargetTagRequirementsGameplayEffectComponent* TagReqComp;
+
 	
 };

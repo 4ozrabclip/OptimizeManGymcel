@@ -17,10 +17,8 @@ class OPTIMIZEMAN_API UEnergyTick_OM : public UGameplayEffect_OM
 public:
 	UEnergyTick_OM();
 
-	virtual void PostInitProperties() override;
 
 protected:
-	UPROPERTY()
-	UTargetTagRequirementsGameplayEffectComponent* TagReqComp;
+
 	
 };

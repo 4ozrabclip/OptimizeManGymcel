@@ -17,6 +17,7 @@
 
 #include "PlayerCharacter_OM.generated.h"
 
+class UCameraComponent;
 class UTodoManagementSubsystem;
 class UGameInstance_OM;
 class APlayerController_OM;
@@ -43,11 +44,19 @@ public:
 protected:
 	void InitializeEffects();
 
+
+	/**** Camera Tricks ****/
+	UFUNCTION(BlueprintCallable)
+	void SpawnSelfieCamera();
+
 	
 
 	/**** Components ****/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UCameraComponent> Camera;
+	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	TObjectPtr<USceneComponent> SelfieCameraLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerAudioComponent;
@@ -131,9 +140,9 @@ protected:
 	float ShouldersSize = 0.f;
 
 	/**** GAS effects ****/
-	UPROPERTY(EditAnywhere, Category = "Constant Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constant Effects")
 	TSubclassOf<UFocusTick_OM> FocusTickClass;
-	UPROPERTY(EditAnywhere, Category = "Constant Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constant Effects")
 	TSubclassOf<UEnergyTick_OM> EnergyTickClass;
 	
 

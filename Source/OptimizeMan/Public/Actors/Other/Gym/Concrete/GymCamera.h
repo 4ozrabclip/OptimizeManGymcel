@@ -11,12 +11,12 @@ UCLASS()
 class OPTIMIZEMAN_API AGymCamera : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
-	// Sets default values for this actor's properties
 	AGymCamera();
+protected:
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaTime) override;
+public:
 	UFUNCTION()
 	void OnEmotionalStateChanged(EPlayerEmotionalStates NewState);
 

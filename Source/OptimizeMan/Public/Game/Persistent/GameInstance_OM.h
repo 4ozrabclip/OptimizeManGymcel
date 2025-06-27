@@ -32,6 +32,7 @@ public: // Initialization
 
 	void FirstDay();
 	void ResetGame();
+	void FinishDemo();
 
 	
 	void InitializePlayerData();

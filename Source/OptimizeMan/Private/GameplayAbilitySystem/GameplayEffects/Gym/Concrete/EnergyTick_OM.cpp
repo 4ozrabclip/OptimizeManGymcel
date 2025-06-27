@@ -17,21 +17,6 @@ UEnergyTick_OM::UEnergyTick_OM()
 	Period = 0.25f;
 	
 
-	TagReqComp = CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(TEXT("TargetTagRequirements"));
+	//TagReqComp = CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(TEXT("TargetTagRequirements"));
 
-}
-
-void UEnergyTick_OM::PostInitProperties()
-{
-	Super::PostInitProperties();
-	FGameplayTagRequirements RequiredTags;
-	RequiredTags.RequireTags.AddTag(FGameplayTag::RequestGameplayTag("State.Idle"));
-	RequiredTags.RequireTags.AddTag(FGameplayTag::RequestGameplayTag("Level.Gym"));
-	RequiredTags.IgnoreTags.AddTag(FGameplayTag::RequestGameplayTag("Stats.Gym.Focus.High"));
-
-	if (TagReqComp)
-		TagReqComp->OngoingTagRequirements = RequiredTags;
-	
-
-	
 }

@@ -33,6 +33,17 @@ void UGameInstance_OM::ResetGame()
 	
 	ResetAllSaves();
 }
+
+void UGameInstance_OM::FinishDemo()
+{
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	{
+		const FString MainMenuLevelString = "/Game/Levels/MainMenu";
+		const FName LevelToChangeTo = FName(MainMenuLevelString);
+		UGameplayStatics::OpenLevel(this, LevelToChangeTo);
+	});
+}
+
 void UGameInstance_OM::Init()
 {
 	Super::Init();

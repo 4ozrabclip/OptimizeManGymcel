@@ -45,12 +45,6 @@ void UWakeUpTutorial_OM::PlayTutorialAnimation(UWidgetAnimation* InAnimationPart
 
 	GetWorld()->GetTimerManager().ClearTimer(Handle);
 	
-
-	FString CurrentTutorialStepString = FString::Printf(TEXT("Step %d"), CurrentTutorialStep);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, CurrentTutorialStepString);
-
-	
 	PlayAnimation(InAnimationPart, 0.f, 1);
 	float Duration = InAnimationPart->GetEndTime();
 
@@ -59,13 +53,7 @@ void UWakeUpTutorial_OM::PlayTutorialAnimation(UWidgetAnimation* InAnimationPart
 void UWakeUpTutorial_OM::PlayContPrompt()
 {
 	bWaitingForInput = true;
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Called PlayContPrompt");
-
-	FString CurrentTutorialStepString = FString::Printf(TEXT("Step %d"), CurrentTutorialStep);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, CurrentTutorialStepString);
-
-
+	
 	switch (CurrentTutorialStep)
 	{
 	case 0:
@@ -148,7 +136,6 @@ void UWakeUpTutorial_OM::OnExitButtonClicked()
 
 FReply UWakeUpTutorial_OM::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	UE_LOG(LogTemp, Error, TEXT("NATIVE ON KEY DOWN"));
 	if (bWaitingForInput)
 	{
 		AdvanceTutorial(); 
@@ -156,4 +143,14 @@ FReply UWakeUpTutorial_OM::NativeOnKeyDown(const FGeometry& InGeometry, const FK
 	}
 
 	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+}
+
+FReply UWakeUpTutorial_OM::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	if (bWaitingForInput)
+	{
+		AdvanceTutorial(); 
+		return FReply::Handled();
+	}
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
