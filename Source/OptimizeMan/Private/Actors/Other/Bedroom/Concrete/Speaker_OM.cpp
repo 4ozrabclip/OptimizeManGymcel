@@ -64,7 +64,7 @@ void ASpeaker_OM::Interact_Implementation()
 	PlayerController->ToggleInteractWidgetFromViewport(true);
 	SpeakerWidget->SetVisibility(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
-	Player->SetToUIMode(true, true);
+	Player->SetToUIMode(true, true, SpeakerWidget->GetWidget());
 	
 	if (Songs.Num() <= 0)
 	{

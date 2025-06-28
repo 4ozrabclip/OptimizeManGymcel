@@ -72,7 +72,7 @@ void AVendingMachine_OM::Interact_Implementation()
 	PlayerController->ToggleInteractWidgetFromViewport(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
 	VendorWidgetComponent->SetVisibility(true);
-	Player->SetToUIMode(true, true);
+	Player->SetToUIMode(true, true, VendorWidgetComponent->GetWidget());
 	SetActorTickEnabled(true);
 }
 

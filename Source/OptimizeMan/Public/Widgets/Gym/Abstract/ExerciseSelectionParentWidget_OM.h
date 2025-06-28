@@ -7,6 +7,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "ExerciseSelectionParentWidget_OM.generated.h"
 
+class UTensionSliderObj_OM;
 class AExerciseEquipment_OM;
 class UTextBlock;
 class USlider;

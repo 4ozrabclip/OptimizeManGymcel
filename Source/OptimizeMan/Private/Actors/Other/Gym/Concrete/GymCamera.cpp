@@ -37,7 +37,6 @@ void AGymCamera::Tick(float DeltaTime)
 
 void AGymCamera::OnEmotionalStateChanged(EPlayerEmotionalStates NewState)
 {
-	UE_LOG(LogTemp, Error, TEXT("CALLED IN GYM CAM"));
 	switch (NewState)
 	{
 	case EPlayerEmotionalStates::Doomer:

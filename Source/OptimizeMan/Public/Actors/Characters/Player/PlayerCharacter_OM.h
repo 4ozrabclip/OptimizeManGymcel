@@ -233,7 +233,7 @@ public:
 	void ShitReaction();
 	void ClearTimers();
 	void ResetPlayer();
-	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false) const;
+	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false, UUserWidget* InWidget = nullptr) const;
 
 	/**** Getters / Setters ****/
 public:

@@ -13,6 +13,7 @@ public class OptimizeMan : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"EnhancedInput" , 
+			"Slate",
 			"SlateCore", 
 			"GameplayTags",
 			"GameplayAbilities",
@@ -21,7 +22,8 @@ public class OptimizeMan : ModuleRules
 			"MovieScene",
 			"AIModule",
 			"NavigationSystem",
-			"MetasoundEngine"
+			"MetasoundEngine",
+			"UMG"
 		});
 		if (Target.bBuildEditor)
 		{

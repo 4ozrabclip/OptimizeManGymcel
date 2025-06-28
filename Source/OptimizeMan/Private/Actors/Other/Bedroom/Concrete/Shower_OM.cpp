@@ -14,7 +14,7 @@
 
 AShower_OM::AShower_OM()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	
 	WidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 	WidgetComp->SetupAttachment(RootComponent);
@@ -47,8 +47,24 @@ void AShower_OM::Interact_Implementation()
 	PlayerController->ToggleInteractWidgetFromViewport(true);
 	WidgetComp->SetVisibility(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
-	Player->SetToUIMode(true, true);
+	Player->SetToUIMode(true, true, WidgetComp->GetWidget());
 	
+}
+
+void AShower_OM::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (Player)
+	{
+		FVector2D Delta = FVector2D(this->GetActorLocation()) - FVector2D(Player->GetActorLocation());
+		
+		if (Delta.Size() > 200)
+		{
+			CloseWidget();
+		}
+	}
 }
 
 void AShower_OM::TakeShower(bool bCold)

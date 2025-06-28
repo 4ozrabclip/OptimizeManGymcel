@@ -110,6 +110,7 @@ void APlayerCharacter_OM::SpawnSelfieCamera()
 	
 	if (ACameraActor* Cam = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), SpawnTransform.GetLocation(), SpawnRotator, SpawnParams))
 	{
+		Cam->GetCameraComponent()->SetConstraintAspectRatio(false);
 		PlayerController->SetViewTargetWithBlend(Cam, 2, VTBlend_Linear);
 	}
 }
@@ -372,6 +373,11 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	
 	CurrentPlayMode = InPlayMode;
 
+	if (CurrentPlayMode == EPlayModes::MirrorMode)
+		PlayerController->HideGamePointsHud(true);
+	else
+		PlayerController->HideGamePointsHud(false);
+
 	if (CurrentPlayMode == EPlayModes::RegularMode)
 	{
 		ManageRegularMode();
@@ -560,7 +566,7 @@ void APlayerCharacter_OM::ManageTodoMode()
  * 
  */
 
-void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement) const
+void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement, UUserWidget* InWidget) const
 {
 	if (!PlayerController)
 	{
@@ -573,15 +579,16 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		FInputModeGameAndUI InputModeUI;
 		InputModeUI.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
 		
-		
-		if (UUserWidget* WidgetInstanceToFocus = PlayerController->GetCurrentPlayModeWidgetInstance())
+		if (InWidget)
 		{
-			UE_LOG(LogTemp, Display, TEXT("Setting up UI Widget to Focus: %s"), *WidgetInstanceToFocus->GetName());
+			InputModeUI.SetWidgetToFocus(InWidget->TakeWidget());
+		}
+		else if (UUserWidget* WidgetInstanceToFocus = PlayerController->GetCurrentPlayModeWidgetInstance())
+		{
 			InputModeUI.SetWidgetToFocus(WidgetInstanceToFocus->TakeWidget());
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("No widget to focus"));
 			InputModeUI.SetWidgetToFocus(nullptr);
 		}
 
