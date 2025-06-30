@@ -7,16 +7,18 @@
 #include "GameplayEffect.h"
 #include "InputAction.h"
 #include "GameplayTagContainer.h"
+#include "Characters/PlayerCharacterBase_OM.h"
 
 #include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
 #include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/EnergyTick_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
-#include "Utils/Structs/PlayerData.h"
-#include "Utils/Structs/PlayModes.h"
+#include "Utils/Structs/PlayerData_Gymcel.h"
+#include "Utils/Structs/PlayModes_Gymcel.h"
 
 #include "PlayerCharacter_OM.generated.h"
 
+class UGameInstance_OMG;
 class UCameraComponent;
 class UTodoManagementSubsystem;
 class UGameInstance_OM;
@@ -26,7 +28,7 @@ class AInteractableActor_OM;
 class ANpcBase_OM;
 
 UCLASS()
-class OPTIMIZEMAN_API APlayerCharacter_OM : public ACharacter, public IAbilitySystemInterface
+class OPTIMIZEMAN_API APlayerCharacter_OM : public APlayerCharacterBase_OM
 {
 	GENERATED_BODY()
 public:
@@ -37,7 +39,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 public:
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	/***** GAS Funcs *****/
 	void InitializeAttributes();
@@ -45,28 +46,17 @@ protected:
 	void InitializeEffects();
 
 
+
+
 	/**** Camera Tricks ****/
 	UFUNCTION(BlueprintCallable)
 	void SpawnSelfieCamera();
 
 	
-
 	/**** Components ****/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UCameraComponent> Camera;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<USceneComponent> SelfieCameraLocation;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerAudioComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<class UFootstepAudio_OM> FootstepAudioComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<class UNotificationAudio_OM> NotificationAudioComponent;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UExercise_OM> ExerciseComponent;
 
@@ -76,8 +66,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerDeformationsComponent_OM> BodyDeformerComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<class UAbilitySystemComponent_OM> AbSysComp;
 
 	/**** Movement + Jump Settings ****/
 	UPROPERTY(EditAnywhere, Category = "Movement")
@@ -159,7 +147,7 @@ private:
 	UPROPERTY()
 	APlayerController_OM* PlayerController;
 	UPROPERTY()
-	UGameInstance_OM* GameInstance;
+	UGameInstance_OMG* GameInstance;
 	UPROPERTY()
 	UTodoManagementSubsystem* TodoManager;
 	
@@ -173,20 +161,17 @@ private:
 	bool bIsJumping = false;
 	bool bIsDoingRep = false;
 
-	/**** Input Handling ****/
+
 public:
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
+	/**** Input Handling ****/
 	virtual void Jump() override;
 
-	UFUNCTION()
-	void InteractClick() { Interact(false); }
+	/** Interaction **/
+	virtual void HandleNoHitInteraction() override;
+	
 
-	UFUNCTION()
-	void InteractToggle() { Interact(true); }
 
 protected:
-	void Interact(const bool bToggleable);
 	float CalculateJumpHeight(float LowerBodyStat) const;
 
 	/**** Play Mode State Management ****/

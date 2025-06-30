@@ -34,6 +34,9 @@ void AExerciseEquipment_OM::BeginPlay()
 	Super::BeginPlay();
 	OriginalPosition = GetActorTransform();
 
+	if (bUnderConstruction)
+		SetInteractableWidgetText("Under Construction");
+
 	if (UExerciseSelectionParentWidget_OM* Widg = Cast<UExerciseSelectionParentWidget_OM>(SelectWorkoutWidget->GetWidget()))
 	{
 		Widg->InitEquipment(this);
@@ -67,7 +70,7 @@ void AExerciseEquipment_OM::TurnOffWidget()
 void AExerciseEquipment_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
-
+	if (bUnderConstruction) return;
 	if (!PlayerController)
 		PlayerController = Cast<APlayerController_OM>(Player->GetController());
 

@@ -12,31 +12,26 @@ void UVendingMachineWidget_OM::NativeConstruct()
 	Super::NativeConstruct();
 
 	SetIsFocusable(true);
-	if (Option1_Button)
-	{
-		Option1_Button->OnClicked.Clear();
-		Option1_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption1Clicked);
-	}
-	if (Option2_Button)
-	{
-		Option2_Button->OnClicked.Clear();
-		Option2_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption2Clicked);
-	}
-	if (Option3_Button)
-	{
-		Option3_Button->OnClicked.Clear();
-		Option3_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption3Clicked);
-	}
-	if (VendingMachine && Exit_Button)
-	{
-		Exit_Button->OnClicked.Clear();
-		Exit_Button->OnClicked.AddDynamic(VendingMachine, &AVendingMachine_OM::ExitVendor);
-	}
+	if (!OptionBuy_Button || !OptionBuy_Button_1 || !OptionBuy_Button_2) return;
+	if (!VendingMachine) return;
+	if (!Exit_Button) return;
+	if (!NoMoney_Overlay) return;
 
-	if (NoMoneyOverlay)
-	{
-		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
-	}
+	OptionBuy_Button->OnClicked.Clear();
+	OptionBuy_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption1Clicked);
+
+	OptionBuy_Button_1->OnClicked.Clear();
+	OptionBuy_Button_1->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption2Clicked);
+
+	OptionBuy_Button_2->OnClicked.Clear();
+	OptionBuy_Button_2->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption3Clicked);
+	
+
+	Exit_Button->OnClicked.Clear();
+	Exit_Button->OnClicked.AddDynamic(VendingMachine, &AVendingMachine_OM::ExitVendor);
+
+	NoMoney_Overlay->SetVisibility(ESlateVisibility::Hidden);
+	
 	
 	SetConsumables();
 	
@@ -78,11 +73,11 @@ void UVendingMachineWidget_OM::SetConsumablesText()
 	if (Consumables.Num() <= 0) return;
 
 	if (Consumables.IsValidIndex(0))
-		SetConsumablesTextHelper(Option1Name_Text, FText::FromString(Consumables[0].NameString));
+		SetConsumablesTextHelper(OptionTitle_Text, FText::FromString(Consumables[0].NameString));
 	if (Consumables.IsValidIndex(1))
-		SetConsumablesTextHelper(Option2Name_Text, FText::FromString(Consumables[1].NameString));
+		SetConsumablesTextHelper(OptionTitle_Text_1, FText::FromString(Consumables[1].NameString));
 	if (Consumables.IsValidIndex(2))
-		SetConsumablesTextHelper(Option3Name_Text, FText::FromString(Consumables[2].NameString));
+		SetConsumablesTextHelper(OptionTitle_Text_2, FText::FromString(Consumables[2].NameString));
 		
 }
 
@@ -131,11 +126,11 @@ void UVendingMachineWidget_OM::OnOption3Clicked()
 }
 void UVendingMachineWidget_OM::ShowNoMoneyWindow()
 {
-	NoMoneyOverlay->SetVisibility(ESlateVisibility::Visible);
+	NoMoney_Overlay->SetVisibility(ESlateVisibility::Visible);
 	GetWorld()->GetTimerManager().ClearTimer(NoMoneyTimer);
 	GetWorld()->GetTimerManager().SetTimer(NoMoneyTimer, [this]()
 	{
-		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
+		NoMoney_Overlay->SetVisibility(ESlateVisibility::Hidden);
 	}, 2.5f, false);
 	
 }

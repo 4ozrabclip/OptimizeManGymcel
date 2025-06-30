@@ -15,7 +15,7 @@ ADumbell_OM::ADumbell_OM()
 void ADumbell_OM::BeginPlay()
 {
 	Super::BeginPlay();
-	SetInteractableWidgetText("Lift Weight");
+	SetInteractableWidgetText("Under Construction");
 }
 
 void ADumbell_OM::Interact_Implementation()

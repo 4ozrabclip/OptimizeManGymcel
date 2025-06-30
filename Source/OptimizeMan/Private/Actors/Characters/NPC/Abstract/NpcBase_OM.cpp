@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
-#include "Interfaces/InteractableInterface_OM.h"
+#include "Interfaces/InteractableInterface.h"
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
 #include "Actors/Other/Gym/Concrete/GymSpeaker_OM.h"
 #include "Components/AudioComponent.h"
@@ -18,7 +18,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Utils/Structs/AudioTypes.h"
 
-ANpcBase_OM::ANpcBase_OM()
+ANpcBase_OMG::ANpcBase_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	//GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -92,7 +92,7 @@ void ANpcBase_OM::BeginPlay()
 		return;
 	}
 	
-	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OM::CheckAndSetDarkMode);
+	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OMG::CheckAndSetDarkMode);
 
 	CheckAndSetDarkMode();
 	
@@ -103,7 +103,7 @@ void ANpcBase_OM::BeginPlay()
 
 
 
-void ANpcBase_OM::Interact_Implementation()
+void ANpcBase_OMG::Interact_Implementation()
 {
 	if (!bCanInteract) return;
 	
@@ -113,7 +113,7 @@ void ANpcBase_OM::Interact_Implementation()
 	StartDialogue();
 	
 }
-void ANpcBase_OM::Tick(float DeltaTime)
+void ANpcBase_OMG::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	ToggleNpcLookStates();
@@ -139,7 +139,7 @@ void ANpcBase_OM::Tick(float DeltaTime)
 	}
 }
 
-void ANpcBase_OM::ToggleNpcLookStates()
+void ANpcBase_OMG::ToggleNpcLookStates()
 {
 	ENpcLookStates NewState = ENpcLookStates::LookingAtPlayer;
 	if (!Player)
@@ -174,7 +174,7 @@ void ANpcBase_OM::ToggleNpcLookStates()
 	
 }
 
-FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
+FVector ANpcBase_OMG::LookAtLocation(const float DeltaTime)
 {
 	if (!Player || !Player->GetMesh()) 
 	{
@@ -223,7 +223,7 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 	return SmoothedLookAtLocation;
 }
 
-void ANpcBase_OM::CheckAndSetDarkMode()
+void ANpcBase_OMG::CheckAndSetDarkMode()
 {
 	if (!GameInstance)
 	{
@@ -239,7 +239,7 @@ void ANpcBase_OM::CheckAndSetDarkMode()
 	}
 }
 
-ENpcRelationshipState ANpcBase_OM::GetCurrentRelationshipState()
+ENpcRelationshipState ANpcBase_OMG::GetCurrentRelationshipState()
 {
 	if (!PlayerRelationship.bHasMetPlayer)
 		return ENpcRelationshipState::Neutral;
@@ -249,7 +249,7 @@ ENpcRelationshipState ANpcBase_OM::GetCurrentRelationshipState()
 	return PlayerRelationship.RelationshipState;
 }
 
-void ANpcBase_OM::StartDialogue()
+void ANpcBase_OMG::StartDialogue()
 {
 	if (!bIsInDialogue)
 	{
@@ -267,7 +267,7 @@ void ANpcBase_OM::StartDialogue()
 	Player->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
 }
 
-void ANpcBase_OM::EndDialog()
+void ANpcBase_OMG::EndDialog()
 {
 	if (bIsInDialogue)
 	{
@@ -289,7 +289,7 @@ void ANpcBase_OM::EndDialog()
 }
 
 
-void ANpcBase_OM::SetFriendshipLevel(const float InAmount, const bool bReset)
+void ANpcBase_OMG::SetFriendshipLevel(const float InAmount, const bool bReset)
 {
 	if (bReset)
 	{
@@ -302,7 +302,7 @@ void ANpcBase_OM::SetFriendshipLevel(const float InAmount, const bool bReset)
 
 }
 
-void ANpcBase_OM::SetCurrentInteractedNpc(ANpcBase_OM* InNpc)
+void ANpcBase_OMG::SetCurrentInteractedNpc(ANpcBase_OMG* InNpc)
 {
 	CurrentInteractedNpc = InNpc;
 
@@ -322,7 +322,7 @@ void ANpcBase_OM::SetCurrentInteractedNpc(ANpcBase_OM* InNpc)
 	}
 }
 
-void ANpcBase_OM::SetCurrentState(const ENpcState InState)
+void ANpcBase_OMG::SetCurrentState(const ENpcState InState)
 {
 	CurrentState = InState;
 
@@ -344,7 +344,7 @@ void ANpcBase_OM::SetCurrentState(const ENpcState InState)
 }
 
 
-void ANpcBase_OM::Talk(USoundBase* InChatAudio) const
+void ANpcBase_OMG::Talk(USoundBase* InChatAudio) const
 {
 	if (!TalkingAudioComponent)
 	{
@@ -363,7 +363,7 @@ void ANpcBase_OM::Talk(USoundBase* InChatAudio) const
 	
 }
 
-void ANpcBase_OM::PlayRandomTalkingAnimForMood()
+void ANpcBase_OMG::PlayRandomTalkingAnimForMood()
 {
 	if (!AnimInstance) return;
 	if (!AnimInstance->GetIsTalking()) return;
@@ -398,7 +398,7 @@ void ANpcBase_OM::PlayRandomTalkingAnimForMood()
 		PlayRandomTalkingHelper(ConfusedChats);
 	}
 }
-void ANpcBase_OM::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap)
+void ANpcBase_OMG::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap)
 {
 	if (InChatMap.Num() <= 0)
 	{
@@ -433,7 +433,7 @@ void ANpcBase_OM::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InCh
 	}
 }
 
-UNpcBaseAnimInstance_OM* ANpcBase_OM::GetAnimInstance()
+UNpcBaseAnimInstance_OM* ANpcBase_OMG::GetAnimInstance()
 {
 	return AnimInstance;
 }

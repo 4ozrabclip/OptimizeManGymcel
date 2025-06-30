@@ -23,7 +23,8 @@ public class OptimizeMan : ModuleRules
 			"AIModule",
 			"NavigationSystem",
 			"MetasoundEngine",
-			"UMG"
+			"UMG", 
+			"OptimizeManCore"
 		});
 		if (Target.bBuildEditor)
 		{

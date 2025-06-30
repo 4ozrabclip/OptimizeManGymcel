@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "OptimizeMan/Public/Interfaces/InteractableInterface_OM.h"
+#include "OptimizeMan/Public/Interfaces/InteractableInterface.h"
 #include "GameFramework/Character.h"
 #include "Game/Persistent/SaveData/NpcDataSave.h"
+#include "Interfaces/InteractableInterface.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/NpcStates.h"
 #include "Utils/Structs/SocialData.h"
@@ -24,11 +25,11 @@ class UNpcBaseAnimInstance_OM;
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNpcStateChanged);
 
 UCLASS(Abstract, Blueprintable)
-class OPTIMIZEMAN_API ANpcBase_OM : public ACharacter, public IInteractableInterface_OM
+class OPTIMIZEMAN_API ANpcBase_OMG : public ACharacter, public IInteractableInterface
 {
 	GENERATED_BODY()
 public:
-	ANpcBase_OM();
+	ANpcBase_OMG();
 	virtual void Interact_Implementation() override;
 protected:
 	virtual void BeginPlay() override;

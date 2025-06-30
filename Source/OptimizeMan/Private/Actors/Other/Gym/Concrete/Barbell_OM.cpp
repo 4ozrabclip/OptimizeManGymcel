@@ -10,6 +10,8 @@ ABarbell_OM::ABarbell_OM()
 	ExtraCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("ExtraCollider"));
 	ExtraCollider->SetCollisionProfileName(TEXT("Default"));
 	ExtraCollider->SetupAttachment(RootComponent);
+
+	bUnderConstruction = false;
 }
 
 void ABarbell_OM::BeginPlay()

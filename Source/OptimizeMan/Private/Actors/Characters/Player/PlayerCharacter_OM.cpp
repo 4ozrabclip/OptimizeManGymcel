@@ -3,6 +3,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 
+#include "Actors/InteractableActor_OM.h"
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
 #include "Actors/Other/Abstract/InteractableActor_OM.h"
@@ -22,30 +23,17 @@
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Camera/CameraActor.h"
-#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
+#include "Components/Management/AbilitySystemComponent_OM.h"
+#include "Game/Persistent/GameInstance_OMG.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
+#include "Utils/Structs/PlayModes_Gymcel.h"
 
 APlayerCharacter_OM::APlayerCharacter_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	Camera->SetupAttachment(RootComponent);
-	Camera->bUsePawnControlRotation = true;
-
-	PlayerAudioComponent = CreateDefaultSubobject<UPlayerVoiceAudio_OM>(TEXT("AudioComponent"));
-	PlayerAudioComponent->bAutoActivate = true;
-	PlayerAudioComponent->SetVolumeMultiplier(1.f);
-
-	FootstepAudioComponent = CreateDefaultSubobject<UFootstepAudio_OM>(TEXT("FootstepAudio"));
-	FootstepAudioComponent->bAutoActivate = true;
-	FootstepAudioComponent->SetVolumeMultiplier(0.6f);
-
-	NotificationAudioComponent = CreateDefaultSubobject<UNotificationAudio_OM>(TEXT("NotificationAudioComponent"));
-	NotificationAudioComponent->bAutoActivate = true;
-	NotificationAudioComponent->SetVolumeMultiplier(1.f);
-	
 	ExerciseComponent = CreateDefaultSubobject<UExercise_OM>(TEXT("ExerciseComponent"));
 	ExerciseComponent->bAutoActivate = true;
 
@@ -54,11 +42,7 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 
 	BodyDeformerComponent = CreateDefaultSubobject<UPlayerDeformationsComponent_OM>(TEXT("BodyDeformer"));
 	BodyDeformerComponent->bAutoActivate = true;
-
-	AbSysComp = CreateDefaultSubobject<UAbilitySystemComponent_OM>(TEXT("AbilitySystemComponent"));
-	//MentalHealthStats = CreateDefaultSubobject<UMentalHealthStats_OM>(TEXT("Mental Health Attributes"));
-	//GymSpecificStats = CreateDefaultSubobject<UGymSpecificStats_OM>(TEXT("Gym Stats"));
-
+	
 	SelfieCameraLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SelfieCameraLocation"));
 	SelfieCameraLocation->SetupAttachment(RootComponent);
 	SelfieCameraLocation->SetVisibility(false);
@@ -100,6 +84,14 @@ void APlayerCharacter_OM::InitializeEffects()
 	}
 }
 
+void APlayerCharacter_OM::HandleNoHitInteraction()
+{
+	Super::HandleNoHitInteraction();
+	if (CurrentInteractedActor && CurrentPlayMode != EPlayModes::RegularMode && CurrentPlayMode != EPlayModes::WorkoutMode)
+		CurrentInteractedActor->Interact_Implementation();
+	
+}
+
 void APlayerCharacter_OM::SpawnSelfieCamera()
 {
 	FActorSpawnParameters SpawnParams;
@@ -127,7 +119,7 @@ void APlayerCharacter_OM::BeginPlay()
 		SetOriginalMovementSpeed(PlayerMovement->MaxWalkSpeed);
 	
 	
-	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	GameInstance = Cast<UGameInstance_OMG>(GetWorld()->GetGameInstance());
 	if (!GameInstance) return;
 
 	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
@@ -229,7 +221,7 @@ void APlayerCharacter_OM::SyncStatsToGameInstance()
 	const UMentalHealthStats_OM* MentalStats = AbSysComp->GetSet<UMentalHealthStats_OM>();
 	if (!MentalStats) return;
 
-	FInnerStatus NewInnerStatus;
+	FInnerStatus_Gymcel NewInnerStatus;
 	NewInnerStatus.Ego = MentalStats->GetEgo();
 	NewInnerStatus.Social = MentalStats->GetSocial();
 	NewInnerStatus.SexAppeal = MentalStats->GetSexAppeal();
@@ -639,43 +631,6 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
  * 
  */
 
-void APlayerCharacter_OM::Interact(const bool bToggleable)
-{
-	FVector Start = Camera->GetComponentLocation();
-	FVector ForwardVector = Camera->GetForwardVector();
-	FVector End = Start + (ForwardVector * 200.0f);
-
-	FHitResult HitResult;
-	FCollisionQueryParams CollisionParams;
-
-	if (CurrentPlayMode != EPlayModes::RegularMode && !bToggleable) return;
-	
-	
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
-
-	if (bHit)
-	{
-		AActor* InteractedActor = HitResult.GetActor();
-		if (!InteractedActor) return;
-		
-		if (AInteractableActor_OM* InteractedActorInterface = Cast<AInteractableActor_OM>(InteractedActor))
-		{
-			if (!InteractedActorInterface->InteractableInterfaceProperties.bIsInteractable) return;
-			if (!GameInstance->GetHasInteractedInitial())
-				GameInstance->SetHasInteractedInitial(true);
-			
-			InteractedActorInterface->Interact_Implementation();
-		}
-		else if (ANpcBase_OM* InteractedNpcInterface = Cast<ANpcBase_OM>(InteractedActor))
-		{
-			InteractedNpcInterface->Interact_Implementation();
-		}
-	}
-	else if (CurrentInteractedActor && CurrentPlayMode != EPlayModes::RegularMode && CurrentPlayMode != EPlayModes::WorkoutMode)
-	{
-		CurrentInteractedActor->Interact_Implementation();
-	}
-}
 
 void APlayerCharacter_OM::CheckInteractable()
 {
@@ -765,10 +720,6 @@ bool APlayerCharacter_OM::GetIsJumping() const
 	}
 	return true;
 }
-UAbilitySystemComponent* APlayerCharacter_OM::GetAbilitySystemComponent() const
-{
-	return AbSysComp;
-}
 
 
 
@@ -790,6 +741,9 @@ void APlayerCharacter_OM::Jump()
 	GetCharacterMovement()->JumpZVelocity = CurrentJumpHeight;
 	Super::Jump();
 }
+
+
+
 float APlayerCharacter_OM::CalculateJumpHeight(const float LowerBodyStat) const 
 {
 	float NormalizedStat = FMath::Clamp(LowerBodyStat / 100.0f, 0.0f, 1.0f);
@@ -819,65 +773,14 @@ void APlayerCharacter_OM::SetMaxMovementSpeed(const float InMaxMovementSpeed)
  */
 
 
-void APlayerCharacter_OM::SetEmotionalState()
-{
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-
-	if (!GameInstance)
-		return;
-	
-
-	constexpr float ChadThreshold = 0.7f;
-	constexpr float GrindsetThreshold = 0.35f;
-	constexpr float DoomerThreshold = -0.3f;
-	constexpr float GoblinThreshold = -0.2f;
-
-	const float Ego = GameInstance->GetEgo();
-	const float SexAppeal = GameInstance->GetSexAppeal();
-	const float Social = GameInstance->GetSocial();
-	
-	EPlayerEmotionalStates NewState;
-	UE_LOG(LogTemp, Error, TEXT("Ego: %f \n SexAppeal: %f \n Social: %f "), Ego, SexAppeal, Social);
-
-	if (Ego >= ChadThreshold && SexAppeal >= ChadThreshold)
-	{
-		UE_LOG(LogTemp, Error, TEXT("new state giga"));
-
-		NewState = EPlayerEmotionalStates::Gigachad;
-	}
-	else if (Ego >= GrindsetThreshold && (Social >= GrindsetThreshold || SexAppeal >= GrindsetThreshold))
-	{
-		UE_LOG(LogTemp, Error, TEXT("new state grind"));
-		NewState = EPlayerEmotionalStates::Grindset;
-	}
-	else if (SexAppeal <= GoblinThreshold && Social <= GoblinThreshold && Ego >= GrindsetThreshold)
-	{
-		UE_LOG(LogTemp, Error, TEXT("new state goblin"));
-		NewState = EPlayerEmotionalStates::GoblinMode;
-	}
-	else if (Ego <= DoomerThreshold && (Social <= DoomerThreshold || SexAppeal <= DoomerThreshold))
-	{
-		UE_LOG(LogTemp, Error, TEXT("new state doom"));
-		NewState = EPlayerEmotionalStates::Doomer;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("new state cope"));
-		NewState = EPlayerEmotionalStates::Cope;
-	}
-	
-	GameInstance->SetCurrentEmotionalState(NewState);
-}
-
 
 void APlayerCharacter_OM::ShitDay()
 {
-	PlayerAudioComponent->UpsetSoundEffects();
+	PlayerVoiceAudioComponent->UpsetSoundEffects();
 }
 void APlayerCharacter_OM::ShitReaction()
 {
-	PlayerAudioComponent->GrumpySoundEffects();
+	PlayerVoiceAudioComponent->GrumpySoundEffects();
 }
 
 /*
@@ -893,7 +796,7 @@ void APlayerCharacter_OM::ClearTimers()
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(SocialComponent);
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(ExerciseComponent);
 	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
+		GameInstance = Cast<UGameInstance_OMG>(GetGameInstance());
 	if (!TodoManager)
 		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	if (!PlayerController)

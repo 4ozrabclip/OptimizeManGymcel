@@ -7,6 +7,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
+class UImage;
 class UOverlay;
 class UTextBlock;
 class UButton;
@@ -51,36 +52,34 @@ protected:
 	FConsumableType Consumable_1;
 	FConsumableType Consumable_2;
 	FConsumableType Consumable_3;
-	
-	// Widget UOBJECTS
-	UPROPERTY(meta = (BindWidget))
-	UButton* Option1_Button;
-	UPROPERTY(meta = (BindWidget))
-	UButton* Option2_Button;
-	UPROPERTY(meta = (BindWidget))
-	UButton* Option3_Button;
 
+	UPROPERTY(meta = (BindWidget))
+	UImage* Option_Image;
+	UPROPERTY(meta = (BindWidget))
+	UImage* Option_Image_1;
+	UPROPERTY(meta = (BindWidget))
+	UImage* Option_Image_2;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* OptionTitle_Text;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* OptionTitle_Text_1;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* OptionTitle_Text_2;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* OptionBuy_Button;
+	UPROPERTY(meta = (BindWidget))
+	UButton* OptionBuy_Button_1;
+	UPROPERTY(meta = (BindWidget))
+	UButton* OptionBuy_Button_2;
+	
 	UPROPERTY(meta = (BindWidget))
 	UButton* Exit_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option1Name_Text;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option2Name_Text;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option3Name_Text;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option1Price_Text;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option2Price_Text;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option3Price_Text;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* YourMoney_Text;
+	UOverlay* NoMoney_Overlay;
 	
-	UPROPERTY(meta = (BindWidget))
-	UOverlay* NoMoneyOverlay;
+
 };
 

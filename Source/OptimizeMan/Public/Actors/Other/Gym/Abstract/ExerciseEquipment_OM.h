@@ -61,10 +61,11 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weights")
 	float MinWeight = 20.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Usable")
+	bool bUnderConstruction = true;
 	
 	
-
-
 	EWeightClass CurrentWeightClass;
 	float CurrentWeight;
 	
