@@ -1,25 +1,23 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/AnimInstance.h"
-#include "Utils/Structs/ExerciseData.h"
-#include "Utils/Structs/PlayerData.h"
-#include "PlayerCharacterAnimInstance_OM.generated.h"
+#include "Animation/PlayerCharacterAnimInstance_OM.h"
+#include "Utils/Structs/PlayerData_Gymcel.h"
+#include "PlayerCharacterAnimInstance_OMG.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UPlayerCharacterAnimInstance_OM : public UAnimInstance
+class OPTIMIZEMAN_API UPlayerCharacterAnimInstance_OMG : public UPlayerCharacterAnimInstance_OM
 {
 	GENERATED_BODY()
-
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Exercises")
 	bool GetIsInSquatPosition() const;
 	UFUNCTION(BlueprintCallable, Category = "Exercises")
@@ -77,21 +75,8 @@ public:
 	
 	void ExitPosition(bool& InIsRepping, bool& InIsInPosition);
 
-protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Player")
-	class APlayerCharacter_OM* Player;
-
-	//Locomotion
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	bool bIsWalking;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-	bool bIsJumping;
+private:
 	
-
-
-	//Exercises
-
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
 	bool bIsInSquatPosition;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Exercises", meta = (AllowPrivateAccess = "true"))
@@ -144,5 +129,10 @@ protected:
 	float LeftCurlAnimationDuration = 4.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exercises")
 	float RightCurlAnimationDuration = 4.f;
-};
 
+
+	/** Cache **/
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	class APlayerCharacter_OM* Player;
+
+};

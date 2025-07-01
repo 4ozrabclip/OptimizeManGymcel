@@ -10,6 +10,7 @@
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Management/AbilitySystemComponent_OM.h"
+#include "Controllers/PlayerController_OM.h"
 #include "Game/GameInstance_OM.h"
 #include "Interfaces/InteractableInterface_OM.h"
 

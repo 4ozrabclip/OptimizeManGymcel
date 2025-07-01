@@ -121,6 +121,7 @@ private:
 	UPROPERTY()
 	class UGameInstance_OMG* GameInstance;
 
+	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OMG> CachedAnimInstance;
 	
 	/**** Movement Tracking State ****/
 	bool bIsDoingRep = false;

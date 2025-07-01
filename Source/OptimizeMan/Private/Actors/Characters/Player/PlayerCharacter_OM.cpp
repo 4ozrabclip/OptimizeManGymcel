@@ -20,6 +20,7 @@
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
+#include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
 #include "Camera/CameraActor.h"
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
@@ -126,7 +127,7 @@ void APlayerCharacter_OM::BeginPlay()
 	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
 	{
 		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
-		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(SkeletalMeshComponent->GetAnimInstance());
+		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(SkeletalMeshComponent->GetAnimInstance());
 
 		if (!CachedAnimInstance.IsValid())
 		{

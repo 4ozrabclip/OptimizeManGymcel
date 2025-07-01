@@ -15,7 +15,7 @@ void UTodoManagementSubsystem::AddToPotentialTodos(const FName InTodo)
 		{
 			PotentialTodos.Add(Todo);
 			return;
-		}
+		} 
 	}
 }
 

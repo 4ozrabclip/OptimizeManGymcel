@@ -71,18 +71,19 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float BaseJumpHeight = 220.0f;
 
-	/** Anim Cache **/
-	UPROPERTY()
-	USkeletalMesh* DefaultSkeletalMesh;
-	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OM> CachedAnimInstance;
+
 
 	/** Current Interacted **/
 	UPROPERTY()
 	AInteractableActor_OM* CurrentInteractedActor;
 	UPROPERTY()
 	ANpcBase_OM* CurrentInteractedCharacter;
-
+	
+	/** Anim Cache **/
+	UPROPERTY()
+	USkeletalMesh* DefaultSkeletalMesh;
 private:
+	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OM> CachedAnimInstance;
 	/** Class Cache **/
 	UPROPERTY()
 	class APlayerController_OM* PlayerController;
