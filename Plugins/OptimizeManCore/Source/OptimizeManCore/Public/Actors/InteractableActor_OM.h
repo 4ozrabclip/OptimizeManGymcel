@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #pragma once
 
@@ -8,7 +8,6 @@
 #include "InteractableActor_OM.generated.h"
 
 
-class APlayerController_OM;
 
 UCLASS(Blueprintable)
 class OPTIMIZEMAN_API AInteractableActor_OM : public AActor, public IInteractableInterface_OM
@@ -16,33 +15,24 @@ class OPTIMIZEMAN_API AInteractableActor_OM : public AActor, public IInteractabl
 	GENERATED_BODY()
 public:	
 	AInteractableActor_OM();
+protected:
+	/** Class Overrides **/
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void Tick(float DeltaTime) override;
 
+	virtual void Interact_Implementation() override {};
 
-protected:
-	UPROPERTY()
-	APlayerController_OM* PlayerController;
-
-	UPROPERTY()
-	class APlayerCharacter_OM* Player;
-
-	UPROPERTY()
-	class UGameInstance_OM* GameInstance;
-
-	UPROPERTY()
-	class UTodoManagementSubsystem* TodoManager;
 
 public:	
-	virtual void Interact_Implementation() override;
-	
+	/** Components **/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 	UStaticMeshComponent* ItemMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AuraLight")
 	class UPointLightComponent* AuraLight;
 
+
+	/** Interactable Widget **/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	FText InteractableText;
 	

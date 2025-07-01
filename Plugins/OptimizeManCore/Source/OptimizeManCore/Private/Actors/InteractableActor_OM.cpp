@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #include "Actors/InteractableActor_OM.h"
 
 #include "Components/PointLightComponent.h"
-#include "Kismet/GameplayStatics.h"
 
-// Sets default values
+
 AInteractableActor_OM::AInteractableActor_OM()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -26,16 +25,6 @@ AInteractableActor_OM::AInteractableActor_OM()
 void AInteractableActor_OM::BeginPlay()
 {
 	Super::BeginPlay();
-
-	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	if (!GameInstance) return;
-	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (!PlayerController) return;
-	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
-	if (!Player) return;
-
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager) return;
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 }
@@ -47,14 +36,4 @@ void AInteractableActor_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		World->GetTimerManager().ClearAllTimersForObject(this);
 	}
-}
-
-void AInteractableActor_OM::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-
-void AInteractableActor_OM::Interact_Implementation()
-{
 }

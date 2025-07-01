@@ -2,8 +2,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h"
 #include "GameplayEffect.h"
 #include "InputAction.h"
 #include "GameplayTagContainer.h"
@@ -22,7 +20,6 @@ class UGameInstance_OMG;
 class UCameraComponent;
 class UTodoManagementSubsystem;
 class UGameInstance_OM;
-class APlayerController_OM;
 class ULevelSequence;
 class AInteractableActor_OM;
 class ANpcBase_OM;
@@ -34,26 +31,18 @@ class OPTIMIZEMAN_API APlayerCharacter_OM : public APlayerCharacterBase_OM
 public:
 	APlayerCharacter_OM();
 protected:
-	/**** Class Overrides ****/
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 public:
-	
-	/***** GAS Funcs *****/
-	void InitializeAttributes();
+	/***** GAS Init *****/
+	virtual void InitializeAttributes() override;
+	virtual void InitializeEffects() override;
 protected:
-	void InitializeEffects();
-
-
-
-
-	/**** Camera Tricks ****/
-	UFUNCTION(BlueprintCallable)
-	void SpawnSelfieCamera();
-
 	
-	/**** Components ****/
+	/************
+	 * Components
+	 ************/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<USceneComponent> SelfieCameraLocation;
 	
@@ -67,16 +56,11 @@ protected:
 	TObjectPtr<class UPlayerDeformationsComponent_OM> BodyDeformerComponent;
 
 
-	/**** Movement + Jump Settings ****/
-	UPROPERTY(EditAnywhere, Category = "Movement")
-	float BaseJumpHeight = 220.0f;
-
+	/**** Movement Settings ****/
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float JumpHeightMultiplier = 1.5f;
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MaxJumpHeight = 1000.0f;
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MinJumpHeight = 300.0f;
 
@@ -89,24 +73,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	EPlayModes CurrentPlayMode;
 	TMap<EPlayModes, FPlayModeConfig> PlayModeConfigs;
-	UPROPERTY()
-	AInteractableActor_OM* CurrentInteractedActor;
-	UPROPERTY()
-	ANpcBase_OM* CurrentInteractedCharacter;
-
-	/****** AnimCache *******/
-	UPROPERTY()
-	USkeletalMesh* DefaultSkeletalMesh;
-	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OM> CachedAnimInstance;
-
+	
 	/***** Gameplay Effects *****/
 	FActiveGameplayEffectHandle FocusDrainEffectHandle;
 
-public:
-	bool bTodoOpen = false;
-	bool bPauseMenuOpen = false;
-	bool bInteractableOpen = false;
-	
 protected:
 	/**** Muscle Stats ****/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
@@ -143,22 +113,16 @@ protected:
 
 
 private:
-	/**** PC + GI + GISubSystems****/
+	/** Class Cache **/
 	UPROPERTY()
-	APlayerController_OM* PlayerController;
+	class APlayerController_OMG* PlayerController;
 	UPROPERTY()
-	UGameInstance_OMG* GameInstance;
+	class UTodoManagementSubsystem* TodoManager;
 	UPROPERTY()
-	UTodoManagementSubsystem* TodoManager;
+	class UGameInstance_OMG* GameInstance;
+
 	
 	/**** Movement Tracking State ****/
-	FVector LastPosition;
-	float MinimumMovementThreshold = 0.5f;
-	float TimeSinceLastFootstep = 0.f;
-	float OriginalMovementSpeed = 600.f;
-
-	bool bIsWalking = false;
-	bool bIsJumping = false;
 	bool bIsDoingRep = false;
 
 
@@ -169,7 +133,9 @@ public:
 	/** Interaction **/
 	virtual void HandleNoHitInteraction() override;
 	
-
+	/**** Camera Tricks ****/
+	UFUNCTION(BlueprintCallable)
+	void SpawnSelfieCamera();
 
 protected:
 	float CalculateJumpHeight(float LowerBodyStat) const;
@@ -208,9 +174,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")
 	void ManageTodoMode();
-
-	void UpdateMovementState();
-	void CheckInteractable();
+	
 
 	/**** Gameplay Logic ****/
 public:
@@ -220,41 +184,35 @@ public:
 	void ResetPlayer();
 	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false, UUserWidget* InWidget = nullptr) const;
 
-	/**** Getters / Setters ****/
-public:
-	UFUNCTION()
-	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
+	/**** Getters ****/
 
+	/*** Setters ***/
 	UFUNCTION(Category = "Gameplay")
 	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter = nullptr);
+
+public:
+
+
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	EPlayModes GetCurrentPlayMode() const { return CurrentPlayMode; }
 
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	AInteractableActor_OM* GetCurrentInteractedActor() const { return CurrentInteractedActor; }
 
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-	ANpcBase_OM* GetCurrentInteractedCharacter() const { return CurrentInteractedCharacter; }
 
-	void SetCurrentInteractedCharacter(ANpcBase_OM* InInteractedCharacter = nullptr) { CurrentInteractedCharacter = InInteractedCharacter; }
 
-	void SetIsWalking(const bool InIsWalking) { bIsWalking = InIsWalking; }
-	bool GetIsWalking() const { return bIsWalking; }
 
-	bool GetIsJumping() const;
+
+
 
 	void SetIsDoingRep(const bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; }
 	bool GetIsDoingRep() const { return bIsDoingRep; }
 
-	void SetMaxMovementSpeed(const float InMaxMovementSpeed);
-	float GetMaxMovementSpeed() const;
 
-	void SetOriginalMovementSpeed(const float InOriginalMovementSpeed) { OriginalMovementSpeed = InOriginalMovementSpeed; }
-	float GetOriginalMovementSpeed() const { return OriginalMovementSpeed; }
 
-	void SetMinimumMovementThreshold(const float InMinimumMovementThreshold) { MinimumMovementThreshold = InMinimumMovementThreshold; }
-	float GetMinimumMovementThreshold() const { return MinimumMovementThreshold; }
+
+
+
+
 
 	void SetEmotionalState();
 };

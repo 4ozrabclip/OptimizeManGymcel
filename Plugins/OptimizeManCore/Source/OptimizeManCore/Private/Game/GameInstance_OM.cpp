@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 
 #include "Game/GameInstance_OM.h"
 
+#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Structs/DifficultyDefinitions.h"
 
@@ -29,34 +30,6 @@ void UGameInstance_OM::Init()
 	TodoManagement->InitializeTodos();
 }
 
-void UGameInstance_OM::SetPosterAsOwned(const int PosterIndex, const FString& PosterType)
-{
-	const FString ChadPosterType_String = "Chad";
-	const FString WaifuPosterType_String = "Waifu";
-
-	if (PosterType == ChadPosterType_String)
-	{
-		if (bOwnsChadPosters.IsValidIndex(PosterIndex) && !bOwnsChadPosters[PosterIndex])
-		{
-		
-			bOwnsChadPosters[PosterIndex] = true;
-			UE_LOG(LogTemp, Error, TEXT("Set chad poster as owned"));
-		}
-	}
-	else if (PosterType == WaifuPosterType_String)
-	{
-		if (bOwnsWaifuPosters.IsValidIndex(PosterIndex) && !bOwnsWaifuPosters[PosterIndex])
-		{
-			bOwnsWaifuPosters[PosterIndex] = true;
-		}
-	}
-}
-
-void UGameInstance_OM::InitializePostersOwned()
-{
-	bOwnsWaifuPosters = {false, false, false};
-	bOwnsChadPosters = {false, false, false};
-}
 
 void UGameInstance_OM::InitializeGameSettings()
 {
@@ -66,8 +39,6 @@ void UGameInstance_OM::InitializeGameSettings()
 void UGameInstance_OM::ResetGame()
 {
 	InitializePlayerData();
-	InitializePostersOwned();
-	SetHasBeenToGymToday(false);
 	SetHasOpenedTodoListInitial(false);
 	SetHasInteractedInitial(false);
 	SetHasOpenedPauseMenuInitial(false);
@@ -77,62 +48,6 @@ void UGameInstance_OM::ResetGame()
 	ResetAllSaves();
 }
 
-FBodyPartData* UGameInstance_OM::FindBodyPart(const EBodyPart& Part, const EBodyPartSide& Side)
-{
-	for (FBodyPartData& PartData : BodyStatus.BodyParts)
-	{
-		if (PartData.Part == Part && PartData.Side == Side)
-		{
-			return &PartData;
-		}
-	}
-	return nullptr;
-}
-float UGameInstance_OM::GetBodyPartStrengthValue(const EBodyPart& Part, const EBodyPartSide& Side)
-{
-	if (FBodyPartData* PartData = FindBodyPart(Part, Side))
-	{
-		return PartData->Strength;
-	}
-	return 0.f;
-}
-float UGameInstance_OM::GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part)
-{
-	float LeftPartStrength = GetBodyPartStrengthValue(Part, Left);
-	float RightPartStrength = GetBodyPartStrengthValue(Part, Right);
-	
-	return LeftPartStrength + RightPartStrength / 2.f;
-	
-}
-
-float* UGameInstance_OM::GetBodyPartStrengthPtr(const EBodyPart& Part, const EBodyPartSide& Side)
-{
-	if (FBodyPartData* PartData = FindBodyPart(Part, Side))
-	{
-		return &PartData->Strength;
-	}
-	return nullptr;
-}
-
-
-void UGameInstance_OM::InitializePlayerData()
-{
-	SetStat(InnerStatus.Ego, 0.f);
-	SetStat(InnerStatus.Social, 0.f);
-	SetStat(InnerStatus.SexAppeal, 0.f);
-	
-	SetPossesion(BodyStatus.bIsBulking, false);
-	SetPossesion(BodyStatus.bHasJawSurgery, false);
-	SetPossesion(BodyStatus.bCurrentlyOnSteroids, false);
-}
-
-void UGameInstance_OM::ResetAllSaves()
-{
-	if (UGameplayStatics::DoesSaveGameExist(TEXT("NpcSaveSlot"), 0))
-	{
-		UGameplayStatics::DeleteGameInSlot(TEXT("NpcSaveSlot"), 0);
-	}
-}
 
 
 void UGameInstance_OM::AddGamePoints(const int InPoints)
@@ -153,32 +68,24 @@ void UGameInstance_OM::SetDarkMode(const bool InDarkMode)
 
 void UGameInstance_OM::SetCurrentEmotionalState(const EPlayerEmotionalStates NewState)
 {
-	UE_LOG(LogTemp, Display, TEXT("SetCurrentEMOTIONAL STATE GI"));
-	InnerStatus.CurrentEmotionalState = NewState;
+	CurrentEmotionalState = NewState;
 	OnEmotionalStateChanged.Broadcast(NewState);
 }
 
 void UGameInstance_OM::SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx)
 {
-	UE_LOG(LogTemp, Display, TEXT("Changed audio settings"));
-	if (GameSettings.MasterVolume != InMaster)
-		GameSettings.MasterVolume = InMaster;
-	if (GameSettings.VoiceVolume != InVoice)
-		GameSettings.VoiceVolume = InVoice;
-	if (GameSettings.MusicVolume != InMusic)
-		GameSettings.MusicVolume = InMusic;
-	if (GameSettings.NotificationVolume != InNotification)
-		GameSettings.NotificationVolume = InNotification;
-	if (GameSettings.SfxVolume != InSfx)
-		GameSettings.SfxVolume = InSfx;
+	if (GameSettings.AudioSettings.MasterVolume != InMaster)
+		GameSettings.AudioSettings.MasterVolume = InMaster;
+	if (GameSettings.AudioSettings.VoiceVolume != InVoice)
+		GameSettings.AudioSettings.VoiceVolume = InVoice;
+	if (GameSettings.AudioSettings.MusicVolume != InMusic)
+		GameSettings.AudioSettings.MusicVolume = InMusic;
+	if (GameSettings.AudioSettings.NotificationVolume != InNotification)
+		GameSettings.AudioSettings.NotificationVolume = InNotification;
+	if (GameSettings.AudioSettings.SfxVolume != InSfx)
+		GameSettings.AudioSettings.SfxVolume = InSfx;
 
 	OnAudioSettingsChanged.Broadcast(InMaster, InVoice, InMusic, InNotification, InSfx);
-}
-
-void UGameInstance_OM::SetRandomEventAsWitnessed(const EEventAndGPData InRandomEvent, const bool InWitnessed)
-{
-	if (bool* bWitnessed = RandomEvents.RandomEventsWitnessedMap.Find(InRandomEvent))
-		*bWitnessed = InWitnessed;
 }
 
 void UGameInstance_OM::IncrementMonth()
@@ -229,31 +136,6 @@ void UGameInstance_OM::IncrementMonth()
 }
 
 
-/*
-void UGameInstance_OM::SetMentalStat(const EPlayerStatTypes InStat, float Value)
-{
-	if (APlayerController_OM* PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(),0)))
-	{
-		if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn()))
-		{
-			if (UAbilitySystemComponent_OM* AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent()))
-			{
-				const UMentalHealthStats_OM* Mental = AbSysComp->GetSet<UMentalHealthStats_OM>();
-
-				switch (InStat)
-				{
-				case EPlayerStatTypes::Ego:
-					{
-						Mental->SetEgo()
-						break;
-					}
-					
-				}
-			}
-		}
-	}
-}*/
-
 void UGameInstance_OM::IncrementDay()
 {
 	DayInfo.DayNumber++;;
@@ -264,9 +146,7 @@ void UGameInstance_OM::IncrementDay()
 
 	IncrementMonth();
 	
-	// Clear Current Todo Array
 	TodoManagement->GetCurrentTodoArray().Empty();
-	
 	
 	HandleDayEvents();
 }
@@ -347,9 +227,9 @@ void UGameInstance_OM::HandleDayEvents()
 		case EWeekDay::Sunday:
 			break;
 	}
-	if (DaysSinceScoreChecked >= 3)
+	if (DaysSinceScoreChecked >= WaveLengthByDays)
 	{
-		Check3DayScore();
+		CheckWaveScore();
 		DaysSinceScoreChecked = 0;
 	}
 	else
@@ -368,10 +248,7 @@ void UGameInstance_OM::HandleDayEvents()
 	}
 }
 
-void UGameInstance_OM::Payday(const int InMoney)
-{
-	SetMoney(InMoney);
-}
+
 
 FString UGameInstance_OM::GetCurrentDayName() const
 {
@@ -394,9 +271,4 @@ FString UGameInstance_OM::GetCurrentDayName() const
 	default:
 		return "Error";
 	}
-}
-
-int32 UGameInstance_OM::GetDayNumber() const
-{
-	return DayInfo.DayNumber;
 }

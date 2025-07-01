@@ -2,21 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "PlayerData.h"
+
 #include "TodoData.generated.h"
 
-UENUM(BlueprintType)
-enum ETodoArrayList : uint8
-{
-	CompleteWorkout = 0,
-	BuySomething,
-	TalkToAGirl,
-	BuySteroids,
-	MakeSomeoneLikeYou,
-	HitTenSquats,
-	StartBulking,
-	GetARealGirlfriend
-};
 
 USTRUCT()
 struct FTodoItem
@@ -42,7 +30,7 @@ struct FTodoItem
 	UPROPERTY()
 	FString CompletedName;
 
-	TMap<EPlayerStatTypes, float> StatBuffs;
+	TMap<FName, float> StatBuffs;
 
 	UPROPERTY()
 	FString Desc;

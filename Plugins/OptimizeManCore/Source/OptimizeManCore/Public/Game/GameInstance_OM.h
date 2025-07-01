@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #pragma once
 
@@ -6,14 +6,11 @@
 #include "Engine/GameInstance.h"
 #include "Structs/Dates.h"
 #include "Structs/DifficultyDefinitions.h"
-#include "Utils/Structs/ConsumableData.h"
-#include "Utils/Structs/Dates.h"
 #include "Structs/GameSettings.h"
 #include "Structs/PlayerData.h"
-#include "Utils/Structs/PlayerData.h"
-#include "Utils/Structs/EventAndGPData.h"
 #include "GameInstance_OM.generated.h"
 
+class UTodoManagementSubsystem;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDarkModeToggled, bool, bDarkModeOn);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAudioSettingsChanged,
 												float, InMaster, float, InVoice,
@@ -30,13 +27,28 @@ class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance
 public: 
 	/** Overrides **/
 	virtual void Init() override;
-	virtual void InitializePlayerData();
-	virtual void InitializePostersOwned();
+	virtual void InitializePlayerData() {};
 	virtual void InitializeGameSettings();
+
+	/** Shader Toggle **/
+	UFUNCTION(BlueprintCallable)
+	void DarkModeToggle();
+	
+	/** Wave/Day Management**/
+	UFUNCTION(BlueprintCallable)
+	void HandleDayEvents();
+	UFUNCTION(BlueprintCallable)
+	void IncrementDay();
+	
+	void CheckWaveScore();
+	void IncrementMonth();
 
 
 	/** Save/Reset Management **/
+	UFUNCTION(Category = "Save System")
+	virtual void ResetAllSaves() {};
 	virtual void ResetGame();
+	
 
 	/** Finders/Getters **/
 	UFUNCTION(BlueprintCallable) //for use with bedroom door
@@ -45,15 +57,61 @@ public:
 	bool GetHasOpenedPauseMenuInitial() const { return bHasOpenedPauseMenuInitial; }
 	UFUNCTION(BlueprintCallable)
 	bool GetHasInteractedInitial() const { return bHasInteractedInitial; }
+	UFUNCTION()
+	EMonth GetCurrentMonth() const { return DayInfo.CurrentMonth; };
+	UFUNCTION(BlueprintPure)
+	int32 GetDayNumber() const { return DayInfo.DayNumber; };
+	UFUNCTION(BlueprintPure)
+	FString GetCurrentDayName() const;
+	UFUNCTION(BlueprintCallable)
+	FDayInfo& GetDayInfo() { return DayInfo; }
+	UFUNCTION(BlueprintCallable)
+	FGameSettings& GetGameSettings() { return GameSettings; }
+	UFUNCTION(BlueprintCallable)
+	bool GetDarkMode() const { return GameSettings.bDarkMode; }
+	UFUNCTION(BlueprintCallable)
+	EPlayerEmotionalStates GetCurrentEmotionalState() const { return CurrentEmotionalState; }
+	UFUNCTION()
+	FGamePointsData& GetGamePointsData() { return GamePointsData; }
+	UFUNCTION()
+	int GetGamePoints() const { return GamePointsData.GamePoints; }
 	
 	float GetBaseDifficultyMultiplier() const { return BaseDifficultyMultiplier; }
 	float GetTempWaveDifficultyMultiplier() const { return TempWaveDifficultyMultiplier; }
 	float GetDifficultyMultiplier() const { return BaseDifficultyMultiplier * TempWaveDifficultyMultiplier; }
+	int GetWaveLengthByDays() const { return WaveLengthByDays; }
 	
 	/** Setters/Adders **/
+	UFUNCTION(BlueprintCallable)
+	void SetDarkMode(const bool InDarkMode);
+	UFUNCTION()
+	void SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx);
+	UFUNCTION()
+	void AddGamePoints(const int InPoints);
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentEmotionalState(const EPlayerEmotionalStates NewState);
+	
 	void SetCurrentWaveType(const EDifficultyWaveType InWaveType) { CurrentWaveType = InWaveType; }
 	void SetWaveDetails();
-	void SetEmotionalState(const EPlayerEmotionalStates InEmotionalState) { CurrentEmotionalState = InEmotionalState; };
+	void SetWaveLengthByDays(const int InLength) { WaveLengthByDays = InLength; }
+	void SetEmotionalState(const EPlayerEmotionalStates InEmotionalState) { CurrentEmotionalState = InEmotionalState; }
+	void SetBaseDifficultyMultiplier(const float InMultiplier) { BaseDifficultyMultiplier = InMultiplier; }
+	void SetTempWaveDifficultyMultiplier(const float InMultiplier) { TempWaveDifficultyMultiplier = InMultiplier; }
+	void SetHasOpenedTodoListInitial(const bool InHasOpenedTodoListInitial) { bHasOpenedTodoListInitial = InHasOpenedTodoListInitial; }	
+	void SetHasOpenedPauseMenuInitial(const bool InHasOpenedPauseMenuInitial) { bHasOpenedPauseMenuInitial = InHasOpenedPauseMenuInitial; }
+	void SetHasInteractedInitial(const bool InHasInteractedInitial) { bHasInteractedInitial = InHasInteractedInitial; }
+	void SetStat(float& Stat, float Value)
+	{
+		Stat = FMath::Clamp(Value, -1.f, 1.0f);
+	}
+	void AddStat(float& Stat, float Value)
+	{
+		Stat = FMath::Clamp(Stat + Value, -1.f, 1.0f);
+	}
+	void SetPossesion(bool& bPossesable, const bool bInPossesion)
+	{
+		bPossesable = bInPossesion;
+	}
 	
 	/** Delegates **/
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -76,156 +134,26 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Structures")
 	FGamePointsData GamePointsData;
 
-
-	EPlayerEmotionalStates CurrentEmotionalState;
-
-
-
-public:
-//General Non-UFUNCS
-	void CheckWaveScore();
-
-//General UFUNCTIONS
-	UFUNCTION(BlueprintCallable)
-	void DarkModeToggle();
-	UFUNCTION(BlueprintCallable)
-	void HandleDayEvents();
-	UFUNCTION(BlueprintCallable)
-	void IncrementDay();
-	UFUNCTION(Category = "Save System")
-	void ResetAllSaves();
-
-//Day Info
-	UFUNCTION()
-	EMonth GetCurrentMonth() const { return DayInfo.CurrentMonth; };
-	UFUNCTION(BlueprintPure)
-	int32 GetDayNumber() const;
-	UFUNCTION(BlueprintPure)
-	FString GetCurrentDayName() const;
-	UFUNCTION(BlueprintCallable)
-	FDayInfo& GetDayInfo() { return DayInfo; }
-	
-	void IncrementMonth();
+	UPROPERTY(BlueprintReadOnly, Category = "Player State")
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Normal;
 
 
-	
-//General Helpers
-	void SetStat(float& Stat, float Value)
-	{
-		Stat = FMath::Clamp(Value, -1.f, 1.0f);
-	}
-	void AddStat(float& Stat, float Value)
-	{
-		Stat = FMath::Clamp(Stat + Value, -1.f, 1.0f);
-	}
-	void SetPossesion(bool& bPossesable, const bool bInPossesion)
-	{
-		bPossesable = bInPossesion;
-	}
 
-	
-//General Getters/Setters
-
-	/*** GAS ***/
-
-
-	void SetBaseDifficultyMultiplier(const float InMultiplier) { BaseDifficultyMultiplier = InMultiplier; }
-	void SetTempWaveDifficultyMultiplier(const float InMultiplier) { TempWaveDifficultyMultiplier = InMultiplier; }
-	
-
-	
-
-
-	void SetHasOpenedTodoListInitial(const bool InHasOpenedTodoListInitial) { bHasOpenedTodoListInitial = InHasOpenedTodoListInitial; }	
-
-	void SetHasOpenedPauseMenuInitial(const bool InHasOpenedPauseMenuInitial) { bHasOpenedPauseMenuInitial = InHasOpenedPauseMenuInitial; }
-
-	void SetHasInteractedInitial(const bool InHasInteractedInitial) { bHasInteractedInitial = InHasInteractedInitial; }
-
-	
-//Game Settings
-	UFUNCTION(BlueprintCallable)
-	FGameSettings& GetGameSettings() { return GameSettings; }
-	UFUNCTION(BlueprintCallable)
-	bool GetDarkMode() const { return GameSettings.bDarkMode; }
-
-	UFUNCTION(BlueprintCallable)
-	void SetDarkMode(const bool InDarkMode);
-	
-	UFUNCTION()
-	void SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx);
-	
-	
-
-
-//Random Events
-	UFUNCTION(BlueprintCallable)
-	FEventAndGPData& GetRandomEvents() { return RandomEvents; }
-	UFUNCTION(BlueprintCallable)
-	void SetRandomEventAsWitnessed(const EEventAndGPData InRandomEvent, const bool InWitnessed);
-	
-	UFUNCTION(BlueprintCallable)
-	TMap<EEventAndGPData, bool> GetRandomEventsWitnessedMap() { return RandomEvents.RandomEventsWitnessedMap; }
-	
-
-
-//Inner Status
-	UFUNCTION()
-	FInnerStatus& GetInnerStatus() { return InnerStatus; }
-	
-	float GetEgo() const { return InnerStatus.Ego; }
-	float GetSexAppeal() const { return InnerStatus.SexAppeal; }
-	float GetSocial() const { return InnerStatus.Social; }
-	
-	
-	UFUNCTION(BlueprintCallable)
-	void SetCurrentEmotionalState(const EPlayerEmotionalStates NewState);
-	UFUNCTION(BlueprintCallable)
-	EPlayerEmotionalStates GetCurrentEmotionalState() const { return InnerStatus.CurrentEmotionalState; }
-	
-//Inventory Data
-	UFUNCTION()
-	FInventoryData& GetInventoryData() { return InventoryData; }
-	
-	bool GetOwnsSteroids() const { return InventoryData.bOwnsSteroids; }
-	bool GetOwnsPreWorkout() const { return InventoryData.bOwnsPreWorkout; }
-	int GetMoney() const { return InventoryData.Money; }
-	void SetMoney(const int InMoney)
-	{
-		InventoryData.Money += InMoney;
-	}
-
-//Consumable Status
-
-	
-//Game Points Data
-	UFUNCTION()
-	FGamePointsData& GetGamePointsData() { return GamePointsData; }
-	
-	UFUNCTION()
-	int GetGamePoints() const { return GamePointsData.GamePoints; }
-	
-	UFUNCTION()
-	void AddGamePoints(const int InPoints);
-
-
-	
-protected: //Subsystems
+protected:
+	/** Subsystems **/  
 	UPROPERTY()
-	class UTodoManagementSubsystem* TodoManagement;
+	UTodoManagementSubsystem* TodoManagement;
+
 
 
 private:
-	TArray<bool> bOwnsWaifuPosters;
-	TArray<bool> bOwnsChadPosters;
-	
-	EDifficultyWaveType CurrentWaveType;
-	
+	EDifficultyWaveType CurrentWaveType = EDifficultyWaveType::RestWave;
+	int WaveLengthByDays = 3;
 
-	bool bHasOpenedTodoListInitial;
-	bool bHasOpenedPauseMenuInitial;
-	bool bHasInteractedInitial;
-
+	bool bHasOpenedTodoListInitial = false;
+	bool bHasOpenedPauseMenuInitial = false;
+	bool bHasInteractedInitial = false;
+	
 	float BaseDifficultyMultiplier = 1.f;
 	float TempWaveDifficultyMultiplier = 1.f;
 
@@ -234,4 +162,4 @@ private:
 	int GameScoreSincePreviousCheck = 0;
 	
 
-};};
+};

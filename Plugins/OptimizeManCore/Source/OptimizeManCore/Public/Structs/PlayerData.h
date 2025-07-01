@@ -4,7 +4,7 @@
 
 
 UENUM(BlueprintType)
-enum class EPlayerEmotionalStates : uint8
+enum EPlayerEmotionalStates : uint8
 {
 	VeryBad		UMETA(DisplayName = "VeryBad"),
 	Bad			UMETA(DisplayName = "Bad"),

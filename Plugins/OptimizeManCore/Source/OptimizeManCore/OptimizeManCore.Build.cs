@@ -26,7 +26,8 @@ public class OptimizeManCore : ModuleRules
 			new string[]
 			{
 				"Core", 
-				"GameplayAbilities",
+				"GameplayAbilities", 
+				"EnhancedInput",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

@@ -6,7 +6,6 @@
 #include "Actors/InteractableActor_OM.h"
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Kismet/GameplayStatics.h"
@@ -18,14 +17,12 @@
 #include "Components/Character/Concrete/Exercise_OM.h"
 #include "Components/Audio/Concrete/FootstepAudio_OM.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Camera/CameraActor.h"
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Utils/Structs/PlayModes_Gymcel.h"
@@ -632,94 +629,7 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
  */
 
 
-void APlayerCharacter_OM::CheckInteractable()
-{
-	const FVector Start = Camera->GetComponentLocation();
-	const FVector ForwardVector = Camera->GetForwardVector();
-	const FVector End = Start + (ForwardVector * 200.0f); 
 
-	FHitResult HitResult;
-	FCollisionQueryParams CollisionParams;
-	if (!PlayerController) return;
-
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
-	if (bHit)
-	{
-		AActor* InteractedActor = HitResult.GetActor();
-		if (!InteractedActor) return;
-		
-		
-		if (AInteractableActor_OM* InteractedActorInterface = Cast<AInteractableActor_OM>(InteractedActor))
-		{
-			if (!InteractedActorInterface->InteractableInterfaceProperties.bIsInteractable) return;
-			PlayerController->WidgetInteraction(InteractedActorInterface);
-		}
-		else if (ANpcBase_OM* InteractedNpcInterface = Cast<ANpcBase_OM>(InteractedActor))
-		{
-			PlayerController->WidgetInteraction(InteractedNpcInterface);
-		}
-		else if (PlayerController->GetIsInteractableWidgetOnViewport())
-		{
-			PlayerController->ToggleInteractWidgetFromViewport(true);
-		}
-	}
-	else if (PlayerController->GetIsInteractableWidgetOnViewport())
-	{
-		PlayerController->ToggleInteractWidgetFromViewport(true);
-	}
-}
-
-void APlayerCharacter_OM::UpdateMovementState()
-{
-	const FVector CurrentPosition = GetActorLocation();
-	const float MovementDelta = FVector::Distance(CurrentPosition, LastPosition);
-	SetIsWalking(MovementDelta > MinimumMovementThreshold);
-
-	LastPosition = CurrentPosition;
-}
-void APlayerCharacter_OM::Move(const FInputActionValue& Value)
-{
-	const FVector2D MovementVector = Value.Get<FVector2D>();
-	
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-	AddMovementInput(ForwardDirection, MovementVector.Y);
-	AddMovementInput(RightDirection, MovementVector.X);
-	
-}
-void APlayerCharacter_OM::Look(const FInputActionValue& Value)
-{
-	const FVector2D LookAxisVector = Value.Get<FVector2D>();
-	
-	AddControllerYawInput(LookAxisVector.X);
-	AddControllerPitchInput(-LookAxisVector.Y);
-	
-}
-bool APlayerCharacter_OM::GetIsJumping() const
-{
-	constexpr float LengthToFloor = 100.f;
-	FHitResult HitResult;
-	FVector PlayerPosition = GetActorLocation();
-	FVector GroundPosition = PlayerPosition - FVector(0.0f, 0.0f, LengthToFloor);
-	
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-	
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, PlayerPosition, GroundPosition, ECC_Visibility, QueryParams))
-	{
-		if (HitResult.GetComponent())
-		{
-			return false;
-		}
-		return true;
-	}
-	return true;
-}
 
 
 
@@ -753,18 +663,7 @@ float APlayerCharacter_OM::CalculateJumpHeight(const float LowerBodyStat) const
 	return FMath::Clamp(CalculatedHeight, MinJumpHeight, MaxJumpHeight);
 }
 
-float APlayerCharacter_OM::GetMaxMovementSpeed() const
-{
-	const UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement());
-	return PlayerMovement->MaxWalkSpeed;
-}
-void APlayerCharacter_OM::SetMaxMovementSpeed(const float InMaxMovementSpeed)
-{
-	if (UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement()))
-	{
-		PlayerMovement->MaxWalkSpeed = InMaxMovementSpeed;
-	}
-}
+
 
 /*
  *
@@ -773,6 +672,50 @@ void APlayerCharacter_OM::SetMaxMovementSpeed(const float InMaxMovementSpeed)
  */
 
 
+void APlayerCharacter_OM::SetEmotionalState()
+{
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OMG>(GetWorld()->GetGameInstance());
+
+	if (!GameInstance)
+		return;
+	
+
+	constexpr float ChadThreshold = 0.7f;
+	constexpr float GrindsetThreshold = 0.35f;
+	constexpr float DoomerThreshold = -0.3f;
+	constexpr float GoblinThreshold = -0.2f;
+
+	const float Ego = GameInstance->GetEgo();
+	const float SexAppeal = GameInstance->GetSexAppeal();
+	const float Social = GameInstance->GetSocial();
+	
+	EPlayerEmotionalStates NewState;
+
+	if (Ego >= ChadThreshold && SexAppeal >= ChadThreshold)
+	{
+
+		NewState = EPlayerEmotionalStates::VeryGood;
+	}
+	else if (Ego >= GrindsetThreshold && (Social >= GrindsetThreshold || SexAppeal >= GrindsetThreshold))
+	{
+		NewState = EPlayerEmotionalStates::Good;
+	}
+	else if (SexAppeal <= GoblinThreshold && Social <= GoblinThreshold && Ego >= GrindsetThreshold)
+	{
+		NewState = EPlayerEmotionalStates::VeryBad;
+	}
+	else if (Ego <= DoomerThreshold && (Social <= DoomerThreshold || SexAppeal <= DoomerThreshold))
+	{
+		NewState = EPlayerEmotionalStates::Bad;
+	}
+	else
+	{
+		NewState = EPlayerEmotionalStates::Normal;
+	}
+
+	GameInstance->SetCurrentEmotionalState(NewState);
+}
 
 void APlayerCharacter_OM::ShitDay()
 {
