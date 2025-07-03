@@ -3,26 +3,20 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffect.h"
-#include "InputAction.h"
 #include "GameplayTagContainer.h"
 #include "Characters/PlayerCharacterBase_OM.h"
 
-#include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
-#include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/EnergyTick_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
-#include "Utils/Structs/PlayerData_Gymcel.h"
 #include "Utils/Structs/PlayModes_Gymcel.h"
 
 #include "PlayerCharacter_OM.generated.h"
 
+
 class UGameInstance_OMG;
-class UCameraComponent;
-class UTodoManagementSubsystem;
-class UGameInstance_OM;
-class ULevelSequence;
-class AInteractableActor_OM;
-class ANpcBase_OM;
+class APlayerController_OMG;
+class UTodoManagement_OMG;
+class ANpcBase_OMG;
 
 UCLASS()
 class OPTIMIZEMAN_API APlayerCharacter_OM : public APlayerCharacterBase_OM
@@ -114,15 +108,21 @@ protected:
 
 private:
 	/** Class Cache **/
-	UPROPERTY()
-	class APlayerController_OMG* PlayerController;
-	UPROPERTY()
-	class UTodoManagementSubsystem* TodoManager;
-	UPROPERTY()
-	class UGameInstance_OMG* GameInstance;
+	APlayerController_OMG* GetPlayerController_Gymcel() const;
+	UGameInstance_OMG* GetGameInstance_Gymcel() const;
+	UTodoManagement_OMG* GetTodoManager_Gymcel() const;
+
+
 
 	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OMG> CachedAnimInstance;
-	
+
+	/** Current Interacted **/
+
+	FORCEINLINE ANpcBase_OMG* GetCurrentInteractedCharacter_Gymcel() const
+	{
+		return Cast<ANpcBase_OMG>(CurrentInteractedCharacter);
+	}
+
 	/**** Movement Tracking State ****/
 	bool bIsDoingRep = false;
 
@@ -189,7 +189,7 @@ public:
 
 	/*** Setters ***/
 	UFUNCTION(Category = "Gameplay")
-	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter = nullptr);
+	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OMG> InInteractedCharacter = nullptr);
 
 public:
 
@@ -198,23 +198,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	EPlayModes GetCurrentPlayMode() const { return CurrentPlayMode; }
 
-
-
-
-
-
-
-
+private:
+	
+public:
+	void SetEmotionalState();
 	void SetIsDoingRep(const bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; }
 	bool GetIsDoingRep() const { return bIsDoingRep; }
 
+	
 
 
-
-
-
-
-
-	void SetEmotionalState();
 };
 

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "CharacterComponentBase_OM.h"
 #include "MovieSceneObjectBindingID.h"
-#include "Utils/Structs/PlayerData.h"
+#include "Utils/Structs/PlayerData_Gymcel.h"
 #include "BodyDeformationsComponent_OM.generated.h"
 
 class ULevelSequence;

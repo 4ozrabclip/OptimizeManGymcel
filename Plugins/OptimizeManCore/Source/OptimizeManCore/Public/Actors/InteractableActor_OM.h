@@ -10,7 +10,7 @@
 
 
 UCLASS(Blueprintable)
-class OPTIMIZEMAN_API AInteractableActor_OM : public AActor, public IInteractableInterface_OM
+class OPTIMIZEMANCORE_API AInteractableActor_OM : public AActor, public IInteractableInterface_OM
 {
 	GENERATED_BODY()
 public:	

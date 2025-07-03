@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
+#include "Actors/InteractableActor_OM.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "ExerciseEquipment_OM.generated.h"
 class UWidgetComponent;
@@ -15,7 +15,6 @@ UCLASS(Abstract)
 class OPTIMIZEMAN_API AExerciseEquipment_OM : public AInteractableActor_OM
 {
 	GENERATED_BODY()
-	
 public:	
 	AExerciseEquipment_OM();
 	virtual void Tick(float DeltaTime) override;

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Animation/PlayerCharacterAnimInstance_OM.h"
 #include "Utils/Structs/PlayerData_Gymcel.h"
 #include "PlayerCharacterAnimInstance_OMG.generated.h"
@@ -118,7 +119,7 @@ private:
 	FTimerHandle RepAnimTimerHandle;
 	
 
-
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exercises")
 	float SquatAnimationDuration = 4.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exercises")
@@ -130,9 +131,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exercises")
 	float RightCurlAnimationDuration = 4.f;
 
-
-	/** Cache **/
-	UPROPERTY(BlueprintReadOnly, Category = "Player")
-	class APlayerCharacter_OM* Player;
+private:
+	FORCEINLINE APlayerCharacter_OM* GetPlayer_Gymcel() const
+	{
+		return Cast<APlayerCharacter_OM>(Player);
+	}
 
 };

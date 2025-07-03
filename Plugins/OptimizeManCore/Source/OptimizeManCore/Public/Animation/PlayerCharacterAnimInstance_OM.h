@@ -1,18 +1,16 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "Utils/Structs/ExerciseData.h"
-#include "Utils/Structs/PlayerData.h"
 #include "PlayerCharacterAnimInstance_OM.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class OPTIMIZEMAN_API UPlayerCharacterAnimInstance_OM : public UAnimInstance
+class OPTIMIZEMANCORE_API UPlayerCharacterAnimInstance_OM : public UAnimInstance
 {
 	GENERATED_BODY()
 
@@ -31,10 +29,9 @@ protected:
 	bool bIsJumping;
 	
 
-
-private:
+protected:
 	/** Cache **/
-	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	UPROPERTY(VisibleAnywhere, Category = "Player")
 	class APlayerCharacterBase_OM* Player;
 
 };

@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ParentWidget_OM.h"
 #include "Blueprint/UserWidget.h"
+#include "Widgets/ParentWidget_OM.h"
 #include "MinigameBaseWidget_OM.generated.h"
 
+class APlayerController_OMG;
 class APlayerController_OM;
 class APlayerCharacter_OM;
 /**
@@ -16,7 +17,6 @@ UCLASS(Abstract)
 class OPTIMIZEMAN_API UMinigameBaseWidget_OM : public UParentWidget_OM
 {
 	GENERATED_BODY()
-
 public:
 	virtual void NativeConstruct() override;
 
@@ -43,7 +43,7 @@ protected:
 	APlayerCharacter_OM* Player;
 
 	UPROPERTY()
-	APlayerController_OM* PlayerController;
+	APlayerController_OMG* PlayerController;
 
 
 

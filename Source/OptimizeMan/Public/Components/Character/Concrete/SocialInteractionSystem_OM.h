@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Components/Character/Abstract/CharacterComponentBase_OM.h"
-#include "Utils/Structs/PlayerData.h"
+#include "Structs/SocialData.h"
 #include "SocialInteractionSystem_OM.generated.h"
 
 /**
@@ -49,7 +48,7 @@ protected:
 	
 
 	UPROPERTY()
-	class UNpcBaseAnimInstance_OM* NpcAnimInstance;
+	class UNpcBaseAnimInstance_OMG* NpcAnimInstance;
 
 	TArray<FGameplayTag> CompletedTodosCheckList;
 

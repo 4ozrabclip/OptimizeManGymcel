@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Controllers/PlayerController_OM.h"
+#include "Game/Persistent/GameInstance_OMG.h"
 #include "PlayerController_OMG.generated.h"
 
+class APlayerCharacter_OM;
 class UWakeUpWidget_OM;
 class UWakeUpTutorial_OM;
 class UPauseMenuWidget_OM;
@@ -60,10 +62,13 @@ public:
 
 private:
 	/** Class Cache **/
-	UPROPERTY()
-	class APlayerCharacter_OM* PlayerCharacter;
-	UPROPERTY()
-	class UGameInstance_OMG* GameInstance;
+	APlayerCharacter_OM* GetPlayer_Gymcel() const;
+
+
+	FORCEINLINE UGameInstance_OMG* GetGameInstance_Gymcel() const
+	{
+		return Cast<UGameInstance_OMG>(GameInstance);
+	}
 	
 	// Timers
 	FTimerHandle TodoPopUpHandle;

@@ -6,7 +6,7 @@
 #include "Components/Character/Abstract/CharacterComponentBase_OM.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/ExerciseParameters.h"
-#include "Utils/Structs/PlayerData.h"
+#include "Utils/Structs/PlayerData_Gymcel.h"
 #include "Exercise_OM.generated.h"
 
 

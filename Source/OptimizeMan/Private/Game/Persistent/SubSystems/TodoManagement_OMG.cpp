@@ -5,6 +5,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Algo/RandomShuffle.h"
+#include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/Structs/TodoData_Gymcel.h"
@@ -14,9 +15,47 @@ void UTodoManagement_OMG::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	
-	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
+	GameInstance = Cast<UGameInstance_OMG>(GetGameInstance());
 
 	TimerToTryCasts();
+}
+void UTodoManagement_OMG::TimerToTryCasts()
+{
+	GetWorld()->GetTimerManager().ClearTimer(InitializeVariablesHandle);
+	
+	GetWorld()->GetTimerManager().SetTimer(
+		InitializeVariablesHandle,
+		this,
+		&UTodoManagement_OMG::TryCasts,
+		0.3f,
+		true);
+}
+
+void UTodoManagement_OMG::TryCasts()
+{
+	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (!Player)
+	{
+		TimerToTryCasts();
+		return;
+	}
+	
+	NotificationAudio = Cast<UNotificationAudio_OM>(Player->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
+	if (!NotificationAudio)
+	{
+		TimerToTryCasts();
+		return;
+	}
+}
+
+APlayerCharacter_OM* UTodoManagement_OMG::GetPlayer_Gymcel() const
+{	
+	return Cast<APlayerCharacter_OM>(Player);
+}
+
+UGameInstance_OMG* UTodoManagement_OMG::GetGameInstance_Gymcel() const
+{
+	return Cast<UGameInstance_OMG>(GameInstance);
 }
 
 void UTodoManagement_OMG::InitializeTodos()
@@ -179,7 +218,7 @@ void UTodoManagement_OMG::ProcessPotentialTodos()
 
 void UTodoManagement_OMG::CompleteTodo(const FGameplayTag TodoCompletedTag)
 {
-	Super::CompleteTodo(TodoCompletedTags);
+	Super::CompleteTodo(TodoCompletedTag);
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	

@@ -6,11 +6,12 @@
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "FootstepAudio_OM.generated.h"
 
+class APlayerCharacterBase_OM;
 /**
  * 
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class OPTIMIZEMAN_API UFootstepAudio_OM : public UGameAudio_OM
+class OPTIMIZEMANCORE_API UFootstepAudio_OM : public UGameAudio_OM
 {
 	GENERATED_BODY()
 
@@ -24,8 +25,9 @@ public:
 	void PlayFootstepSound();
 
 protected:
+	/** Class Cache **/
 	UPROPERTY()
-	APlayerCharacter_OM* Player;
+	APlayerCharacterBase_OM* Player;
 private:
 	UPROPERTY(EditAnywhere, Category = "FootstepsSounds")
 	TArray<USoundBase*> FootstepSounds;

@@ -6,6 +6,8 @@
 #include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "TodoManagement_OMG.generated.h"
 
+class UGameInstance_OMG;
+class APlayerCharacter_OM;
 /**
  * 
  */
@@ -28,12 +30,9 @@ public:
 
 private:
 	/** Class Cache **/
-	UPROPERTY()
-	class UGameInstance_OMG* GameInstance;
-	UPROPERTY()
-	class APlayerCharacter_OM* Player;
-	UPROPERTY()
-	class UNotificationAudio_OM* NotificationAudio;
+	APlayerCharacter_OM* GetPlayer_Gymcel() const;
+	UGameInstance_OMG* GetGameInstance_Gymcel() const;
+	
 
 
 	/** Timer Handles **/

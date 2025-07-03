@@ -9,7 +9,7 @@
 class IPersistentStateProvider_OM;
 
 UCLASS()
-class OPTIMIZEMAN_API APostProcessControllerBase_OM : public AActor
+class OPTIMIZEMANCORE_API APostProcessControllerBase_OM : public AActor
 {
 	GENERATED_BODY()
 public:

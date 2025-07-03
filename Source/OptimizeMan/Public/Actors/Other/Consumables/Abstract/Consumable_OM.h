@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
+#include "Actors/InteractableActor_OM.h"
 #include "Utils/Structs/ConsumableData.h"
 #include "Consumable_OM.generated.h"
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableActor_OM.h"
+#include "Actors/InteractableActor_OM.h"
 #include "Door.generated.h"
 
 UCLASS(Abstract)

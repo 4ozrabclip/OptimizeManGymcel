@@ -12,18 +12,17 @@ UCLASS()
 class OPTIMIZEMAN_API APoster_OM : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
-	// Sets default values for this actor's properties
 	APoster_OM();
+protected:
 	virtual void BeginPlay() override;
+public:
 	void CheckOwnedPosters();
 
 	UFUNCTION(BlueprintCallable)
 	void CheckAndSetDarkMode();
 
 protected:
-	// Called when the game starts or when spawned
 	void SetVisibilityOfPoster(UPosterComponent_OM* InPoster, bool InIsOwned);
 
 	/*void SetDarkModeForOwnedPoster(UStaticMeshComponent* InPoster, URectLightComponent* InLight,

@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Structs/GameSettings.h"
 #include "ParentWidget_OM.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class OPTIMIZEMAN_API UParentWidget_OM : public UUserWidget
+class OPTIMIZEMANCORE_API UParentWidget_OM : public UUserWidget
 {
 	GENERATED_BODY()
 

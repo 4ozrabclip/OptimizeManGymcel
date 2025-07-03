@@ -6,11 +6,12 @@
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "NotificationAudio_OM.generated.h"
 
+class APlayerCharacterBase_OM;
 /**
  * 
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class OPTIMIZEMAN_API UNotificationAudio_OM : public UGameAudio_OM
+class OPTIMIZEMANCORE_API UNotificationAudio_OM : public UGameAudio_OM
 {
 	GENERATED_BODY()
 
@@ -27,9 +28,13 @@ public:
 	void PlayTodoCompletedSound();
 
 
-private:
+protected:
+	/** Class Cache **/
 	UPROPERTY()
-	APlayerCharacter_OM* Player;
+	APlayerCharacterBase_OM* Player;
+
+
+	/** Sounds **/
 	UPROPERTY(EditAnywhere, Category = "NotifcationSounds")
 	USoundBase* TodoWritingSound;
 

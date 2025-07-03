@@ -73,16 +73,12 @@ protected:
 
 
 
-	/** Current Interacted **/
-	UPROPERTY()
-	AInteractableActor_OM* CurrentInteractedActor;
-	UPROPERTY()
-	ANpcBase_OM* CurrentInteractedCharacter;
+
 	
 	/** Anim Cache **/
 	UPROPERTY()
 	USkeletalMesh* DefaultSkeletalMesh;
-private:
+protected:
 	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OM> CachedAnimInstance;
 	/** Class Cache **/
 	UPROPERTY()
@@ -91,6 +87,12 @@ private:
 	class UTodoManagementSubsystem* TodoManager;
 	UPROPERTY()
 	class UGameInstance_OM* GameInstance;
+
+	/** Current Interacted **/
+	UPROPERTY()
+	AInteractableActor_OM* CurrentInteractedActor;
+	UPROPERTY()
+	ANpcBase_OM* CurrentInteractedCharacter;
 
 
 public:

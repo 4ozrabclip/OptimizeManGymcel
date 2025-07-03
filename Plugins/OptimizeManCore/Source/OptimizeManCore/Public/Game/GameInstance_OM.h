@@ -21,7 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionalStateChanged, EPlayerEmo
 
 
 UCLASS(BlueprintType)
-class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance 
+class OPTIMIZEMANCORE_API UGameInstance_OM : public UGameInstance 
 {
 	GENERATED_BODY()
 public: 

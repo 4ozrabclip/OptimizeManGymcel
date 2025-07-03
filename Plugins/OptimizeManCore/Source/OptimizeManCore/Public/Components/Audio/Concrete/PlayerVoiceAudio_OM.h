@@ -11,7 +11,7 @@ enum EPlayerEmotionalStates : uint8;
  * 
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class OPTIMIZEMAN_API UPlayerVoiceAudio_OM : public UGameAudio_OM
+class OPTIMIZEMANCORE_API UPlayerVoiceAudio_OM : public UGameAudio_OM
 {
 	GENERATED_BODY()
 
@@ -29,8 +29,9 @@ public:
 	void UpsetSoundEffects();
 	void GrumpySoundEffects();
 protected:
+	/** Class Cache **/
 	UPROPERTY()
-	APlayerCharacter_OM* Player;
+	APlayerCharacterBase_OM* Player;
 private:
 	UPROPERTY(EditAnywhere, Category = "PlayerVoiceSounds")
 	TArray<USoundBase*> MajorInjurySounds;

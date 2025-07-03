@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/Character/Concrete/Exercise_OM.h"
 #include "Components/AudioComponent.h"
 #include "GameAudio_OM.generated.h"
 
@@ -12,7 +11,7 @@ enum class EAudioTypes : uint8;
  * 
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class OPTIMIZEMAN_API UGameAudio_OM : public UAudioComponent
+class OPTIMIZEMANCORE_API UGameAudio_OM : public UAudioComponent
 {
 	GENERATED_BODY()
 public:

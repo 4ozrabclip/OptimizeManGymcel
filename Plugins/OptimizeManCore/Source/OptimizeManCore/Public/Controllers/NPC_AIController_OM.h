@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "Utils/structs/NpcStates.h"
 #include "NPC_AIController_OM.generated.h"
 
 class ANpcBase_OM;
@@ -12,7 +11,7 @@ class ANpcBase_OM;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API ANPC_AIController_OM : public AAIController
+class OPTIMIZEMANCORE_API ANPC_AIController_OM : public AAIController
 {
 	GENERATED_BODY()
 public:
@@ -22,13 +21,9 @@ public:
 	virtual void OnPossess(APawn* InPawn) override;
 	
 private:
-	void ActivityChangeDiceRoll();
 
-
-private:
+protected:
 	UPROPERTY()
 	ANpcBase_OM* Npc;
 
-	float TimeSinceLastActivityChange = 0.f;
-	float RandDurationBetweenRolls = 10.f;
 };

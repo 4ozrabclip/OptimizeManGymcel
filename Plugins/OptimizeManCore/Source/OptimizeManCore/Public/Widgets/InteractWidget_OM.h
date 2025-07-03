@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "ParentWidget_OM.h"
 #include "InteractWidget_OM.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UInteractWidget_OM : public UParentWidget_OM
+class OPTIMIZEMANCORE_API UInteractWidget_OM : public UParentWidget_OM
 {
 	GENERATED_BODY()
 

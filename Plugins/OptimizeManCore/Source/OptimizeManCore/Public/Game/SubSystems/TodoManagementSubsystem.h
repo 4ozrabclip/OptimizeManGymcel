@@ -14,7 +14,7 @@
 DECLARE_MULTICAST_DELEGATE(FOnPointsChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTodoComplete);
 UCLASS(Abstract)
-class OPTIMIZEMAN_API UTodoManagementSubsystem : public UGameInstanceSubsystem
+class OPTIMIZEMANCORE_API UTodoManagementSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
@@ -57,7 +57,7 @@ protected:
 	TArray<FTodoItem> CurrentTodoArray;
 	
 	
-private:
+protected:
 	/** Class Cache **/
 	UPROPERTY()
 	class UGameInstance_OM* GameInstance;
@@ -66,6 +66,7 @@ private:
 	UPROPERTY()
 	class UNotificationAudio_OM* NotificationAudio;
 
+private:
 	/** Timer Handles **/
 	FTimerHandle InitializeVariablesHandle;
 	FTimerHandle DelayForPlayerAchievementsHandle;

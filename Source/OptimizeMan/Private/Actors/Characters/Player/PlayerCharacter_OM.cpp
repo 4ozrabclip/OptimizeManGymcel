@@ -10,7 +10,9 @@
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
+#include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Actors/Characters/Player/PlayerController_OMG.h"
 #include "Components/Character/Concrete/PlayerDeformationsComponent_OM.h"
 #include "OptimizeMan/Public/Game/GMB/BedroomGameModeBase_OM.h"
 #include "OptimizeMan/Public/Game/GMB/GymGameModeBase_OM.h"
@@ -21,9 +23,12 @@
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
+#include "Characters/NpcBase_OM.h"
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
+#include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
 #include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Utils/Structs/PlayModes_Gymcel.h"
@@ -110,7 +115,7 @@ void APlayerCharacter_OM::BeginPlay()
 	Super::BeginPlay();
 
 	InitPlayModes();
-	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	PlayerController = Cast<APlayerController_OMG>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	LastPosition = GetActorLocation();
 	
 	if (UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement()))
@@ -219,7 +224,7 @@ void APlayerCharacter_OM::SyncStatsToGameInstance()
 	const UMentalHealthStats_OM* MentalStats = AbSysComp->GetSet<UMentalHealthStats_OM>();
 	if (!MentalStats) return;
 
-	FInnerStatus_Gymcel NewInnerStatus;
+	FInnerStatus NewInnerStatus;
 	NewInnerStatus.Ego = MentalStats->GetEgo();
 	NewInnerStatus.Social = MentalStats->GetSocial();
 	NewInnerStatus.SexAppeal = MentalStats->GetSexAppeal();
@@ -354,7 +359,7 @@ void APlayerCharacter_OM::InitPlayModes()
 
 }
 
-void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter)
+void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor, const TWeakObjectPtr<ANpcBase_OMG> InInteractedCharacter)
 {
 	// dont allow to switch between playmode unless its regular to x or x to regular 
 	if (CurrentPlayMode != EPlayModes::RegularMode && InPlayMode != EPlayModes::RegularMode) return;
@@ -630,9 +635,20 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
  */
 
 
+APlayerController_OMG* APlayerCharacter_OM::GetPlayerController_Gymcel() const
+{
+	return Cast<APlayerController_OMG>(PlayerController);
+}
 
+UGameInstance_OMG* APlayerCharacter_OM::GetGameInstance_Gymcel() const
+{
+	return Cast<UGameInstance_OMG>(GameInstance);
+}
 
-
+UTodoManagement_OMG* APlayerCharacter_OM::GetTodoManager_Gymcel() const
+{
+	return Cast<UTodoManagement_OMG>(TodoManager);
+}
 
 void APlayerCharacter_OM::Jump()
 {
@@ -744,7 +760,7 @@ void APlayerCharacter_OM::ClearTimers()
 	if (!TodoManager)
 		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	if (!PlayerController)
-		PlayerController = Cast<APlayerController_OM>(GetController());
+		PlayerController = Cast<APlayerController_OMG>(GetController());
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(TodoManager);
 	if (PlayerController)
 		GetWorld()->GetTimerManager().ClearAllTimersForObject(PlayerController);

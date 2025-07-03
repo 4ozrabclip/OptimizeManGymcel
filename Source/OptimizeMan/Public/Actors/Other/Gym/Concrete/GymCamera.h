@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Utils/Structs/PlayerData.h"
+#include "Structs/PlayerData.h"
 #include "GymCamera.generated.h"
 
 UCLASS()

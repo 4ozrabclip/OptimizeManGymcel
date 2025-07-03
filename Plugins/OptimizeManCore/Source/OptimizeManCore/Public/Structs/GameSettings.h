@@ -4,10 +4,10 @@
 #include "GameSettings.generated.h"
 
 USTRUCT(BlueprintType)
-struct FAudioSettings
+struct FAudioSettingsOM
 {
 	GENERATED_USTRUCT_BODY()
-	FAudioSettings() :
+	FAudioSettingsOM() :
 	MasterVolume(1.f),
 	MusicVolume(1.f),
 	VoiceVolume(2.f),
@@ -40,6 +40,6 @@ struct FGameSettings
 	bool bDarkMode;  
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FAudioSettings AudioSettings;
+	FAudioSettingsOM AudioSettings;
 
 };
