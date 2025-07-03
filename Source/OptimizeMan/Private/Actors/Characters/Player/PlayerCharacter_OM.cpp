@@ -140,7 +140,7 @@ void APlayerCharacter_OM::InitializeAttributes()
 	if (!GameInstance) return;
 	if (!AbSysComp) return;
 	
-	const FInnerStatus& InnerStatus = GetGameInstance_Gymcel()->GetInnerStatus();
+	const FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
 
 	UGameplayEffect* CurrentMentalStatsGE = NewObject<UGameplayEffect>(GetTransientPackage(), TEXT("CurrentMentalStats"));
 	CurrentMentalStatsGE->DurationPolicy = EGameplayEffectDurationType::Instant;
@@ -200,7 +200,7 @@ void APlayerCharacter_OM::SyncStatsToGameInstance()
 	NewInnerStatus.Social = MentalStats->GetSocial();
 	NewInnerStatus.SexAppeal = MentalStats->GetSexAppeal();
 
-	GetGameInstance_Gymcel()->SetInnerStatus(NewInnerStatus);
+	GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetInnerStatus(NewInnerStatus);
 }
 
 
@@ -377,7 +377,7 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 
 	if (Config.bHasWidget)
 	{
-		GetPlayerController_Gymcel()->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
+		GymcelUtils::GetPC_Gymcel(GetWorld())->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
 	}
 
 	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
@@ -435,7 +435,7 @@ void APlayerCharacter_OM::ManageCurrentPlayMode()
 void APlayerCharacter_OM::ManageRegularMode()
 {
 	if (!PlayerController) return;
-	GetPlayerController_Gymcel()->RemoveAllActiveWidgets();
+	GymcelUtils::GetPC_Gymcel(GetWorld())->RemoveAllActiveWidgets();
 	if (CurrentInteractedCharacter)
 	{
 		GetCurrentInteractedCharacter_Gymcel()->EndDialog();
@@ -659,9 +659,9 @@ void APlayerCharacter_OM::SetEmotionalState()
 	constexpr float DoomerThreshold = -0.3f;
 	constexpr float GoblinThreshold = -0.2f;
 
-	const float Ego = GetGameInstance_Gymcel()->GetEgo();
-	const float SexAppeal = GetGameInstance_Gymcel()->GetSexAppeal();
-	const float Social = GetGameInstance_Gymcel()->GetSocial();
+	const float Ego = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetEgo();
+	const float SexAppeal = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSexAppeal();
+	const float Social = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSocial();
 	
 	EPlayerEmotionalStates NewState;
 

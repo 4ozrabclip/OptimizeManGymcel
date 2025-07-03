@@ -4,12 +4,12 @@
 #include "Actors/Other/Bedroom/Concrete/Bed_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
-#include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/GMB/BedroomGameModeBase_OM.h"
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
+#include "Game/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 ABed_OM::ABed_OM()
 {
@@ -28,10 +28,7 @@ void ABed_OM::BeginPlay()
 }
 void ABed_OM::CheckAndSetDarkMode()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
+	if (!GameInstance) return;
 	if (GameInstance->GetDarkMode())
 	{
 		AuraLight->SetIntensity(0.5f);
@@ -53,9 +50,9 @@ void ABed_OM::Interact_Implementation()
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
 	if (!GameInstance) return;
 	
-	if (!GameInstance->GetHasBeenToGymToday())
+	if (!GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetHasBeenToGymToday())
 	{
-		Player->ShitReaction();
+		GymcelUtils::GetPlayer_Gymcel(GetWorld())->ShitReaction();
 		return;
 	}
 	
@@ -67,7 +64,7 @@ void ABed_OM::Interact_Implementation()
 	PlayerController->SetInputMode(Input);
 	if (GameInstance->GetDayNumber() == 1)
 	{
-		GameInstance->FinishDemo();
+		GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FinishDemo();
 		return;
 	}
 	
@@ -99,9 +96,9 @@ void ABed_OM::SleepDelay(const float FadeDuration)
 				constexpr float MaxEnergy = 1.f;
 				Player->SetMaxMovementSpeed(Player->GetOriginalMovementSpeed());
 				GameInstance->IncrementDay();
-				FGymResStats& GymResStats = GameInstance->GetGymResStats();
-				GameInstance->SetGymResStats(GymResStats.Energy, MaxEnergy);	
-				GameInstance->SetHasBeenToGymToday(false);
+				FGymResStats& GymResStats = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats();
+				GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetGymResStats(GymResStats.Energy, MaxEnergy);	
+				GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetHasBeenToGymToday(false);
 				UGameplayStatics::OpenLevel(this, LevelToChangeTo);
 			},
 			FadeDuration, 
