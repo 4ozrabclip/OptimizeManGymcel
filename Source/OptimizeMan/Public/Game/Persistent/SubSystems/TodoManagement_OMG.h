@@ -30,8 +30,7 @@ public:
 
 private:
 	/** Class Cache **/
-	APlayerCharacter_OM* GetPlayer_Gymcel() const;
-	UGameInstance_OMG* GetGameInstance_Gymcel() const;
+
 	
 
 

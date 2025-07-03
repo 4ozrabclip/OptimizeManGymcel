@@ -8,6 +8,9 @@
 #include "InteractableActor_OM.generated.h"
 
 
+class UGameInstance_OM;
+class APlayerController_OM;
+class APlayerCharacterBase_OM;
 
 UCLASS(Blueprintable)
 class OPTIMIZEMANCORE_API AInteractableActor_OM : public AActor, public IInteractableInterface_OM
@@ -19,9 +22,19 @@ protected:
 	/** Class Overrides **/
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
+	
+	
+public:
 	virtual void Interact_Implementation() override {};
 
+protected:
+	/** Cache **/
+	UPROPERTY()
+	APlayerCharacterBase_OM* Player;
+	UPROPERTY()
+	APlayerController_OM* PlayerController;
+	UPROPERTY()
+	UGameInstance_OM* GameInstance;
 
 public:	
 	/** Components **/

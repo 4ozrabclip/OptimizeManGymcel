@@ -3,9 +3,7 @@
 
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 
-#include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Utils/Structs/AudioTypes.h"  
+#include "Game/GameInstance_OM.h"
 
 UGameAudio_OM::UGameAudio_OM()
 {
@@ -38,7 +36,7 @@ void UGameAudio_OM::GetAndSetVolume()
 {
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
-		FGameSettings Settings = GameInstance->GetGameSettings();
+		FAudioSettingsOM Settings = GameInstance->GetGameSettings().AudioSettings;
 
 		switch (AudioType)
 		{

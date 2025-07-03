@@ -90,8 +90,7 @@ void ANpcBase_OM::BeginPlay()
 	
 	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OM::CheckAndSetDarkMode);
 
-	CheckAndSetDarkMode();
-	
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;

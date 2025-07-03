@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/AudioComponent.h"
+#include "Structs/AudioTypes.h"
 #include "GameAudio_OM.generated.h"
 
-enum class EAudioTypes : uint8;
 /**
  * 
  */

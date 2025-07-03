@@ -5,6 +5,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/PointLightComponent.h"
+#include "Controllers/PlayerController_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,49 +29,45 @@ void ADoor::Interact_Implementation()
 	Super::Interact_Implementation();
 	if (bHasOpenedDoor) return;
 	if (LevelToLoad.IsEmpty()) return;
-	if (!TodoManager)
-	{
-		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	}
-	if (!Player)
-	{
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	}
-
-	Player->SyncStatsToGameInstance();
+	
+	if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+		Player->SyncStatsToGameInstance();
 	
 }
 
 void ADoor::ClearTimers()
 {
-	if (!Player)
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	Player->ClearTimers();
+	if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+		Player->ClearTimers();
 }
 
 void ADoor::OpenDoor()
 {
 	SetHasOpenedDoor(true);
-
-	Player->SetMaxMovementSpeed(0.f);
-	
-	if (APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager)
+	if (const APlayerController_OM* PC = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
 	{
-		constexpr float FadeDuration = 2.f;
-		CameraManager->StartCameraFade(0.f, 1.f, FadeDuration, FLinearColor::Black, true, true);
-
-		const FName LevelToChangeTo = FName(LevelToLoad);
-
-		if (TimerHandle.IsValid())
+		if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(PC->GetPawn()))
 		{
-			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+			Player->SetMaxMovementSpeed(0.f);
+			
+			if (APlayerCameraManager* CameraManager = PC->PlayerCameraManager)
+			{
+				constexpr float FadeDuration = 2.f;
+				CameraManager->StartCameraFade(0.f, 1.f, FadeDuration, FLinearColor::Black, true, true);
+
+				const FName LevelToChangeTo = FName(LevelToLoad);
+
+				if (TimerHandle.IsValid())
+				{
+					GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+				}
+		
+				DoorOpenDelay(LevelToChangeTo, FadeDuration, [this]()
+				{
+					SetHasOpenedDoor(false);
+				});
+			}
 		}
-		
-		DoorOpenDelay(LevelToChangeTo, FadeDuration, [this]()
-		{
-			SetHasOpenedDoor(false);
-		});
-		
 	}
 }
 
@@ -82,7 +79,8 @@ void ADoor::DoorOpenDelay(FName LevelToChangeTo, const float FadeDuration, TFunc
 			{
 				if (LevelToChangeTo.IsValid())
 				{
-					Player->SetMaxMovementSpeed(Player->GetOriginalMovementSpeed());
+					if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+						Player->SetMaxMovementSpeed(Player->GetOriginalMovementSpeed());
 					UGameplayStatics::OpenLevel(this, LevelToChangeTo);
 				}
 				SetHasOpenedDoor(false);

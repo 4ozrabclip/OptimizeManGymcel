@@ -2,6 +2,8 @@
 
 #include "Actors/Characters/NPC/Concrete/GymGuy1_OM.h"
 
+#include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
+
 AGymGuy1_OM::AGymGuy1_OM()
 {
 	CurrentMood = ENpcMood::Neutral;

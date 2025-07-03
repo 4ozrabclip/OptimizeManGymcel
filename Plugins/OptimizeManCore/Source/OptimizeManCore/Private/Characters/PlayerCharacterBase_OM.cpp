@@ -4,6 +4,7 @@
 #include "Characters/PlayerCharacterBase_OM.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/InteractableActor_OM.h"
+#include "Animation/PlayerCharacterAnimInstance_OM.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/NpcBase_OM.h"
 #include "Components/Audio/Concrete/FootstepAudio_OM.h"
@@ -12,7 +13,9 @@
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Controllers/PlayerController_OM.h"
 #include "Game/GameInstance_OM.h"
+#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Interfaces/InteractableInterface_OM.h"
+#include "Kismet/GameplayStatics.h"
 
 
 APlayerCharacterBase_OM::APlayerCharacterBase_OM()
@@ -43,6 +46,30 @@ APlayerCharacterBase_OM::APlayerCharacterBase_OM()
 void APlayerCharacterBase_OM::BeginPlay()
 {
 	Super::BeginPlay();
+	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	LastPosition = GetActorLocation();
+	
+	if (UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement()))
+		SetOriginalMovementSpeed(PlayerMovement->MaxWalkSpeed);
+	
+	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	if (!GameInstance) return;
+
+	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
+	if (!TodoManager) return;
+
+	
+	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
+	{
+		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
+		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(SkeletalMeshComponent->GetAnimInstance());
+
+		if (!CachedAnimInstance.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to cache anim instance!"));
+			return;
+		}
+	}
 	
 }
 

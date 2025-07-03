@@ -9,9 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Actors/Characters/Player/PlayerController_OMG.h"
 #include "Components/Character/Concrete/PlayerDeformationsComponent_OM.h"
 #include "OptimizeMan/Public/Game/GMB/BedroomGameModeBase_OM.h"
@@ -21,7 +19,6 @@
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
-#include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
 #include "Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
@@ -30,7 +27,9 @@
 #include "Game/Persistent/GameInstance_OMG.h"
 #include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
 #include "Game/SubSystems/TodoManagementSubsystem.h"
+#include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Utils/Structs/PlayModes_Gymcel.h"
 
 APlayerCharacter_OM::APlayerCharacter_OM()
@@ -49,7 +48,6 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	SelfieCameraLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SelfieCameraLocation"));
 	SelfieCameraLocation->SetupAttachment(RootComponent);
 	SelfieCameraLocation->SetVisibility(false);
-
 	
 	SetMinimumMovementThreshold(0.5f);
 	SetIsWalking(false);
@@ -64,7 +62,6 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	PlayerFacingMuscleViewLocation = FVector(240, 2102, 90);
 
 	DefaultSkeletalMesh = nullptr;
-	
 }
 
 void APlayerCharacter_OM::PostInitializeComponents()
@@ -112,35 +109,9 @@ void APlayerCharacter_OM::SpawnSelfieCamera()
 
 void APlayerCharacter_OM::BeginPlay()
 {
-	Super::BeginPlay();
-
 	InitPlayModes();
-	PlayerController = Cast<APlayerController_OMG>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	LastPosition = GetActorLocation();
+	Super::BeginPlay();
 	
-	if (UCharacterMovementComponent* PlayerMovement = Cast<UCharacterMovementComponent>(GetCharacterMovement()))
-		SetOriginalMovementSpeed(PlayerMovement->MaxWalkSpeed);
-	
-	
-	GameInstance = Cast<UGameInstance_OMG>(GetWorld()->GetGameInstance());
-	if (!GameInstance) return;
-
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager) return;
-
-	
-	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
-	{
-		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
-		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(SkeletalMeshComponent->GetAnimInstance());
-
-		if (!CachedAnimInstance.IsValid())
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to cache anim instance!"));
-			return;
-		}
-	}
-
 	HeadPosition = GetMesh()->GetBoneLocation("Head");
 	SetCurrentPlayMode(EPlayModes::RegularMode);
 	SetEmotionalState();
@@ -169,7 +140,7 @@ void APlayerCharacter_OM::InitializeAttributes()
 	if (!GameInstance) return;
 	if (!AbSysComp) return;
 	
-	const FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+	const FInnerStatus& InnerStatus = GetGameInstance_Gymcel()->GetInnerStatus();
 
 	UGameplayEffect* CurrentMentalStatsGE = NewObject<UGameplayEffect>(GetTransientPackage(), TEXT("CurrentMentalStats"));
 	CurrentMentalStatsGE->DurationPolicy = EGameplayEffectDurationType::Instant;
@@ -229,7 +200,7 @@ void APlayerCharacter_OM::SyncStatsToGameInstance()
 	NewInnerStatus.Social = MentalStats->GetSocial();
 	NewInnerStatus.SexAppeal = MentalStats->GetSexAppeal();
 
-	GameInstance->SetInnerStatus(NewInnerStatus);
+	GetGameInstance_Gymcel()->SetInnerStatus(NewInnerStatus);
 }
 
 
@@ -406,7 +377,7 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 
 	if (Config.bHasWidget)
 	{
-		PlayerController->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
+		GetPlayerController_Gymcel()->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
 	}
 
 	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
@@ -464,10 +435,10 @@ void APlayerCharacter_OM::ManageCurrentPlayMode()
 void APlayerCharacter_OM::ManageRegularMode()
 {
 	if (!PlayerController) return;
-	PlayerController->RemoveAllActiveWidgets();
+	GetPlayerController_Gymcel()->RemoveAllActiveWidgets();
 	if (CurrentInteractedCharacter)
 	{
-		CurrentInteractedCharacter->EndDialog();
+		GetCurrentInteractedCharacter_Gymcel()->EndDialog();
 		CurrentInteractedCharacter = nullptr;
 	}
 	if (CurrentInteractedActor)
@@ -578,7 +549,7 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		{
 			InputModeUI.SetWidgetToFocus(InWidget->TakeWidget());
 		}
-		else if (UUserWidget* WidgetInstanceToFocus = PlayerController->GetCurrentPlayModeWidgetInstance())
+		else if (UUserWidget* WidgetInstanceToFocus = GymcelUtils::GetPC_Gymcel(GetWorld())->GetCurrentPlayModeWidgetInstance())
 		{
 			InputModeUI.SetWidgetToFocus(WidgetInstanceToFocus->TakeWidget());
 		}
@@ -635,21 +606,6 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
  */
 
 
-APlayerController_OMG* APlayerCharacter_OM::GetPlayerController_Gymcel() const
-{
-	return Cast<APlayerController_OMG>(PlayerController);
-}
-
-UGameInstance_OMG* APlayerCharacter_OM::GetGameInstance_Gymcel() const
-{
-	return Cast<UGameInstance_OMG>(GameInstance);
-}
-
-UTodoManagement_OMG* APlayerCharacter_OM::GetTodoManager_Gymcel() const
-{
-	return Cast<UTodoManagement_OMG>(TodoManager);
-}
-
 void APlayerCharacter_OM::Jump()
 {
 	if (!GetCharacterMovement())
@@ -703,9 +659,9 @@ void APlayerCharacter_OM::SetEmotionalState()
 	constexpr float DoomerThreshold = -0.3f;
 	constexpr float GoblinThreshold = -0.2f;
 
-	const float Ego = GameInstance->GetEgo();
-	const float SexAppeal = GameInstance->GetSexAppeal();
-	const float Social = GameInstance->GetSocial();
+	const float Ego = GetGameInstance_Gymcel()->GetEgo();
+	const float SexAppeal = GetGameInstance_Gymcel()->GetSexAppeal();
+	const float Social = GetGameInstance_Gymcel()->GetSocial();
 	
 	EPlayerEmotionalStates NewState;
 

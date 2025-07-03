@@ -108,20 +108,13 @@ protected:
 
 private:
 	/** Class Cache **/
-	APlayerController_OMG* GetPlayerController_Gymcel() const;
-	UGameInstance_OMG* GetGameInstance_Gymcel() const;
-	UTodoManagement_OMG* GetTodoManager_Gymcel() const;
-
 
 
 	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OMG> CachedAnimInstance;
 
 	/** Current Interacted **/
 
-	FORCEINLINE ANpcBase_OMG* GetCurrentInteractedCharacter_Gymcel() const
-	{
-		return Cast<ANpcBase_OMG>(CurrentInteractedCharacter);
-	}
+	ANpcBase_OMG* GetCurrentInteractedCharacter_Gymcel() const;
 
 	/**** Movement Tracking State ****/
 	bool bIsDoingRep = false;

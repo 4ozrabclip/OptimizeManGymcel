@@ -4,6 +4,7 @@
 #include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OMG.h"
 #include "Actors/Other/Gym/Concrete/GymSpeaker_OM.h"
 #include "AI/Controllers/NPC_Controller_OMG.h"
 #include "AnimInstances/NpcBaseAnimInstance_OMG.h"
@@ -30,8 +31,6 @@ ANpcBase_OMG::ANpcBase_OMG()
 void ANpcBase_OMG::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AnimInstance = Cast<UNpcBaseAnimInstance_OMG>(GetMesh()->GetAnimInstance());
 	
 }
 
@@ -99,14 +98,8 @@ void ANpcBase_OMG::StartDialogue()
 		SetCurrentState(ENpcState::Talking);
 		ActiveTags.AddTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
-	UE_LOG(LogTemp, Warning, TEXT("START DIALOGUE"));
-	
-	if (!Player)
-	{
-		UE_LOG(LogTemp, Error, TEXT("player null in start dialogue"));
-		return;
-	}
-	Player->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
+
+	GetPlayer_Gymcel()->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
 }
 
 void ANpcBase_OMG::EndDialog()
@@ -165,6 +158,11 @@ void ANpcBase_OMG::ToggleNpcLookStates()
 	
 }
 
+APlayerController_OMG* ANpcBase_OMG::GetPlayerController_Gymcel() const
+{
+	return Cast<APlayerController_OMG>(PlayerController);
+}
+
 
 void ANpcBase_OMG::PlayRandomTalkingAnimForMood()
 {
@@ -172,31 +170,31 @@ void ANpcBase_OMG::PlayRandomTalkingAnimForMood()
 	if (!AnimInstance->GetIsTalking()) return;
 
 	UE_LOG(LogTemp, Warning, TEXT("Play random Talkeranim for mood called "));
-	if (AnimInstance->GetIsExplaining())
+	if (GetAnimInstance_Gymcel()->GetIsExplaining())
 	{
 		PlayRandomTalkingHelper(ExplainingChats);
 	}
-	else if (AnimInstance->GetIsYelling())
+	else if (GetAnimInstance_Gymcel()->GetIsYelling())
 	{
 		PlayRandomTalkingHelper(AngryChats);
 	}
-	else if (AnimInstance->GetIsAffirming())
+	else if (GetAnimInstance_Gymcel()->GetIsAffirming())
 	{
 		PlayRandomTalkingHelper(AffirmingChats);
 	}
-	else if (AnimInstance->GetIsDisagreeing())
+	else if (GetAnimInstance_Gymcel()->GetIsDisagreeing())
 	{
 		PlayRandomTalkingHelper(DisagreeingChats);
 	}
-	else if (AnimInstance->GetIsDisgusted())
+	else if (GetAnimInstance_Gymcel()->GetIsDisgusted())
 	{
 		PlayRandomTalkingHelper(DisgustedChats);
 	}
-	else if (AnimInstance->GetIsLaughing())
+	else if (GetAnimInstance_Gymcel()->GetIsLaughing())
 	{
 		PlayRandomTalkingHelper(LaughingChats);
 	}
-	else if (AnimInstance->GetIsConfused())
+	else if (GetAnimInstance_Gymcel()->GetIsConfused())
 	{
 		PlayRandomTalkingHelper(ConfusedChats);
 	}

@@ -18,7 +18,7 @@
 #include "Widgets/Both/Concrete/TodoList_OM.h"
 #include "Widgets/Gym/Concrete/ExerciseInteractWidget_OM.h"
 #include "Widgets/Gym/Concrete/GymHud_OM.h"
-
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Both/Concrete/HintsWidget_OM.h"
 #include "Widgets/Gym/Concrete/MuscleViewWidget_OM.h"
 #include "Widgets/Gym/Concrete/SocialInteractionWidget_OM.h"
@@ -32,17 +32,14 @@
 
 APlayerController_OMG::APlayerController_OMG()
 {
-	CurrentPlayModeWidgetInstance = nullptr;
-	PlayerCharacter = nullptr;
-	GameInstance = nullptr;
 }
 void APlayerController_OMG::BindInputMapping()
 {
 	Super::BindInputMapping();
 	if (TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(InputToOpenTodo, ETriggerEvent::Completed, PlayerCharacter, &APlayerCharacter_OM::ToggleTodoMode);
-		EnhancedInputComponent->BindAction(InputToOpenPauseMenu, ETriggerEvent::Completed, PlayerCharacter, &APlayerCharacter_OM::TogglePauseMode);
+		EnhancedInputComponent->BindAction(InputToOpenTodo, ETriggerEvent::Completed, GymcelUtils::GetPlayer_Gymcel(GetWorld()), &APlayerCharacter_OM::ToggleTodoMode);
+		EnhancedInputComponent->BindAction(InputToOpenPauseMenu, ETriggerEvent::Completed, GymcelUtils::GetPlayer_Gymcel(GetWorld()), &APlayerCharacter_OM::TogglePauseMode);
 	}
 }
 void APlayerController_OMG::BeginPlay()
@@ -51,7 +48,7 @@ void APlayerController_OMG::BeginPlay()
 	GameInstance = Cast<UGameInstance_OMG>(GetWorld()->GetGameInstance());
 	if (GameInstance)
 	{
-		GameInstance->OnGymStatsChanged.AddDynamic(this, &APlayerController_OMG::UpdateGymHud);
+		GymcelUtils::GetGameInstance_Gymcel(GetWorld())->OnGymStatsChanged.AddDynamic(this, &APlayerController_OMG::UpdateGymHud);
 		
 		if (UTodoManagementSubsystem* TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>()))
 		{

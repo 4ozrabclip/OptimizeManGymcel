@@ -40,23 +40,7 @@ public:
 	
 private:
 	/** Class Cache **/
-	FORCEINLINE TWeakObjectPtr<UNpcBaseAnimInstance_OMG> GetAnimInstance_Gymcel() const
-	{
-		return Cast<UNpcBaseAnimInstance_OMG>(AnimInstance);
-	}
-
-	FORCEINLINE APlayerCharacter_OM* GetPlayer_Gymcel() const
-	{
-		return Cast<APlayerCharacter_OM>(Player);
-	}
-	FORCEINLINE APlayerController_OMG* GetPlayerController_Gymcel() const
-	{
-		return Cast<APlayerController_OMG>(PlayerController);
-	}
-	FORCEINLINE UGameInstance_OMG* GetGameInstance_Gymcel() const
-	{
-		return Cast<UGameInstance_OMG>(GameInstance);
-	}
+	
 
 
 public:

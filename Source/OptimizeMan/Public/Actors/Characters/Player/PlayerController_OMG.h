@@ -62,13 +62,7 @@ public:
 
 private:
 	/** Class Cache **/
-	APlayerCharacter_OM* GetPlayer_Gymcel() const;
 
-
-	FORCEINLINE UGameInstance_OMG* GetGameInstance_Gymcel() const
-	{
-		return Cast<UGameInstance_OMG>(GameInstance);
-	}
 	
 	// Timers
 	FTimerHandle TodoPopUpHandle;

@@ -48,16 +48,6 @@ void UTodoManagement_OMG::TryCasts()
 	}
 }
 
-APlayerCharacter_OM* UTodoManagement_OMG::GetPlayer_Gymcel() const
-{	
-	return Cast<APlayerCharacter_OM>(Player);
-}
-
-UGameInstance_OMG* UTodoManagement_OMG::GetGameInstance_Gymcel() const
-{
-	return Cast<UGameInstance_OMG>(GameInstance);
-}
-
 void UTodoManagement_OMG::InitializeTodos()
 {
 	FName SexAppealName = FName("SexAppeal");
