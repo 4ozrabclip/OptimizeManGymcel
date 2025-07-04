@@ -12,6 +12,7 @@
 #include "Components/Character/Concrete/NPCBodyDeformationsComponent_OM.h"
 #include "Controllers/NPC_AIController_OM.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 ANpcBase_OMG::ANpcBase_OMG()
 {
@@ -99,7 +100,7 @@ void ANpcBase_OMG::StartDialogue()
 		ActiveTags.AddTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 
-	GetPlayer_Gymcel()->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
+	GymcelUtils::GetPlayer_Gymcel()->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
 }
 
 void ANpcBase_OMG::EndDialog()
@@ -158,10 +159,6 @@ void ANpcBase_OMG::ToggleNpcLookStates()
 	
 }
 
-APlayerController_OMG* ANpcBase_OMG::GetPlayerController_Gymcel() const
-{
-	return Cast<APlayerController_OMG>(PlayerController);
-}
 
 
 void ANpcBase_OMG::PlayRandomTalkingAnimForMood()
@@ -170,34 +167,38 @@ void ANpcBase_OMG::PlayRandomTalkingAnimForMood()
 	if (!AnimInstance->GetIsTalking()) return;
 
 	UE_LOG(LogTemp, Warning, TEXT("Play random Talkeranim for mood called "));
-	if (GetAnimInstance_Gymcel()->GetIsExplaining())
+	if (auto* AnimInstanceGymcel = Cast<UNpcBaseAnimInstance_OMG>(AnimInstance.Get()))
 	{
-		PlayRandomTalkingHelper(ExplainingChats);
+		if (AnimInstanceGymcel->GetIsExplaining())
+		{
+			PlayRandomTalkingHelper(ExplainingChats);
+		}
+		else if (AnimInstanceGymcel->GetIsYelling())
+		{
+			PlayRandomTalkingHelper(AngryChats);
+		}
+		else if (AnimInstanceGymcel->GetIsAffirming())
+		{
+			PlayRandomTalkingHelper(AffirmingChats);
+		}
+		else if (AnimInstanceGymcel->GetIsDisagreeing())
+		{
+			PlayRandomTalkingHelper(DisagreeingChats);
+		}
+		else if (AnimInstanceGymcel->GetIsDisgusted())
+		{
+			PlayRandomTalkingHelper(DisgustedChats);
+		}
+		else if (AnimInstanceGymcel->GetIsLaughing())
+		{
+			PlayRandomTalkingHelper(LaughingChats);
+		}
+		else if (AnimInstanceGymcel->GetIsConfused())
+		{
+			PlayRandomTalkingHelper(ConfusedChats);
+		}
 	}
-	else if (GetAnimInstance_Gymcel()->GetIsYelling())
-	{
-		PlayRandomTalkingHelper(AngryChats);
-	}
-	else if (GetAnimInstance_Gymcel()->GetIsAffirming())
-	{
-		PlayRandomTalkingHelper(AffirmingChats);
-	}
-	else if (GetAnimInstance_Gymcel()->GetIsDisagreeing())
-	{
-		PlayRandomTalkingHelper(DisagreeingChats);
-	}
-	else if (GetAnimInstance_Gymcel()->GetIsDisgusted())
-	{
-		PlayRandomTalkingHelper(DisgustedChats);
-	}
-	else if (GetAnimInstance_Gymcel()->GetIsLaughing())
-	{
-		PlayRandomTalkingHelper(LaughingChats);
-	}
-	else if (GetAnimInstance_Gymcel()->GetIsConfused())
-	{
-		PlayRandomTalkingHelper(ConfusedChats);
-	}
+
 }
 FVector ANpcBase_OMG::LookAtLocation(const float DeltaTime)
 {

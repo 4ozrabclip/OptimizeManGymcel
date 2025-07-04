@@ -9,7 +9,6 @@
 #include "Characters/NpcBase_OM.h"
 #include "Components/Audio/Concrete/FootstepAudio_OM.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
-#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Controllers/PlayerController_OM.h"
 #include "Game/GameInstance_OM.h"
@@ -28,9 +27,7 @@ APlayerCharacterBase_OM::APlayerCharacterBase_OM()
 	
 	AbSysComp = CreateDefaultSubobject<UAbilitySystemComponent_OM>(TEXT("AbilitySystemComponent"));
 
-	PlayerVoiceAudioComponent = CreateDefaultSubobject<UPlayerVoiceAudio_OM>(TEXT("AudioComponent"));
-	PlayerVoiceAudioComponent->bAutoActivate = true;
-	PlayerVoiceAudioComponent->SetVolumeMultiplier(1.f);
+
 
 	FootstepAudioComponent = CreateDefaultSubobject<UFootstepAudio_OM>(TEXT("FootstepAudio"));
 	FootstepAudioComponent->bAutoActivate = true;

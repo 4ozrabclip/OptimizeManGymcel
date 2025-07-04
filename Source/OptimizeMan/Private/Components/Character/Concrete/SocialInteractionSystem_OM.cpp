@@ -3,12 +3,10 @@
 
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "Actors/Characters/NPC/Abstract/FemaleBase_OM.h"
-#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "AnimInstances/NpcBaseAnimInstance_OM.h"
+#include "Game/Persistent/SaveData/NpcDataSave.h"
+#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 
 USocialInteractionSystem_OM::USocialInteractionSystem_OM()
@@ -218,11 +216,7 @@ void USocialInteractionSystem_OM::ProcessFriendshipLevel()
 
 void USocialInteractionSystem_OM::CheckForSocialAchievements()
 {
-	if (!TodoManager)
-	{
-		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-		UE_LOG(LogTemp, Warning, TEXT("Had to recast todomanager in social system check for achievements"));
-	}
+
 
 	CompletedTodosCheckList.Empty();
 	
@@ -268,11 +262,11 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
     auto ModifyMoodByEmotionalState = [&](ENpcMood& Mood, bool& bPositiveReaction) {
         switch (CurrentEmotionalState)
         {
-            case EPlayerEmotionalStates::Doomer:
+            case EPlayerEmotionalStates::Bad:
                 Mood = ENpcMood::Uncomfortable;
                 bPositiveReaction = false;
                 break;
-            case EPlayerEmotionalStates::Cope:
+            case EPlayerEmotionalStates::Normal:
             	if (GodsJudgement >= 0.55)
             	{
             		Mood = (bPositiveReaction) ? ENpcMood::Happy : ENpcMood::Uncomfortable;
@@ -282,14 +276,14 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
 	            	Mood = (bPositiveReaction) ? ENpcMood::Neutral : ENpcMood::Uncomfortable;
 	            }
                 break;
-            case EPlayerEmotionalStates::Grindset:
+            case EPlayerEmotionalStates::Good:
                 Mood = (bPositiveReaction) ? ENpcMood::Happy : ENpcMood::Neutral;
                 break;
-            case EPlayerEmotionalStates::Gigachad:
+            case EPlayerEmotionalStates::VeryGood:
                 Mood = ENpcMood::Happy;
                 bPositiveReaction = true;
                 break;
-            case EPlayerEmotionalStates::GoblinMode:
+            case EPlayerEmotionalStates::VeryBad:
                 Mood = ENpcMood::Disgusted;
                 bPositiveReaction = false;
                 break;
@@ -427,9 +421,12 @@ void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 		return;
 	}
 
-	CurrentInteractedNpc->EndDialog();
+	if (auto* Npc = Cast<ANpcBase_OMG>(CurrentInteractedNpc))
+	{
+		Npc->EndDialog();
+	}
 	Player->SetCurrentPlayMode(EPlayModes::RegularMode);
-	Player->bInteractableOpen = false;
+	Player->GetInteractableOpen() = false;
 	SaveNpcFriendshipData();
 	
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(CurrentInteractedNpc);

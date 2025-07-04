@@ -6,6 +6,7 @@
 #include "Components/PointLightComponent.h"
 #include "Controllers/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 
 ADoor::ADoor()
@@ -27,46 +28,41 @@ void ADoor::Interact_Implementation()
 	if (bHasOpenedDoor) return;
 	if (LevelToLoad.IsEmpty()) return;
 	
-	if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
-		Player->SyncStatsToGameInstance();
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SyncStatsToGameInstance();
 	
 }
 
 void ADoor::ClearTimers()
 {
-	if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
-		Player->ClearTimers();
+	//if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->ClearTimers();
 }
 
 void ADoor::OpenDoor()
 {
 	SetHasOpenedDoor(true);
-	if (const APlayerController_OM* PC = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
+
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetMaxMovementSpeed(0.f);
+	
+	if (APlayerCameraManager* CameraManager = GymcelUtils::GetPC_Gymcel(GetWorld())->PlayerCameraManager)
 	{
-		if (APlayerCharacter_OM* Player = Cast<APlayerCharacter_OM>(PC->GetPawn()))
+		constexpr float FadeDuration = 2.f;
+		CameraManager->StartCameraFade(0.f, 1.f, FadeDuration, FLinearColor::Black, true, true);
+
+		const FName LevelToChangeTo = FName(LevelToLoad);
+
+		if (TimerHandle.IsValid())
 		{
-			Player->SetMaxMovementSpeed(0.f);
-			
-			if (APlayerCameraManager* CameraManager = PC->PlayerCameraManager)
-			{
-				constexpr float FadeDuration = 2.f;
-				CameraManager->StartCameraFade(0.f, 1.f, FadeDuration, FLinearColor::Black, true, true);
-
-				const FName LevelToChangeTo = FName(LevelToLoad);
-
-				if (TimerHandle.IsValid())
-				{
-					GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-				}
-		
-				DoorOpenDelay(LevelToChangeTo, FadeDuration, [this]()
-				{
-					SetHasOpenedDoor(false);
-				});
-			}
+			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 		}
+
+		DoorOpenDelay(LevelToChangeTo, FadeDuration, [this]()
+		{
+			SetHasOpenedDoor(false);
+		});
 	}
 }
+
 
 void ADoor::DoorOpenDelay(FName LevelToChangeTo, const float FadeDuration, TFunction<void()> Cleanup)
 {

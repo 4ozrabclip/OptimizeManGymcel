@@ -29,12 +29,10 @@ public:
 	UFUNCTION()
 	bool GetHasHint() const { return bHasHint; }
 
-	UFUNCTION()
-	virtual void SetWidgetUIDarkLightMode();
+	virtual void CheckAndSetDarkMode(const bool bIsDarkMode) override;
+
 	
 protected:
-	UPROPERTY()
-	bool bIsDarkMode;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ExitButton;

@@ -6,6 +6,7 @@
 #include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
 #include "WakeUpBase_OM.generated.h"
 
+class UTodoManagement_OMG;
 class UNotificationAudio_OM;
 class UButton;
 class UTextBlock;
@@ -102,7 +103,7 @@ protected:
 
 	
 	UPROPERTY()
-	UTodoManagementSubsystem* TodoManager;
+	UTodoManagement_OMG* TodoManager;
 
 	UPROPERTY()
 	UNotificationAudio_OM* NotificationAudio;

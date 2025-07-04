@@ -249,11 +249,6 @@ void APlayerController_OMG::RemoveAllActiveWidgets()
 
 }
 
-APlayerCharacter_OM* APlayerController_OMG::GetPlayer_Gymcel() const
-{
-	return Cast<APlayerCharacter_OM>(PlayerCharacter);
-}
-
 void APlayerController_OMG::ShowOrHideHint(const FString& HintText, float HintLength, bool HideHint, bool RemoveFully) const 
 { 
 	APlayerController_OMG* ThisPC = const_cast<APlayerController_OMG*>(this);

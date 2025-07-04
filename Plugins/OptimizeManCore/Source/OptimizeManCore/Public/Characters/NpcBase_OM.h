@@ -28,13 +28,13 @@ public:
 protected:
 	/** Class Overrides **/
 	virtual void BeginPlay() override;
-	virtual void Interact_Implementation() override;
 	virtual void Tick(float DeltaTime) override;
 
 public:
 	/** Shader Helper **/
 	UFUNCTION(BlueprintCallable)
 	void CheckAndSetDarkMode(bool bDarkMode);
+	virtual void Interact_Implementation() override;
 
 
 	/** Animation / Audio Helper Funcs **/

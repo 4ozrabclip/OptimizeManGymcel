@@ -6,6 +6,8 @@
 #include "Components/Button.h"
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
+#include "Game/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 void UVendingMachineWidget_OM::NativeConstruct()
 {
@@ -49,9 +51,6 @@ void UVendingMachineWidget_OM::NativeDestruct()
 
 void UVendingMachineWidget_OM::SetConsumables()
 {
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-
 	if (VendingMachine)
 	{
 		for (TSubclassOf<AConsumable_OM> Item : VendingMachine->GetVendorInventory())
@@ -94,13 +93,13 @@ void UVendingMachineWidget_OM::BuyConsumable(const FConsumableType& InConsumable
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	int PlayerMoney = GameInstance->GetMoney();
+	int PlayerMoney = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney();
 
 	if (PlayerMoney >= InConsumable.Price)
 	{
 		VendingMachine->PlayBuySound();
 		VendingMachine->SpawnItem(InConsumable);
-		GameInstance->SetMoney(-InConsumable.Price);
+		GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetMoney(-InConsumable.Price);
 	}
 	else
 	{

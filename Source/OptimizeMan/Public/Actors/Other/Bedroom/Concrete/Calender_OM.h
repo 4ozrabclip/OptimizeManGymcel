@@ -18,8 +18,7 @@ public:
 	
 	virtual void BeginPlay() override;
 	
-	UFUNCTION(BlueprintCallable, Category = "Dark/Light Mode")
-	void CheckAndSetDarkMode();
+	virtual void CheckAndSetDarkMode(bool bIsDarkMode) override;
 	void SetCalenderImage();
 
 	virtual void Interact_Implementation() override;

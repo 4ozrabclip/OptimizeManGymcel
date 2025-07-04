@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Gym/Concrete/VendingMachine_OM.h"
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "Widgets/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
 class UImage;

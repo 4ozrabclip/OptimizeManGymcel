@@ -3,11 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
 #include "GameFramework/SaveGame.h"
-#include "Utils/Structs/SocialData.h"
 #include "NpcDataSave.generated.h"
 
-enum class ENpcRelationshipState : uint8;
 /**
 * USTRUCT(BlueprintType)
 struct FNpcRelationshipData

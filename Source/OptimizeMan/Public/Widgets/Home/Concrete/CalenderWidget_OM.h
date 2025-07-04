@@ -25,8 +25,8 @@ public:
 	class UTextBlock* CurrentMonthTextBlock;
 
 	TArray<class UImage*> DayOverlays;
-	
-	virtual void SetWidgetUIDarkLightMode() override;
+
+	virtual void CheckAndSetDarkMode(const bool bIsDarkMode) override;
 
 	UPROPERTY(meta = (BindWidget))
 	class UBorder* CalenderBorder;

@@ -9,6 +9,7 @@
 #include "Components/GridPanel.h"
 #include "Components/Slider.h"
 #include "Components/TextBlock.h"
+#include "Game/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
 
 void UExerciseSelectionParentWidget_OM::NativeConstruct()
@@ -55,16 +56,15 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 			return;
 	}
 
-	CheckAndSetDarkMode();
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 	
 	InitialOpen();
 }
 
-void UExerciseSelectionParentWidget_OM::CheckAndSetDarkMode()
+void UExerciseSelectionParentWidget_OM::CheckAndSetDarkMode(bool bIsDarkMode)
 {
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	if (GameInstance->GetDarkMode())
+	Super::CheckAndSetDarkMode(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		WeightSelect_Text->SetColorAndOpacity(White);
 	}
@@ -73,6 +73,7 @@ void UExerciseSelectionParentWidget_OM::CheckAndSetDarkMode()
 		WeightSelect_Text->SetColorAndOpacity(Black);
 	}
 }
+
 
 void UExerciseSelectionParentWidget_OM::UpdateWeightSelect(float InValue)
 {

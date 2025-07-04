@@ -6,6 +6,8 @@
 #include "Actors/Other/Bedroom/Concrete/Shelf_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
+#include "Utils/UtilityHelpers_OMG.h"
+#include "Utils/Structs/PlayerData_Gymcel.h"
 
 void UShelfWidget_OM::NativeConstruct()
 {
@@ -24,7 +26,7 @@ void UShelfWidget_OM::InitButtons()
 		UE_LOG(LogTemp, Error, TEXT("No game instance in shelf widget"));
 		return;
 	}
-	FInventoryData& InventoryData = GameInstance->GetInventoryData();
+	FInventoryData& InventoryData = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInventoryData();
 	
 	if (UseBabyCrackButton)
 	{
@@ -68,8 +70,8 @@ void UShelfWidget_OM::OnItemUsed(EShopAndBook InItem)
 		return;
 	}
 	
-	FInventoryData& InventoryData = GameInstance->GetInventoryData();
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	FInventoryData& InventoryData = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInventoryData();
+	FBodyStatus& BodyStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus();
 
 	AShelf_OM* Shelf = Cast<AShelf_OM>(Player->GetCurrentInteractedActor());
 

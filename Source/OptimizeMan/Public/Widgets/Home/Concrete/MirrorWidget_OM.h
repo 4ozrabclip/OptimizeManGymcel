@@ -20,7 +20,7 @@ class OPTIMIZEMAN_API UMirrorWidget_OM : public UMinigameBaseWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	void CheckAndSetForDarkLightMode();
+	virtual void CheckAndSetDarkMode(const bool bIsDarkMode) override;
 	void CheckAndSetWarningText();
 
 protected:

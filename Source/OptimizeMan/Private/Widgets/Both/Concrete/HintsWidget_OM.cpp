@@ -4,6 +4,7 @@
 #include "Widgets/Both/Concrete/HintsWidget_OM.h"
 
 #include "Components/TextBlock.h"
+#include "Game/GameInstance_OM.h"
 
 void UHintsWidget_OM::NativeConstruct()
 {

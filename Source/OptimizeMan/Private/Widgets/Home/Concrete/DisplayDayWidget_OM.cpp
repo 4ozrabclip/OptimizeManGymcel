@@ -4,7 +4,7 @@
 #include "Widgets/Home/Concrete/DisplayDayWidget_OM.h"
 
 #include "Components/TextBlock.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 void UDisplayDayWidget_OM::NativeConstruct()
 {
@@ -28,18 +28,14 @@ void UDisplayDayWidget_OM::SetText(const FString& InText)
 }
 void UDisplayDayWidget_OM::CheckAndSetTextColour()
 {
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No game instance, recasting.."));
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
+
 	if (!DisplayDayText)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Display Day TextBlock"));
 		return;
 	}
 
-	if (GameInstance->GetDarkMode())
+	if (GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetDarkMode())
 	{
 		DisplayDayText->SetColorAndOpacity(White);
 		UE_LOG(LogTemp, Error, TEXT("Set text to white"));

@@ -17,12 +17,12 @@
 #include "Components/Character/Concrete/Exercise_OM.h"
 #include "Components/Audio/Concrete/FootstepAudio_OM.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
-#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
 #include "Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
 #include "Characters/NpcBase_OM.h"
+#include "Components/Character/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
 #include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
@@ -38,6 +38,10 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 
 	ExerciseComponent = CreateDefaultSubobject<UExercise_OM>(TEXT("ExerciseComponent"));
 	ExerciseComponent->bAutoActivate = true;
+
+	PlayerVoiceAudioComponent = CreateDefaultSubobject<UPlayerVoiceAudio_OM>(TEXT("AudioComponent"));
+	PlayerVoiceAudioComponent->bAutoActivate = true;
+	PlayerVoiceAudioComponent->SetVolumeMultiplier(1.f);
 
 	SocialComponent = CreateDefaultSubobject<USocialInteractionSystem_OM>(TEXT("SocialInteractionComponent"));
 	SocialComponent->bAutoActivate = true;

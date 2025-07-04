@@ -6,8 +6,11 @@
 #include "Components/CheckBox.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Game/GameInstance_OM.h"
+#include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
+
+#include "Game/SubSystems/TodoManagementSubsystem.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 void UTodoList_OM::NativePreConstruct()
 {
@@ -26,7 +29,7 @@ void UTodoList_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	if (UTodoManagementSubsystem* TodoManagement = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>()))
+	if (auto* TodoManagement = Cast<UTodoManagement_OMG>(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSubsystem<UTodoManagement_OMG>()))
 	{
 		FString Task1String = FString::Format(TEXT("{0}"), {TodoManagement->GetTodoName(0)});
 		FString Task2String = FString::Format(TEXT("{0}"), {TodoManagement->GetTodoName(1)});

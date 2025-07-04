@@ -9,8 +9,8 @@
 #include "Components/Slider.h"
 #include "Components/VerticalBox.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Game/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Utils/Structs/AudioTypes.h"
 
 void UMainMenuWidget_OM::NativeConstruct()
 {
@@ -22,10 +22,7 @@ void UMainMenuWidget_OM::NativeConstruct()
 	
 	UpdateImagesForDarkMode();
 
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
+
 
 	if (GameInstance)
 	{
@@ -276,37 +273,37 @@ void UMainMenuWidget_OM::UpdateGameSettings()
 	const float NotificationVolumeValue = NotificationVolume_Slider->GetValue();
 	const float SfxVolumeValue = SfxVolume_Slider->GetValue();
 
-	float NewMasterVolume = GameSettings.MasterVolume;
-	float NewMusicVolume = GameSettings.MusicVolume;
-	float NewVoiceVolume = GameSettings.VoiceVolume;
-	float NewNotificationVolume = GameSettings.NotificationVolume;
-	float NewSfxVolume = GameSettings.SfxVolume;
+	float NewMasterVolume = GameSettings.AudioSettings.MasterVolume;
+	float NewMusicVolume = GameSettings.AudioSettings.MusicVolume;
+	float NewVoiceVolume = GameSettings.AudioSettings.VoiceVolume;
+	float NewNotificationVolume = GameSettings.AudioSettings.NotificationVolume;
+	float NewSfxVolume = GameSettings.AudioSettings.SfxVolume;
 
-	if (MasterVolumeValue != GameSettings.MasterVolume)
+	if (MasterVolumeValue != GameSettings.AudioSettings.MasterVolume)
 	{
 		bChangeAudioSettings = true;
 		NewMasterVolume = MasterVolumeValue;
 		MenuMusic->SetVolumeMultiplier(NewMusicVolume * NewMasterVolume);
 		NotificationAudio->SetVolumeMultiplier(NewNotificationVolume * NewMasterVolume);
 	}
-	if (MusicVolumeValue != GameSettings.MusicVolume)
+	if (MusicVolumeValue != GameSettings.AudioSettings.MusicVolume)
 	{
 		bChangeAudioSettings = true;
 		NewMusicVolume = MusicVolumeValue;
 		MenuMusic->SetVolumeMultiplier(NewMusicVolume * NewMasterVolume);
 	} 
-	if (VoiceVolumeValue != GameSettings.VoiceVolume)
+	if (VoiceVolumeValue != GameSettings.AudioSettings.VoiceVolume)
 	{
 		bChangeAudioSettings = true;
 		NewVoiceVolume = VoiceVolumeValue;
 	} 
-	if (NotificationVolumeValue != GameSettings.NotificationVolume)
+	if (NotificationVolumeValue != GameSettings.AudioSettings.NotificationVolume)
 	{
 		bChangeAudioSettings = true;
 		NewNotificationVolume = NotificationVolumeValue;
 		NotificationAudio->SetVolumeMultiplier(NewNotificationVolume * NewMasterVolume);
 	}
-	if (SfxVolumeValue != GameSettings.SfxVolume)
+	if (SfxVolumeValue != GameSettings.AudioSettings.SfxVolume)
 	{
 		bChangeAudioSettings = true;
 		NewSfxVolume = SfxVolumeValue;

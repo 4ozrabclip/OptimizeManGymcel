@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/Character/Abstract/CharacterComponentBase_OM.h"
 #include "Structs/SocialData.h"
+#include "Utils/Structs/SocialData_Gymcel.h"
 #include "SocialInteractionSystem_OM.generated.h"
 
 /**

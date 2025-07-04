@@ -3,10 +3,10 @@
 
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
 
-#include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Characters/PlayerCharacterBase_OM.h"
+#include "Game/GameInstance_OM.h"
+#include "Game/SubSystems/TodoManagementSubsystem.h"
+
 
 UNotificationAudio_OM::UNotificationAudio_OM()
 {
@@ -21,7 +21,7 @@ void UNotificationAudio_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	if (!Player)
-		Player = Cast<APlayerCharacter_OM>(GetOwner());
+		Player = Cast<APlayerCharacterBase_OM>(GetOwner());
 	
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{

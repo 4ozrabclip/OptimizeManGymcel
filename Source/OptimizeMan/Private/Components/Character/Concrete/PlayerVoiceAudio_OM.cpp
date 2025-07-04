@@ -1,12 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
+#include "Components/Character/Concrete/PlayerVoiceAudio_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Utils/Structs/AudioTypes.h"
-#include "Utils/Structs/PlayerData.h"
+#include "Game/Persistent/GameInstance_OMG.h"
+#include "Structs/PlayerData.h"
 
 
 UPlayerVoiceAudio_OM::UPlayerVoiceAudio_OM()
@@ -36,7 +34,7 @@ void UPlayerVoiceAudio_OM::InjurySoundEffects(const EExerciseType CurrentExercis
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 	
-	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Normal;
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
 		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
@@ -45,13 +43,13 @@ void UPlayerVoiceAudio_OM::InjurySoundEffects(const EExerciseType CurrentExercis
 
 	switch (CurrentEmotionalState)
 	{
-	case EPlayerEmotionalStates::Cope:
-	case EPlayerEmotionalStates::Gigachad:
-	case EPlayerEmotionalStates::Grindset:
+	case EPlayerEmotionalStates::Normal:
+	case EPlayerEmotionalStates::VeryGood:
+	case EPlayerEmotionalStates::Good:
 		SoundsToUse = &MajorInjurySounds;
 		break;
-	case EPlayerEmotionalStates::Doomer:
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::Bad:
+	case EPlayerEmotionalStates::VeryBad:
 		SoundsToUse = &MajorInjurySounds_Intense;
 		break;
 	default:
@@ -83,7 +81,7 @@ void UPlayerVoiceAudio_OM::MinorInjurySoundEffects(const EExerciseType CurrentEx
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Normal;
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
 		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
@@ -92,13 +90,13 @@ void UPlayerVoiceAudio_OM::MinorInjurySoundEffects(const EExerciseType CurrentEx
 
 	switch (CurrentEmotionalState)
 	{
-	case EPlayerEmotionalStates::Cope:
-	case EPlayerEmotionalStates::Gigachad:
-	case EPlayerEmotionalStates::Grindset:
+	case EPlayerEmotionalStates::Normal:
+	case EPlayerEmotionalStates::VeryGood:
+	case EPlayerEmotionalStates::Good:
 		SoundsToUse = &MinorInjurySounds;
 		break;
-	case EPlayerEmotionalStates::Doomer:
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::Bad:
+	case EPlayerEmotionalStates::VeryBad:
 		SoundsToUse = &MinorInjurySounds_Intense;
 		break;
 	default:
@@ -130,7 +128,7 @@ void UPlayerVoiceAudio_OM::WorkoutGruntSoundEffects(const EExerciseType CurrentE
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Normal;
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
 		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
@@ -139,13 +137,13 @@ void UPlayerVoiceAudio_OM::WorkoutGruntSoundEffects(const EExerciseType CurrentE
 
 	switch (CurrentEmotionalState)
 	{
-	case EPlayerEmotionalStates::Cope:
-	case EPlayerEmotionalStates::Gigachad:
-	case EPlayerEmotionalStates::Grindset:
+	case EPlayerEmotionalStates::Normal:
+	case EPlayerEmotionalStates::VeryGood:
+	case EPlayerEmotionalStates::Good:
 		SoundsToUse = &FunnyGruntSounds;
 		break;
-	case EPlayerEmotionalStates::Doomer:
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::Bad:
+	case EPlayerEmotionalStates::VeryBad:
 		SoundsToUse = &FunnyGruntSounds_Intense;
 		break;
 	default:
@@ -176,7 +174,7 @@ void UPlayerVoiceAudio_OM::UpsetSoundEffects()
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Normal;
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
 		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
@@ -185,10 +183,10 @@ void UPlayerVoiceAudio_OM::UpsetSoundEffects()
 
 	switch (CurrentEmotionalState)
 	{
-	case EPlayerEmotionalStates::Doomer:
+	case EPlayerEmotionalStates::Bad:
 		SoundsToUse = &UpsetSounds_Doomer;
 		break;
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::VeryBad:
 		SoundsToUse = &UpsetSounds_Goblin;
 		break;
 	default:
@@ -216,7 +214,7 @@ void UPlayerVoiceAudio_OM::GrumpySoundEffects()
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 
-	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
+	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Normal;
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
 	{
 		CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
@@ -225,13 +223,13 @@ void UPlayerVoiceAudio_OM::GrumpySoundEffects()
 
 	switch (CurrentEmotionalState)
 	{
-	case EPlayerEmotionalStates::Cope:
-	case EPlayerEmotionalStates::Gigachad:
-	case EPlayerEmotionalStates::Grindset:
+	case EPlayerEmotionalStates::Normal:
+	case EPlayerEmotionalStates::VeryGood:
+	case EPlayerEmotionalStates::Good:
 		SoundsToUse = &GrumpySounds;
 		break;
-	case EPlayerEmotionalStates::Doomer:
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::Bad:
+	case EPlayerEmotionalStates::VeryBad:
 		SoundsToUse = &GrumpySounds_Intense;
 		break;
 	default:

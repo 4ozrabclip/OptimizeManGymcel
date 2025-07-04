@@ -56,9 +56,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UAbilitySystemComponent_OM> AbSysComp;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerVoiceAudioComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UFootstepAudio_OM> FootstepAudioComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
@@ -129,7 +127,7 @@ public:
 	float GetOriginalMovementSpeed() const { return OriginalMovementSpeed; }
 	bool GetTodoOpen() const { return bTodoOpen; }
 	bool GetPauseMenuOpen() const { return bPauseMenuOpen; }
-	bool GetInteractableOpen() const { return bInteractableOpen; }
+	bool& GetInteractableOpen() { return bInteractableOpen; }
 
 	/** Setters **/
 	void SetCurrentInteractedCharacter(ANpcBase_OM* InInteractedCharacter = nullptr) { CurrentInteractedCharacter = InInteractedCharacter; }

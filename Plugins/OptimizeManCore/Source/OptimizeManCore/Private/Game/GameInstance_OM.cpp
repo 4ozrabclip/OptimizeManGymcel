@@ -206,27 +206,7 @@ void UGameInstance_OM::HandleDayEvents()
 {
 	DayInfo.bIsSpecialDay = false;
 	DayInfo.DayEvent.Empty();
-	constexpr int PaydayMoney = 30.f;
-	
-	switch (DayInfo.CurrentDay)
-	{
-		case EWeekDay::Monday:
-			break;
-		case EWeekDay::Tuesday:
-			Payday(PaydayMoney);
-			break;
-		case EWeekDay::Wednesday:
-			DayInfo.DayEvent = "Zumba";
-			break;
-		case EWeekDay::Thursday:
-			break;
-		case EWeekDay::Friday:
-			break;
-		case EWeekDay::Saturday:
-			break;
-		case EWeekDay::Sunday:
-			break;
-	}
+
 	if (DaysSinceScoreChecked >= WaveLengthByDays)
 	{
 		CheckWaveScore();

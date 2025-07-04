@@ -8,14 +8,16 @@
 #include "Components/GridPanel.h"
 #include "Components/TextBlock.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
+#include "Game/GameInstance_OM.h"
 #include "Game/GMB/BedroomGameModeBase_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Game/SubSystems/TodoManagementSubsystem.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 void UWakeUpBase_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
+	TodoManager = Cast<auto>(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSubsystem<UTodoManagement_OMG>());
 	if (!TodoManager)
 	{
 		UE_LOG(LogTemp, Error, TEXT("TodoManager is null.  Cast failed"));

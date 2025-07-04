@@ -18,6 +18,9 @@ class OPTIMIZEMANCORE_API UParentWidget_OM : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
+	UFUNCTION()
+	virtual void CheckAndSetDarkMode(const bool bIsDarkMode) {};
+
 	
 	UFUNCTION()
 	virtual void FadeIn();

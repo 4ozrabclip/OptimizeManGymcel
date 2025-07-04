@@ -6,7 +6,8 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/PointLightComponent.h"
 #include "Components/RectLightComponent.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Game/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 ACalender_OM::ACalender_OM()
 {
@@ -42,19 +43,12 @@ void ACalender_OM::BeginPlay()
 	Super::BeginPlay();
 	AuraLight->SetActive(false);
 	AuraLight->SetVisibility(false);
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
+
 	SetCalenderImage();
 }
-void ACalender_OM::CheckAndSetDarkMode()
+void ACalender_OM::CheckAndSetDarkMode(bool bIsDarkMode)
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (GameInstance->GetDarkMode())
+	if (bIsDarkMode)
 	{
 		Light->SetIntensity(0.2f);
 	}
@@ -66,10 +60,6 @@ void ACalender_OM::CheckAndSetDarkMode()
 }
 void ACalender_OM::SetCalenderImage()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
 
 	const bool bIsDarkMode = GameInstance->GetDarkMode();
 
@@ -172,6 +162,6 @@ void ACalender_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
 
-	Player->TogglePlayMode(EPlayModes::CalenderMode, Player->bInteractableOpen, this);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->TogglePlayMode(EPlayModes::CalenderMode, Player->GetInteractableOpen(), this);
 	//Player->SetCurrentPlayMode(EPlayModes::CalenderMode, this);
 }

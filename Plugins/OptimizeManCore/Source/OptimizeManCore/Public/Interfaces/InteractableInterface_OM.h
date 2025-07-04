@@ -30,7 +30,7 @@ class UInteractableInterface_OM : public UInterface
 /**
  * 
  */
-class OPTIMIZEMAN_API IInteractableInterface_OM
+class OPTIMIZEMANCORE_API IInteractableInterface_OM
 {
 	GENERATED_BODY()
 

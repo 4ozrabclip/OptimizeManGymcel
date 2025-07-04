@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "Widgets/ParentWidget_OM.h"
 #include "DisplayDayWidget_OM.generated.h"
 
 /**

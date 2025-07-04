@@ -2,15 +2,16 @@
 
 
 #include "Widgets/Gym/Concrete/SocialInteractionWidget_OM.h"
+
+#include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
 #include "Components/Button.h"
-#include "AnimInstances/NpcBaseAnimInstance_OM.h"
-#include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "Components/Border.h"
 #include "Components/ProgressBar.h"
+#include "Game/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Gym/Concrete/ExerciseInteractWidget_OM.h"
 
 void USocialInteractionWidget_OM::NativeConstruct()
@@ -18,20 +19,12 @@ void USocialInteractionWidget_OM::NativeConstruct()
 	Super::NativeConstruct();
 
 	InitializeButtonStyles();
-
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (!PlayerController)
-	{
-		PlayerController = Cast<APlayerController_OM>(Player->GetController());
-	}
+	
 	//if (GameInstance)
 	//{
 	//	GameInstance->OnEmotionalStateChanged.AddDynamic(this, &USocialInteractionWidget_OM::OnEmotionalStateChanged);
 	//}
-	Npc = Player->GetCurrentInteractedCharacter();
+	Npc = Cast<ANpcBase_OMG>(Player->GetCurrentInteractedCharacter());
 	if (!Npc)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Npc is NULL"));
@@ -50,7 +43,7 @@ void USocialInteractionWidget_OM::NativeConstruct()
 		UE_LOG(LogTemp, Error, TEXT("DSGDASGSDGSDGs"));
 	}
 	
-	AnimInstance = Cast<UNpcBaseAnimInstance_OM>(Npc->GetMesh()->GetAnimInstance());
+	AnimInstance = Cast<UNpcBaseAnimInstance_OMG>(Npc->GetMesh()->GetAnimInstance());
 	if (!AnimInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("NpcAnimInstance is NULL"));
@@ -78,7 +71,7 @@ void USocialInteractionWidget_OM::NativeConstruct()
 		Option2Button->OnClicked.AddDynamic(this, &USocialInteractionWidget_OM::OnButton2Clicked);
 		Option3Button->OnClicked.AddDynamic(this, &USocialInteractionWidget_OM::OnButton3Clicked);
 	}
-	CheckAndSetDarkMode();
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 
 	SetDesiredSizeInViewport(FVector2D(1920, 1080));
 	
@@ -104,22 +97,16 @@ void USocialInteractionWidget_OM::NativeTick(const FGeometry& MyGeometry, float 
 	}*/
 		
 }
-
-void USocialInteractionWidget_OM::CheckAndSetDarkMode()
+void USocialInteractionWidget_OM::CheckAndSetDarkMode(bool bIsDarkMode)
 {
-	UE_LOG(LogTemp, Error, TEXT("check and Set darkmode for social interaction widget called"));
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Game Instance null in social interaction widget"));
-		return;
-	}
+	Super::CheckAndSetDarkMode(bIsDarkMode);
 	if (!WhiteBorder || !BlackBorder)
 	{
 		UE_LOG(LogTemp, Error, TEXT("White or Black border is null in social interaction widget"));
 		return;
 	}
 	
-	if (GameInstance->GetDarkMode())
+	if (bIsDarkMode)
 	{
 		FSlateBrush DarkModeBrush;
 		DarkModeBrush.SetResourceObject(WhiteBorder);
@@ -132,6 +119,7 @@ void USocialInteractionWidget_OM::CheckAndSetDarkMode()
 		SocialOptionsBorder->SetBrush(LightModeBrush);
 	}
 }
+
 
 void USocialInteractionWidget_OM::OnEmotionalStateChanged(EPlayerEmotionalStates InEmotionalState)
 {
@@ -155,12 +143,12 @@ void USocialInteractionWidget_OM::InitializeButtonStyles()
 		}
 		UTexture2D* Normal;
 		UTexture2D* Pressed;
-		if (CurrentEmotionalState == EPlayerEmotionalStates::GoblinMode)
+		if (CurrentEmotionalState == EPlayerEmotionalStates::VeryBad)
 		{
 			Normal = SocialInteractionTypes[Index].EmojiType_Goblin;
 			Pressed = SocialInteractionTypes[Index].PressedEmoji_Goblin;
 		}
-		else if (CurrentEmotionalState == EPlayerEmotionalStates::Gigachad)
+		else if (CurrentEmotionalState == EPlayerEmotionalStates::VeryGood)
 		{
 			Normal = SocialInteractionTypes[Index].EmojiType_Chad;
 			Pressed = SocialInteractionTypes[Index].PressedEmoji_Chad;
@@ -335,7 +323,7 @@ void USocialInteractionWidget_OM::ManageInteraction(const UButton* ClickedButton
 	}
 	if (!AnimInstance)
 	{
-		AnimInstance = Npc->GetAnimInstance();
+		AnimInstance = Cast<UNpcBaseAnimInstance_OMG>(Npc->GetAnimInstance());
 	}
 
 	
@@ -518,3 +506,4 @@ void USocialInteractionWidget_OM::OnExitButtonClicked()
 	Super::OnExitButtonClicked();
 	SocialInteractionComponent->LeaveConversation();
 }
+

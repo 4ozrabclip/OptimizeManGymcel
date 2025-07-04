@@ -6,7 +6,8 @@
 #include "Actors/Other/Bedroom/Concrete/Laptop_OM.h"
 #include "Components/RectLightComponent.h"
 #include "Components/Other/Concrete/PosterComponent_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Game/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 // Sets default values
 APoster_OM::APoster_OM()
@@ -61,10 +62,10 @@ void APoster_OM::CheckOwnedPosters()
 
 	OwnedChadPosters.Empty();
 	
-	OwnedChadPosters = GameInstance->GetOwnedChadPosters();
+	OwnedChadPosters = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetOwnedChadPosters();
 
 	OwnedWaifuPosters.Empty();
-	OwnedWaifuPosters = GameInstance->GetOwnedWaifuPosters();
+	OwnedWaifuPosters = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetOwnedWaifuPosters();
 
 	if (OwnedChadPosters.Num() != NumberOfChadPosters)
 	{

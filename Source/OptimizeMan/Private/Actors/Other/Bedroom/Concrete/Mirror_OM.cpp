@@ -13,6 +13,7 @@
 #include "Components/PointLightComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Structs/AudioTypes.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Home/Concrete/MirrorWidget_OM.h"
 
 AMirror_OM::AMirror_OM()
@@ -51,28 +52,11 @@ void AMirror_OM::BeginPlay()
 void AMirror_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
-	if (!PlayerController)
-	{
-		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-		if (!PlayerController)
-		{
-			UE_LOG(LogTemp, Error, TEXT("AMirror_OM: PlayerController is null!"));
-			return;
-		}
-	}
 
-	if (!Player)
-	{
-		Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn()); 
-		if (!Player)
-		{
-			UE_LOG(LogTemp, Error, TEXT("AMirror_OM: PlayerCharacter is null!"));
-			return;
-		}
-	}
 
-	Player->TogglePlayMode(EPlayModes::MirrorMode, Player->bInteractableOpen, this);
-	;
+
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->TogglePlayMode(EPlayModes::MirrorMode, Player->GetInteractableOpen(), this);
+	
 	
 }
 

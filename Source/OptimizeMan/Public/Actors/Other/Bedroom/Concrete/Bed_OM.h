@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #pragma once
 
@@ -18,8 +18,8 @@ public:
 	void SleepDelay(const float FadeDuration);
 
 	virtual void BeginPlay() override;
-	UFUNCTION(BlueprintCallable)
-	void CheckAndSetDarkMode();
+
+	virtual void CheckAndSetDarkMode(bool bIsDarkMode) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	class UBoxComponent* ExtraCollider;

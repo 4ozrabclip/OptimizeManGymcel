@@ -10,6 +10,7 @@
 #include "Components/Overlay.h"
 #include "Components/PanelWidget.h"
 #include "Components/TextBlock.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 
 void ULaptopWidget_OM::NativeConstruct()
@@ -402,7 +403,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 }
 void ULaptopWidget_OM::UpdateBank()
 {
-	const FString MoneyStringNumeral = FString::FromInt(GameInstance->GetMoney());
+	const FString MoneyStringNumeral = FString::FromInt(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney());
 	const FString MoneyString = FString::Format(TEXT("${0}"), {MoneyStringNumeral});
 
 	MoneyTextBlock->SetText(FText::FromString(MoneyString));
@@ -528,23 +529,23 @@ void ULaptopWidget_OM::SetForSkanState()
 
 	switch (GameInstance->GetCurrentEmotionalState())
 	{
-	case EPlayerEmotionalStates::Doomer:
+	case EPlayerEmotionalStates::Bad:
 		CurrentForSkanState = EForSkanType::Bad;
 		UE_LOG(LogTemp, Display, TEXT("Doomer"));
 		break;
-	case EPlayerEmotionalStates::Cope:
+	case EPlayerEmotionalStates::Normal:
 		CurrentForSkanState = EForSkanType::Mixed;
 		UE_LOG(LogTemp, Display, TEXT("Cope"));
 		break;
-	case EPlayerEmotionalStates::Grindset:
+	case EPlayerEmotionalStates::Good:
 		CurrentForSkanState = EForSkanType::Good;
 		UE_LOG(LogTemp, Display, TEXT("Grindset"));
 		break;
-	case EPlayerEmotionalStates::Gigachad:
+	case EPlayerEmotionalStates::VeryGood:
 		CurrentForSkanState = EForSkanType::Good;
 		UE_LOG(LogTemp, Display, TEXT("Gigachad"));
 		break;
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::VeryBad:
 		CurrentForSkanState = EForSkanType::Crazy;
 		UE_LOG(LogTemp, Display, TEXT("GoblinMode"));
 		break;

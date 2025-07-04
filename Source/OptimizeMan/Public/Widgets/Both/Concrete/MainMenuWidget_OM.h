@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "Widgets/ParentWidget_OM.h"
 #include "MainMenuWidget_OM.generated.h"
 
 class UGameAudio_OM;

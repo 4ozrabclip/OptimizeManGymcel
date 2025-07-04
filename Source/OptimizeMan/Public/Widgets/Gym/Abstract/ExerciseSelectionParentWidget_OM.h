@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Character/Concrete/Exercise_OM.h"
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "Widgets/ParentWidget_OM.h"
 #include "ExerciseSelectionParentWidget_OM.generated.h"
 
 class UTensionSliderObj_OM;
@@ -22,7 +22,7 @@ class OPTIMIZEMAN_API UExerciseSelectionParentWidget_OM : public UParentWidget_O
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	void CheckAndSetDarkMode();
+	virtual void CheckAndSetDarkMode(bool bIsDarkMode) override;
 
 	UFUNCTION()
 	virtual void InitialOpen();

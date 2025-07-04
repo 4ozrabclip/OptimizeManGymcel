@@ -13,7 +13,9 @@
 #include "Components/Slider.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
+#include "Game/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 
 void UPauseMenuWidget_OM::NativeConstruct()
@@ -108,23 +110,23 @@ void UPauseMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	
 		if (Ego >= ChadThreshold && SexAppeal >= ChadThreshold)
 		{
-			NewEmotionalState = Gigachad;
+			NewEmotionalState = EPlayerEmotionalStates::VeryGood;
 		}
 		else if (Ego >= GrindsetThreshold && (Social >= GrindsetThreshold || SexAppeal >= GrindsetThreshold))
 		{
-			NewEmotionalState = Grindset;
+			NewEmotionalState = EPlayerEmotionalStates::Good;
 		}
 		else if (SexAppeal <= GoblinThreshold && Social <= GoblinThreshold && Ego >= GrindsetThreshold)
 		{
-			NewEmotionalState = GoblinMode;
+			NewEmotionalState = EPlayerEmotionalStates::VeryBad;
 		}
 		else if (Ego <= DoomerThreshold && (Social <= DoomerThreshold || SexAppeal <= DoomerThreshold))
 		{
-			NewEmotionalState = Doomer;
+			NewEmotionalState = EPlayerEmotionalStates::Bad;
 		}
 		else
 		{
-			NewEmotionalState = Cope;
+			NewEmotionalState = EPlayerEmotionalStates::Normal;
 		}
 
 		if (CurrentEmotionalState != NewEmotionalState)
@@ -139,26 +141,12 @@ void UPauseMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 
 void UPauseMenuWidget_OM::OnClickToggleLightDark()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to cast to game instance"));
-		return;
-	}
 	
 	GameInstance->DarkModeToggle();
-	SetWidgetUIDarkLightMode();
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 }
 void UPauseMenuWidget_OM::UpdateGameSettings()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (!GameInstance) return;
 
 	if (!Player)
 	{
@@ -174,33 +162,33 @@ void UPauseMenuWidget_OM::UpdateGameSettings()
 	const float NotificationVolumeValue = NotificationVolume_Slider->GetValue();
 	const float SfxVolumeValue = SfxVolume_Slider->GetValue();
 
-	float NewMasterVolume = GameSettings.MasterVolume;
-	float NewMusicVolume = GameSettings.MusicVolume;
-	float NewVoiceVolume = GameSettings.VoiceVolume;
-	float NewNotificationVolume = GameSettings.NotificationVolume;
-	float NewSfxVolume = GameSettings.SfxVolume;
+	float NewMasterVolume = GameSettings.AudioSettings.MasterVolume;
+	float NewMusicVolume = GameSettings.AudioSettings.MusicVolume;
+	float NewVoiceVolume = GameSettings.AudioSettings.VoiceVolume;
+	float NewNotificationVolume = GameSettings.AudioSettings.NotificationVolume;
+	float NewSfxVolume = GameSettings.AudioSettings.SfxVolume;
 
-	if (MasterVolumeValue != GameSettings.MasterVolume)
+	if (MasterVolumeValue != GameSettings.AudioSettings.MasterVolume)
 	{
 		bChangeAudioSettings = true;
 		NewMasterVolume = MasterVolumeValue;
 	}
-	if (MusicVolumeValue != GameSettings.MusicVolume)
+	if (MusicVolumeValue != GameSettings.AudioSettings.MusicVolume)
 	{
 		bChangeAudioSettings = true;
 		NewMusicVolume = MusicVolumeValue;
 	} 
-	if (VoiceVolumeValue != GameSettings.VoiceVolume)
+	if (VoiceVolumeValue != GameSettings.AudioSettings.VoiceVolume)
 	{
 		bChangeAudioSettings = true;
 		NewVoiceVolume = VoiceVolumeValue;
 	} 
-	if (NotificationVolumeValue != GameSettings.NotificationVolume)
+	if (NotificationVolumeValue != GameSettings.AudioSettings.NotificationVolume)
 	{
 		bChangeAudioSettings = true;
 		NewNotificationVolume = NotificationVolumeValue;
 	}
-	if (SfxVolumeValue != GameSettings.SfxVolume)
+	if (SfxVolumeValue != GameSettings.AudioSettings.SfxVolume)
 	{
 		bChangeAudioSettings = true;
 		NewSfxVolume = SfxVolumeValue;
@@ -234,7 +222,7 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 		return;
 	}
 
-	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+	FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
 
 	
 	const float JawValue = JawStat_Slider->GetValue();
@@ -246,13 +234,13 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	const float EgoValue = EgoStat_Slider->GetValue();
 	const float SexAppealValue = SexAppealStat_Slider->GetValue();
 
-	float* JawStrength = GameInstance->GetBodyPartStrengthPtr(Jaw, Center);
-	float* LeftArmStrength = GameInstance->GetBodyPartStrengthPtr(Arm, Left);
-	float* RightArmStrength = GameInstance->GetBodyPartStrengthPtr(Arm, Right);
-	float* LeftThighStrength = GameInstance->GetBodyPartStrengthPtr(Thigh, Left);
-	float* RightThighStrength = GameInstance->GetBodyPartStrengthPtr(Thigh, Right);
-	float* LeftCalveStrength = GameInstance->GetBodyPartStrengthPtr(Calve, Left);
-	float* RightCalveStrength = GameInstance->GetBodyPartStrengthPtr(Calve, Right);
+	float* JawStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Jaw, Center);
+	float* LeftArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Arm, Left);
+	float* RightArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Arm, Right);
+	float* LeftThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Thigh, Left);
+	float* RightThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Thigh, Right);
+	float* LeftCalveStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Calve, Left);
+	float* RightCalveStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Calve, Right);
 
 	GameInstance->SetStat(*JawStrength, JawValue);
 	GameInstance->SetStat(*LeftArmStrength, LeftArmValue);
@@ -297,34 +285,29 @@ void UPauseMenuWidget_OM::OpenSettings()
 	}
 	GameSettings = GameInstance->GetGameSettings();
 
-	MasterVolume_Slider->SetValue(GameSettings.MasterVolume);
-	MusicVolume_Slider->SetValue(GameSettings.MusicVolume);
-	VoiceVolume_Slider->SetValue(GameSettings.VoiceVolume);
-	NotificationVolume_Slider->SetValue(GameSettings.NotificationVolume);
+	MasterVolume_Slider->SetValue(GameSettings.AudioSettings.MasterVolume);
+	MusicVolume_Slider->SetValue(GameSettings.AudioSettings.MusicVolume);
+	VoiceVolume_Slider->SetValue(GameSettings.AudioSettings.VoiceVolume);
+	NotificationVolume_Slider->SetValue(GameSettings.AudioSettings.NotificationVolume);
 
 	OpenLayer(nullptr, Settings_Grid);
 }
 void UPauseMenuWidget_OM::OpenChangeStats()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (!GameInstance) return;
 
 	if (!Player)
 	{
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	}
 
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
-	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+	FBodyStatus& BodyStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus();
+	FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
 
-	const float JawStrength = GameInstance->GetBodyPartStrengthValue(Jaw, Center);
-	const float LeftArmStrength = GameInstance->GetBodyPartStrengthValue(Arm, Left);
-	const float RightArmStrength = GameInstance->GetBodyPartStrengthValue(Arm, Right);
-	const float ThighsStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
-	const float CalvesStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Calve);
+	const float JawStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Jaw, Center);
+	const float LeftArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Arm, Left);
+	const float RightArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Arm, Right);
+	const float ThighsStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
+	const float CalvesStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(Calve);
 
 	JawStat_Slider->SetValue(JawStrength);
 	LeftArmStat_Slider->SetValue(LeftArmStrength);
@@ -346,10 +329,6 @@ void UPauseMenuWidget_OM::OpenChangeStats()
 
 void UPauseMenuWidget_OM::OnClickQuitToTitleScreen()
 {
-	if (!Player)
-	{
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	}
 	if (Player)
 	{
         Player->ClearTimers();

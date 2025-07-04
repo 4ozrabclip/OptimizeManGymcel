@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Bedroom/Concrete/Shower_OM.h"
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "Widgets/ParentWidget_OM.h"
 #include "ShowerWidget_OM.generated.h"
 
 class UButton;

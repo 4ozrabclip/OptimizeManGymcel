@@ -10,10 +10,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
-#include "Kismet/GameplayStatics.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/Subsystems/TodoManagementSubsystem.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Game/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
+
 
 ALaptop_OM::ALaptop_OM()
 {
@@ -30,27 +29,7 @@ ALaptop_OM::ALaptop_OM()
 void ALaptop_OM::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-		UE_LOG(LogTemp, Error, TEXT("RECAST GAME INSTANCE IN LAPTOP"));
-	}
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to recast in laptop"));
-		return;
-	}
-	if (!Player)
-	{
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		UE_LOG(LogTemp, Error, TEXT("RECAST PLAYER IN LAPTOP"));
-	}
-	if (!Player)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to recast in laptop"));
-		return;
-	}
-		
+	
 	if (!Shelf)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Shelf assigned to laptop"));
@@ -61,25 +40,10 @@ void ALaptop_OM::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("No Poster class assigned to laptop"));
 		return;
 	}
-	CheckAndSetDarkMode();
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 }
 
 
-void ALaptop_OM::CheckAndSetDarkMode()
-{
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (GameInstance->GetDarkMode())
-	{
-		AuraLight->SetAttenuationRadius(50.f);
-	}
-	else
-	{
-		AuraLight->SetAttenuationRadius(100.f);
-	}
-}
 void ALaptop_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
@@ -90,7 +54,7 @@ void ALaptop_OM::Interact_Implementation()
 		return;
 	}
 	//Player->SetCurrentPlayMode(EPlayModes::LaptopMode, this);
-	Player->TogglePlayMode(EPlayModes::LaptopMode, Player->bInteractableOpen, this);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->TogglePlayMode(EPlayModes::LaptopMode, Player->GetInteractableOpen(), this);
 }
 
 
@@ -105,13 +69,10 @@ void ALaptop_OM::BuyItem()
 {
 	if (CurrentShopAndBook == EShopAndBook::None) return;
 	if (!GameInstance) return;
-	if (!TodoManager)
-	{
-		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	}
+
 	
-	FInventoryData& InventoryData = GameInstance->GetInventoryData();
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
+	FInventoryData& InventoryData = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInventoryData();
+	FBodyStatus& BodyStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus();
 
 
 	constexpr int JawSurgeryPrice = 20;
@@ -129,15 +90,15 @@ void ALaptop_OM::BuyItem()
 	const FString ChadPosterType_String = "Chad";
 	const FString WaifuPosterType_String = "Waifu";
 	
-	FBodyPartData* Jaw = GameInstance->FindBodyPart(EBodyPart::Jaw, Center);
+	FBodyPartData* Jaw = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Jaw, Center);
 	switch (CurrentShopAndBook)
 	{
 	case EShopAndBook::JawSurgery:
-		if ((GameInstance->GetMoney() >= JawSurgeryPrice) && (Jaw->Strength <= 1.f - JawSurgeryIncrease))
+		if ((GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney() >= JawSurgeryPrice) && (Jaw->Strength <= 1.f - JawSurgeryIncrease))
 		{
-			GameInstance->SetMoney(-JawSurgeryPrice);
-			GameInstance->AddStat(Jaw->Strength, JawSurgeryIncrease);
-			GameInstance->SetPossesion(BodyStatus.bHasJawSurgery, true);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetMoney(-JawSurgeryPrice);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->AddStat(Jaw->Strength, JawSurgeryIncrease);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetPossesion(BodyStatus.bHasJawSurgery, true);
 
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
@@ -146,13 +107,13 @@ void ALaptop_OM::BuyItem()
 		}
 		break;
 	case EShopAndBook::Steroids:
-		if ((GameInstance->GetMoney() >= SteroidsPrice) && (!InventoryData.bOwnsSteroids))
+		if ((GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney() >= SteroidsPrice) && (!InventoryData.bOwnsSteroids))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Buy steroids"));
 			constexpr float SteroidsEgoIncrease = 0.9f;
 			constexpr float SteroidsSexIncrease = 0.9f;
-			GameInstance->SetMoney(-SteroidsPrice);
-			GameInstance->SetPossesion(InventoryData.bOwnsSteroids,true);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetMoney(-SteroidsPrice);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetPossesion(InventoryData.bOwnsSteroids,true);
 
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySteroids"));
@@ -162,10 +123,10 @@ void ALaptop_OM::BuyItem()
 		}
 		break;
 	case EShopAndBook::PreWorkout:
-		if ((GameInstance->GetMoney() >= PreWorkoutPrice) && (!InventoryData.bOwnsPreWorkout))
+		if ((GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney() >= PreWorkoutPrice) && (!InventoryData.bOwnsPreWorkout))
 		{
-			GameInstance->SetMoney(-PreWorkoutPrice);
-			GameInstance->SetPossesion(InventoryData.bOwnsPreWorkout, true);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetMoney(-PreWorkoutPrice);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetPossesion(InventoryData.bOwnsPreWorkout, true);
 
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
@@ -173,24 +134,24 @@ void ALaptop_OM::BuyItem()
 		}
 		break;
 	case EShopAndBook::ChadPoster:
-		if ((GameInstance->GetMoney() < ChadPosterPrice)) return;
+		if ((GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney() < ChadPosterPrice)) return;
 		DoesOwnPosterArray.Empty();
-		DoesOwnPosterArray = GameInstance->GetOwnedChadPosters();
+		DoesOwnPosterArray = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetOwnedChadPosters();
 		if (BuyPoster(DoesOwnPosterArray, ChadPosterType_String))
 		{
-			GameInstance->SetMoney(-ChadPosterPrice);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetMoney(-ChadPosterPrice);
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
 			PlaySound(BuySound);
 		}
 		break;
 	case EShopAndBook::WaifuPoster:
-		if ((GameInstance->GetMoney() < WaifuPosterPrice)) return;
+		if ((GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetMoney() < WaifuPosterPrice)) return;
 		DoesOwnPosterArray.Empty();
-		DoesOwnPosterArray = GameInstance->GetOwnedWaifuPosters();
+		DoesOwnPosterArray = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetOwnedWaifuPosters();
 		if (BuyPoster(DoesOwnPosterArray, WaifuPosterType_String))
 		{
-			GameInstance->SetMoney(-WaifuPosterPrice);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetMoney(-WaifuPosterPrice);
 			CompletedTodosCheckList.Empty();
 			CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething"));
 			PlaySound(BuySound);
@@ -200,7 +161,11 @@ void ALaptop_OM::BuyItem()
 		CompletedTodosCheckList.Empty();
 		break;
 	}
-	TodoManager->DelayForPlayerAchievements(CompletedTodosCheckList);
+	if (auto* TodoManager = Cast<UTodoManagement_OMG>(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSubsystem<UTodoManagement_OMG>()))
+	{
+		TodoManager->DelayForPlayerAchievements(CompletedTodosCheckList);
+	}
+
 
 	Shelf->UpdateShelfItems();
 	
@@ -211,7 +176,7 @@ bool ALaptop_OM::BuyPoster(TArray<bool>& InPosterArray, const FString& PosterTyp
 	{
 		if (!InPosterArray[PosterIndex])
 		{
-			GameInstance->SetPosterAsOwned(PosterIndex, PosterType);
+			GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetPosterAsOwned(PosterIndex, PosterType);
 			if (PostersClass)
 				PostersClass->CheckOwnedPosters();
 			return true;
@@ -228,4 +193,17 @@ void ALaptop_OM::PlaySound(USoundBase* InSound)
 	}
 	LaptopAudio->SetSound(InSound);
 	LaptopAudio->Play();
+}
+
+void ALaptop_OM::CheckAndSetDarkMode(bool bIsDarkMode)
+{
+	Super::CheckAndSetDarkMode(bIsDarkMode);
+	if (bIsDarkMode)
+	{
+		AuraLight->SetAttenuationRadius(50.f);
+	}
+	else
+	{
+		AuraLight->SetAttenuationRadius(100.f);
+	}
 }

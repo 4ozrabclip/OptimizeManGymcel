@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelSequence.h"
 #include "Controllers/PlayerController_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
+#include "Utils/Structs/PlayModes_Gymcel.h"
 #include "PlayerController_OMG.generated.h"
 
 class APlayerCharacter_OM;

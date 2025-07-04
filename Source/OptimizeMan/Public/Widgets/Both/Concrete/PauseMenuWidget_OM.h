@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Structs/PlayerData.h"
 #include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
 #include "PauseMenuWidget_OM.generated.h"
 

@@ -5,15 +5,12 @@
 #include "Components/Border.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Game/GameInstance_OM.h"
 
 void UCalenderWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
+
 
 	SetCalenderText();
 	//SetCalenderUIDarkLightMode();
@@ -82,10 +79,6 @@ void UCalenderWidget_OM::SetCalenderText()
 
 void UCalenderWidget_OM::SetCompletedDays()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
 	if (!GameInstance) return;
 
 
@@ -114,9 +107,9 @@ void UCalenderWidget_OM::ClearOverlaysForNewMonth()
 	}
 }
 
-void UCalenderWidget_OM::SetWidgetUIDarkLightMode()
+void UCalenderWidget_OM::CheckAndSetDarkMode(const bool bIsDarkMode)
 {
-	Super::SetWidgetUIDarkLightMode();
+	Super::CheckAndSetDarkMode(bIsDarkMode);
 	if (!CalenderBorder) return;
 	if (!CalenderBackgroundDark || !CalenderBackgroundLight) return;
 	if (!CurrentMonthTextBlock) return;
@@ -131,8 +124,4 @@ void UCalenderWidget_OM::SetWidgetUIDarkLightMode()
 		CalenderBorder->Background.SetResourceObject(CalenderBackgroundLight);
 		CurrentMonthTextBlock->SetColorAndOpacity(Black);
 	}
-
-	
-
-	
 }

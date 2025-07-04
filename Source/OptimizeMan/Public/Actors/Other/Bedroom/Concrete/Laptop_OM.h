@@ -35,8 +35,7 @@ public:
 	void BuyItem();
 	void PlaySound(USoundBase* InSound);
 
-	UFUNCTION(BlueprintCallable)
-	void CheckAndSetDarkMode();
+	virtual void CheckAndSetDarkMode(bool bIsDarkMode) override;
 
 
 	

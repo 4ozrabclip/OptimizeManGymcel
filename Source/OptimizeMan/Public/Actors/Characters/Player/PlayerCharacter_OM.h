@@ -48,6 +48,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerDeformationsComponent_OM> BodyDeformerComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerVoiceAudioComponent;
 
 
 	/**** Movement Settings ****/

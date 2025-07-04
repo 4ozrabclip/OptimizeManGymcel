@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Widgets/Both/Abstract/ParentWidget_OM.h"
+#include "Widgets/ParentWidget_OM.h"
 
+#include "Game/GameInstance_OM.h"
 
 
 void UParentWidget_OM::NativeConstruct()
@@ -12,10 +13,15 @@ void UParentWidget_OM::NativeConstruct()
 	if (!GameInstance)
 	{
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-		UE_LOG(LogTemp, Warning, TEXT("Game instance cast in parent widget"));
 	}
-	
-	GameSettings = GameInstance->GetGameSettings();
+
+	if (GameInstance)
+	{
+		GameSettings = GameInstance->GetGameSettings();
+
+		GameInstance->OnDarkModeToggled.AddDynamic(this, &UParentWidget_OM::CheckAndSetDarkMode);
+	}
+
 
 	Black = FLinearColor(0.f, 0.f, 0.f);
 

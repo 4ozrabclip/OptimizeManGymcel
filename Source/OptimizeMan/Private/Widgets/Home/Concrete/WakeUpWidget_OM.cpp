@@ -8,8 +8,6 @@
 #include "Components/GridPanel.h"
 #include "Components/TextBlock.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 void UWakeUpWidget_OM::NativeConstruct()
 {

@@ -22,10 +22,14 @@ protected:
 	/** Class Overrides **/
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	
 	
 public:
 	virtual void Interact_Implementation() override {};
+
+	UFUNCTION()
+	virtual void CheckAndSetDarkMode(bool bIsDarkMode) {};
 
 protected:
 	/** Cache **/

@@ -36,6 +36,32 @@ void UGameInstance_OMG::ResetAllSaves()
 	}
 }
 
+void UGameInstance_OMG::HandleDayEvents()
+{
+	Super::HandleDayEvents();
+	constexpr int PaydayMoney = 30.f;
+	
+	switch (DayInfo.CurrentDay)
+	{
+	case EWeekDay::Monday:
+		break;
+	case EWeekDay::Tuesday:
+		//Payday(PaydayMoney);
+			break;
+	case EWeekDay::Wednesday:
+		DayInfo.DayEvent = "Zumba";
+		break;
+	case EWeekDay::Thursday:
+		break;
+	case EWeekDay::Friday:
+		break;
+	case EWeekDay::Saturday:
+		break;
+	case EWeekDay::Sunday:
+		break;
+	}
+}
+
 void UGameInstance_OMG::FinishDemo()
 {
 	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()

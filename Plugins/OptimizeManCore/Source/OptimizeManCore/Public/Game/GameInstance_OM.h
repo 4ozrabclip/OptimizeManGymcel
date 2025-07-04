@@ -36,7 +36,7 @@ public:
 	
 	/** Wave/Day Management**/
 	UFUNCTION(BlueprintCallable)
-	void HandleDayEvents();
+	virtual void HandleDayEvents();
 	UFUNCTION(BlueprintCallable)
 	void IncrementDay();
 	

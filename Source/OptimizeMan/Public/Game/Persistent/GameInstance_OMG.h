@@ -28,6 +28,8 @@ public:
 	virtual void ResetGame() override;
 	virtual void ResetAllSaves() override;
 
+	virtual void HandleDayEvents() override;
+
 	
 
 	/** Finders/Getters **/

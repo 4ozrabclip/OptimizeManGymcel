@@ -3,31 +3,30 @@
 
 #include "Widgets/Home/Concrete/MirrorWidget_OM.h"
 
-#include "Actors/Other/Bedroom/Concrete/Mirror_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
-#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Components/Management/AbilitySystemComponent_OM.h"
+#include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 
 void UMirrorWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-	CheckAndSetForDarkLightMode();
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 	
 	UpdateStats();
 	CheckAndSetWarningText();
 	
 }
-void UMirrorWidget_OM::CheckAndSetForDarkLightMode()
+
+
+void UMirrorWidget_OM::CheckAndSetDarkMode(const bool bIsDarkMode)
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
-	if (GameInstance && GameInstance->GetDarkMode())
+	Super::CheckAndSetDarkMode(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		EgoImage->SetBrushResourceObject(EgoWhiteText);
 		SexAppealImage->SetBrushResourceObject(SexAppealWhiteText);
@@ -45,20 +44,9 @@ void UMirrorWidget_OM::CheckAndSetForDarkLightMode()
 
 void UMirrorWidget_OM::CheckAndSetWarningText()
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Game instance is null in mirror widget"));
-		return;
-	}
 
 	FString WarningText_String = TEXT("");
-	
-	if (GameInstance->GetCurrentlyOnSteroids())
-		WarningText_String = TEXT("You have gyno");
+
 
 	WarningText->SetText(FText::FromString(WarningText_String));
 }
@@ -74,7 +62,7 @@ void UMirrorWidget_OM::UpdateStats()
 		return;
 	}
 	
-	const FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+	const FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
 
 
 	const UAbilitySystemComponent_OM* AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent());
@@ -112,6 +100,5 @@ void UMirrorWidget_OM::UpdateStatBar(const float InTypeStat, UProgressBar* InPos
 		InPositiveBar->SetPercent(0.f);
 		InNegativeBar->SetPercent(0.f);
 	}
-	UE_LOG(LogTemp, Log, TEXT("InTypeStat: %f"), InTypeStat);
 	
 }

@@ -6,15 +6,16 @@
 #include "Actors/Other/Gym/Concrete/Dumbell_OM.h"
 #include "Actors/Other/Gym/Abstract/ExerciseEquipment_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/Slider.h"
 #include "Components/TextBlock.h"
-#include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Components/Character/Concrete/Exercise_OM.h"
 #include "Components/GridPanel.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Game/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 void UExerciseInteractWidget_OM::NativeConstruct()
 {
@@ -166,7 +167,7 @@ void UExerciseInteractWidget_OM::OnExitButtonClicked()
 
 	Super::OnExitButtonClicked();
 
-	if (UPlayerCharacterAnimInstance_OM* AnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(Player->GetMesh()->GetAnimInstance()))
+	if (auto* AnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(Player->GetMesh()->GetAnimInstance()))
 	{
 		AnimInstance->SetHasSquatInjury(false);
 		AnimInstance->SetHasMinorSquatInjury(false);
@@ -348,7 +349,7 @@ void UExerciseInteractWidget_OM::SetSpecialSliderOn(const bool InSpecialSliderOn
 
 void UExerciseInteractWidget_OM::UpdateStats()
 {
-	EnergyLevel->SetPercent(GameInstance->GetGymResStats().Energy);
+	EnergyLevel->SetPercent(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats().Energy);
 	if (EnergyLevel->GetPercent() <= 0.f)
 	{
 		NotificationTextPopUp();

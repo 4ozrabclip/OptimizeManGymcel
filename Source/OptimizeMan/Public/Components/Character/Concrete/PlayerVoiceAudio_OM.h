@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Utils/Structs/ExerciseData.h"
 #include "PlayerVoiceAudio_OM.generated.h"
 
-enum EPlayerEmotionalStates : uint8;
+class APlayerCharacterBase_OM;
 /**
  * 
  */

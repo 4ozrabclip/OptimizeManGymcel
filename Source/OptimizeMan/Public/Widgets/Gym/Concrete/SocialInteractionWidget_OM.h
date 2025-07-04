@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Utils/Structs/SocialData.h"
+#include "Structs/PlayerData.h"
+#include "Utils/Structs/SocialData_Gymcel.h"
 
 #include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
 #include "SocialInteractionWidget_OM.generated.h"
@@ -57,7 +58,7 @@ public:
 
 	virtual void OnExitButtonClicked() override;
 	
-	void CheckAndSetDarkMode();
+	virtual void CheckAndSetDarkMode(bool bIsDarkMode) override;
 	
 	void SetButton(UButton* InButton, const ESocialType InSocialType) const;
 	
@@ -160,10 +161,10 @@ private:
 	TMap<FDialogueCondition, TArray<ESocialType>> InteractionMap;
 	
 	UPROPERTY()
-	class ANpcBase_OM* Npc;
+	class ANpcBase_OMG* Npc;
 
 	UPROPERTY()
-	class UNpcBaseAnimInstance_OM* AnimInstance;
+	class UNpcBaseAnimInstance_OMG* AnimInstance;
 
 	UPROPERTY()
 	float ChatDuration = 3.f;

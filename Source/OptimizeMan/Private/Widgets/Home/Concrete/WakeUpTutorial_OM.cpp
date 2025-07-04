@@ -8,7 +8,8 @@
 #include "Components/GridPanel.h"
 #include "Components/Overlay.h"
 #include "Game/GMB/BedroomGameModeBase_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
+
 
 UWakeUpTutorial_OM::UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializer)
 {

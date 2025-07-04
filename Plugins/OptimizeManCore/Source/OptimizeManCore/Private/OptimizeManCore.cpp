@@ -4,12 +4,12 @@
 
 #define LOCTEXT_NAMESPACE "FCharacterController_OptimizeManModule"
 
-void FCharacterController_OptimizeManModule::StartupModule()
+void FOptimizeManCoreModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FCharacterController_OptimizeManModule::ShutdownModule()
+void FOptimizeManCoreModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -17,4 +17,4 @@ void FCharacterController_OptimizeManModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FCharacterController_OptimizeManModule, CharacterController_OptimizeMan)
+IMPLEMENT_MODULE(FOptimizeManCoreModule, CharacterController_OptimizeMan)

@@ -3,6 +3,7 @@
 #include "Actors/InteractableActor_OM.h"
 
 #include "Components/PointLightComponent.h"
+#include "Game/GameInstance_OM.h"
 
 
 AInteractableActor_OM::AInteractableActor_OM()
@@ -27,6 +28,11 @@ void AInteractableActor_OM::BeginPlay()
 	Super::BeginPlay();
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
+
+	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
+
+	if (GameInstance)
+		GameInstance->OnDarkModeToggled.AddDynamic(this, &AInteractableActor_OM::CheckAndSetDarkMode);
 }
 
 void AInteractableActor_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -3,8 +3,8 @@
 
 #include "Components/Audio/Concrete/FootstepAudio_OM.h"
 
-#include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Characters/PlayerCharacterBase_OM.h"
+
 
 UFootstepAudio_OM::UFootstepAudio_OM()
 {
@@ -20,7 +20,7 @@ void UFootstepAudio_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	if (!Player)
-		Player = Cast<APlayerCharacter_OM>(GetOwner());
+		Player = Cast<APlayerCharacterBase_OM>(GetOwner());
 }
 
 void UFootstepAudio_OM::Footsteps(float DeltaTime)
