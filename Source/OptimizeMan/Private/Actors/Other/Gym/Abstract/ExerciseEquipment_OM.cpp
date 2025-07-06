@@ -5,14 +5,12 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
 #include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Components/WidgetComponent.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Controllers/PlayerController_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Gym/Abstract/ExerciseSelectionParentWidget_OM.h"
-
-class UExerciseSelectionParentWidget_OM;
 
 AExerciseEquipment_OM::AExerciseEquipment_OM()
 {
@@ -62,7 +60,7 @@ void AExerciseEquipment_OM::TurnOffWidget()
 {
 	SelectWorkoutWidget->SetVisibility(false);
 	//InteractableInterfaceProperties.bIsInteractable = true;
-	Player->SetToUIMode(false);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(false);
 	PlayerController->HideUnhideInteractableWidget(false);
 	SetActorTickEnabled(false);
 }
@@ -80,7 +78,7 @@ void AExerciseEquipment_OM::Interact_Implementation()
 	SelectWorkoutWidget->SetVisibility(true);
 	SetIsInteractable(false);
 	//InteractableInterfaceProperties.bIsInteractable = false;
-	Player->SetToUIMode(true, true);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(true, true);
 }
 
 void AExerciseEquipment_OM::StartWorkoutMode()
@@ -90,9 +88,9 @@ void AExerciseEquipment_OM::StartWorkoutMode()
 		UE_LOG(LogTemp, Error, TEXT("Player is invalid"));
 		return;
 	}
-	if (GameInstance && GameInstance->GetGymResStats().Energy > 0)
+	if (GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats().Energy > 0)
 	{
-		Player->SetCurrentPlayMode(EPlayModes::WorkoutMode, this);
+		GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetCurrentPlayMode(EPlayModes::WorkoutMode, this);
 	}
 }
 

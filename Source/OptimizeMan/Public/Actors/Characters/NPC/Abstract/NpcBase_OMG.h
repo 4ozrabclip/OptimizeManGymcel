@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AnimInstances/NpcBaseAnimInstance_OMG.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/NpcStates.h"
 #include "Characters/NpcBase_OM.h"

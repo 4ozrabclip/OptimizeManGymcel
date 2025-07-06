@@ -6,9 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "PostProcessController_OM.generated.h"
 
+class UGameInstance_OM;
 class IPersistentStateProvider_OM;
 
-UCLASS()
+UCLASS(Blueprintable)
 class OPTIMIZEMANCORE_API APostProcessControllerBase_OM : public AActor
 {
 	GENERATED_BODY()
@@ -21,7 +22,8 @@ protected:
 	void CheckDarkMode();
 	void SetDarkMode(bool bDark) const;
 
-	IPersistentStateProvider_OM* Persistence;
+	UPROPERTY()
+	UGameInstance_OM* GameInstance;
 
 protected:
 	UPROPERTY(EditInstanceOnly, Category="PostProcess")

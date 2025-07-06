@@ -6,12 +6,12 @@
 #include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
 #include "BehaviorTree/BehaviorTree.h"
 
-
-ANPC_Controller_OMG::ANPC_Controller_OMG()
+ANPC_Controller_OMG::ANPC_Controller_OMG(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	Npc = nullptr;
 }
+
 void ANPC_Controller_OMG::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -30,6 +30,7 @@ void ANPC_Controller_OMG::OnPossess(APawn* InPawn)
 	}
 }
 
+
 void ANPC_Controller_OMG::BeginPlay()
 {
 	Super::BeginPlay();
@@ -42,7 +43,7 @@ void ANPC_Controller_OMG::Tick(float DeltaTime)
 
 	
 	// ---- This will not be walking in the future
-	if (Npc->GetCurrentState() == ENpcState::Walking)
+	if (GetNpcBase_Gymcel()->GetCurrentState() == ENpcState::Walking)
 	{
 		TimeSinceLastActivityChange += DeltaTime;
 
@@ -70,21 +71,21 @@ void ANPC_Controller_OMG::ActivityChangeDiceRoll()
 	case 2:
 	case 3:
 		Npc->SetIsOpenForConversation(false);
-		Npc->SetCurrentState(ENpcState::Walking);
+		GetNpcBase_Gymcel()->SetCurrentState(ENpcState::Walking);
 		break;
 	case 4:
 	case 5:
 	case 6:
 		Npc->SetIsOpenForConversation(true);
-		Npc->SetCurrentState(ENpcState::TalkingWithNpc);
+		GetNpcBase_Gymcel()->SetCurrentState(ENpcState::TalkingWithNpc);
 		break;
 	case 7:
 	case 8:
 		Npc->SetIsOpenForConversation(false);
-		if (Npc->GetCurrentState() == ENpcState::TalkingWithNpc)
-			Npc->SetCurrentState(ENpcState::Walking);
+		if (GetNpcBase_Gymcel()->GetCurrentState() == ENpcState::TalkingWithNpc)
+			GetNpcBase_Gymcel()->SetCurrentState(ENpcState::Walking);
 		else
-			Npc->SetCurrentState(ENpcState::WorkingOut);
+			GetNpcBase_Gymcel()->SetCurrentState(ENpcState::WorkingOut);
 		break;
 	default:
 		break;

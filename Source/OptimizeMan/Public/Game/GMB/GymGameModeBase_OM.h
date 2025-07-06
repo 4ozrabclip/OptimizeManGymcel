@@ -10,13 +10,12 @@
 #include "Utils/Structs/ConsumableData.h"
 #include "GymGameModeBase_OM.generated.h"
 
+class APlayerController_OMG;
+class UGameInstance_OMG;
 class UMentalHealthStats_OM;
 class UGymSpecificStats_OM;
 class UAbilitySystemComponent_OM;
-class APlayerController_OM;
 class APlayerCharacter_OM;
-class UGameInstance_OM;
-class UConsumablesSubsystem;
 /**
  * 
  */
@@ -38,11 +37,9 @@ private:
 
 protected:
 	UPROPERTY()
-	UGameInstance_OM* GameInstance;
+	UGameInstance_OMG* GameInstance;
 	UPROPERTY()
-	UConsumablesSubsystem* ConsumableManager;
-	UPROPERTY()
-	APlayerController_OM* PlayerController;
+	APlayerController_OMG* PlayerController;
 	UPROPERTY()
 	APlayerCharacter_OM* Player;
 

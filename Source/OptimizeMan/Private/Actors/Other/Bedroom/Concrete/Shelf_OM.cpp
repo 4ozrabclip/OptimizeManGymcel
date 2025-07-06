@@ -4,7 +4,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/PointLightComponent.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 AShelf_OM::AShelf_OM()
 {
@@ -26,10 +26,6 @@ AShelf_OM::AShelf_OM()
 void AShelf_OM::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
 	
 	AuraLight->SetVisibility(false);
 
@@ -44,7 +40,7 @@ void AShelf_OM::UpdateShelfItems() const
 		UE_LOG(LogTemp, Error, TEXT("No game instance in shelf"));
 		return;
 	}
-	const FInventoryData& Inventory = GameInstance->GetInventoryData();
+	const FInventoryData& Inventory = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInventoryData();
 	if (Inventory.bOwnsSteroids)
 	{
 		SteroidsMesh->SetVisibility(true);
@@ -73,6 +69,6 @@ void AShelf_OM::Interact_Implementation()
 		return;
 	}
 	
-	Player->TogglePlayMode(EPlayModes::ShelfMode, Player->bInteractableOpen, this);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->TogglePlayMode(EPlayModes::ShelfMode, Player->GetInteractableOpen(), this);
 	//Player->SetCurrentPlayMode(EPlayModes::ShelfMode, this);
 }

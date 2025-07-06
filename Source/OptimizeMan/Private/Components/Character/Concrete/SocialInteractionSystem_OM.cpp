@@ -4,6 +4,7 @@
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "Actors/Characters/NPC/Abstract/FemaleBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "AnimInstances/NpcBaseAnimInstance_OMG.h"
 #include "Game/Persistent/SaveData/NpcDataSave.h"
 #include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
@@ -29,7 +30,7 @@ void USocialInteractionSystem_OM::InitConversation()
 		UE_LOG(LogTemp, Error, TEXT("No TodoManager"));
 		return;
 	}
-	CurrentInteractedNpc = Player->GetCurrentInteractedCharacter();
+	CurrentInteractedNpc = Cast<ANpcBase_OMG>(Player->GetCurrentInteractedCharacter());
 	if (!CurrentInteractedNpc)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Current Interacted NPC"));
@@ -98,7 +99,7 @@ void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick
 	}
 	else if (Player)
 	{
-		CurrentInteractedNpc = Player->GetCurrentInteractedCharacter();
+		CurrentInteractedNpc = Cast<ANpcBase_OMG>(Player->GetCurrentInteractedCharacter());
 	}
 	else
 	{
@@ -248,7 +249,7 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
     }
 
 	if (!NpcAnimInstance)
-		NpcAnimInstance = CurrentInteractedNpc->GetAnimInstance();
+		NpcAnimInstance = Cast<UNpcBaseAnimInstance_OMG>(CurrentInteractedNpc->GetAnimInstance());
 
 	const EPlayerEmotionalStates CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
 	
@@ -434,8 +435,5 @@ void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 	NpcAnimInstance = nullptr;
 	CurrentInteractedNpc = nullptr;
 	SetComponentTickEnabled(false);
-
-	
-
 	
 }

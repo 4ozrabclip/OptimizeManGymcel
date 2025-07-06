@@ -2,11 +2,10 @@
 
 
 #include "Actors/Other/Gym/Concrete/Toilet_OM.h"
-
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Controllers/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 
 AToilet_OM::AToilet_OM()
@@ -59,9 +58,9 @@ void AToilet_OM::ResetBladder()
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	float& Bladder = GameInstance->GetGymResStats().Bladder;
+	float& Bladder = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats().Bladder;
 	
-	GameInstance->SetGymResStats(Bladder, 0.f);
+	GymcelUtils::GetGameInstance_Gymcel(GetWorld())->SetGymResStats(Bladder, 0.f);
 	
 }
 

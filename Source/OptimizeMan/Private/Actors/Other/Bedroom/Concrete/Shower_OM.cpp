@@ -4,12 +4,11 @@
 #include "Actors/Other/Bedroom/Concrete/Shower_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/WidgetComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Controllers/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Home/Concrete/ShowerWidget_OM.h"
 
 AShower_OM::AShower_OM()
@@ -28,12 +27,7 @@ AShower_OM::AShower_OM()
 void AShower_OM::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (!PlayerController) return;
-
-	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
-	if (!Player) return;
+	
 	
 	if (UShowerWidget_OM* Widg = Cast<UShowerWidget_OM>(WidgetComp->GetWidget()))
 		Widg->InitShower(this);
@@ -47,15 +41,13 @@ void AShower_OM::Interact_Implementation()
 	PlayerController->ToggleInteractWidgetFromViewport(true);
 	WidgetComp->SetVisibility(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
-	Player->SetToUIMode(true, true, WidgetComp->GetWidget());
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(true, true, WidgetComp->GetWidget());
 	
 }
 
 void AShower_OM::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (!Player)
-		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (Player)
 	{
 		FVector2D Delta = FVector2D(this->GetActorLocation()) - FVector2D(Player->GetActorLocation());
@@ -109,7 +101,7 @@ void AShower_OM::CloseWidget()
 {
 	WidgetComp->SetVisibility(false);
 	InteractableInterfaceProperties.bIsInteractable = true;
-	Player->SetToUIMode(false);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(false);
 	PlayerController->ToggleInteractWidgetFromViewport(false);
 	SetActorTickEnabled(false);
 }

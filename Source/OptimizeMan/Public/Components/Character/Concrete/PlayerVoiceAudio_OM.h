@@ -12,10 +12,9 @@ class APlayerCharacterBase_OM;
  * 
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class OPTIMIZEMANCORE_API UPlayerVoiceAudio_OM : public UGameAudio_OM
+class OPTIMIZEMAN_API UPlayerVoiceAudio_OM : public UGameAudio_OM
 {
 	GENERATED_BODY()
-
 public:
 	UPlayerVoiceAudio_OM();
 

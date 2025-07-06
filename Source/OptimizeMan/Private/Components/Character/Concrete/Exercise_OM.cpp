@@ -6,10 +6,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Animation/PlayerCharacterAnimInstance_OM.h"
+#include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
+#include "Components/Character/Concrete/PlayerVoiceAudio_OM.h"
+#include "Utils/UtilityHelpers_OMG.h"
 
 UExercise_OM::UExercise_OM()
 {
@@ -40,7 +40,7 @@ void UExercise_OM::BeginPlay()
 	}
 	if (GameInstance)
 	{
-		ExerciseParameters.UpdateParameters(GameInstance);
+		ExerciseParameters.UpdateParameters(Cast<UGameInstance_OMG>(GameInstance));
 		UE_LOG(LogTemp, Display, TEXT("Updated Exercise Paramaters"));
 	}
 
@@ -104,7 +104,7 @@ void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 }
 void UExercise_OM::PrepareExercise()
 {
-	if (GameInstance && GameInstance->GetGymResStats().Energy <= 0.f)
+	if (GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats().Energy <= 0.f)
 	{
 		if (CurrentExerciseType != EExerciseType::None)
 		{
@@ -124,7 +124,7 @@ void UExercise_OM::EnterExercisePosition()
 	const FName LeftHandSocket = FName("LeftHandSocket");
 	const FName RightHandSocket = FName("RightHandSocket");
 
-	AnimInstance = Player->GetCachedAnimInstance();
+	AnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(Player->GetCachedAnimInstance());
 
 	if (!AnimInstance) return;
 	
@@ -204,7 +204,7 @@ void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 
 	if (BodyParts.IsEmpty()) return;
 	
-	for (FBodyPartData& Part : GameInstance->GetBodyStatus().BodyParts)
+	for (FBodyPartData& Part : GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus().BodyParts)
 	{
 		if (BodyParts.Contains(Part))
 		{
@@ -240,8 +240,8 @@ void UExercise_OM::MinorInjury()
 	default:
 		break;
 	}
-	FGymResStats& GymResStats = GameInstance->GetGymResStats();
-	GameInstance->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
+	FGymResStats& GymResStats = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats();
+	GymcelUtils::GetGameInstance_Gymcel(GetWorld())->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
 	AddFocus(InjuryFocusDecrease);
 }
 
@@ -283,7 +283,7 @@ EExerciseType UExercise_OM::GetCurrentExerciseType()
 void UExercise_OM::AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const
 {
 	if (!GameInstance) return;
-	if (FBodyPartData* Data = GameInstance->FindBodyPart(Part, Side))
+	if (FBodyPartData* Data = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(Part, Side))
 	{
 		GameInstance->AddStat(Data->Strength, Increase);
 	}
@@ -292,9 +292,9 @@ void UExercise_OM::SetRep()
 {
 	constexpr float EgoIncrease = 0.07f;
 	
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
-	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
-	FGymResStats& GymResStats = GameInstance->GetGymResStats();
+	FBodyStatus& BodyStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus();
+	FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
+	FGymResStats& GymResStats = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats();
 
 	if (!TodoManager)
 	{
@@ -392,7 +392,7 @@ void UExercise_OM::DoRep(const TFunction<void()>& AnimFunction, const TFunction<
 		[this]()
 		{
 			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
-			if (GameInstance->GetGymResStats().Energy <= 0.f)
+			if (GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats().Energy <= 0.f)
 			{
 				LeaveExercise();
 			}
@@ -408,8 +408,8 @@ void UExercise_OM::DoRep(const TFunction<void()>& AnimFunction, const TFunction<
 	{
 		UE_LOG(LogTemp, Error, TEXT("Can't find modify muscle value func"));
 	}
-	FGymResStats& GymRes = GameInstance->GetGymResStats();
-	GameInstance->AddGymResStats(GymRes.Energy, EnergyUse);
+	FGymResStats& GymRes = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats();
+	GymcelUtils::GetGameInstance_Gymcel(GetWorld())->AddGymResStats(GymRes.Energy, EnergyUse);
 	AudioComponent->WorkoutGruntSoundEffects(CurrentExerciseType);
 	CheckForExerciseAchievements();
 }
@@ -493,5 +493,5 @@ void UExercise_OM::SetCurrentWorkoutState(const EWorkoutStates InWorkoutState)
 
 bool UExercise_OM::GetHasEnergy()
 {
-	return GameInstance->GetGymResStats().Energy > 0;
+	return GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats().Energy > 0;
 }

@@ -110,25 +110,25 @@ void UCompoundSelectionWidget_OM::SetExerciseType(EExerciseType InExerciseType)
 	switch (InExerciseType)
 	{
 	case EExerciseType::Squat:
-		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(Thigh));
+		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh));
 		ExerciseComponent->SetBodyPartInUse(*GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Thigh, EBodyPartSide::Left));
 		ExerciseComponent->SetBodyPartInUse(*GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Thigh, EBodyPartSide::Right));
 		break;
 	case EExerciseType::BicepCurl:
-		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(Arm));
+		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Arm));
 		ExerciseComponent->SetBodyPartInUse(*GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
 		ExerciseComponent->SetBodyPartInUse(*GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Right));
 		break;
 	case EExerciseType::LeftCurl:
-		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Arm, Left));
+		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Left));
 		ExerciseComponent->SetBodyPartInUse(*GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
 		break;
 	case EExerciseType::RightCurl:
-		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Arm, Right));
+		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Right));
 		ExerciseComponent->SetBodyPartInUse(*GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
 		break;
 	default:
-		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Abdominal, Center));
+		SetMuscleGroupCurrentStrength(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(EBodyPart::Abdominal, EBodyPartSide::Center));
 		break;
 	}
 

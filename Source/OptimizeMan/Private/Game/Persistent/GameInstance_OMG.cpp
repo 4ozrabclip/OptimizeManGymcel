@@ -94,8 +94,8 @@ float UGameInstance_OMG::GetBodyPartStrengthValue(const EBodyPart& Part, const E
 }
 float UGameInstance_OMG::GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part)
 {
-	float LeftPartStrength = GetBodyPartStrengthValue(Part, Left);
-	float RightPartStrength = GetBodyPartStrengthValue(Part, Right);
+	float LeftPartStrength = GetBodyPartStrengthValue(Part, EBodyPartSide::Left);
+	float RightPartStrength = GetBodyPartStrengthValue(Part, EBodyPartSide::Right);
 	
 	return LeftPartStrength + RightPartStrength / 2.f;
 	

@@ -17,4 +17,4 @@ void FOptimizeManCoreModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FOptimizeManCoreModule, CharacterController_OptimizeMan)
+IMPLEMENT_MODULE(FOptimizeManCoreModule, OptimizeManCore)

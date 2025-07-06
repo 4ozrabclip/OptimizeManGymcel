@@ -4,14 +4,13 @@
 #include "Actors/Other/Bedroom/Concrete/Speaker_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Controllers/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Home/Concrete/SpeakerWidget_OM.h"
 
 ASpeaker_OM::ASpeaker_OM()
@@ -33,17 +32,7 @@ ASpeaker_OM::ASpeaker_OM()
 void ASpeaker_OM::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-		UE_LOG(LogTemp, Error, TEXT("RECAST GAME INSTANCE IN speaker"));
-	}
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to recast in speaker"));
-		return;
-	}
-
+	
 	
 	if (USpeakerWidget_OM* Widg = Cast<USpeakerWidget_OM>(SpeakerWidget->GetWidget()))
 		Widg->InitSpeaker(this);
@@ -64,7 +53,7 @@ void ASpeaker_OM::Interact_Implementation()
 	PlayerController->ToggleInteractWidgetFromViewport(true);
 	SpeakerWidget->SetVisibility(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
-	Player->SetToUIMode(true, true, SpeakerWidget->GetWidget());
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(true, true, SpeakerWidget->GetWidget());
 	
 	if (Songs.Num() <= 0)
 	{
@@ -96,7 +85,7 @@ void ASpeaker_OM::TurnOffWidget()
 {
 	SpeakerWidget->SetVisibility(false);
 	InteractableInterfaceProperties.bIsInteractable = true;
-	Player->SetToUIMode(false);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(false);
 	PlayerController->ToggleInteractWidgetFromViewport(false);
 	SetActorTickEnabled(false);
 }

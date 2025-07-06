@@ -8,6 +8,7 @@
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Game/Persistent/GameInstance_OMG.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Utils/Structs/TodoData_Gymcel.h"
 
 
@@ -181,9 +182,9 @@ void UTodoManagement_OMG::InitializeTodos()
 void UTodoManagement_OMG::ProcessPotentialTodos()
 {
 	Super::ProcessPotentialTodos();
-	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
-	FInventoryData& InventoryData = GameInstance->GetInventoryData();
-	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+	FBodyStatus& BodyStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus();
+	FInventoryData& InventoryData = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInventoryData();
+	FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
 
 	PotentialTodos.Empty();
 
@@ -193,7 +194,7 @@ void UTodoManagement_OMG::ProcessPotentialTodos()
 	
 	ProcessTodoHelper(!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3, FName("StartBulking"));
 
-	float ThighStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
+	float ThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh);
 	ProcessTodoHelper(ThighStrength > 0 && ThighStrength < 0.5, FName("HitTenSquats"));
 	
 	ProcessTodoHelper(InventoryData.Money > 5 && !InventoryData.bOwnsSteroids, FName("BuySteroids"));
@@ -212,8 +213,8 @@ void UTodoManagement_OMG::CompleteTodo(const FGameplayTag TodoCompletedTag)
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
-	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
-	FGymResStats& GymResStats = GameInstance->GetGymResStats();
+	FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
+	FGymResStats& GymResStats = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats();
 
 	for (FTodoItem& Item : CurrentTodoArray)
 	{
@@ -230,23 +231,22 @@ void UTodoManagement_OMG::CompleteTodo(const FGameplayTag TodoCompletedTag)
 				FName BuffType = TodoStatBuffPair.Key;
 				float BuffAmount = TodoStatBuffPair.Value;
 
-				switch (BuffType)
+				if (BuffType == FName("Ego"))
 				{
-				case EPlayerStatTypes::Ego:
 					GameInstance->AddStat(InnerStatus.Ego, BuffAmount);
-					break;
-				case EPlayerStatTypes::Social:
-					GameInstance->AddStat(InnerStatus.Social, BuffAmount);
-					break;
-				case EPlayerStatTypes::SexAppeal:
-					GameInstance->AddStat(InnerStatus.SexAppeal, BuffAmount);
-					break;
-				default:
-					break;
 				}
+				else if (BuffType == FName("Social"))
+				{
+					GameInstance->AddStat(InnerStatus.Social, BuffAmount);
+				}
+				else if (BuffType == FName("SexAppeal"))
+				{
+					GameInstance->AddStat(InnerStatus.SexAppeal, BuffAmount);
+				}
+
 				constexpr float FocusIncrease = 0.005f;
 
-				GameInstance->AddGymResStats(GymResStats.Focus, FocusIncrease);
+				GymcelUtils::GetGameInstance_Gymcel(GetWorld())->AddGymResStats(GymResStats.Focus, FocusIncrease);
 			}
 			
 			UpdateTodoList();

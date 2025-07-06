@@ -8,10 +8,8 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/BoxComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
-#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Components/Management/AbilitySystemComponent_OM.h"
+#include "Game/GameInstance_OM.h"
 
 AConsumable_OM::AConsumable_OM()
 {

@@ -90,7 +90,7 @@ void ALaptop_OM::BuyItem()
 	const FString ChadPosterType_String = "Chad";
 	const FString WaifuPosterType_String = "Waifu";
 	
-	FBodyPartData* Jaw = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Jaw, Center);
+	FBodyPartData* Jaw = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->FindBodyPart(EBodyPart::Jaw, EBodyPartSide::Center);
 	switch (CurrentShopAndBook)
 	{
 	case EShopAndBook::JawSurgery:

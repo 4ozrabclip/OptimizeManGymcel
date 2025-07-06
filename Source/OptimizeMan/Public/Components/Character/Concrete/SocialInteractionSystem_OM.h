@@ -17,9 +17,9 @@ class OPTIMIZEMAN_API USocialInteractionSystem_OM : public UCharacterComponentBa
 {
 	GENERATED_BODY()
 
+public:
 	USocialInteractionSystem_OM();
 
-public:
 	virtual void BeginPlay() override;
 	void InitConversation();
 	void SaveNpcFriendshipData();
@@ -42,7 +42,7 @@ public:
 
 protected:
 	UPROPERTY()
-	class ANpcBase_OM* CurrentInteractedNpc;
+	class ANpcBase_OMG* CurrentInteractedNpc;
 
 	UPROPERTY()
 	ENpcMood CurrentNpcMood;

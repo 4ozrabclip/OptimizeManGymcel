@@ -37,7 +37,7 @@ protected:
 	FTransform GigachadTransform;
 
 	UPROPERTY()
-	class UGameInstance_OM* GameInstance;
+	class UGameInstance_OMG* GameInstance;
 
 private:
 	FTransform DefaultTransform;

@@ -4,11 +4,12 @@
 #include "Actors/Other/Gym/Concrete/VendingMachine_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/WidgetComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Controllers/PlayerController_OM.h"
+#include "Game/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "Utils/Structs/AudioTypes.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Gym/Concrete/VendingMachineWidget_OM.h"
 
 
@@ -72,7 +73,7 @@ void AVendingMachine_OM::Interact_Implementation()
 	PlayerController->ToggleInteractWidgetFromViewport(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
 	VendorWidgetComponent->SetVisibility(true);
-	Player->SetToUIMode(true, true, VendorWidgetComponent->GetWidget());
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(true, true, VendorWidgetComponent->GetWidget());
 	SetActorTickEnabled(true);
 }
 
@@ -91,7 +92,7 @@ void AVendingMachine_OM::PlaySound(USoundBase* InSound) const
 void AVendingMachine_OM::ExitVendor()
 {
 	VendorWidgetComponent->SetVisibility(false);
-	Player->SetToUIMode(false);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(false);
 	PlayerController->ToggleInteractWidgetFromViewport(false);
 	InteractableInterfaceProperties.bIsInteractable = true;
 	SetActorTickEnabled(false);

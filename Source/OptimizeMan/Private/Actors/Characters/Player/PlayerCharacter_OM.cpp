@@ -28,6 +28,7 @@
 #include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
 #include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
+#include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Utils/UtilityHelpers_OMG.h"
 #include "Utils/Structs/PlayModes_Gymcel.h"
@@ -115,6 +116,17 @@ void APlayerCharacter_OM::BeginPlay()
 {
 	InitPlayModes();
 	Super::BeginPlay();
+	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
+	{
+		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
+		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(SkeletalMeshComponent->GetAnimInstance());
+
+		if (!CachedAnimInstance.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to cache anim instance!"));
+			return;
+		}
+	}
 	
 	HeadPosition = GetMesh()->GetBoneLocation("Head");
 	SetCurrentPlayMode(EPlayModes::RegularMode);
@@ -610,6 +622,11 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
  */
 
 
+ANpcBase_OMG* APlayerCharacter_OM::GetCurrentInteractedCharacter_Gymcel() const
+{
+	return Cast<ANpcBase_OMG>(CurrentInteractedCharacter);
+};
+
 void APlayerCharacter_OM::Jump()
 {
 	if (!GetCharacterMovement())
@@ -740,7 +757,7 @@ void APlayerCharacter_OM::ResetPlayer()
 		SkeletalMeshComponent->InitAnim(true); 
 		SkeletalMeshComponent->TickAnimation(0.f, false);
 
-		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(SkeletalMeshComponent->GetAnimInstance());
+		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(SkeletalMeshComponent->GetAnimInstance());
 
 		if (!CachedAnimInstance.IsValid())
 		{

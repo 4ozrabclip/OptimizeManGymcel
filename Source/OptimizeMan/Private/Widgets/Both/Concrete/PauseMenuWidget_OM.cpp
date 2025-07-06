@@ -234,13 +234,13 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	const float EgoValue = EgoStat_Slider->GetValue();
 	const float SexAppealValue = SexAppealStat_Slider->GetValue();
 
-	float* JawStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Jaw, Center);
-	float* LeftArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Arm, Left);
-	float* RightArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Arm, Right);
-	float* LeftThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Thigh, Left);
-	float* RightThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Thigh, Right);
-	float* LeftCalveStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Calve, Left);
-	float* RightCalveStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(Calve, Right);
+	float* JawStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Jaw, EBodyPartSide::Center);
+	float* LeftArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Arm, EBodyPartSide::Left);
+	float* RightArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Arm, EBodyPartSide::Right);
+	float* LeftThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Thigh, EBodyPartSide::Left);
+	float* RightThighStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Thigh, EBodyPartSide::Right);
+	float* LeftCalveStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Calve, EBodyPartSide::Left);
+	float* RightCalveStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthPtr(EBodyPart::Calve, EBodyPartSide::Right);
 
 	GameInstance->SetStat(*JawStrength, JawValue);
 	GameInstance->SetStat(*LeftArmStrength, LeftArmValue);
@@ -303,11 +303,11 @@ void UPauseMenuWidget_OM::OpenChangeStats()
 	FBodyStatus& BodyStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyStatus();
 	FInnerStatus& InnerStatus = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetInnerStatus();
 
-	const float JawStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Jaw, Center);
-	const float LeftArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Arm, Left);
-	const float RightArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(Arm, Right);
-	const float ThighsStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
-	const float CalvesStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(Calve);
+	const float JawStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(EBodyPart::Jaw, EBodyPartSide::Center);
+	const float LeftArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Left);
+	const float RightArmStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Right);
+	const float ThighsStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh);
+	const float CalvesStrength = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Calve);
 
 	JawStat_Slider->SetValue(JawStrength);
 	LeftArmStat_Slider->SetValue(LeftArmStrength);

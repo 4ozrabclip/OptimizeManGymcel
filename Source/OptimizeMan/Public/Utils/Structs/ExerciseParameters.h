@@ -31,7 +31,7 @@ struct FExerciseParameters
 	float ShoulderIncrease;
 
 
-	void UpdateParameters(class UGameInstance_OM* GameInstance);
+	void UpdateParameters(class UGameInstance_OMG* GameInstance);
 
 	
 };

@@ -10,7 +10,6 @@
 
 class UAbilitySystemComponent_OM;
 class UGameplayEffect;
-class UConsumablesSubsystem;
 class UBoxComponent;
 class UGameAudio_OM;
 

@@ -6,6 +6,7 @@
 #include "Actors/Characters/NPC/Abstract/NpcBase_OMG.h"
 #include "Components/Button.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "AnimInstances/NpcBaseAnimInstance_OMG.h"
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "Components/Border.h"
 #include "Components/ProgressBar.h"

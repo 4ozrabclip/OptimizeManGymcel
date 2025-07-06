@@ -29,7 +29,7 @@ protected:
 	class APlayerCharacter_OM* Player;
 
 	UPROPERTY()
-	class UPlayerCharacterAnimInstance_OM* AnimInstance;
+	class UPlayerCharacterAnimInstance_OMG* AnimInstance;
 
 
 };

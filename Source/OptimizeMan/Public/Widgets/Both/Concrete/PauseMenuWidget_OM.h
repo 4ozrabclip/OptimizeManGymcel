@@ -157,7 +157,7 @@ protected:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Emotional State")
-	TMap<TEnumAsByte<EPlayerEmotionalStates>, UTexture2D*> EmotionalState_Wojak;
+	TMap<EPlayerEmotionalStates, UTexture2D*> EmotionalState_Wojak;
 
 private:
 	EPlayerEmotionalStates CurrentEmotionalState;

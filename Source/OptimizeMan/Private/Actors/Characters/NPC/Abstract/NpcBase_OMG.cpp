@@ -100,7 +100,7 @@ void ANpcBase_OMG::StartDialogue()
 		ActiveTags.AddTag(FGameplayTag::RequestGameplayTag(FName("NPC.States.InConversation")));
 	}
 
-	GymcelUtils::GetPlayer_Gymcel()->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
+	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
 }
 
 void ANpcBase_OMG::EndDialog()

@@ -9,6 +9,7 @@
 #include "PlayerCharacterBase_OM.generated.h"
 
 
+class UPlayerCharacterAnimInstance_OM;
 class ANpcBase_OM;
 class AInteractableActor_OM;
 class UCameraComponent;
@@ -77,7 +78,6 @@ protected:
 	UPROPERTY()
 	USkeletalMesh* DefaultSkeletalMesh;
 protected:
-	TWeakObjectPtr<class UPlayerCharacterAnimInstance_OM> CachedAnimInstance;
 	/** Class Cache **/
 	UPROPERTY()
 	class APlayerController_OM* PlayerController;
@@ -115,8 +115,7 @@ public:
 	/** Getters **/
 	UFUNCTION()
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UFUNCTION()
-	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
+
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	ANpcBase_OM* GetCurrentInteractedCharacter() const { return CurrentInteractedCharacter; }
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")

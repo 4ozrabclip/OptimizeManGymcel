@@ -7,7 +7,6 @@
 #include "Components/AudioComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
-#include "Utils/Structs/AudioTypes.h"
 
 AGymGate_OM::AGymGate_OM()
 {

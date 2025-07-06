@@ -193,6 +193,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	EPlayModes GetCurrentPlayMode() const { return CurrentPlayMode; }
+	UFUNCTION()
+	UPlayerCharacterAnimInstance_OMG* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
 
 private:
 	

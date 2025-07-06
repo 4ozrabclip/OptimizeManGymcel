@@ -4,12 +4,11 @@
 #include "Game/GMB/GymGameModeBase_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
-#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
-#include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
+#include "Actors/Characters/Player/PlayerController_OMG.h"
+#include "Components/Management/AbilitySystemComponent_OM.h"
+#include "Game/Persistent/GameInstance_OMG.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Kismet/GameplayStatics.h"
-#include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 
 AGymGameModeBase_OM::AGymGameModeBase_OM()
 {
@@ -18,7 +17,6 @@ AGymGameModeBase_OM::AGymGameModeBase_OM()
 	PlayerController = nullptr;
 	Player = nullptr;
 	GameInstance = nullptr;
-	ConsumableManager = nullptr;
 }
 void AGymGameModeBase_OM::BeginPlay()
 {
@@ -30,11 +28,11 @@ void AGymGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerControll
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 	
-	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
+	GameInstance = Cast<UGameInstance_OMG>(GetGameInstance());
 	if (GameInstance && !GameInstance->GetHasBeenToGymToday())
 		GameInstance->SetHasBeenToGymToday(true);
 	
-	PlayerController = Cast<APlayerController_OM>(NewPlayer);
+	PlayerController = Cast<APlayerController_OMG>(NewPlayer);
 	if (!PlayerController) return;
 	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
 	if (!Player) return;

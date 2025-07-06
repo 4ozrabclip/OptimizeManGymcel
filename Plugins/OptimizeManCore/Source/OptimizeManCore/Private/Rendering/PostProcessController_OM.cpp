@@ -3,7 +3,7 @@
 
 #include "Rendering/PostProcessController_OM.h"
 
-#include "Interfaces/PersistentStateProvider_OM.h"
+#include "Game/GameInstance_OM.h"
 
 
 APostProcessControllerBase_OM::APostProcessControllerBase_OM()
@@ -41,15 +41,8 @@ void APostProcessControllerBase_OM::BeginPlay()
 		GlobalPostProcessVolume->Settings.WeightedBlendables.Array.Add(FWeightedBlendable(0.f, LightModeMID));
 	}
 
-	if (UGameInstance* GI = GetGameInstance())
-	{
-		if (GI->GetClass()->ImplementsInterface(UPersistentStateProvider_OM::StaticClass()))
-		{
-			Persistence = Cast<IPersistentStateProvider_OM>(GI);
+	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-			SetDarkMode(Persistence->GetIsDarkMode());
-		}
-	}
 
 	//GameInstance->OnDarkModeToggled.Clear();
 	//GameInstance->OnDarkModeToggled.AddDynamic(this, &APostProcessController_OM::CheckDarkMode);
@@ -58,7 +51,7 @@ void APostProcessControllerBase_OM::BeginPlay()
 
 void APostProcessControllerBase_OM::CheckDarkMode()
 {
-	SetDarkMode(Persistence->GetIsDarkMode());
+	SetDarkMode(GameInstance->GetDarkMode());
 }
 
 void APostProcessControllerBase_OM::SetDarkMode(bool bDarkMode) const

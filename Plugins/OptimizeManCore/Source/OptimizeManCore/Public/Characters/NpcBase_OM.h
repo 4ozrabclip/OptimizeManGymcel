@@ -86,8 +86,8 @@ protected:
 	FString NpcID;
 	
 	/** Level Streaming **/
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equipment")
-	TArray<TSoftObjectPtr<ANpcBase_OM>> NpcsInLevel;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Equipment")
+	TArray<ANpcBase_OM*> NpcsInLevel;
 	
 	
 
@@ -122,7 +122,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FName GetUniqueNpcID() const { return FName(NpcID); }
 	UFUNCTION(BlueprintCallable)
-	TArray<TSoftObjectPtr<ANpcBase_OM>> GetNpcsInLevel() { return NpcsInLevel; };
+	TArray<ANpcBase_OM*> GetNpcsInLevel() { return NpcsInLevel; };
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	bool GetPlayerCanInteract() const { return bCanInteract; }
 	UFUNCTION(BlueprintCallable)

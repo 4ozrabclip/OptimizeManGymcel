@@ -46,17 +46,17 @@ protected:
 	UUserWidget* ShowDayWidget;
 
 	UPROPERTY()
-	class UGameInstance_OM* GameInstance;
+	class UGameInstance_OMG* GameInstance;
 
 	UPROPERTY()
-	class UTodoManagementSubsystem* TodoManager;
+	class UTodoManagement_OMG* TodoManager;
 
 
 	UPROPERTY()
 	class APlayerCharacter_OM* Player;
 
 	UPROPERTY()
-	class APlayerController_OM* PlayerController;
+	class APlayerController_OMG* PlayerController;
 
 
 	

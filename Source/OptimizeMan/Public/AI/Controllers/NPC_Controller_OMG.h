@@ -14,7 +14,7 @@ class OPTIMIZEMAN_API ANPC_Controller_OMG : public ANPC_AIController_OM
 {
 	GENERATED_BODY()
 public:
-	ANPC_Controller_OMG();
+	explicit ANPC_Controller_OMG(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	virtual void BeginPlay() override;

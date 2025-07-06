@@ -56,17 +56,7 @@ void APlayerCharacterBase_OM::BeginPlay()
 	if (!TodoManager) return;
 
 	
-	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
-	{
-		DefaultSkeletalMesh = SkeletalMeshComponent->GetSkeletalMeshAsset();
-		CachedAnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(SkeletalMeshComponent->GetAnimInstance());
 
-		if (!CachedAnimInstance.IsValid())
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to cache anim instance!"));
-			return;
-		}
-	}
 	
 }
 

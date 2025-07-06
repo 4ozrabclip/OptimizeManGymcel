@@ -28,7 +28,7 @@ void ULaptopWidget_OM::NativeConstruct()
 
 	UpdateBank();
 
-	OpenPage(Bank, BankLayers);
+	OpenPage(EWebsites::Bank, BankLayers);
 
 	SetForSkanState();
 	SetForSkanText();
@@ -186,7 +186,7 @@ void ULaptopWidget_OM::BackButtonClicked()
 
 	if (!WebsiteHistoryLog.IsValidIndex(PreviousWebsiteIndex))
 	{
-		OpenPage(Bank, BankLayers);
+		OpenPage(EWebsites::Bank, BankLayers);
 		return;
 	}
 	EWebsites PreviousWebsite = WebsiteHistoryLog[PreviousWebsiteIndex];
@@ -195,32 +195,32 @@ void ULaptopWidget_OM::BackButtonClicked()
 	{
 	case EWebsites::Bank:
 		{
-			OpenPage(Bank, BankLayers);
+			OpenPage(EWebsites::Bank, BankLayers);
 			break;
 		}
 	case EWebsites::GeneralStore:
 		{
-			OpenPageFromBackButton(GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid);
+			OpenPageFromBackButton(EWebsites::GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid);
 			break;
 		}
 	case EWebsites::CornSite:
 		{
-			OpenPageFromBackButton(CornSite, YourHeavenXLayers, YourHeavenXHomeGrid);
+			OpenPageFromBackButton(EWebsites::CornSite, YourHeavenXLayers, YourHeavenXHomeGrid);
 			break;
 		}
 	case EWebsites::SupplementsShop:
 		{
-			OpenPageFromBackButton(SupplementsShop, SupplementsShopLayers);
+			OpenPageFromBackButton(EWebsites::SupplementsShop, SupplementsShopLayers);
 			break;
 		}
 	case EWebsites::ForSkanForum:
 		{
-			OpenPageFromBackButton(ForSkanForum, ForSkanLayers);
+			OpenPageFromBackButton(EWebsites::ForSkanForum, ForSkanLayers);
 			break;
 		}
 	case EWebsites::PlasticSurgeryShop:
 		{
-			OpenPageFromBackButton(PlasticSurgeryShop, PlasticSurgeryLayers);
+			OpenPageFromBackButton(EWebsites::PlasticSurgeryShop, PlasticSurgeryLayers);
 			break;
 		}
 	default:

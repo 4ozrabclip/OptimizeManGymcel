@@ -28,7 +28,11 @@ public class OptimizeManCore : ModuleRules
 				"Core", 
 				"GameplayAbilities", 
 				"EnhancedInput", 
-				"AIModule"
+				"AIModule",
+				"UMG", 
+				"GameplayTags",
+				"GameplayAbilities",
+				"GameplayTasks",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

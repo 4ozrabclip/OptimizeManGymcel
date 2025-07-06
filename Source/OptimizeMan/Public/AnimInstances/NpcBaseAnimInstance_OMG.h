@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Animation/NpcBaseAnimInstance_OM.h"
 #include "NpcBaseAnimInstance_OMG.generated.h"
 
-class APlayerCharacter_OM;
 class ANpcBase_OMG;
 /**
  * 
@@ -124,13 +122,9 @@ protected:
 
 	
 	
-	FORCEINLINE APlayerCharacter_OM* GetPlayer_Gymcel() const
-	{
-		return Cast<APlayerCharacter_OM>(Player);
-	}
 	/** Refactor this to fit with optimize man core **/
 	UPROPERTY()
-	ANpcBase_OM* OwningNpc;
+	ANpcBase_OMG* OwningNpc;
 	/** ------ **/
 
 

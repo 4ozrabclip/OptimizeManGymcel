@@ -3,7 +3,7 @@
 
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
 #include "Camera/CameraComponent.h"
-#include "Game/Persistent/GameInstance_OM.h"
+#include "Game/Persistent/GameInstance_OMG.h"
 
 AGymCamera::AGymCamera()
 {
@@ -19,7 +19,7 @@ void AGymCamera::BeginPlay()
 	DefaultTransform = GetActorTransform();
 	if (!GameInstance)
 	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+		GameInstance = Cast<UGameInstance_OMG>(GetWorld()->GetGameInstance());
 	}
 	if (GameInstance)
 	{
@@ -39,32 +39,32 @@ void AGymCamera::OnEmotionalStateChanged(EPlayerEmotionalStates NewState)
 {
 	switch (NewState)
 	{
-	case EPlayerEmotionalStates::Doomer:
+	case EPlayerEmotionalStates::Bad:
 		{
 			UE_LOG(LogTemp, Error, TEXT("doom in gym cam"));
 			SetActorTransform(DoomerTransform);
 			break;
 		}
-	case EPlayerEmotionalStates::Cope:
+	case EPlayerEmotionalStates::Normal:
 		{
 			UE_LOG(LogTemp, Error, TEXT("cope in gym cam"));
 			SetActorTransform(DefaultTransform);
 			break;
 		}
-	case EPlayerEmotionalStates::Gigachad:
+	case EPlayerEmotionalStates::VeryGood:
 		{
 			UE_LOG(LogTemp, Error, TEXT("giga in gym cam"));
 			SetActorTransform(GigachadTransform);
 			break;
 		}
-	case EPlayerEmotionalStates::GoblinMode:
+	case EPlayerEmotionalStates::VeryBad:
 		{
 			UE_LOG(LogTemp, Error, TEXT("goblin in gym cam1"));
 			SetActorTransform(GoblinTransform);
 			UE_LOG(LogTemp, Error, TEXT("goblin in gym cam2"));
 			break;
 		}
-	case EPlayerEmotionalStates::Grindset:
+	case EPlayerEmotionalStates::Good:
 		{
 			UE_LOG(LogTemp, Error, TEXT("grindset in gym cam"));
 			SetActorTransform(GrindsetTransform);

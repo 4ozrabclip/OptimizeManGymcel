@@ -3,12 +3,13 @@
 
 #include "Game/GMB/BedroomGameModeBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Actors/Characters/Player/PlayerController_OMG.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
+#include "Game/Persistent/GameInstance_OMG.h"
+#include "Game/Persistent/SubSystems/TodoManagement_OMG.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utils/UtilityHelpers_OMG.h"
 #include "Widgets/Home/Concrete/DisplayDayWidget_OM.h"
-#include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 
 ABedroomGameModeBase_OM::ABedroomGameModeBase_OM()
@@ -34,13 +35,13 @@ void ABedroomGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerCont
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 	
-	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	GameInstance = Cast<UGameInstance_OMG>(GetWorld()->GetGameInstance());
 	if (!GameInstance) return;
-	PlayerController = Cast<APlayerController_OM>(NewPlayer);
+	PlayerController = Cast<APlayerController_OMG>(NewPlayer);
 	if (!PlayerController) return;
 	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
 	if (!Player) return;
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
+	TodoManager = Cast<UTodoManagement_OMG>(GameInstance->GetSubsystem<UTodoManagement_OMG>());
 	if (!TodoManager) return;
 
 	Player->SwitchLevelTag(FGameplayTag::RequestGameplayTag("Level.Home"));
@@ -67,12 +68,12 @@ void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 {
 	if (!TodoManager)
 	{
-		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
+		TodoManager = Cast<UTodoManagement_OMG>(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSubsystem<UTodoManagement_OMG>());
 	}
 	if (!GameInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameInstance needs to be recasted in bedroom game mode base"));
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+		GameInstance = GymcelUtils::GetGameInstance_Gymcel(GetWorld());
 	}
 	TArray<FTodoItem>& CurrentTodos = TodoManager->GetCurrentTodoArray();
 	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();

@@ -4,10 +4,14 @@
 #include "Components/Character/Abstract/CharacterComponentBase_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
-#include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
+#include "Animation/PlayerCharacterAnimInstance_OM.h"
+#include "AnimInstances/PlayerCharacterAnimInstance_OMG.h"
+#include "Game/GameInstance_OM.h"
+#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
-#include "Game/Persistent/GameInstance_OM.h"
-#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Utils/UtilityHelpers_OMG.h"
+#include "Utils/Structs/PlayerData_Gymcel.h"
+
 
 UCharacterComponentBase_OM::UCharacterComponentBase_OM()
 {
@@ -46,7 +50,7 @@ void UCharacterComponentBase_OM::BeginPlay()
 	}
 
 	
-	AnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(Player->GetMesh()->GetAnimInstance());
+	AnimInstance = Cast<UPlayerCharacterAnimInstance_OMG>(Player->GetMesh()->GetAnimInstance());
 	if (!AnimInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("AnimInstance is NULL"));
@@ -68,12 +72,12 @@ void UCharacterComponentBase_OM::AddFocus(const float InFocus)
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	FGymResStats& GymResStats = GameInstance->GetGymResStats();
+	FGymResStats& GymResStats = GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetGymResStats();
 
 	const float DifficultyMultiplier = GameInstance->GetDifficultyMultiplier();
 
 	const float FocusAdd = InFocus * DifficultyMultiplier;
 	
-	GameInstance->AddGymResStats(GymResStats.Focus, FocusAdd);
+	GymcelUtils::GetGameInstance_Gymcel(GetWorld())->AddGymResStats(GymResStats.Focus, FocusAdd);
 }
 

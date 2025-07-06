@@ -17,7 +17,7 @@ void UWakeUpBase_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TodoManager = Cast<auto>(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSubsystem<UTodoManagement_OMG>());
+	TodoManager = Cast<UTodoManagement_OMG>(GymcelUtils::GetGameInstance_Gymcel(GetWorld())->GetSubsystem<UTodoManagement_OMG>());
 	if (!TodoManager)
 	{
 		UE_LOG(LogTemp, Error, TEXT("TodoManager is null.  Cast failed"));
