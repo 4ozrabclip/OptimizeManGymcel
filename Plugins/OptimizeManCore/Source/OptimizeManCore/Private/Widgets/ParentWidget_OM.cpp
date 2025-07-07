@@ -10,6 +10,8 @@ void UParentWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	
+
 	if (!GameInstance)
 	{
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());

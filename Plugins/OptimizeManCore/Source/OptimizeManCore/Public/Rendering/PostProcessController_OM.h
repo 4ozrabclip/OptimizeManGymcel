@@ -10,17 +10,18 @@ class UGameInstance_OM;
 class IPersistentStateProvider_OM;
 
 UCLASS(Blueprintable)
-class OPTIMIZEMANCORE_API APostProcessControllerBase_OM : public AActor
+class OPTIMIZEMANCORE_API APostProcessController_OM : public AActor
 {
 	GENERATED_BODY()
 public:
-	APostProcessControllerBase_OM();
+	APostProcessController_OM();
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void CheckDarkMode();
-	void SetDarkMode(bool bDark) const;
+	UFUNCTION()
+	void SetDarkMode(bool bDark);
 
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;

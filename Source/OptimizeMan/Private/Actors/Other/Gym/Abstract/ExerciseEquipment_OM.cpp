@@ -30,6 +30,7 @@ AExerciseEquipment_OM::AExerciseEquipment_OM()
 void AExerciseEquipment_OM::BeginPlay()
 {
 	Super::BeginPlay();
+	SetActorTickEnabled(false);
 	OriginalPosition = GetActorTransform();
 
 	if (bUnderConstruction)
@@ -39,6 +40,7 @@ void AExerciseEquipment_OM::BeginPlay()
 	{
 		Widg->InitEquipment(this);
 	}
+
 }
 void AExerciseEquipment_OM::Tick(float DeltaTime)
 {
@@ -61,6 +63,8 @@ void AExerciseEquipment_OM::TurnOffWidget()
 	SelectWorkoutWidget->SetVisibility(false);
 	//InteractableInterfaceProperties.bIsInteractable = true;
 	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(false);
+	if (!PlayerController)
+		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	PlayerController->HideUnhideInteractableWidget(false);
 	SetActorTickEnabled(false);
 }
@@ -77,6 +81,7 @@ void AExerciseEquipment_OM::Interact_Implementation()
 	PlayerController->HideUnhideInteractableWidget(true);
 	SelectWorkoutWidget->SetVisibility(true);
 	SetIsInteractable(false);
+	SetActorTickEnabled(true);
 	//InteractableInterfaceProperties.bIsInteractable = false;
 	GymcelUtils::GetPlayer_Gymcel(GetWorld())->SetToUIMode(true, true);
 }

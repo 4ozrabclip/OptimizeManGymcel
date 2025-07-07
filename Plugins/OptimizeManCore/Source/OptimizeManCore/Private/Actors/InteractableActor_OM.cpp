@@ -2,8 +2,12 @@
 
 #include "Actors/InteractableActor_OM.h"
 
+#include "Characters/PlayerCharacterBase_OM.h"
 #include "Components/PointLightComponent.h"
+#include "Controllers/PlayerController_OM.h"
 #include "Game/GameInstance_OM.h"
+#include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 
 AInteractableActor_OM::AInteractableActor_OM()
@@ -21,6 +25,12 @@ AInteractableActor_OM::AInteractableActor_OM()
 	AuraLight->SetAttenuationRadius(100.f);
 	AuraLight->SetIntensityUnits(ELightUnits::Candelas);
 	AuraLight->SetIntensity(6.f);
+
+	ConstructorHelpers::FClassFinder<UUserWidget>
+		InteractWidgetBPClassRef(TEXT("/OptimizeManCore/Widgets/BPInteractWidget"));
+	if (InteractWidgetBPClassRef.Succeeded())
+		InteractableWidget = InteractWidgetBPClassRef.Class;
+	
 }
 
 void AInteractableActor_OM::BeginPlay()
@@ -30,6 +40,9 @@ void AInteractableActor_OM::BeginPlay()
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 
 	GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
+
+	PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	Player = Cast<APlayerCharacterBase_OM>(PlayerController->GetPawn());
 
 	if (GameInstance)
 		GameInstance->OnDarkModeToggled.AddDynamic(this, &AInteractableActor_OM::CheckAndSetDarkMode);

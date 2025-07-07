@@ -27,7 +27,7 @@ void UGameInstance_OM::Init()
 		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
 		return;
 	}
-	TodoManagement->InitializeTodos();
+	ExtraInits();
 }
 
 

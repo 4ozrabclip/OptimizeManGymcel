@@ -6,7 +6,7 @@
 #include "Game/GameInstance_OM.h"
 
 
-APostProcessControllerBase_OM::APostProcessControllerBase_OM()
+APostProcessController_OM::APostProcessController_OM()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	GlobalPostProcessVolume = nullptr;
@@ -16,10 +16,12 @@ APostProcessControllerBase_OM::APostProcessControllerBase_OM()
 	LightModeMID = nullptr;
 }
 
-void APostProcessControllerBase_OM::BeginPlay()
+void APostProcessController_OM::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!GlobalPostProcessVolume)
+		return;
 
 	if (!DarkModeMID && DarkModeMaterial)
 	{
@@ -44,17 +46,19 @@ void APostProcessControllerBase_OM::BeginPlay()
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
 
-	//GameInstance->OnDarkModeToggled.Clear();
-	//GameInstance->OnDarkModeToggled.AddDynamic(this, &APostProcessController_OM::CheckDarkMode);
+	GameInstance->OnDarkModeToggled.Clear();
+	GameInstance->OnDarkModeToggled.AddDynamic(this, &APostProcessController_OM::SetDarkMode);
+
+	CheckDarkMode();
 }
 
 
-void APostProcessControllerBase_OM::CheckDarkMode()
+void APostProcessController_OM::CheckDarkMode()
 {
 	SetDarkMode(GameInstance->GetDarkMode());
 }
 
-void APostProcessControllerBase_OM::SetDarkMode(bool bDarkMode) const
+void APostProcessController_OM::SetDarkMode(bool bDarkMode) 
 {
 	for (FWeightedBlendable& Blendable : GlobalPostProcessVolume->Settings.WeightedBlendables.Array)
 	{

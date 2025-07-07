@@ -29,6 +29,7 @@ public:
 	virtual void Init() override;
 	virtual void InitializePlayerData() {};
 	virtual void InitializeGameSettings();
+	virtual void ExtraInits() {};
 
 	/** Shader Toggle **/
 	UFUNCTION(BlueprintCallable)
