@@ -26,7 +26,7 @@ public:
 
 	TArray<class UImage*> DayOverlays;
 	
-	virtual void SetWidgetUIDarkLightMode() override;
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 	UPROPERTY(meta = (BindWidget))
 	class UBorder* CalenderBorder;

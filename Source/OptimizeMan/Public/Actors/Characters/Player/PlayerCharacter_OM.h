@@ -29,7 +29,7 @@ UCLASS()
 class OPTIMIZEMAN_API APlayerCharacter_OM : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-public:
+public:  
 	APlayerCharacter_OM();
 protected:
 	/**** Class Overrides ****/
@@ -42,15 +42,13 @@ public:
 	/***** GAS Funcs *****/
 	void InitializeAttributes();
 protected:
-	void InitializeEffects();
-
+	void InitializeConstantEffects();
 
 	/**** Camera Tricks ****/
 	UFUNCTION(BlueprintCallable)
 	void SpawnSelfieCamera();
 
 	
-
 	/**** Components ****/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UCameraComponent> Camera;
@@ -204,7 +202,7 @@ public:
 protected:
 	void InitPlayModes();
 	void ManageCurrentPlayMode();
-	void InitializeConstantEffects();
+
 	void ManagePauseMode();
 
 	UFUNCTION(BlueprintCallable, Category = "InteractionModes")

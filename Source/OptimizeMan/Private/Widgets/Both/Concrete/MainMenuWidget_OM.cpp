@@ -19,8 +19,6 @@ void UMainMenuWidget_OM::NativeConstruct()
 	OpenWindow(MainMenuBox);
 	
 	InitButtons();
-	
-	UpdateImagesForDarkMode();
 
 	if (!GameInstance)
 	{
@@ -105,10 +103,11 @@ void UMainMenuWidget_OM::InitButtons()
 
 }
 
-
-void UMainMenuWidget_OM::UpdateImagesForDarkMode()
+void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	if (GameInstance->GetDarkMode())
+	Super::DarkModeToggle(bIsDarkMode);
+
+	if (bIsDarkMode)
 	{
 		FButtonStyle AudioQualityDarkModeStyle;
 		AudioQualityDarkModeStyle.Normal.SetResourceObject(AudioQualityWhite);
@@ -215,6 +214,7 @@ void UMainMenuWidget_OM::UpdateImagesForDarkMode()
 
 
 
+
 void UMainMenuWidget_OM::ToggleDarkModeFunction()
 {
 	if (!GameInstance)
@@ -223,8 +223,6 @@ void UMainMenuWidget_OM::ToggleDarkModeFunction()
 		return;
 	}
 	GameInstance->DarkModeToggle();
-
-	UpdateImagesForDarkMode();
 }
 
 void UMainMenuWidget_OM::StartNewGame() 

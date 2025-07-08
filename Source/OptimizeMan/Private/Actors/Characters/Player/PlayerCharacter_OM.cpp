@@ -86,18 +86,8 @@ void APlayerCharacter_OM::PostInitializeComponents()
 	AbSysComp->AddSet<UMentalHealthStats_OM>();
 	AbSysComp->AddSet<UGymSpecificStats_OM>();
 
-	InitializeEffects();
-}
-
-void APlayerCharacter_OM::InitializeEffects()
-{
-	FGameplayEffectContextHandle ContextHandle = AbSysComp->MakeEffectContext();
-	
-	FGameplayEffectSpecHandle FocusDrainGymHandle = AbSysComp->MakeOutgoingSpec(UFocusTick_OM::StaticClass(), 1.0f, ContextHandle);
-	if (FocusDrainGymHandle.IsValid())
-	{
-		FocusDrainEffectHandle = AbSysComp->ApplyGameplayEffectSpecToSelf(*FocusDrainGymHandle.Data.Get());
-	}
+	//InitializeEffects();
+	InitializeConstantEffects();
 }
 
 void APlayerCharacter_OM::SpawnSelfieCamera()
@@ -167,6 +157,22 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 	{
 		CheckInteractable();
 	}
+
+	const UGameplayEffect* FocusEffect = FocusTickClass.GetDefaultObject();
+	if (FocusEffect)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Focus Effect RequireTags: %s"),
+			*FocusEffect->ApplicationTagRequirements.RequireTags.ToStringSimple());
+		UE_LOG(LogTemp, Warning, TEXT("Focus Effect Ongoing RequireTags: %s"),
+	*FocusEffect->OngoingTagRequirements.RequireTags.ToStringSimple());
+		UE_LOG(LogTemp, Warning, TEXT("Focus Effect IgnoreTags: %s"),
+			*FocusEffect->ApplicationTagRequirements.IgnoreTags.ToStringSimple());
+	}
+	FGameplayTagContainer OwnedTags;
+	AbSysComp->GetOwnedGameplayTags(OwnedTags);
+
+	UE_LOG(LogTemp, Warning, TEXT("Owned tags right before applying Focus: %s"), *OwnedTags.ToStringSimple());
+
 	
 }
 void APlayerCharacter_OM::InitializeAttributes()
@@ -207,19 +213,12 @@ void APlayerCharacter_OM::InitializeConstantEffects()
 {
 	if (AbSysComp)
 	{
+		
 		FGameplayEffectContextHandle EffectContext = AbSysComp->MakeEffectContext();
 		EffectContext.AddSourceObject(this); 
 
-		FGameplayEffectSpecHandle FocusSpecHandle = AbSysComp->MakeOutgoingSpec(FocusTickClass, 1.0f, EffectContext);
-		if (FocusSpecHandle.IsValid())
-		{
-			AbSysComp->ApplyGameplayEffectSpecToSelf(*FocusSpecHandle.Data.Get());
-		}
-		FGameplayEffectSpecHandle EnergySpecHandle = AbSysComp->MakeOutgoingSpec(EnergyTickClass, 1.0f, EffectContext);
-		if (EnergySpecHandle.IsValid())
-		{
-			AbSysComp->ApplyGameplayEffectSpecToSelf(*EnergySpecHandle.Data.Get());
-		}
+		AbSysComp->ApplyGameplayEffectToSelf(EnergyTickClass.GetDefaultObject(), 1.0f, EffectContext);
+		AbSysComp->ApplyGameplayEffectToSelf(FocusTickClass.GetDefaultObject(), 1.0f, EffectContext);
 	}
 }
 

@@ -69,6 +69,10 @@ protected:
 	float CurrentWeight;
 	
 	FTransform OriginalPosition;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bUnderConstruction = true;
 	
 
 };

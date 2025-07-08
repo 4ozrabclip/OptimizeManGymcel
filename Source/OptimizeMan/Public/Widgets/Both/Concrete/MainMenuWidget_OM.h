@@ -25,11 +25,12 @@ public:
 	void OpenWindow(UVerticalBox* InWindow = nullptr, UBorder* InBorder = nullptr) const;
 	void InitButtons();
 
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
+
 	UFUNCTION()
 	void StartNewGame();
 	UFUNCTION()
 	void QuitGameNow();
-	void UpdateImagesForDarkMode();
 	
 	UFUNCTION()
 	void PlayButtonClicked() { OpenWindow(PlayGameBox); };

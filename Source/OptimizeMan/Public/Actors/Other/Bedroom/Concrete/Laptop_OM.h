@@ -34,9 +34,8 @@ public:
 	void SetShopAndBook(EShopAndBook InShopAndBook);
 	void BuyItem();
 	void PlaySound(USoundBase* InSound);
-
-	UFUNCTION(BlueprintCallable)
-	void CheckAndSetDarkMode();
+	
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 
 	

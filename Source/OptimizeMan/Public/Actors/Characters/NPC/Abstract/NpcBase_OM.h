@@ -53,7 +53,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SayHello() { PlayRandomTalkingHelper(FriendlyHello); }
 	UFUNCTION(BlueprintCallable)
-	void CheckAndSetDarkMode();
+	virtual void DarkModeToggle(const bool bIsDarkMode);
 
 
 	//Delegates

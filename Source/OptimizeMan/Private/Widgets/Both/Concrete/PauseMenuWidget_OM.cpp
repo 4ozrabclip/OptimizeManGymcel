@@ -150,7 +150,6 @@ void UPauseMenuWidget_OM::OnClickToggleLightDark()
 	}
 	
 	GameInstance->DarkModeToggle();
-	SetWidgetUIDarkLightMode();
 }
 void UPauseMenuWidget_OM::UpdateGameSettings()
 {

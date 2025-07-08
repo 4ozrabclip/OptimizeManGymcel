@@ -23,16 +23,13 @@ void ABed_OM::BeginPlay()
 	GameMode = Cast<ABedroomGameModeBase_OM>(UGameplayStatics::GetGameMode(this));
 	SetIsSleeping(false);
 	SetInteractableWidgetText("Go Sleep");
-	CheckAndSetDarkMode();
 
 }
-void ABed_OM::CheckAndSetDarkMode()
+
+void ABed_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (GameInstance->GetDarkMode())
+	Super::DarkModeToggle(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		AuraLight->SetIntensity(0.5f);
 		AuraLight->SetAttenuationRadius(100.f);
@@ -43,6 +40,7 @@ void ABed_OM::CheckAndSetDarkMode()
 		AuraLight->SetAttenuationRadius(195.f);
 	}
 }
+
 
 void ABed_OM::Interact_Implementation()
 {

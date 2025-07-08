@@ -9,8 +9,26 @@
 void UDisplayDayWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+}
 
-	CheckAndSetTextColour();
+void UDisplayDayWidget_OM::DarkModeToggle(const bool bIsDarkMode)
+{
+	Super::DarkModeToggle(bIsDarkMode);
+	if (!DisplayDayText)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Display Day TextBlock"));
+		return;
+	}
+
+	if (bIsDarkMode)
+	{
+		DisplayDayText->SetColorAndOpacity(White);
+	}
+	else
+	{
+		DisplayDayText->SetColorAndOpacity(Black);
+	}
 }
 
 void UDisplayDayWidget_OM::SetText(const FString& InText)
@@ -26,30 +44,7 @@ void UDisplayDayWidget_OM::SetText(const FString& InText)
 	DisplayDayText->SetText(FText::FromString(WidgetTextString));
 
 }
-void UDisplayDayWidget_OM::CheckAndSetTextColour()
-{
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No game instance, recasting.."));
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
-	if (!DisplayDayText)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No Display Day TextBlock"));
-		return;
-	}
 
-	if (GameInstance->GetDarkMode())
-	{
-		DisplayDayText->SetColorAndOpacity(White);
-		UE_LOG(LogTemp, Error, TEXT("Set text to white"));
-	}
-	else
-	{
-		DisplayDayText->SetColorAndOpacity(Black);
-		UE_LOG(LogTemp, Error, TEXT("Set text to black"));
-	}
-}
 FString UDisplayDayWidget_OM::GetText()
 {
 	return WidgetTextString;

@@ -42,6 +42,13 @@ void AInteractableActor_OM::BeginPlay()
 	if (!TodoManager) return;
 	InteractableInterfaceProperties.InteractableText = InteractableText;
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
+
+	DarkModeToggle(GameInstance->GetDarkMode());
+
+	if (!GameInstance->OnDarkModeToggled.IsAlreadyBound(this, &AInteractableActor_OM::DarkModeToggle))
+	{
+		GameInstance->OnDarkModeToggled.AddDynamic(this, &AInteractableActor_OM::DarkModeToggle);
+	}
 }
 
 void AInteractableActor_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -50,6 +57,10 @@ void AInteractableActor_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (UWorld* World = GetWorld())
 	{
 		World->GetTimerManager().ClearAllTimersForObject(this);
+	}
+	if (GameInstance)
+	{
+		GameInstance->OnDarkModeToggled.RemoveDynamic(this, &AInteractableActor_OM::DarkModeToggle);
 	}
 }
 

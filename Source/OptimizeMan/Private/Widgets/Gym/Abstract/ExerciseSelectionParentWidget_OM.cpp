@@ -54,17 +54,14 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 		if (!ExerciseComponent)
 			return;
 	}
-
-	CheckAndSetDarkMode();
 	
 	InitialOpen();
 }
 
-void UExerciseSelectionParentWidget_OM::CheckAndSetDarkMode()
+void UExerciseSelectionParentWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	if (GameInstance->GetDarkMode())
+	Super::DarkModeToggle(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		WeightSelect_Text->SetColorAndOpacity(White);
 	}
@@ -73,6 +70,7 @@ void UExerciseSelectionParentWidget_OM::CheckAndSetDarkMode()
 		WeightSelect_Text->SetColorAndOpacity(Black);
 	}
 }
+
 
 void UExerciseSelectionParentWidget_OM::UpdateWeightSelect(float InValue)
 {

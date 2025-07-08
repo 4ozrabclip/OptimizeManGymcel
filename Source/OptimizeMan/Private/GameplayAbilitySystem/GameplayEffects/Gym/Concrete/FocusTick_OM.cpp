@@ -15,8 +15,5 @@ UFocusTick_OM::UFocusTick_OM()
 	DurationPolicy = EGameplayEffectDurationType::Infinite;
 	Period = 0.25f;
 
-
-
-	//TagReqComp = CreateDefaultSubobject<UTargetTagRequirementsGameplayEffectComponent>(TEXT("TargetTagRequirements"));
-
+	
 }

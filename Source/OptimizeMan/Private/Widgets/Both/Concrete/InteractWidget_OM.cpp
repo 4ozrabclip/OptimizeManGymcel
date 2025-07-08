@@ -14,7 +14,7 @@ void UInteractWidget_OM::NativeConstruct()
 		UE_LOG(LogTemp, Error, TEXT("No Text Block in InteractableWidget"));
 		return;
 	}
-	CheckAndSetTextColour();
+
 
 }
 
@@ -34,29 +34,22 @@ void UInteractWidget_OM::SetText(const FString& InText)
 	
 }
 
-void UInteractWidget_OM::CheckAndSetTextColour()
-{
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No game instance, recasting.."));
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
 
+void UInteractWidget_OM::DarkModeToggle(const bool bIsDarkMode)
+{
+	Super::DarkModeToggle(bIsDarkMode);
 	if (!TextBlock)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No Text Block in InteractableWidget"));
-		return;
-	}
-	
-	if (GameInstance->GetDarkMode())
+    {
+    	UE_LOG(LogTemp, Error, TEXT("No Text Block in InteractableWidget"));
+    	return;
+    }
+	if (bIsDarkMode)
 	{
 		TextBlock->SetColorAndOpacity(White);
-		UE_LOG(LogTemp, Error, TEXT("Set text to white"));
 	}
 	else
 	{
 		TextBlock->SetColorAndOpacity(Black);
-		UE_LOG(LogTemp, Error, TEXT("Set text to black"));
 	}
 }
 

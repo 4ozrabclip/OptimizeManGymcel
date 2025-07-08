@@ -18,8 +18,8 @@ public:
 	void SleepDelay(const float FadeDuration);
 
 	virtual void BeginPlay() override;
-	UFUNCTION(BlueprintCallable)
-	void CheckAndSetDarkMode();
+
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	class UBoxComponent* ExtraCollider;

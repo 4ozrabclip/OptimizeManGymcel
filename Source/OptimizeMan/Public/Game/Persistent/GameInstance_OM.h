@@ -11,7 +11,7 @@
 #include "Utils/Structs/EventAndGPData.h"
 #include "GameInstance_OM.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDarkModeToggled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDarkModeToggled, bool, bIsDarkMode);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAudioSettingsChanged,
 												float, InMaster, float, InVoice,
 												float, InMusic, float, InNotifications,

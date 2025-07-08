@@ -57,7 +57,7 @@ public:
 
 	virtual void OnExitButtonClicked() override;
 	
-	void CheckAndSetDarkMode();
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 	
 	void SetButton(UButton* InButton, const ESocialType InSocialType) const;
 	

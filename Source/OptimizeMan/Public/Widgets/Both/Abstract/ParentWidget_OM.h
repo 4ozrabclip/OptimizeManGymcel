@@ -17,7 +17,11 @@ class OPTIMIZEMAN_API UParentWidget_OM : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
+
+	UFUNCTION()
+	virtual void DarkModeToggle(const bool bIsDarkMode);
 	
 	UFUNCTION()
 	virtual void FadeIn();

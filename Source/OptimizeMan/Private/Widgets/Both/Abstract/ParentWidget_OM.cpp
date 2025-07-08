@@ -8,18 +8,42 @@
 void UParentWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
+	Black = FLinearColor(0.f, 0.f, 0.f);
+
+	White = FLinearColor(1.f, 1.f, 1.f);
 
 	if (!GameInstance)
 	{
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-		UE_LOG(LogTemp, Warning, TEXT("Game instance cast in parent widget"));
 	}
+
+	if (GameInstance)
+	{
+		GameSettings = GameInstance->GetGameSettings();
+
 	
-	GameSettings = GameInstance->GetGameSettings();
+		DarkModeToggle(GameInstance->GetDarkMode());
 
-	Black = FLinearColor(0.f, 0.f, 0.f);
+	
+		if (!GameInstance->OnDarkModeToggled.IsAlreadyBound(this, &UParentWidget_OM::DarkModeToggle))
+		{
+			GameInstance->OnDarkModeToggled.AddDynamic(this, &UParentWidget_OM::DarkModeToggle);
+		}
+	}
+}
 
-	White = FLinearColor(1.f, 1.f, 1.f);
+void UParentWidget_OM::NativeDestruct()
+{
+	Super::NativeDestruct();
+	if (GameInstance)
+	{
+		GameInstance->OnDarkModeToggled.RemoveDynamic(this, &UParentWidget_OM::DarkModeToggle);
+	}
+}
+
+
+void UParentWidget_OM::DarkModeToggle(const bool bIsDarkMode)
+{
 }
 
 void UParentWidget_OM::FadeIn()

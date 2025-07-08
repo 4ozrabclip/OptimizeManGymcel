@@ -19,7 +19,8 @@ public:
 	virtual void NativeConstruct() override;
 	
 	void SetText(const FString& InText);
-	void CheckAndSetTextColour();
+
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 	FString GetText();
 

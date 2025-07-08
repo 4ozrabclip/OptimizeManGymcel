@@ -18,22 +18,21 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 	}
 
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-
-	SetWidgetUIDarkLightMode();
+	
 }
 
-void UMinigameBaseWidget_OM::SetWidgetUIDarkLightMode()
+
+void UMinigameBaseWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
+	Super::DarkModeToggle(bIsDarkMode);
+
 	if (!WhiteExitButton || !WhiteHoveredExitButton || !BlackExitButton || !BlackHoveredExitButton)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No dark/light mode exit buttons in the widget"));
 		return;
 	}
-
-	bIsDarkMode = GameInstance->GetDarkMode();
 	
-	if (GameInstance && bIsDarkMode)
+	if (bIsDarkMode)
 	{
 		DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
 		DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
@@ -60,3 +59,4 @@ void UMinigameBaseWidget_OM::OnExitButtonClicked()
 
 	Player->bInteractableOpen = false;
 }
+

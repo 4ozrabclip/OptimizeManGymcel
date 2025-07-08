@@ -61,17 +61,13 @@ void ALaptop_OM::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("No Poster class assigned to laptop"));
 		return;
 	}
-	CheckAndSetDarkMode();
+	DarkModeToggle(GameInstance->GetDarkMode());
 }
 
-
-void ALaptop_OM::CheckAndSetDarkMode()
+void ALaptop_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (GameInstance->GetDarkMode())
+	Super::DarkModeToggle(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		AuraLight->SetAttenuationRadius(50.f);
 	}
@@ -80,6 +76,7 @@ void ALaptop_OM::CheckAndSetDarkMode()
 		AuraLight->SetAttenuationRadius(100.f);
 	}
 }
+
 void ALaptop_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
@@ -229,3 +226,4 @@ void ALaptop_OM::PlaySound(USoundBase* InSound)
 	LaptopAudio->SetSound(InSound);
 	LaptopAudio->Play();
 }
+

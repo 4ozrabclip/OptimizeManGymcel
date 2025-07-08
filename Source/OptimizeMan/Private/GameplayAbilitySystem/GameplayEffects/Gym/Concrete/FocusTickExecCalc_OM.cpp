@@ -24,7 +24,7 @@ void UFocusTickExecCalc_OM::Execute_Implementation(const FGameplayEffectCustomEx
 	if (!AggregatedTags.HasTag(IdleStateTag) || !AggregatedTags.HasTag(GymLevelTag))
 		return;*/
 	
-	constexpr float FocusDrainPerSecond = -0.001f;
+	constexpr float FocusDrainPerSecond = -0.003f;
 
 	OutExecutionOutput.AddOutputModifier(
 		FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetFocusAttribute(), EGameplayModOp::Additive, FocusDrainPerSecond));

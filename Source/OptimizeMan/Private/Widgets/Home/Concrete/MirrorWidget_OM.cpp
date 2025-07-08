@@ -15,19 +15,16 @@
 void UMirrorWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-	CheckAndSetForDarkLightMode();
 	
 	UpdateStats();
 	CheckAndSetWarningText();
 	
 }
-void UMirrorWidget_OM::CheckAndSetForDarkLightMode()
+
+void UMirrorWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	}
-	if (GameInstance && GameInstance->GetDarkMode())
+	Super::DarkModeToggle(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		EgoImage->SetBrushResourceObject(EgoWhiteText);
 		SexAppealImage->SetBrushResourceObject(SexAppealWhiteText);

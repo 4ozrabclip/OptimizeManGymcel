@@ -78,7 +78,6 @@ void USocialInteractionWidget_OM::NativeConstruct()
 		Option2Button->OnClicked.AddDynamic(this, &USocialInteractionWidget_OM::OnButton2Clicked);
 		Option3Button->OnClicked.AddDynamic(this, &USocialInteractionWidget_OM::OnButton3Clicked);
 	}
-	CheckAndSetDarkMode();
 
 	SetDesiredSizeInViewport(FVector2D(1920, 1080));
 	
@@ -104,22 +103,16 @@ void USocialInteractionWidget_OM::NativeTick(const FGeometry& MyGeometry, float 
 	}*/
 		
 }
-
-void USocialInteractionWidget_OM::CheckAndSetDarkMode()
+void USocialInteractionWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	UE_LOG(LogTemp, Error, TEXT("check and Set darkmode for social interaction widget called"));
-	if (!GameInstance)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Game Instance null in social interaction widget"));
-		return;
-	}
+	Super::DarkModeToggle(bIsDarkMode);
 	if (!WhiteBorder || !BlackBorder)
 	{
 		UE_LOG(LogTemp, Error, TEXT("White or Black border is null in social interaction widget"));
 		return;
 	}
 	
-	if (GameInstance->GetDarkMode())
+	if (bIsDarkMode)
 	{
 		FSlateBrush DarkModeBrush;
 		DarkModeBrush.SetResourceObject(WhiteBorder);
@@ -518,3 +511,4 @@ void USocialInteractionWidget_OM::OnExitButtonClicked()
 	Super::OnExitButtonClicked();
 	SocialInteractionComponent->LeaveConversation();
 }
+

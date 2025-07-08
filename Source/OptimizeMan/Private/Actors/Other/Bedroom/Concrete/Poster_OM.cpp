@@ -51,6 +51,9 @@ void APoster_OM::BeginPlay()
 		return;
 	}
 	CheckOwnedPosters();
+	
+	GameInstance->OnDarkModeToggled.AddDynamic(this, &APoster_OM::CheckAndSetDarkMode);
+	
 }
 
 void APoster_OM::CheckOwnedPosters()
@@ -77,7 +80,7 @@ void APoster_OM::CheckOwnedPosters()
 		return;
 	}
 
-	CheckAndSetDarkMode();
+	CheckAndSetDarkMode(GameInstance->GetDarkMode());
 	
 	if (OwnedChadPosters.IsValidIndex(0))
 		UE_LOG(LogTemp, Error, TEXT("Valid Index For ChadPoster [ 0 ]"));
@@ -96,6 +99,7 @@ void APoster_OM::CheckOwnedPosters()
 		SetVisibilityOfPoster(WaifuPoster3, OwnedWaifuPosters[2]);
 	
 }
+
 
 void APoster_OM::SetVisibilityOfPoster(UPosterComponent_OM* InPoster, const bool InIsOwned)
 {
@@ -116,7 +120,8 @@ void APoster_OM::SetVisibilityOfPoster(UPosterComponent_OM* InPoster, const bool
 	}
 }
 
-void APoster_OM::CheckAndSetDarkMode()
+
+void APoster_OM::CheckAndSetDarkMode(bool bIsDarkMode)
 {
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
@@ -132,15 +137,15 @@ void APoster_OM::CheckAndSetDarkMode()
 		return;
 	}
 	if (OwnedChadPosters.IsValidIndex(0) && OwnedChadPosters[0])
-		ChadPoster1->CheckAndSetDarkMode();
+		ChadPoster1->DarkModeToggle(bIsDarkMode);
 	if (OwnedChadPosters.IsValidIndex(1) && OwnedChadPosters[1])
-		ChadPoster2->CheckAndSetDarkMode();
+		ChadPoster2->DarkModeToggle(bIsDarkMode);
 	if (OwnedChadPosters.IsValidIndex(2) & OwnedChadPosters[2])
-		ChadPoster3->CheckAndSetDarkMode();
+		ChadPoster3->DarkModeToggle(bIsDarkMode);
 	if (OwnedWaifuPosters.IsValidIndex(0) && OwnedWaifuPosters[0])
-		WaifuPoster1->CheckAndSetDarkMode();
+		WaifuPoster1->DarkModeToggle(bIsDarkMode);
 	if (OwnedWaifuPosters.IsValidIndex(1) && OwnedWaifuPosters[1])
-		WaifuPoster2->CheckAndSetDarkMode();
+		WaifuPoster2->DarkModeToggle(bIsDarkMode);
 	if (OwnedWaifuPosters.IsValidIndex(2) && OwnedWaifuPosters[2])
-		WaifuPoster3->CheckAndSetDarkMode();
+		WaifuPoster3->DarkModeToggle(bIsDarkMode);
 }

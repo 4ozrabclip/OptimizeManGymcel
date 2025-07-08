@@ -20,7 +20,7 @@ public:
 	void CheckOwnedPosters();
 
 	UFUNCTION(BlueprintCallable)
-	void CheckAndSetDarkMode();
+	void CheckAndSetDarkMode(bool bIsDarkMode);
 
 protected:
 	// Called when the game starts or when spawned

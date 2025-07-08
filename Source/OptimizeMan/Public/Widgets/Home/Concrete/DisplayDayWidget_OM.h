@@ -16,7 +16,7 @@ class OPTIMIZEMAN_API UDisplayDayWidget_OM : public UParentWidget_OM
 public:
 
 	virtual void NativeConstruct() override;
-	void CheckAndSetTextColour();
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 	UFUNCTION(BlueprintSetter)
 	void SetText(const FString& InText);

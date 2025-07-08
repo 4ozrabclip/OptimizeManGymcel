@@ -48,13 +48,11 @@ void ACalender_OM::BeginPlay()
 	}
 	SetCalenderImage();
 }
-void ACalender_OM::CheckAndSetDarkMode()
+
+void ACalender_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (GameInstance->GetDarkMode())
+	Super::DarkModeToggle(bIsDarkMode);
+	if (bIsDarkMode)
 	{
 		Light->SetIntensity(0.2f);
 	}
@@ -64,6 +62,7 @@ void ACalender_OM::CheckAndSetDarkMode()
 	}
 	SetCalenderImage();
 }
+
 void ACalender_OM::SetCalenderImage()
 {
 	if (!GameInstance)

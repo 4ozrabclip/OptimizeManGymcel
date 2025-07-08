@@ -180,7 +180,7 @@ void UGameInstance_OM::DarkModeToggle()
 {
 	GameSettings.bDarkMode = !GameSettings.bDarkMode;
 	UE_LOG(LogTemp, Log, TEXT("DarkModeToggle called. New Dark Mode State: %d"), GameSettings.bDarkMode);
-	OnDarkModeToggled.Broadcast();
+	OnDarkModeToggled.Broadcast(GameSettings.bDarkMode);
 }
 
 void UGameInstance_OM::SetDarkMode(const bool InDarkMode)

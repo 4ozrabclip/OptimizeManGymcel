@@ -15,6 +15,7 @@ ABarbell_OM::ABarbell_OM()
 void ABarbell_OM::BeginPlay()
 {
 	Super::BeginPlay();
+	bUnderConstruction = false;
 	SetInteractableWidgetText("Lift Weight");
 }
 

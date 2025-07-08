@@ -19,6 +19,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	virtual void DarkModeToggle(const bool bIsDarkMode) {}
 
 
 protected:

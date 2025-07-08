@@ -114,13 +114,12 @@ void UCalenderWidget_OM::ClearOverlaysForNewMonth()
 	}
 }
 
-void UCalenderWidget_OM::SetWidgetUIDarkLightMode()
+void UCalenderWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
-	Super::SetWidgetUIDarkLightMode();
+	Super::DarkModeToggle(bIsDarkMode);
 	if (!CalenderBorder) return;
 	if (!CalenderBackgroundDark || !CalenderBackgroundLight) return;
 	if (!CurrentMonthTextBlock) return;
-
 	if (bIsDarkMode)
 	{
 		CalenderBorder->Background.SetResourceObject(CalenderBackgroundDark);
@@ -131,8 +130,4 @@ void UCalenderWidget_OM::SetWidgetUIDarkLightMode()
 		CalenderBorder->Background.SetResourceObject(CalenderBackgroundLight);
 		CurrentMonthTextBlock->SetColorAndOpacity(Black);
 	}
-
-	
-
-	
 }

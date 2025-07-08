@@ -92,9 +92,9 @@ void ANpcBase_OM::BeginPlay()
 		return;
 	}
 	
-	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OM::CheckAndSetDarkMode);
+	GameInstance->OnDarkModeToggled.AddDynamic(this, &ANpcBase_OM::DarkModeToggle);
 
-	CheckAndSetDarkMode();
+	DarkModeToggle(GameInstance->GetDarkMode());
 	
 
 	InteractableInterfaceProperties.InteractableText = InteractableText;
@@ -223,21 +223,6 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 	return SmoothedLookAtLocation;
 }
 
-void ANpcBase_OM::CheckAndSetDarkMode()
-{
-	if (!GameInstance)
-	{
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-	}
-	if (GameInstance->GetDarkMode())
-	{
-		AuraLight->SetAttenuationRadius(35.f);
-	}
-	else
-	{
-		AuraLight->SetAttenuationRadius(100.f);
-	}
-}
 
 ENpcRelationshipState ANpcBase_OM::GetCurrentRelationshipState()
 {
@@ -286,6 +271,18 @@ void ANpcBase_OM::EndDialog()
 		SetHasMetPlayer(true);
 	}
 	//SetActorTickEnabled(false);
+}
+
+void ANpcBase_OM::DarkModeToggle(const bool bIsDarkMode)
+{
+	if (bIsDarkMode)
+	{
+		AuraLight->SetAttenuationRadius(35.f);
+	}
+	else
+	{
+		AuraLight->SetAttenuationRadius(100.f);
+	}
 }
 
 

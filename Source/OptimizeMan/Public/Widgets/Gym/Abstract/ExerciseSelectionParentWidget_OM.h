@@ -22,7 +22,7 @@ class OPTIMIZEMAN_API UExerciseSelectionParentWidget_OM : public UParentWidget_O
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	void CheckAndSetDarkMode();
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 	UFUNCTION()
 	virtual void InitialOpen();
