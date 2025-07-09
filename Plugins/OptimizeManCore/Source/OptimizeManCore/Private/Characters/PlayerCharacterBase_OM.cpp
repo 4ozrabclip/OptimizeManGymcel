@@ -12,7 +12,6 @@
 #include "Components/Management/AbilitySystemComponent_OM.h"
 #include "Controllers/PlayerController_OM.h"
 #include "Game/GameInstance_OM.h"
-#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Interfaces/InteractableInterface_OM.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -51,9 +50,6 @@ void APlayerCharacterBase_OM::BeginPlay()
 	
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	if (!GameInstance) return;
-
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager) return;
 
 	
 

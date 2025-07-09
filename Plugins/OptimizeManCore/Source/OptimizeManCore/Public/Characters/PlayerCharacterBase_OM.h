@@ -82,8 +82,6 @@ protected:
 	UPROPERTY()
 	class APlayerController_OM* PlayerController;
 	UPROPERTY()
-	class UTodoManagementSubsystem* TodoManager;
-	UPROPERTY()
 	class UGameInstance_OM* GameInstance;
 
 	/** Current Interacted **/

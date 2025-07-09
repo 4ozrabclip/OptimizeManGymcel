@@ -5,7 +5,6 @@
 
 #include "Characters/PlayerCharacterBase_OM.h"
 #include "Game/GameInstance_OM.h"
-#include "Game/SubSystems/TodoManagementSubsystem.h"
 
 
 UNotificationAudio_OM::UNotificationAudio_OM()
@@ -23,13 +22,7 @@ void UNotificationAudio_OM::BeginPlay()
 	if (!Player)
 		Player = Cast<APlayerCharacterBase_OM>(GetOwner());
 	
-	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
-	{
-		if (UTodoManagementSubsystem* TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>()))
-		{
-			TodoManager->OnTodoComplete.AddDynamic(this, &UNotificationAudio_OM::PlayTodoCompletedSound);
-		}
-	}
+
 }
 
 void UNotificationAudio_OM::PlayWritingSound()

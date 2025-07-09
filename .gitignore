@@ -1,4 +1,9 @@
-Content/StarterContent/*
+Content/*
+Build/*
+Source/*
+*.uproject
+*.uproject.*
+*.sln.*
 
 # Intellij
 .idea

@@ -3,7 +3,6 @@
 
 #include "Game/GameInstance_OM.h"
 
-#include "Game/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Structs/DifficultyDefinitions.h"
 
@@ -20,13 +19,6 @@ void UGameInstance_OM::Init()
 	SetHasOpenedPauseMenuInitial(false);
 	
 	ResetAllSaves();
-	
-	TodoManagement = GetSubsystem<UTodoManagementSubsystem>();
-	if (!TodoManagement) 
-	{
-		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
-		return;
-	}
 	ExtraInits();
 }
 
@@ -146,7 +138,6 @@ void UGameInstance_OM::IncrementDay()
 
 	IncrementMonth();
 	
-	TodoManagement->GetCurrentTodoArray().Empty();
 	
 	HandleDayEvents();
 }

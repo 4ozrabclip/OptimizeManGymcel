@@ -10,7 +10,6 @@
 #include "Structs/PlayerData.h"
 #include "GameInstance_OM.generated.h"
 
-class UTodoManagementSubsystem;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDarkModeToggled, bool, bDarkModeOn);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAudioSettingsChanged,
 												float, InMaster, float, InVoice,
@@ -39,7 +38,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void HandleDayEvents();
 	UFUNCTION(BlueprintCallable)
-	void IncrementDay();
+	virtual void IncrementDay();
 	
 	void CheckWaveScore();
 	void IncrementMonth();
@@ -142,12 +141,10 @@ protected:
 
 protected:
 	/** Subsystems **/  
-	UPROPERTY()
-	UTodoManagementSubsystem* TodoManagement;
 
 
 
-private:
+	
 	EDifficultyWaveType CurrentWaveType = EDifficultyWaveType::RestWave;
 	int WaveLengthByDays = 3;
 

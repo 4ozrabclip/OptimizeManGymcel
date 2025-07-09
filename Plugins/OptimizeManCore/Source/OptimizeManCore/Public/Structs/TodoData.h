@@ -6,7 +6,7 @@
 #include "TodoData.generated.h"
 
 
-USTRUCT()
+USTRUCT(Blueprintable)
 struct FTodoItem
 {
 	GENERATED_USTRUCT_BODY()
