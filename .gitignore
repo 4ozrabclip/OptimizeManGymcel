@@ -1,4 +1,8 @@
-Content/StarterContent/*
+Content/*
+Plugins/*
+Build/*
+*.uproject.DotSettings.*
+*.sln.DotSettings.*
 
 # Intellij
 .idea
