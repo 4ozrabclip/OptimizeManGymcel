@@ -163,7 +163,7 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 void APlayerCharacter_OM::InitializeAttributes()
 {
 	if (!GameInstance) return;
-	if (!AbSysComp) return;
+	if (!AbSysComp) return; //test
 	
 	const FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
