@@ -3,6 +3,7 @@
 
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Game/Persistent/GameInstance_OM.h"
 
 void UPlayerCharacterAnimInstance_OM::NativeInitializeAnimation()
 {
@@ -14,13 +15,21 @@ void UPlayerCharacterAnimInstance_OM::NativeInitializeAnimation()
 	bIsJumping = false;
 	bIsInSquatPosition = false;
 	bIsSquatting = false;
-	bHasSquatInjury1 = false;
+	bHasInjury = false;
 	bHasJawSurgery = true;
 	bIsInLeftCurlPosition = false;
 	bIsInRightCurlPosition = false;
 	bIsLeftCurling = false;
 	bIsRightCurling = false;
 
+	if (!Player) return;
+	if (UGameInstance_OM* GI = Player->GetWorld()->GetGameInstance<UGameInstance_OM>())
+	{
+		Thigh_Left = *GI->FindBodyPart(EBodyPart::Thigh, EBodyPartSide::Left);
+		Thigh_Right = *GI->FindBodyPart(EBodyPart::Thigh, EBodyPartSide::Right);
+		Arm_Left = *GI->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left);
+		Arm_Right = *GI->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Right);
+	}
 
 }
 
@@ -29,12 +38,14 @@ void UPlayerCharacterAnimInstance_OM::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (Player && GetWorld() && !GetWorld()->IsPaused())
 	{
-		bIsWalking = Player->GetIsWalking();
-		bIsJumping = Player->GetIsJumping();
 
+		if (CurrentPlayMode != EPlayModes::WorkoutMode)
+		{
+			bIsWalking = Player->GetIsWalking();
+			bIsJumping = Player->GetIsJumping();
+		}
+		
 	}
-
-	
 }
 
 bool UPlayerCharacterAnimInstance_OM::GetIsInSquatPosition() const

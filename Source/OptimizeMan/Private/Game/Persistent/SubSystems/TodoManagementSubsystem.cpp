@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
@@ -165,7 +165,7 @@ void UTodoManagementSubsystem::ProcessPotentialTodos()
 	
 	ProcessTodoHelper(!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3, StartBulking);
 
-	float ThighStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
+	float ThighStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh);
 	ProcessTodoHelper(ThighStrength > 0 && ThighStrength < 0.5, HitTenSquats);
 	
 	ProcessTodoHelper(InventoryData.Money > 5 && !InventoryData.bOwnsSteroids, BuySteroids);

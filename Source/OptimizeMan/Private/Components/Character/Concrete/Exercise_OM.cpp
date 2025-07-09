@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 #include "Components/Character/Concrete/Exercise_OM.h"
 #include "Components/PointLightComponent.h"
@@ -50,7 +49,7 @@ void UExercise_OM::InitInjurys() const
 {
 	if (!AnimInstance) return;
 
-	AnimInstance->SetHasSquatInjury(false);
+	AnimInstance->SetHasInjury(false);
 }
 void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
@@ -59,6 +58,7 @@ void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 
 	if (CurrentWorkoutState != EWorkoutStates::SetComplete)
 	{
+		if (CurrentWorkoutState == EWorkoutStates::InExercisePosition && TimeSinceLastRep < 5.f)
 		if (CurrentWorkoutState == EWorkoutStates::InExercisePosition && TimeSinceLastRep < 5.f)
 		{
 			TimeSinceLastRep += DeltaTime;
@@ -195,7 +195,7 @@ void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 	case EExerciseType::None:
 		break;
 	case EExerciseType::Squat:
-		AnimInstance->SetHasSquatInjury(true);
+		AnimInstance->SetHasInjury(true);
 		AudioComponent->InjurySoundEffects(CurrentExerciseType);
 		break;
 	default:
@@ -220,9 +220,8 @@ void UExercise_OM::MinorInjury()
 	switch (CurrentExerciseType)
 	{
 	case EExerciseType::None:
-		break;
+		return;
 	case EExerciseType::Squat:
-		AnimInstance->SetHasMinorSquatInjury(true);
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
 		break;
 	case EExerciseType::BicepCurl:
@@ -238,8 +237,9 @@ void UExercise_OM::MinorInjury()
 		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
 		break;
 	default:
-		break;
+		return;
 	}
+	AnimInstance->SetHasInjury(true);
 	FGymResStats& GymResStats = GameInstance->GetGymResStats();
 	GameInstance->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
 	AddFocus(InjuryFocusDecrease);

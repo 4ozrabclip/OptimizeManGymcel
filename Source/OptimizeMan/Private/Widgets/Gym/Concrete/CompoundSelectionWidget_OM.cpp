@@ -111,25 +111,25 @@ void UCompoundSelectionWidget_OM::SetExerciseType(EExerciseType InExerciseType)
 	switch (InExerciseType)
 	{
 	case EExerciseType::Squat:
-		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh));
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Thigh, EBodyPartSide::Left));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Thigh, EBodyPartSide::Right));
 		break;
 	case EExerciseType::BicepCurl:
-		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Arm));
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Arm));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Right));
 		break;
 	case EExerciseType::LeftCurl:
-		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(Arm, Left));
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Left));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
 		break;
 	case EExerciseType::RightCurl:
-		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(Arm, Right));
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Right));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
 		break;
 	default:
-		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(Abdominal, Center));
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(EBodyPart::Abdominal, EBodyPartSide::Center));
 		break;
 	}
 

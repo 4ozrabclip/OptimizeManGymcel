@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 
 #include "Widgets/Both/Concrete/PauseMenuWidget_OM.h"
@@ -245,13 +245,13 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	const float EgoValue = EgoStat_Slider->GetValue();
 	const float SexAppealValue = SexAppealStat_Slider->GetValue();
 
-	float* JawStrength = GameInstance->GetBodyPartStrengthPtr(Jaw, Center);
-	float* LeftArmStrength = GameInstance->GetBodyPartStrengthPtr(Arm, Left);
-	float* RightArmStrength = GameInstance->GetBodyPartStrengthPtr(Arm, Right);
-	float* LeftThighStrength = GameInstance->GetBodyPartStrengthPtr(Thigh, Left);
-	float* RightThighStrength = GameInstance->GetBodyPartStrengthPtr(Thigh, Right);
-	float* LeftCalveStrength = GameInstance->GetBodyPartStrengthPtr(Calve, Left);
-	float* RightCalveStrength = GameInstance->GetBodyPartStrengthPtr(Calve, Right);
+	float* JawStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Jaw, EBodyPartSide::Center);
+	float* LeftArmStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Arm, EBodyPartSide::Left);
+	float* RightArmStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Arm, EBodyPartSide::Right);
+	float* LeftThighStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Thigh, EBodyPartSide::Left);
+	float* RightThighStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Thigh, EBodyPartSide::Right);
+	float* LeftCalveStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Calve, EBodyPartSide::Left);
+	float* RightCalveStrength = GameInstance->GetBodyPartStrengthPtr(EBodyPart::Calve, EBodyPartSide::Right);
 
 	GameInstance->SetStat(*JawStrength, JawValue);
 	GameInstance->SetStat(*LeftArmStrength, LeftArmValue);
@@ -319,11 +319,11 @@ void UPauseMenuWidget_OM::OpenChangeStats()
 	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
-	const float JawStrength = GameInstance->GetBodyPartStrengthValue(Jaw, Center);
-	const float LeftArmStrength = GameInstance->GetBodyPartStrengthValue(Arm, Left);
-	const float RightArmStrength = GameInstance->GetBodyPartStrengthValue(Arm, Right);
-	const float ThighsStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Thigh);
-	const float CalvesStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(Calve);
+	const float JawStrength = GameInstance->GetBodyPartStrengthValue(EBodyPart::Jaw, EBodyPartSide::Center);
+	const float LeftArmStrength = GameInstance->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Left);
+	const float RightArmStrength = GameInstance->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Right);
+	const float ThighsStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh);
+	const float CalvesStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Calve);
 
 	JawStat_Slider->SetValue(JawStrength);
 	LeftArmStat_Slider->SetValue(LeftArmStrength);

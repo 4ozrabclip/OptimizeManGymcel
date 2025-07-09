@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2025 4ozStudio. All rights reserved.
 
 
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
@@ -122,8 +122,8 @@ float UGameInstance_OM::GetBodyPartStrengthValue(const EBodyPart& Part, const EB
 }
 float UGameInstance_OM::GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part)
 {
-	float LeftPartStrength = GetBodyPartStrengthValue(Part, Left);
-	float RightPartStrength = GetBodyPartStrengthValue(Part, Right);
+	float LeftPartStrength = GetBodyPartStrengthValue(Part, EBodyPartSide::Left);
+	float RightPartStrength = GetBodyPartStrengthValue(Part, EBodyPartSide::Right);
 	
 	return LeftPartStrength + RightPartStrength / 2.f;
 	

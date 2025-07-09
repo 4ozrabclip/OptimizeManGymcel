@@ -168,8 +168,7 @@ void UExerciseInteractWidget_OM::OnExitButtonClicked()
 
 	if (UPlayerCharacterAnimInstance_OM* AnimInstance = Cast<UPlayerCharacterAnimInstance_OM>(Player->GetMesh()->GetAnimInstance()))
 	{
-		AnimInstance->SetHasSquatInjury(false);
-		AnimInstance->SetHasMinorSquatInjury(false);
+		AnimInstance->SetHasInjury(false);
 	}
 }
 

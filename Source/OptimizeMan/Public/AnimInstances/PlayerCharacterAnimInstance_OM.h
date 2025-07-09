@@ -6,6 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/PlayerData.h"
+#include "Utils/Structs/PlayModes.h"
 #include "PlayerCharacterAnimInstance_OM.generated.h"
 
 /**
@@ -17,8 +18,11 @@ class OPTIMIZEMAN_API UPlayerCharacterAnimInstance_OM : public UAnimInstance
 	GENERATED_BODY()
 
 public:
+	/** Overrides **/
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+
 
 	UFUNCTION(BlueprintCallable, Category = "Exercises")
 	bool GetIsInSquatPosition() const;
@@ -38,15 +42,13 @@ public:
 	void EnterSquatPosition();
 
 	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
-	void SetHasSquatInjury(const bool InHasSquatInjury) { bHasSquatInjury1 = InHasSquatInjury; }
+	void SetHasInjury(const bool InHasInjury) { bHasInjury = InHasInjury; }
 
 	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
 	void SetInjuryLevel(const EInjuryLevel InInjuryLevel) { InjuryLevel = InInjuryLevel; };
 	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
 	EInjuryLevel GetInjuryLevel() const { return InjuryLevel; };
 
-	UFUNCTION(BlueprintCallable, Category = "ExerciseInjuries")
-	void SetHasMinorSquatInjury(const bool InHasSquatInjuryMinor) { bHasSquatInjuryMinor = InHasSquatInjuryMinor; }
 
 	
 //Barbell
@@ -121,11 +123,8 @@ protected:
 	EInjuryLevel InjuryLevel;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Injury", meta = (AllowPrivateAccess = "true"))
-	bool bHasSquatInjury1;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Injury", meta = (AllowPrivateAccess = "true"))
-	bool bHasSquatInjuryMinor;
-
+	bool bHasInjury;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Surgery", meta = (AllowPrivateAccess = "true"))
 	bool bHasJawSurgery;
 
@@ -144,5 +143,27 @@ protected:
 	float LeftCurlAnimationDuration = 4.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exercises")
 	float RightCurlAnimationDuration = 4.f;
+
+
+
+
+	/** Cache **/
+	UPROPERTY(BlueprintReadOnly, Category = "State Management")
+	EPlayModes CurrentPlayMode = EPlayModes::RegularMode;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Strength")
+	FBodyPartData Thigh_Left;
+	UPROPERTY(BlueprintReadOnly, Category = "Strength")
+	FBodyPartData Thigh_Right;
+	UPROPERTY(BlueprintReadOnly, Category = "Strength")
+	FBodyPartData Arm_Left;
+	UPROPERTY(BlueprintReadOnly, Category = "Strength")
+	FBodyPartData Arm_Right;
+
+
+public:
+	/** State Setters **/
+	void SetCurrentPlayMode(const EPlayModes InPlayMode) { CurrentPlayMode = InPlayMode; }
+
 };
 

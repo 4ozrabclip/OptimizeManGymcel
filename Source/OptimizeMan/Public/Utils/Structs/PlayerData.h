@@ -3,7 +3,7 @@
 #include "PlayerData.generated.h"
 
 UENUM(BlueprintType)
-enum EPlayerStatTypes : uint8
+enum class EPlayerStatTypes : uint8
 {
 	Ego = 0,
 	SexAppeal,
@@ -11,7 +11,7 @@ enum EPlayerStatTypes : uint8
 };
 
 UENUM(BlueprintType)
-enum EPlayerEmotionalStates : uint8
+enum class EPlayerEmotionalStates : uint8
 {
 	Doomer,
 	Cope,
@@ -38,7 +38,7 @@ struct FGymResStats
 	
 };
 UENUM(BlueprintType)
-enum EBodyPart
+enum class EBodyPart : uint8
 {
 	Jaw			UMETA(DisplayName = "Jaw"),
 	Shoulder	UMETA(DisplayName = "Shoulder"),
@@ -50,7 +50,7 @@ enum EBodyPart
 	Calve		UMETA(DisplayName = "Calve")
 };
 UENUM(BlueprintType)
-enum EBodyPartSide : uint8
+enum class EBodyPartSide : uint8
 {
 	Left	UMETA(DisplayName = "Left"),
 	Right	UMETA(DisplayName = "Right"),
@@ -84,9 +84,9 @@ struct FBodyPartData
 	UPROPERTY(BlueprintReadOnly)
 	float Strength;
 	UPROPERTY(BlueprintReadOnly)
-	TEnumAsByte<EBodyPart> Part;
+	EBodyPart Part;
 	UPROPERTY(BlueprintReadOnly)
-	TEnumAsByte<EBodyPartSide> Side;
+	EBodyPartSide Side;
 	UPROPERTY(BlueprintReadOnly)
 	EInjuryLevel InjuryLevel;
 

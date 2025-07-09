@@ -158,21 +158,6 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 		CheckInteractable();
 	}
 
-	const UGameplayEffect* FocusEffect = FocusTickClass.GetDefaultObject();
-	if (FocusEffect)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Focus Effect RequireTags: %s"),
-			*FocusEffect->ApplicationTagRequirements.RequireTags.ToStringSimple());
-		UE_LOG(LogTemp, Warning, TEXT("Focus Effect Ongoing RequireTags: %s"),
-	*FocusEffect->OngoingTagRequirements.RequireTags.ToStringSimple());
-		UE_LOG(LogTemp, Warning, TEXT("Focus Effect IgnoreTags: %s"),
-			*FocusEffect->ApplicationTagRequirements.IgnoreTags.ToStringSimple());
-	}
-	FGameplayTagContainer OwnedTags;
-	AbSysComp->GetOwnedGameplayTags(OwnedTags);
-
-	UE_LOG(LogTemp, Warning, TEXT("Owned tags right before applying Focus: %s"), *OwnedTags.ToStringSimple());
-
 	
 }
 void APlayerCharacter_OM::InitializeAttributes()
@@ -371,6 +356,11 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	if (!PlayerController) return;
 	
 	CurrentPlayMode = InPlayMode;
+
+	if (CachedAnimInstance.IsValid())
+	{
+		CachedAnimInstance.Get()->SetCurrentPlayMode(CurrentPlayMode);
+	}
 
 	if (CurrentPlayMode == EPlayModes::MirrorMode)
 		PlayerController->HideGamePointsHud(true);

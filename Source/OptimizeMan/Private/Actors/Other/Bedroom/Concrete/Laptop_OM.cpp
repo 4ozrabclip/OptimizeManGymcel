@@ -126,7 +126,7 @@ void ALaptop_OM::BuyItem()
 	const FString ChadPosterType_String = "Chad";
 	const FString WaifuPosterType_String = "Waifu";
 	
-	FBodyPartData* Jaw = GameInstance->FindBodyPart(EBodyPart::Jaw, Center);
+	FBodyPartData* Jaw = GameInstance->FindBodyPart(EBodyPart::Jaw, EBodyPartSide::Center);
 	switch (CurrentShopAndBook)
 	{
 	case EShopAndBook::JawSurgery:
