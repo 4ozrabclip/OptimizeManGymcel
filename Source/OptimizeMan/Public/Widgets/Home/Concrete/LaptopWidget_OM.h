@@ -49,27 +49,27 @@ protected: //UFUNCS
 	UFUNCTION()
 	void BackButtonClicked();
 	UFUNCTION()
-	void PlasticSurgeryButtonClicked() { OpenPage(PlasticSurgeryShop, PlasticSurgeryLayers); }
+	void PlasticSurgeryButtonClicked() { OpenPage(EWebsites::PlasticSurgeryShop, PlasticSurgeryLayers); }
 	UFUNCTION()
-	void BankButtonClicked() { OpenPage(Bank, BankLayers); }
+	void BankButtonClicked() { OpenPage(EWebsites::Bank, BankLayers); }
 	UFUNCTION()
-	void ForSkanButtonClicked() { OpenPage(ForSkanForum, ForSkanLayers); }
+	void ForSkanButtonClicked() { OpenPage(EWebsites::ForSkanForum, ForSkanLayers); }
 	UFUNCTION()
-	void SupplementsShopButtonClicked() { OpenPage(SupplementsShop, SupplementsShopLayers); }
+	void SupplementsShopButtonClicked() { OpenPage(EWebsites::SupplementsShop, SupplementsShopLayers); }
 	UFUNCTION()
-	void YourHeavenXButtonClicked() { OpenPage(CornSite, YourHeavenXLayers, YourHeavenXHomeGrid); }
+	void YourHeavenXButtonClicked() { OpenPage(EWebsites::CornSite, YourHeavenXLayers, YourHeavenXHomeGrid); }
 	UFUNCTION()
-	void DickPumpSiteButtonClicked() { OpenPage(CornSite, YourHeavenXLayers, BuyDickPumpGrid); }
+	void DickPumpSiteButtonClicked() { OpenPage(EWebsites::CornSite, YourHeavenXLayers, BuyDickPumpGrid); }
 	UFUNCTION()
-	void GeneralStoreChildBackButtonClicked() { OpenPage(GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid, false);}
+	void GeneralStoreChildBackButtonClicked() { OpenPage(EWebsites::GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid, false);}
     UFUNCTION()
-    void GeneralStoreButtonClicked() { OpenPage(GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid); }
+    void GeneralStoreButtonClicked() { OpenPage(EWebsites::GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid); }
     UFUNCTION()
-    void MusicStoreButtonClicked() {  OpenPage(MusicStore, GeneralStoreLayers, MusicStoreGrid); }
+    void MusicStoreButtonClicked() {  OpenPage(EWebsites::MusicStore, GeneralStoreLayers, MusicStoreGrid); }
     UFUNCTION()
-    void PosterStoreButtonClicked() {  OpenPage(PosterStore, GeneralStoreLayers, PosterStoreGrid); }
+    void PosterStoreButtonClicked() {  OpenPage(EWebsites::PosterStore, GeneralStoreLayers, PosterStoreGrid); }
     UFUNCTION()
-    void SupplyStoreButtonClicked() {  OpenPage(SupplyStore, GeneralStoreLayers, SupplyStoreGrid); }
+    void SupplyStoreButtonClicked() {  OpenPage(EWebsites::SupplyStore, GeneralStoreLayers, SupplyStoreGrid); }
     UFUNCTION()
     void BuySteroidsButtonClicked() { BuyItem(EShopAndBook::Steroids); }
     UFUNCTION()
@@ -83,7 +83,7 @@ protected: //UFUNCS
     UFUNCTION()
     void WaifuPosterBuyButtonClicked() { BuyItem(EShopAndBook::WaifuPoster); }
     UFUNCTION()
-    void OpenHomePage() { OpenPage(Bank, HomePageLayers); }
+    void OpenHomePage() { OpenPage(EWebsites::Bank, HomePageLayers); }
 
 private:
 	EWebsites CurrentWebsite;
@@ -95,7 +95,7 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
-	TMap<TEnumAsByte<EWebsites>, UTexture2D*> AdvertisementMap;
+	TMap<EWebsites, UTexture2D*> AdvertisementMap;
 	
 	// -------------------------------- HomePageLayer
 	UPROPERTY(meta = (BindWidget))

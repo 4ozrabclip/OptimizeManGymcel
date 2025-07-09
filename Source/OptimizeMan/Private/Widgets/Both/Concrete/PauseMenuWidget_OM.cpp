@@ -3,7 +3,6 @@
 
 #include "Widgets/Both/Concrete/PauseMenuWidget_OM.h"
 
-#include "VREditorBaseActor.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Components/Character/Concrete/PlayerDeformationsComponent_OM.h"
@@ -11,7 +10,6 @@
 #include "Components/GridPanel.h"
 #include "Components/Image.h"
 #include "Components/Slider.h"
-#include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -108,23 +106,23 @@ void UPauseMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	
 		if (Ego >= ChadThreshold && SexAppeal >= ChadThreshold)
 		{
-			NewEmotionalState = Gigachad;
+			NewEmotionalState = EPlayerEmotionalStates::Gigachad;
 		}
 		else if (Ego >= GrindsetThreshold && (Social >= GrindsetThreshold || SexAppeal >= GrindsetThreshold))
 		{
-			NewEmotionalState = Grindset;
+			NewEmotionalState = EPlayerEmotionalStates::Grindset;
 		}
 		else if (SexAppeal <= GoblinThreshold && Social <= GoblinThreshold && Ego >= GrindsetThreshold)
 		{
-			NewEmotionalState = GoblinMode;
+			NewEmotionalState = EPlayerEmotionalStates::GoblinMode;
 		}
 		else if (Ego <= DoomerThreshold && (Social <= DoomerThreshold || SexAppeal <= DoomerThreshold))
 		{
-			NewEmotionalState = Doomer;
+			NewEmotionalState = EPlayerEmotionalStates::Doomer;
 		}
 		else
 		{
-			NewEmotionalState = Cope;
+			NewEmotionalState = EPlayerEmotionalStates::Cope;
 		}
 
 		if (CurrentEmotionalState != NewEmotionalState)

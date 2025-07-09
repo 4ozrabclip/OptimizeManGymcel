@@ -5,7 +5,7 @@
 
 
 UENUM()
-enum EWebsites : uint8
+enum class EWebsites : uint8
 {
 	Bank UMETA(DisplayName = "SexyBank"),
 	SupplementsShop UMETA(DisplayName = "SupplementNation"),

@@ -7,12 +7,10 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
-#include "AnimNodes/AnimNode_RandomPlayer.h"
 #include "Components/WidgetComponent.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Widgets/Gym/Abstract/ExerciseSelectionParentWidget_OM.h"
 
-class UExerciseSelectionParentWidget_OM;
 
 AExerciseEquipment_OM::AExerciseEquipment_OM()
 {

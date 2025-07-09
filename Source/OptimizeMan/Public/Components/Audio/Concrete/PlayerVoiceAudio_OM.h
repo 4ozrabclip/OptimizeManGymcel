@@ -6,7 +6,6 @@
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "PlayerVoiceAudio_OM.generated.h"
 
-enum EPlayerEmotionalStates : uint8;
 /**
  * 
  */
