@@ -23,8 +23,34 @@ protected:
 	UFUNCTION()
 	void SetDarkMode(bool bDark);
 
+	UFUNCTION(BlueprintCallable)
+	void StartChromaticEffects();
+
+
+	void ChromaticEffectsTick(const int EndTime, FPostProcessSettings& Settings);
+
+	
+	/** Serialized Effect Params **/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	float MaxChromaticIntensity = 1.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	float MinChromaticOffset = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	float MaxChromaticOffset = 1.f;
+
+	bool bGoingUp = true;
+	
+
+private:
+	float TimeSinceAnxietyTickStarted = 0.f;
+	int AnxietyTickEndTime = 0;
+	const float TickRate = 0.1f;
+
+	float ChromaticTickCounter = 0.f;
+
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;
+
 
 protected:
 	UPROPERTY(EditInstanceOnly, Category="PostProcess")
@@ -40,5 +66,23 @@ protected:
 	UPROPERTY()
 	UMaterialInstanceDynamic* LightModeMID;
 
+	
+
+private:
+	FTimerHandle AnxietyTickHandle;
+	FTimerHandle ChromaticTickHandle;
+
+
+	float TargetFilmSlope;
+	float FilmSlopeFadeSpeed;
+	
+	float TargetVignette;
+	float VignetteFadeSpeed;
+
+	float TargetBloom;
+	float BloomFadeSpeed;
+
+	float TargetLensDistortion;
+	float LensDistortionFadeSpeed;
 
 };
