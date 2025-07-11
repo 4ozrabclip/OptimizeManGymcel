@@ -157,8 +157,6 @@ void APlayerCharacter_OM::Tick(float DeltaTime)
 	{
 		CheckInteractable();
 	}
-
-	
 }
 void APlayerCharacter_OM::InitializeAttributes()
 {

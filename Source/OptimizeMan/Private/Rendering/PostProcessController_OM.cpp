@@ -76,6 +76,36 @@ void APostProcessController_OM::SetDarkMode(bool bDarkMode)
 		}
 	}
 }
+
+void APostProcessController_OM::StartFilmGrainEffect()
+{
+	if (bFilmGrainOn) return;
+
+	int EndTime = FMath::RandRange(10, 40);
+
+	GlobalPostProcessVolume->Settings.bOverride_FilmGrainIntensity;
+	GlobalPostProcessVolume->Settings.bOverride_FilmGrainTexelSize;
+
+	FilmGrainTickCounter = 0.f;
+
+	GetWorld()->GetTimerManager().ClearTimer(FilmGrainEffectHandle);
+	GetWorld()->GetTimerManager().SetTimer(
+		FilmGrainEffectHandle,
+		[this, EndTime]()
+		{
+			FilmGrainEffectTick(EndTime);
+		}, TickRate, true);
+}
+void APostProcessController_OM::FilmGrainEffectTick(const int EndTime)
+{
+	constexpr float TexelSizeMax = 4.f;
+	if (GlobalPostProcessVolume->Settings.FilmGrainTexelSize < TexelSizeMax)
+	{
+		
+		GlobalPostProcessVolume->Settings.FilmGrainTexelSize = FMath::FInterpConstantTo()
+	}
+	FilmGrainTickCounter += TickRate;
+}
 void APostProcessController_OM::StartVignetteEffect()
 {
 	if (bVignetteOn) return;
@@ -91,6 +121,35 @@ void APostProcessController_OM::StartVignetteEffect()
 			VignetteEffectTick(Settings);
 		}, TickRate, true);
 }
+
+void APostProcessController_OM::RemoveVignetteEffect()
+{
+	if (!bVignetteOn) return;
+	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
+	Settings.bOverride_VignetteIntensity = true;
+	GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
+	GetWorld()->GetTimerManager().SetTimer(
+	VignetteTickHandle,
+	[this, &Settings]()
+	{
+		if (bVignetteOn) bVignetteOn = false;
+		RemoveVignetteEffectTick(Settings);
+	}, TickRate, true);
+}
+
+void APostProcessController_OM::RemoveVignetteEffectTick(FPostProcessSettings& Settings)
+{
+	if (FMath::IsNearlyEqual(Settings.VignetteIntensity, 0.f))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
+	}
+	else
+	{
+		Settings.VignetteIntensity = FMath::FInterpConstantTo(
+			Settings.VignetteIntensity,0.f,0.065f,0.5);
+	}
+}
+
 void APostProcessController_OM::VignetteEffectTick(FPostProcessSettings& Settings)
 {
 	if (FMath::IsNearlyEqual(Settings.VignetteIntensity, 1.f))

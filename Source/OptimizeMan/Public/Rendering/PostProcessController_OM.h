@@ -27,8 +27,12 @@ protected:
 public:
 	/** Effects Callers **/
 	UFUNCTION(BlueprintCallable)
-	void StartVignetteEffect();
+	void StartFilmGrainEffect();
 
+	UFUNCTION(BlueprintCallable)
+	void StartVignetteEffect();
+	UFUNCTION(BlueprintCallable)
+	void RemoveVignetteEffect();
 	UFUNCTION(BlueprintCallable)
 	void StartChromaticEffects();
 	UFUNCTION(BlueprintCallable)
@@ -36,9 +40,10 @@ public:
 protected:
 	/** Effects Ticks **/
 	void VignetteEffectTick(FPostProcessSettings& Settings);
+	void RemoveVignetteEffectTick(FPostProcessSettings& Settings);
 	void RemoveChromaticEffectsTick(FPostProcessSettings& Settings);
 	void ChromaticEffectsTick(const int EndTime, FPostProcessSettings& Settings);
-
+	void FilmGrainEffectTick(int EndTime);
 	
 	/** Serialized Effect Params **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
@@ -49,19 +54,21 @@ protected:
 	float MaxChromaticOffset = 1.f;
 
 	bool bGoingUp = true;
-
+	
 	
 
 private:
+	bool bFilmGrainOn = false;
 	bool bChromaticOn = false;
 	bool bVignetteOn = false;
 	
 	float ChromaticTickCounter = 0.f;
+	float FilmGrainTickCounter = 0.f;
 	const float TickRate = 0.1f;
 
 	FTimerHandle VignetteTickHandle;
 	FTimerHandle ChromaticTickHandle;
-	
+	FTimerHandle FilmGrainEffectHandle;
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;
 
@@ -99,3 +106,4 @@ private:
 	float LensDistortionFadeSpeed;
 
 };
+
