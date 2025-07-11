@@ -76,9 +76,37 @@ void APostProcessController_OM::SetDarkMode(bool bDarkMode)
 		}
 	}
 }
+void APostProcessController_OM::StartVignetteEffect()
+{
+	if (bVignetteOn) return;
+	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
+	Settings.bOverride_VignetteIntensity = true;
+
+	GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
+	GetWorld()->GetTimerManager().SetTimer(
+		VignetteTickHandle,
+		[this, &Settings]()
+		{
+			if (!bVignetteOn) bVignetteOn = true;
+			VignetteEffectTick(Settings);
+		}, TickRate, true);
+}
+void APostProcessController_OM::VignetteEffectTick(FPostProcessSettings& Settings)
+{
+	if (FMath::IsNearlyEqual(Settings.VignetteIntensity, 1.f))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
+	}
+	else
+	{
+		Settings.VignetteIntensity = FMath::FInterpConstantTo(
+			Settings.VignetteIntensity,1.f,0.065f,0.5);
+	}
+}
 
 void APostProcessController_OM::StartChromaticEffects()
 {
+	if (bChromaticOn) return;
 	int EndTime = FMath::RandRange(2, 20);
 	ChromaticTickCounter = 0.f;
 	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
@@ -89,10 +117,37 @@ void APostProcessController_OM::StartChromaticEffects()
 		ChromaticTickHandle,
 		[this, EndTime, &Settings]()
 		{
+			if (!bChromaticOn) bChromaticOn = true;
 			ChromaticEffectsTick(EndTime, Settings);
 		},TickRate,true);
 }
+void APostProcessController_OM::RemoveChromaticEffects()
+{
+	if (bChromaticOn) bChromaticOn = false;
+	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
+	Settings.bOverride_SceneFringeIntensity = true;
+	Settings.bOverride_ChromaticAberrationStartOffset = true;
+	GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
+	GetWorld()->GetTimerManager().SetTimer(
+		ChromaticTickHandle,
+		[this, &Settings]()
+		{
+			RemoveChromaticEffectsTick(Settings);
+		}, TickRate, true);
+}
+void APostProcessController_OM::RemoveChromaticEffectsTick(FPostProcessSettings& Settings)
+{
+	if (FMath::IsNearlyZero(Settings.SceneFringeIntensity))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
+	}
+	else
+	{
+		Settings.SceneFringeIntensity = FMath::FInterpConstantTo(
+			Settings.SceneFringeIntensity,0.f,0.065,0.5);
+	}
 
+}
 void APostProcessController_OM::ChromaticEffectsTick(const int EndTime, FPostProcessSettings& Settings)
 {
 	if (Settings.SceneFringeIntensity < MaxChromaticIntensity)
@@ -115,5 +170,9 @@ Settings.ChromaticAberrationStartOffset, MinChromaticOffset, 0.065, 0.5);
 	
 	ChromaticTickCounter += TickRate;
 	if (ChromaticTickCounter >= EndTime)
+	{
+		bChromaticOn = false;
 		GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
+	}
+
 }

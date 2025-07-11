@@ -23,10 +23,20 @@ protected:
 	UFUNCTION()
 	void SetDarkMode(bool bDark);
 
+
+public:
+	/** Effects Callers **/
+	UFUNCTION(BlueprintCallable)
+	void StartVignetteEffect();
+
 	UFUNCTION(BlueprintCallable)
 	void StartChromaticEffects();
-
-
+	UFUNCTION(BlueprintCallable)
+	void RemoveChromaticEffects();
+protected:
+	/** Effects Ticks **/
+	void VignetteEffectTick(FPostProcessSettings& Settings);
+	void RemoveChromaticEffectsTick(FPostProcessSettings& Settings);
 	void ChromaticEffectsTick(const int EndTime, FPostProcessSettings& Settings);
 
 	
@@ -39,15 +49,19 @@ protected:
 	float MaxChromaticOffset = 1.f;
 
 	bool bGoingUp = true;
+
 	
 
 private:
-	float TimeSinceAnxietyTickStarted = 0.f;
-	int AnxietyTickEndTime = 0;
+	bool bChromaticOn = false;
+	bool bVignetteOn = false;
+	
+	float ChromaticTickCounter = 0.f;
 	const float TickRate = 0.1f;
 
-	float ChromaticTickCounter = 0.f;
-
+	FTimerHandle VignetteTickHandle;
+	FTimerHandle ChromaticTickHandle;
+	
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;
 
@@ -69,8 +83,7 @@ protected:
 	
 
 private:
-	FTimerHandle AnxietyTickHandle;
-	FTimerHandle ChromaticTickHandle;
+
 
 
 	float TargetFilmSlope;
