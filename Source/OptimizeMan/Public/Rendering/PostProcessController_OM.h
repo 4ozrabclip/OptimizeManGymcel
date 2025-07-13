@@ -9,6 +9,67 @@
 class UGameInstance_OM;
 class IPersistentStateProvider_OM;
 
+UENUM()
+enum class EEffectTickMode : uint8
+{
+	None		UMETA(DisplayName = "None"),
+	WaveEffect	UMETA(DisplayName = "WaveEffect"),
+	FadeIn		UMETA(DisplayName = "FadeIn"),
+};
+USTRUCT()
+struct FPostProcessEffect
+{
+	GENERATED_USTRUCT_BODY()
+	FPostProcessEffect() :
+	Name("Invalid")
+	{}
+	FName Name;
+	float Max;
+	float Min;
+	bool bGoingUp = false;
+	bool bCurrentlyOn = false;
+	float TickCounter = 0.f;
+	TFunction<void(bool)> OverrideSetter;
+	TFunction<float()> ValueGetter;
+	TFunction<void(float)> ValueSetter;
+	FTimerHandle TimerHandle;
+
+	void WaveEffectTick(int EndTime, const float TickRate)
+	{
+		if (bGoingUp)
+		{
+			if (ValueGetter() >= Max) bGoingUp = false;
+			ValueSetter(FMath::FInterpConstantTo(
+			ValueGetter(), Max, 0.065, 0.5));
+		}
+		else
+		{
+			if (ValueGetter() <= Min) bGoingUp = true;
+			ValueSetter(FMath::FInterpConstantTo(
+			ValueGetter(), Min, 0.065, 0.5));
+		}
+
+		TickCounter += TickRate;
+		if (TickCounter >= EndTime)
+		{
+			bCurrentlyOn = false;
+		}
+	}
+	void FadeIn()
+	{
+		if (ValueGetter() < Max)
+		{
+			ValueSetter(FMath::FInterpConstantTo(
+			ValueGetter(), Max, 0.065, 0.5));
+		}
+		else
+		{
+			// This will be on, so maybe a better naming convention.
+			bCurrentlyOn = false;
+		}
+	}
+};
+
 UCLASS(Blueprintable)
 class OPTIMIZEMAN_API APostProcessController_OM : public AActor
 {
@@ -16,34 +77,36 @@ class OPTIMIZEMAN_API APostProcessController_OM : public AActor
 public:
 	APostProcessController_OM();
 protected:
+	/** Overrides **/
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	void InitializeEffects();
 
 	UFUNCTION()
 	void CheckDarkMode();
 	UFUNCTION()
 	void SetDarkMode(bool bDark);
+	void StartEffect(FName InEffectName, int MinTime, int MaxTime,
+	                 EEffectTickMode InEffectTickMode);
 
+
+	/** Effects Array **/
+	TArray<FPostProcessEffect> Effects;
 
 public:
 	/** Effects Callers **/
 	UFUNCTION(BlueprintCallable)
-	void StartFilmGrainEffect();
-
-	UFUNCTION(BlueprintCallable)
-	void StartVignetteEffect();
-	UFUNCTION(BlueprintCallable)
-	void RemoveVignetteEffect();
+	void StartFilmGrainEffects();
 	UFUNCTION(BlueprintCallable)
 	void StartChromaticEffects();
-	UFUNCTION(BlueprintCallable)
-	void RemoveChromaticEffects();
+
+	/** Getters/Setters **/
+	FPostProcessEffect& GetEffect(FName InName);
+
 protected:
 	/** Effects Ticks **/
-	void VignetteEffectTick(FPostProcessSettings& Settings);
-	void RemoveVignetteEffectTick(FPostProcessSettings& Settings);
-	void RemoveChromaticEffectsTick(FPostProcessSettings& Settings);
-	void ChromaticEffectsTick(const int EndTime, FPostProcessSettings& Settings);
-	void FilmGrainEffectTick(int EndTime);
+
 	
 	/** Serialized Effect Params **/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
@@ -53,8 +116,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
 	float MaxChromaticOffset = 1.f;
 
-	bool bGoingUp = true;
-	
+	bool bChromaticGoingUp = true;
+
 	
 
 private:
@@ -68,7 +131,8 @@ private:
 
 	FTimerHandle VignetteTickHandle;
 	FTimerHandle ChromaticTickHandle;
-	FTimerHandle FilmGrainEffectHandle;
+	FTimerHandle FilmGrainIntensityHandle;
+	FTimerHandle FilmGrainTexelSizeHandle;
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;
 
@@ -90,9 +154,6 @@ protected:
 	
 
 private:
-
-
-
 	float TargetFilmSlope;
 	float FilmSlopeFadeSpeed;
 	

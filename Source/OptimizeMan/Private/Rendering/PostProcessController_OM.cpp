@@ -2,8 +2,6 @@
 
 
 #include "Rendering/PostProcessController_OM.h"
-
-#include "Chaos/Character/CharacterGroundConstraintContainer.h"
 #include "Game/Persistent/GameInstance_OM.h"
 
 
@@ -54,8 +52,59 @@ void APostProcessController_OM::BeginPlay()
 
 	CheckDarkMode();
 
+	InitializeEffects();
+
 }
 
+void APostProcessController_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	Super::EndPlay(EndPlayReason);
+}
+
+void APostProcessController_OM::InitializeEffects()
+{
+	Effects.Empty();
+	FPostProcessEffect FilmGrainIntensity;
+	FilmGrainIntensity.Name = FName("FilmGrainIntensity");
+	FilmGrainIntensity.Min = 0.f;
+	FilmGrainIntensity.Max = 1.f;
+	FilmGrainIntensity.bGoingUp = false;
+	FilmGrainIntensity.OverrideSetter = [&](bool bEnable) {GlobalPostProcessVolume->Settings.bOverride_FilmGrainIntensity = bEnable;};
+	FilmGrainIntensity.ValueGetter = [&]() { return GlobalPostProcessVolume->Settings.FilmGrainIntensity; };
+	FilmGrainIntensity.ValueSetter = [&](float Value) { GlobalPostProcessVolume->Settings.FilmGrainIntensity = Value; };
+	Effects.Add(FilmGrainIntensity);
+	
+	FPostProcessEffect FilmGrainTexelSize;
+	FilmGrainTexelSize.Name = FName("FilmGrainTexelSize");
+	FilmGrainTexelSize.Min = 0.f;
+	FilmGrainTexelSize.Max = 4.f;
+	FilmGrainTexelSize.bGoingUp = false;
+	FilmGrainTexelSize.OverrideSetter = [&](bool bEnable){ GlobalPostProcessVolume->Settings.bOverride_FilmGrainTexelSize = bEnable; };
+	FilmGrainTexelSize.ValueGetter = [&]() {return GlobalPostProcessVolume->Settings.FilmGrainTexelSize; };
+	FilmGrainTexelSize.ValueSetter = [&](float Value) { GlobalPostProcessVolume->Settings.FilmGrainTexelSize = Value; };
+	Effects.Add(FilmGrainTexelSize);
+
+	FPostProcessEffect ChromaticIntensity;
+	ChromaticIntensity.Name = FName("ChromaticIntensity");
+	ChromaticIntensity.Min = 0.f;
+	ChromaticIntensity.Max = 5.f;
+	ChromaticIntensity.bGoingUp = false;
+	ChromaticIntensity.OverrideSetter = [&](bool bEnable) { GlobalPostProcessVolume->Settings.bOverride_SceneFringeIntensity = bEnable; };
+	ChromaticIntensity.ValueGetter = [&]() {return GlobalPostProcessVolume->Settings.SceneFringeIntensity; };
+	ChromaticIntensity.ValueSetter = [&](float Value) { GlobalPostProcessVolume->Settings.SceneFringeIntensity = Value; };
+	Effects.Add(ChromaticIntensity);
+
+	FPostProcessEffect ChromaticOffset;
+	ChromaticOffset.Name = FName("ChromaticOffset");
+	ChromaticOffset.Min = 0.f;
+	ChromaticOffset.Max = 1.f;
+	ChromaticOffset.bGoingUp = false;
+	ChromaticOffset.OverrideSetter = [&](bool bEnable) { GlobalPostProcessVolume->Settings.bOverride_ChromaticAberrationStartOffset = bEnable; };
+	ChromaticOffset.ValueGetter = [&]() { return GlobalPostProcessVolume->Settings.ChromaticAberrationStartOffset; };
+	ChromaticOffset.ValueSetter = [&](float Value) { GlobalPostProcessVolume->Settings.ChromaticAberrationStartOffset = Value; };
+	Effects.Add(ChromaticOffset);
+}
 
 void APostProcessController_OM::CheckDarkMode()
 {
@@ -77,161 +126,80 @@ void APostProcessController_OM::SetDarkMode(bool bDarkMode)
 	}
 }
 
-void APostProcessController_OM::StartFilmGrainEffect()
+void APostProcessController_OM::StartEffect(const FName InEffectName, int MinTime, int MaxTime, EEffectTickMode InEffectTickMode)
 {
-	if (bFilmGrainOn) return;
+	int EndTime = FMath::RandRange(MinTime, MaxTime);
+	FPostProcessEffect& EffectToPlay = GetEffect(InEffectName);
 
-	int EndTime = FMath::RandRange(10, 40);
-
-	GlobalPostProcessVolume->Settings.bOverride_FilmGrainIntensity;
-	GlobalPostProcessVolume->Settings.bOverride_FilmGrainTexelSize;
-
-	FilmGrainTickCounter = 0.f;
-
-	GetWorld()->GetTimerManager().ClearTimer(FilmGrainEffectHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-		FilmGrainEffectHandle,
-		[this, EndTime]()
-		{
-			FilmGrainEffectTick(EndTime);
-		}, TickRate, true);
-}
-void APostProcessController_OM::FilmGrainEffectTick(const int EndTime)
-{
-	constexpr float TexelSizeMax = 4.f;
-	if (GlobalPostProcessVolume->Settings.FilmGrainTexelSize < TexelSizeMax)
+	const FName InvalidName = FName("Invalid");
+	if (EffectToPlay.Name == InvalidName)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid Effect in StartEffect: %s"), *InEffectName.ToString());
+		return;
+	}
+	EffectToPlay.OverrideSetter(true);
+
+	EffectToPlay.bCurrentlyOn = true;
+
+	EffectToPlay.TickCounter = 0.f;
+
+	GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+	GetWorld()->GetTimerManager().SetTimer(EffectToPlay.TimerHandle, [this, &EffectToPlay, EndTime, InEffectTickMode]()
+	{
+		if (!EffectToPlay.bCurrentlyOn)
+		{
+			GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+		}
+		switch (InEffectTickMode)
+		{
+			case EEffectTickMode::None:
+			{
+				GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+				break;
+			}
+			case EEffectTickMode::WaveEffect:
+			{
+				EffectToPlay.WaveEffectTick(EndTime, TickRate);
+				break;
+			}
+			case EEffectTickMode::FadeIn:
+			{
+				EffectToPlay.FadeIn();
+				break;
+			}
+			default:
+			{
+				GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+				break;
+			}
+		}
 		
-		GlobalPostProcessVolume->Settings.FilmGrainTexelSize = FMath::FInterpConstantTo()
-	}
-	FilmGrainTickCounter += TickRate;
-}
-void APostProcessController_OM::StartVignetteEffect()
-{
-	if (bVignetteOn) return;
-	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
-	Settings.bOverride_VignetteIntensity = true;
-
-	GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-		VignetteTickHandle,
-		[this, &Settings]()
-		{
-			if (!bVignetteOn) bVignetteOn = true;
-			VignetteEffectTick(Settings);
-		}, TickRate, true);
-}
-
-void APostProcessController_OM::RemoveVignetteEffect()
-{
-	if (!bVignetteOn) return;
-	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
-	Settings.bOverride_VignetteIntensity = true;
-	GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-	VignetteTickHandle,
-	[this, &Settings]()
-	{
-		if (bVignetteOn) bVignetteOn = false;
-		RemoveVignetteEffectTick(Settings);
 	}, TickRate, true);
+	
 }
 
-void APostProcessController_OM::RemoveVignetteEffectTick(FPostProcessSettings& Settings)
+void APostProcessController_OM::StartFilmGrainEffects()
 {
-	if (FMath::IsNearlyEqual(Settings.VignetteIntensity, 0.f))
-	{
-		GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
-	}
-	else
-	{
-		Settings.VignetteIntensity = FMath::FInterpConstantTo(
-			Settings.VignetteIntensity,0.f,0.065f,0.5);
-	}
+	StartEffect(FName("FilmGrainIntensity"), 5, 30, EEffectTickMode::WaveEffect);
+	StartEffect(FName("FilmGrainTexelSize"), 5, 30, EEffectTickMode::WaveEffect);
 }
-
-void APostProcessController_OM::VignetteEffectTick(FPostProcessSettings& Settings)
-{
-	if (FMath::IsNearlyEqual(Settings.VignetteIntensity, 1.f))
-	{
-		GetWorld()->GetTimerManager().ClearTimer(VignetteTickHandle);
-	}
-	else
-	{
-		Settings.VignetteIntensity = FMath::FInterpConstantTo(
-			Settings.VignetteIntensity,1.f,0.065f,0.5);
-	}
-}
-
 void APostProcessController_OM::StartChromaticEffects()
 {
-	if (bChromaticOn) return;
-	int EndTime = FMath::RandRange(2, 20);
-	ChromaticTickCounter = 0.f;
-	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
-	Settings.bOverride_SceneFringeIntensity = true;
-	Settings.bOverride_ChromaticAberrationStartOffset = true;
-	GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-		ChromaticTickHandle,
-		[this, EndTime, &Settings]()
+	StartEffect(FName("ChromaticIntensity"), 5, 30, EEffectTickMode::WaveEffect);
+	StartEffect(FName("ChromaticOffset"), 5, 30, EEffectTickMode::WaveEffect);
+}
+FPostProcessEffect& APostProcessController_OM::GetEffect(FName InName)
+{
+	FPostProcessEffect DefEffect;
+	DefEffect.Name = FName("Invalid");
+	if (Effects.Num() <= 0) return DefEffect;
+	for (FPostProcessEffect& Effect : Effects)
+	{
+		if (Effect.Name == InName)
 		{
-			if (!bChromaticOn) bChromaticOn = true;
-			ChromaticEffectsTick(EndTime, Settings);
-		},TickRate,true);
-}
-void APostProcessController_OM::RemoveChromaticEffects()
-{
-	if (bChromaticOn) bChromaticOn = false;
-	FPostProcessSettings& Settings = GlobalPostProcessVolume->Settings;
-	Settings.bOverride_SceneFringeIntensity = true;
-	Settings.bOverride_ChromaticAberrationStartOffset = true;
-	GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-		ChromaticTickHandle,
-		[this, &Settings]()
-		{
-			RemoveChromaticEffectsTick(Settings);
-		}, TickRate, true);
-}
-void APostProcessController_OM::RemoveChromaticEffectsTick(FPostProcessSettings& Settings)
-{
-	if (FMath::IsNearlyZero(Settings.SceneFringeIntensity))
-	{
-		GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
+			UE_LOG(LogTemp, Warning, TEXT("Found Effect %s"), *Effect.Name.ToString());
+			return Effect;
+		}
 	}
-	else
-	{
-		Settings.SceneFringeIntensity = FMath::FInterpConstantTo(
-			Settings.SceneFringeIntensity,0.f,0.065,0.5);
-	}
-
-}
-void APostProcessController_OM::ChromaticEffectsTick(const int EndTime, FPostProcessSettings& Settings)
-{
-	if (Settings.SceneFringeIntensity < MaxChromaticIntensity)
-	{
-		Settings.SceneFringeIntensity = FMath::FInterpConstantTo(
-		Settings.SceneFringeIntensity, MaxChromaticIntensity, 0.065, 0.5);
-	}
-	if (bGoingUp)
-	{
-		if (Settings.ChromaticAberrationStartOffset >= MaxChromaticOffset) bGoingUp = false;
-		Settings.ChromaticAberrationStartOffset = FMath::FInterpConstantTo(
-	Settings.ChromaticAberrationStartOffset, MaxChromaticOffset, 0.065, 0.5);
-	}
-	else
-	{
-		if (Settings.ChromaticAberrationStartOffset <= MinChromaticOffset) bGoingUp = true;
-		Settings.ChromaticAberrationStartOffset = FMath::FInterpConstantTo(
-Settings.ChromaticAberrationStartOffset, MinChromaticOffset, 0.065, 0.5);
-	}
-	
-	ChromaticTickCounter += TickRate;
-	if (ChromaticTickCounter >= EndTime)
-	{
-		bChromaticOn = false;
-		GetWorld()->GetTimerManager().ClearTimer(ChromaticTickHandle);
-	}
-
+	return DefEffect;
 }
