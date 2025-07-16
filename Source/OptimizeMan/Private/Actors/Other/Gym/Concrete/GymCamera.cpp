@@ -8,9 +8,8 @@
 AGymCamera::AGymCamera()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	Camera->SetupAttachment(RootComponent);
-	
+
+	GameInstance = nullptr;
 }
 
 void AGymCamera::BeginPlay()

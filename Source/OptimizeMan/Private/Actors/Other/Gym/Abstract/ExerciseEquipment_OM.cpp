@@ -7,6 +7,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
+#include "Camera/CameraComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Widgets/Gym/Abstract/ExerciseSelectionParentWidget_OM.h"
@@ -25,6 +26,10 @@ AExerciseEquipment_OM::AExerciseEquipment_OM()
 	SelectWorkoutWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	SelectWorkoutWidget->SetupAttachment(RootComponent);
 	SelectWorkoutWidget->SetVisibility(false);
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	CameraComponent->SetupAttachment(RootComponent);
+	CameraComponent->SetMobility(EComponentMobility::Static);
 }
 
 void AExerciseEquipment_OM::BeginPlay()
@@ -146,7 +151,7 @@ FVector AExerciseEquipment_OM::GetLookAtCameraPosition() const
 	return LookAtCameraPosition;
 }
 
-AActor* AExerciseEquipment_OM::GetGymCamera() const
+ACameraActor* AExerciseEquipment_OM::GetGymCamera() const
 {
 	return Camera;
 }

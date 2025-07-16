@@ -6,6 +6,7 @@
 #include "Actors/Other/Abstract/InteractableActor_OM.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "ExerciseEquipment_OM.generated.h"
+class UCameraComponent;
 class UWidgetComponent;
 class AGymCamera;
 /*
@@ -35,7 +36,7 @@ public:
 	FRotator GetLookAtCameraRotation() const;
 	FVector GetLookAtCameraPosition() const;
 	FTransform GetOriginalPosition() const;
-	AActor* GetGymCamera() const;
+	ACameraActor* GetGymCamera() const;
 
 	float GetMaxWeight() const { return MaxWeight; }
 	float GetMinWeight() const { return MinWeight; }
@@ -43,6 +44,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
 	UWidgetComponent* SelectWorkoutWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UCameraComponent* CameraComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	AGymCamera* Camera;

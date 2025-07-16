@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Camera/CameraActor.h"
 #include "Utils/Structs/PlayerData.h"
 #include "GymCamera.generated.h"
 
 UCLASS()
-class OPTIMIZEMAN_API AGymCamera : public AActor
+class OPTIMIZEMAN_API AGymCamera : public ACameraActor
 {
 	GENERATED_BODY()
 public:	
@@ -22,9 +22,6 @@ public:
 
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCameraComponent* Camera;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transform")
 	FTransform DoomerTransform;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Transform")

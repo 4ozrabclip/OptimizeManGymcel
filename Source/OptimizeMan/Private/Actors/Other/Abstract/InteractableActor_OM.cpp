@@ -13,10 +13,13 @@
 AInteractableActor_OM::AInteractableActor_OM()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	
 	
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	ItemMesh->SetCollisionProfileName(TEXT("Default"));
-	RootComponent = ItemMesh;
+	ItemMesh->SetupAttachment(RootComponent);
 	
 	AuraLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("AuraLight"));
 	AuraLight->SetupAttachment(RootComponent);

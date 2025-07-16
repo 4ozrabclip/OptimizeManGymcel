@@ -16,8 +16,6 @@ AVendingMachine_OM::AVendingMachine_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-
 	VendorWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	VendorWidgetComponent->SetupAttachment(RootComponent);
 	VendorWidgetComponent->SetVisibility(false);
