@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/Slider.h"
+#include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Kismet/GameplayStatics.h"
@@ -107,47 +108,50 @@ void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
 	Super::DarkModeToggle(bIsDarkMode);
 
+	if (!BorderWhite || !BorderBlack || !BorderWhite2 || !BorderBlack2 ||
+		!BorderWhite_Hover || !BorderBlack_Hover || !BorderWhite_Hover2 || !BorderBlack_Hover2) return;
+
 	if (bIsDarkMode)
 	{
 		FButtonStyle AudioQualityDarkModeStyle;
-		AudioQualityDarkModeStyle.Normal.SetResourceObject(AudioQualityWhite);
-		AudioQualityDarkModeStyle.Hovered.SetResourceObject(AudioQualityWhiteHover);
-		AudioQualityDarkModeStyle.Pressed.SetResourceObject(AudioQualityWhite);
+		AudioQualityDarkModeStyle.Normal.SetResourceObject(BorderWhite);
+		AudioQualityDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
+		AudioQualityDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 		
 		FButtonStyle PlayDarkModeStyle;
-		PlayDarkModeStyle.Normal.SetResourceObject(PlayButtonWhite);
-		PlayDarkModeStyle.Hovered.SetResourceObject(PlayButtonWhiteHover);
-		PlayDarkModeStyle.Pressed.SetResourceObject(PlayButtonWhite);
+		PlayDarkModeStyle.Normal.SetResourceObject(BorderWhite);
+		PlayDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
+		PlayDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 
 		FButtonStyle SettingsDarkModeStyle;
-		SettingsDarkModeStyle.Normal.SetResourceObject(SettingsButtonWhite);
-		SettingsDarkModeStyle.Hovered.SetResourceObject(SettingsButtonWhiteHover);
-		SettingsDarkModeStyle.Pressed.SetResourceObject(SettingsButtonWhite);
+		SettingsDarkModeStyle.Normal.SetResourceObject(BorderWhite2);
+		SettingsDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
+		SettingsDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 		
 		FButtonStyle QuitDarkModeStyle;
-		QuitDarkModeStyle.Normal.SetResourceObject(QuitButtonWhite);
-		QuitDarkModeStyle.Hovered.SetResourceObject(QuitButtonWhiteHover);
-		QuitDarkModeStyle.Pressed.SetResourceObject(QuitButtonWhite);
+		QuitDarkModeStyle.Normal.SetResourceObject(BorderWhite);
+		QuitDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
+		QuitDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 
 		FButtonStyle BackButtonDarkModeStyle;
-		BackButtonDarkModeStyle.Normal.SetResourceObject(BackButtonWhite);
-		BackButtonDarkModeStyle.Hovered.SetResourceObject(BackButtonWhiteHover);
-		BackButtonDarkModeStyle.Pressed.SetResourceObject(BackButtonWhite);
+		BackButtonDarkModeStyle.Normal.SetResourceObject(BorderWhite);
+		BackButtonDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
+		BackButtonDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 
 		FButtonStyle NewGameDarkModeStyle;
-		NewGameDarkModeStyle.Normal.SetResourceObject(NewGameButtonWhite);
-		NewGameDarkModeStyle.Hovered.SetResourceObject(NewGameButtonWhiteHover);
-		NewGameDarkModeStyle.Pressed.SetResourceObject(NewGameButtonWhite);
+		NewGameDarkModeStyle.Normal.SetResourceObject(BorderWhite2);
+		NewGameDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
+		NewGameDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 
 		FButtonStyle LoadGameDarkModeStyle;
-		LoadGameDarkModeStyle.Normal.SetResourceObject(LoadGameButtonWhite);
-		LoadGameDarkModeStyle.Hovered.SetResourceObject(LoadGameButtonWhiteHover);
-		LoadGameDarkModeStyle.Pressed.SetResourceObject(LoadGameButtonWhite);
+		LoadGameDarkModeStyle.Normal.SetResourceObject(BorderWhite2);
+		LoadGameDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
+		LoadGameDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
 
 		FButtonStyle ToggleDarkModeStyle;
-		ToggleDarkModeStyle.Normal.SetResourceObject(ToggleDarkModeWhite);
-		ToggleDarkModeStyle.Hovered.SetResourceObject(ToggleDarkModeWhiteHover);
-		ToggleDarkModeStyle.Pressed.SetResourceObject(ToggleDarkModeWhite);
+		ToggleDarkModeStyle.Normal.SetResourceObject(BorderWhite);
+		ToggleDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
+		ToggleDarkModeStyle.Pressed.SetResourceObject(BorderWhite2);
 
 		
 		
@@ -161,43 +165,55 @@ void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 		LoadGameButton->SetStyle(LoadGameDarkModeStyle);
 		ToggleDarkMode->SetStyle(ToggleDarkModeStyle);
 		AudioQualitySettingsButton->SetStyle(AudioQualityDarkModeStyle);
+
+		// Text
+		Play_Text->SetColorAndOpacity(White);
+		Settings_Text->SetColorAndOpacity(White);
+		Quit_Text->SetColorAndOpacity(White);
+		NewGame_Text->SetColorAndOpacity(White);
+		LoadGame_Text->SetColorAndOpacity(White);
+		PlayGameBack_Text->SetColorAndOpacity(White);
+		ToggleDarkMode_Text->SetColorAndOpacity(White);
+		AudioQualitySettings_Text->SetColorAndOpacity(White);
+		SettingsBack_Text->SetColorAndOpacity(White);
+		
 	}
 	else
 	{
 		FButtonStyle AudioQualityLightModeStyle;
-		AudioQualityLightModeStyle.Normal.SetResourceObject(AudioQualityBlack);
-		AudioQualityLightModeStyle.Hovered.SetResourceObject(AudioQualityBlackHover);
-		AudioQualityLightModeStyle.Pressed.SetResourceObject(AudioQualityBlack);
+		AudioQualityLightModeStyle.Normal.SetResourceObject(BorderBlack);
+		AudioQualityLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
+		AudioQualityLightModeStyle.Pressed.SetResourceObject(BorderBlack2);
 		
 		FButtonStyle PlayLightModeStyle;
-		PlayLightModeStyle.Normal.SetResourceObject(PlayButtonBlack);
-		PlayLightModeStyle.Hovered.SetResourceObject(PlayButtonBlackHover);
-		PlayLightModeStyle.Pressed.SetResourceObject(PlayButtonBlack);
+		PlayLightModeStyle.Normal.SetResourceObject(BorderBlack2);
+		PlayLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
+		PlayLightModeStyle.Pressed.SetResourceObject(BorderBlack);
 		
 		FButtonStyle SettingsLightModeStyle;
-		SettingsLightModeStyle.Normal.SetResourceObject(SettingsButtonBlack);
-		SettingsLightModeStyle.Hovered.SetResourceObject(SettingsButtonBlackHover);
-		SettingsLightModeStyle.Pressed.SetResourceObject(SettingsButtonBlack);
+		SettingsLightModeStyle.Normal.SetResourceObject(BorderBlack);
+		SettingsLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
+		SettingsLightModeStyle.Pressed.SetResourceObject(BorderBlack);
 		FButtonStyle QuitLightModeStyle;
-		QuitLightModeStyle.Normal.SetResourceObject(QuitButtonBlack);
-		QuitLightModeStyle.Hovered.SetResourceObject(QuitButtonBlackHover);
-		QuitLightModeStyle.Pressed.SetResourceObject(QuitButtonBlack);
+		QuitLightModeStyle.Normal.SetResourceObject(BorderBlack2);
+		QuitLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
+		QuitLightModeStyle.Pressed.SetResourceObject(BorderBlack);
 		FButtonStyle BackButtonLightModeStyle;
-		BackButtonLightModeStyle.Normal.SetResourceObject(BackButtonBlack);
-		BackButtonLightModeStyle.Hovered.SetResourceObject(BackButtonBlackHover);
-		BackButtonLightModeStyle.Pressed.SetResourceObject(BackButtonBlack);
+		BackButtonLightModeStyle.Normal.SetResourceObject(BorderBlack);
+		BackButtonLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
+		BackButtonLightModeStyle.Pressed.SetResourceObject(BorderBlack);
 		FButtonStyle NewGameLightModeStyle;
-		NewGameLightModeStyle.Normal.SetResourceObject(NewGameButtonBlack);
-		NewGameLightModeStyle.Hovered.SetResourceObject(NewGameButtonBlackHover);
-		NewGameLightModeStyle.Pressed.SetResourceObject(NewGameButtonBlack);
+		NewGameLightModeStyle.Normal.SetResourceObject(BorderBlack2);
+		NewGameLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
+		NewGameLightModeStyle.Pressed.SetResourceObject(BorderBlack);
 		FButtonStyle LoadGameLightModeStyle;
-		LoadGameLightModeStyle.Normal.SetResourceObject(LoadGameButtonBlack);
-		LoadGameLightModeStyle.Hovered.SetResourceObject(LoadGameButtonBlackHover);
-		LoadGameLightModeStyle.Pressed.SetResourceObject(LoadGameButtonBlack);
+		LoadGameLightModeStyle.Normal.SetResourceObject(BorderBlack);
+		LoadGameLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
+		LoadGameLightModeStyle.Pressed.SetResourceObject(BorderBlack2);
 		FButtonStyle ToggleDarkModeStyle;
-		ToggleDarkModeStyle.Normal.SetResourceObject(ToggleDarkModeBlack);
-		ToggleDarkModeStyle.Hovered.SetResourceObject(ToggleDarkModeBlackHover);
-		ToggleDarkModeStyle.Pressed.SetResourceObject(ToggleDarkModeBlack);
+		ToggleDarkModeStyle.Normal.SetResourceObject(BorderBlack2);
+		ToggleDarkModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
+		ToggleDarkModeStyle.Pressed.SetResourceObject(BorderBlack);
 		
 		Title->SetBrushResourceObject(LogoBlack);
 		PlayButton->SetStyle(PlayLightModeStyle);
@@ -209,6 +225,17 @@ void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 		LoadGameButton->SetStyle(LoadGameLightModeStyle);
 		ToggleDarkMode->SetStyle(ToggleDarkModeStyle);
 		AudioQualitySettingsButton->SetStyle(AudioQualityLightModeStyle);
+
+		// Text
+		Play_Text->SetColorAndOpacity(Black);
+		Settings_Text->SetColorAndOpacity(Black);
+		Quit_Text->SetColorAndOpacity(Black);
+		NewGame_Text->SetColorAndOpacity(Black);
+		LoadGame_Text->SetColorAndOpacity(Black);
+		PlayGameBack_Text->SetColorAndOpacity(Black);
+		ToggleDarkMode_Text->SetColorAndOpacity(Black);
+		AudioQualitySettings_Text->SetColorAndOpacity(Black);
+		SettingsBack_Text->SetColorAndOpacity(Black);
 	}
 }
 

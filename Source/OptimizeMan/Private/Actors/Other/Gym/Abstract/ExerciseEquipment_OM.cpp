@@ -26,10 +26,7 @@ AExerciseEquipment_OM::AExerciseEquipment_OM()
 	SelectWorkoutWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	SelectWorkoutWidget->SetupAttachment(RootComponent);
 	SelectWorkoutWidget->SetVisibility(false);
-
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(RootComponent);
-	CameraComponent->SetMobility(EComponentMobility::Static);
+	
 }
 
 void AExerciseEquipment_OM::BeginPlay()

@@ -44,9 +44,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
 	UWidgetComponent* SelectWorkoutWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UCameraComponent* CameraComponent;
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	AGymCamera* Camera;

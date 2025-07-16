@@ -6,6 +6,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "MainMenuWidget_OM.generated.h"
 
+class UTextBlock;
 class UGameAudio_OM;
 class USlider;
 class UBorder;
@@ -75,23 +76,41 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* PlayButton;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Play_Text;
+	UPROPERTY(meta = (BindWidget))
 	UButton* SettingsButton;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Settings_Text;
+	UPROPERTY(meta = (BindWidget))
 	UButton* QuitButton;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Quit_Text;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* NewGameButton;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* NewGame_Text;
+	UPROPERTY(meta = (BindWidget))
 	UButton* LoadGameButton;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LoadGame_Text;
+	UPROPERTY(meta = (BindWidget))
 	UButton* PlayGameBackButton;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* PlayGameBack_Text;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* ToggleDarkMode;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ToggleDarkMode_Text;
+	UPROPERTY(meta = (BindWidget))
 	UButton* AudioQualitySettingsButton;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* AudioQualitySettings_Text;
+	UPROPERTY(meta = (BindWidget))
 	UButton* SettingsBackButton;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* SettingsBack_Text;
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* AudioQualitySettings_Layer;
@@ -121,75 +140,20 @@ private:
 	UTexture* LogoWhite;
 
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* PlayButtonBlack;
+	UMaterial* BorderBlack;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* PlayButtonBlackHover;
+	UMaterial* BorderBlack2;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* PlayButtonWhite;
+	UMaterial* BorderBlack_Hover;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* PlayButtonWhiteHover;
-	
+	UMaterial* BorderBlack_Hover2;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* SettingsButtonBlack;
+	UMaterial* BorderWhite;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* SettingsButtonBlackHover;
+	UMaterial* BorderWhite2;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* SettingsButtonWhite;
+	UMaterial* BorderWhite_Hover;
 	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* SettingsButtonWhiteHover;
-
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* QuitButtonBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* QuitButtonBlackHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* QuitButtonWhite;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* QuitButtonWhiteHover;
-
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* NewGameButtonBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* NewGameButtonBlackHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* NewGameButtonWhite;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* NewGameButtonWhiteHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* LoadGameButtonBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* LoadGameButtonBlackHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* LoadGameButtonWhite;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* LoadGameButtonWhiteHover;
-
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* ToggleDarkModeBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* ToggleDarkModeBlackHover;
-	UPROPERTY(Editanywhere, Category = "Images")
-	UMaterial* ToggleDarkModeWhite;
-	UPROPERTY(Editanywhere, Category = "Images")
-	UMaterial* ToggleDarkModeWhiteHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* AudioQualityBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* AudioQualityBlackHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* AudioQualityWhite;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* AudioQualityWhiteHover;
-
-	
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BackButtonBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BackButtonBlackHover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BackButtonWhite;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BackButtonWhiteHover;
-	
+	UMaterial* BorderWhite_Hover2;
 
 };
