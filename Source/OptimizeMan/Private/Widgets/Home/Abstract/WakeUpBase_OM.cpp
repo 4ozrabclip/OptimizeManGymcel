@@ -67,6 +67,11 @@ void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 		return;
 	}
 
+	if (TodoManager->GetCurrentTodoArray().Num() == 3)
+	{
+		return;
+	}
+
 	switch (InOption)
 	{
 	case 0:

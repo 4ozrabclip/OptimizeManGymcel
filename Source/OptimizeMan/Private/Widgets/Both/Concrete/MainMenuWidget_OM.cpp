@@ -239,9 +239,6 @@ void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 	}
 }
 
-
-
-
 void UMainMenuWidget_OM::ToggleDarkModeFunction()
 {
 	if (!GameInstance)
