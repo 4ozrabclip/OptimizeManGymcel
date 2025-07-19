@@ -16,7 +16,7 @@ class OPTIMIZEMAN_API UCompoundSelectionWidget_OM : public UExerciseSelectionPar
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	void CheckAndSetEquipmentType();
+	virtual void CheckAndSetEquipmentType() override;
 	virtual void InitialOpen() override;
 	virtual void OpenLayer(UGridPanel* InGrid) const override;
 
@@ -34,8 +34,10 @@ public:
 	void SetExerciseLeftCurl() { SetExerciseType(EExerciseType::LeftCurl); };
 	UFUNCTION()
 	void SetExerciseRightCurl() { SetExerciseType(EExerciseType::RightCurl); };
+	UFUNCTION()
+	void SetExerciseChestDip() { SetExerciseType(EExerciseType::ChestDip); }
 	
-	void SetExerciseType(EExerciseType InExerciseType);
+	virtual void SetExerciseType(EExerciseType InExerciseType) override;
 
 
 protected:
@@ -58,7 +60,7 @@ protected:
 
 private:
 
-	EEquipmentTypes CurrentEquipmentType;
+
 
 
 };

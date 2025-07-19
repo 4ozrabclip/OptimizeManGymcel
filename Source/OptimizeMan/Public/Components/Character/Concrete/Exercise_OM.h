@@ -66,7 +66,7 @@ public: // Exercise Management
 
 	void SetRep();
 
-	void DoRep(const TFunction<void()>& AnimFunction, const TFunction<void(float)>& ModifyMuscleValueFunc,
+	void DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc,
 	           float MuscleIncrease, float EnergyUse, float RepDuration);
 	void CheckForExerciseAchievements();
 
@@ -78,7 +78,8 @@ public: // Exercise Management
 
 
 	void EnterExercisePosition();
-	
+	void ManageEntry();
+
 	void DetachEquipment() const;
 
 	
@@ -129,6 +130,7 @@ private:
 	const float SquatDuration = 4.2f;
 	const float BicepCurlDuration = 4.2f;
 	const float OverheadPressDuration = 4.2f;
+	const float ChestDipDuration = 4.2f;
 
 	float TimeSinceLastRep;
 

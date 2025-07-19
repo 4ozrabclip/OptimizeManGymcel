@@ -346,6 +346,19 @@ void APlayerCharacter_OM::InitPlayModes()
 
 }
 
+EWorkoutStates APlayerCharacter_OM::GetWorkoutState() const
+{
+	if (ExerciseComponent)
+		return ExerciseComponent->GetCurrentWorkoutState();
+	return EWorkoutStates::NotInExercisePosition;
+}
+EExerciseType APlayerCharacter_OM::GetCurrentExerciseType() const
+{
+	if (ExerciseComponent)
+		return ExerciseComponent->GetCurrentExerciseType();
+	return EExerciseType::None;
+}
+
 void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter)
 {
 	// dont allow to switch between playmode unless its regular to x or x to regular 

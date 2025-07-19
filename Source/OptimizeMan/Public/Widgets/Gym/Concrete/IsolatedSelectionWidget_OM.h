@@ -15,4 +15,12 @@ class OPTIMIZEMAN_API UIsolatedSelectionWidget_OM : public UExerciseSelectionPar
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+
+	virtual void CheckAndSetEquipmentType() override;
+
+	virtual void SetExerciseType(EExerciseType InExerciseType) override;
+
+
+	UFUNCTION()
+	void OpenWeightSelect() { OpenLayer(WeightSelect_Grid); }
 };

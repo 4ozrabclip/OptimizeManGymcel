@@ -10,6 +10,8 @@ AGymCamera::AGymCamera()
 	PrimaryActorTick.bCanEverTick = true;
 
 	GameInstance = nullptr;
+
+	GetCameraComponent()->SetConstraintAspectRatio(false);
 }
 
 void AGymCamera::BeginPlay()

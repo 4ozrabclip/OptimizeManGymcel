@@ -17,6 +17,7 @@ class OPTIMIZEMAN_API UWakeUpTutorial_OM : public UWakeUpBase_OM
 public:
 	explicit UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override;
+	
 	void InitiateTutorialSequence();
 	void PlayTutorialAnimation(UWidgetAnimation* InAnimationPart);
 	void PlayContPrompt();
@@ -26,8 +27,7 @@ public:
 	void FinishTutorial();
 
 	virtual void OnExitButtonClicked() override;
-
-
+	
 	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 

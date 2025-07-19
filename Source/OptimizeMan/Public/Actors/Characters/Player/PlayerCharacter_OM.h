@@ -12,6 +12,7 @@
 #include "GameplayAbilitySystem/AttributeSets/Concrete/MentalHealthStats_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/EnergyTick_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
+#include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/PlayerData.h"
 #include "Utils/Structs/PlayModes.h"
 
@@ -237,6 +238,11 @@ public:
 public:
 	UFUNCTION()
 	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
+
+	UFUNCTION()
+	EWorkoutStates GetWorkoutState() const;
+	UFUNCTION()
+	EExerciseType GetCurrentExerciseType() const;
 
 	UFUNCTION(Category = "Gameplay")
 	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter = nullptr);

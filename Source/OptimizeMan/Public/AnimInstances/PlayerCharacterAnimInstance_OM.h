@@ -151,6 +151,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State Management")
 	EPlayModes CurrentPlayMode = EPlayModes::RegularMode;
 
+	UPROPERTY(BlueprintReadOnly, Category = "State Management")
+	EExerciseType CurrentExerciseType = EExerciseType::None;
+	UPROPERTY(BlueprintReadOnly, Category = "State Management")
+	EWorkoutStates CurrentWorkoutState = EWorkoutStates::NotInExercisePosition;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Strength")
 	FBodyPartData Thigh_Left;
 	UPROPERTY(BlueprintReadOnly, Category = "Strength")
@@ -164,6 +169,7 @@ protected:
 public:
 	/** State Setters **/
 	void SetCurrentPlayMode(const EPlayModes InPlayMode) { CurrentPlayMode = InPlayMode; }
-
+	void SetCurrentWorkoutState(const EWorkoutStates InWorkoutState) { CurrentWorkoutState = InWorkoutState; }
+	
 };
 

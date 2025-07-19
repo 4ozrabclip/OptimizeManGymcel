@@ -37,7 +37,9 @@ enum class EEquipmentTypes : uint8
 {
 	None = 0,
 	Barbell,
-	Dumbell
+	Dumbell,
+	Dipbar,
+	Legpress
 };
 
 UENUM()
@@ -49,12 +51,14 @@ enum class EButtonOptions : uint8
 	ButtonThree,
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class EWorkoutStates : uint8
 {
 	NotInExercisePosition = 0,
+	Entry,
 	InExercisePosition,
 	DoingRep,
+	PostRep,
 	SetComplete
 };
 UENUM(BlueprintType)
@@ -66,5 +70,7 @@ enum class EExerciseType : uint8
 	BicepCurl		UMETA(DisplayName = "Bicepcurl"),
 	LeftCurl		UMETA(DisplayName = "Left Curl"),
 	RightCurl		UMETA(DisplayName = "Right Curl"),
+	ChestDip		UMETA(DisplayName = "Chest Dip"),
+	LegPress		UMETA(DisplayName = "Leg Press"),
 	
 };

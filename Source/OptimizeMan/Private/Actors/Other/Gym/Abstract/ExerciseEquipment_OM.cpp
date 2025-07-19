@@ -26,6 +26,8 @@ AExerciseEquipment_OM::AExerciseEquipment_OM()
 	SelectWorkoutWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	SelectWorkoutWidget->SetupAttachment(RootComponent);
 	SelectWorkoutWidget->SetVisibility(false);
+	SelectWorkoutWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	SelectWorkoutWidget->SetDrawSize(FVector2D(320.f, 180.f));
 	
 }
 

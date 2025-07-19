@@ -5,6 +5,7 @@
 
 #include "Actors/Other/Gym/Abstract/ExerciseEquipment_OM.h"
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
+#include "Actors/Other/Gym/Concrete/DipBar_OM.h"
 #include "Actors/Other/Gym/Concrete/Dumbell_OM.h"
 #include "Components/Button.h"
 #include "Components/GridPanel.h"
@@ -21,13 +22,13 @@ void UCompoundSelectionWidget_OM::NativeConstruct()
 		SelectWeight_Button->OnClicked.AddDynamic(this, &UCompoundSelectionWidget_OM::OnSelectWorkoutButtonClicked);
 	}
 
-	CheckAndSetEquipmentType();
+
 	AssignWorkoutButtons();
 }
 void UCompoundSelectionWidget_OM::CheckAndSetEquipmentType()
 {
-	if (!ExerciseEquipment) return;
-	
+	Super::CheckAndSetEquipmentType();
+	 
 	if (ExerciseEquipment->IsA<ABarbell_OM>())
 	{
 		CurrentEquipmentType = EEquipmentTypes::Barbell;
@@ -35,6 +36,10 @@ void UCompoundSelectionWidget_OM::CheckAndSetEquipmentType()
 	else if (ExerciseEquipment->IsA<ADumbell_OM>())
 	{
 		CurrentEquipmentType = EEquipmentTypes::Dumbell;
+	}
+	else if (ExerciseEquipment->IsA<ADipBar_OM>())
+	{
+		CurrentEquipmentType = EEquipmentTypes::Dipbar;
 	}
 }
 void UCompoundSelectionWidget_OM::AssignWorkoutButtons()
@@ -74,6 +79,17 @@ void UCompoundSelectionWidget_OM::AssignWorkoutButtons()
 				WorkoutType3_Button->SetVisibility(ESlateVisibility::Hidden);
 				break;
 			}
+		case EEquipmentTypes::Dipbar:
+			{
+				const FText ChestDipsText = FText::FromString("ChestDips");
+				WorkoutType1_Text->SetText(ChestDipsText);
+				WorkoutType1_Button->OnClicked.Clear();
+				WorkoutType1_Button->OnClicked.AddDynamic(this, &UCompoundSelectionWidget_OM::SetExerciseChestDip);
+
+				WorkoutType2_Button->SetVisibility(ESlateVisibility::Hidden);
+				WorkoutType3_Button->SetVisibility(ESlateVisibility::Hidden);
+				break;
+			}
 		default:
 			{
 				ExerciseEquipment->TurnOffWidget();
@@ -97,15 +113,7 @@ void UCompoundSelectionWidget_OM::OpenLayer(UGridPanel* InGrid) const
 
 void UCompoundSelectionWidget_OM::SetExerciseType(EExerciseType InExerciseType)
 {
-	if (!ExerciseComponent) return;
-	if (ExerciseComponent)
-	{
-		ExerciseComponent->SetExerciseType(InExerciseType);
-	}
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-
-	ExerciseComponent->ClearBodyPartsInUse();
+	Super::SetExerciseType(InExerciseType);
 
 	const FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();
 	switch (InExerciseType)
@@ -127,6 +135,10 @@ void UCompoundSelectionWidget_OM::SetExerciseType(EExerciseType InExerciseType)
 	case EExerciseType::RightCurl:
 		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(EBodyPart::Arm, EBodyPartSide::Right));
 		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Arm, EBodyPartSide::Left));
+		break;
+	case EExerciseType::ChestDip:
+		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(EBodyPart::Chest, EBodyPartSide::Center));
+		ExerciseComponent->SetBodyPartInUse(*GameInstance->FindBodyPart(EBodyPart::Chest, EBodyPartSide::Center));
 		break;
 	default:
 		SetMuscleGroupCurrentStrength(GameInstance->GetBodyPartStrengthValue(EBodyPart::Abdominal, EBodyPartSide::Center));

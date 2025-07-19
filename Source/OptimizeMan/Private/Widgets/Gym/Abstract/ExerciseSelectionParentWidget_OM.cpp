@@ -54,8 +54,10 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 		if (!ExerciseComponent)
 			return;
 	}
-	
+
 	InitialOpen();
+
+	CheckAndSetEquipmentType();
 }
 
 void UExerciseSelectionParentWidget_OM::DarkModeToggle(const bool bIsDarkMode)
@@ -69,6 +71,25 @@ void UExerciseSelectionParentWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 	{
 		WeightSelect_Text->SetColorAndOpacity(Black);
 	}
+}
+
+void UExerciseSelectionParentWidget_OM::CheckAndSetEquipmentType()
+{
+	if (!ExerciseEquipment) return;
+
+}
+
+void UExerciseSelectionParentWidget_OM::SetExerciseType(EExerciseType InExerciseType)
+{
+	if (!ExerciseComponent) return;
+	if (ExerciseComponent)
+	{
+		ExerciseComponent->SetExerciseType(InExerciseType);
+	}
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+
+	ExerciseComponent->ClearBodyPartsInUse();
 }
 
 

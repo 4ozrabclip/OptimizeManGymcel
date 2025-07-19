@@ -59,7 +59,6 @@ void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	if (CurrentWorkoutState != EWorkoutStates::SetComplete)
 	{
 		if (CurrentWorkoutState == EWorkoutStates::InExercisePosition && TimeSinceLastRep < 5.f)
-		if (CurrentWorkoutState == EWorkoutStates::InExercisePosition && TimeSinceLastRep < 5.f)
 		{
 			TimeSinceLastRep += DeltaTime;
 		}
@@ -97,6 +96,7 @@ void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 		SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
 	
 	}
+	
 	//need exercise type to be stated before EnterExercisePosition
 	CurrentExerciseType = InExerciseType;
 	
@@ -134,29 +134,52 @@ void UExercise_OM::EnterExercisePosition()
 	case EExerciseType::None:
 		break;
 	case EExerciseType::Squat:
-		//Have a check here to see if equipment is a barbell
-		Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, NeckSocket);
-		AnimInstance->SetIsInSquatPosition(true);
-		break;
+		{
+			//Have a check here to see if equipment is a barbell
+			Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, NeckSocket);
+			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			break;
+		}
 	case EExerciseType::BicepCurl:
-		Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, LeftHandSocket);
-		//Equipment->SetPivotOffset(NewRelativeLocation);
-		Equipment->SetActorRelativeLocation(NewRelativeLocation);
-		//Equipment->SetActorLocation(NewRelativeLocation);
-		AnimInstance->SetIsInCurlPosition(true);
-		break;
+		{
+			Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, LeftHandSocket);
+			//Equipment->SetPivotOffset(NewRelativeLocation);
+			Equipment->SetActorRelativeLocation(NewRelativeLocation);
+			//Equipment->SetActorLocation(NewRelativeLocation);
+			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			break;
+		}
 	case EExerciseType::OverheadPress:
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "EnterExercisePosition: OHP");
-		AnimInstance->SetIsInOverheadPressPosition(true);
-		break;
+		{
+			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			//AnimInstance->SetIsInOverheadPressPosition(true);
+			break;
+		}
 	case EExerciseType::LeftCurl:
-		Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, LeftHandSocket);
-		AnimInstance->SetIsInLeftCurlPosition(true);
-		break;
+		{
+			Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, LeftHandSocket);
+			//AnimInstance->SetIsInLeftCurlPosition(true);
+			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			break;
+		}
 	case EExerciseType::RightCurl:
-		Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, RightHandSocket);
-		AnimInstance->SetIsInRightCurlPosition(true);
-		break;
+		{
+			Equipment->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, RightHandSocket);
+			//AnimInstance->SetIsInRightCurlPosition(true);
+			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			break;
+		}
+	case EExerciseType::ChestDip:
+		{
+			SetCurrentWorkoutState(EWorkoutStates::Entry);
+			break;
+			//ManageEntry();
+		}
+	case EExerciseType::LegPress:
+		{
+			SetCurrentWorkoutState(EWorkoutStates::Entry);
+			break;
+		}
 	default:
 		return;
 	}
@@ -170,9 +193,12 @@ void UExercise_OM::EnterExercisePosition()
 	Equipment->AuraLight->SetVisibility(false);
 	Player->GetCharacterMovement()->SetMovementMode(MOVE_None);
 	SetStoppedExercise(false);
+
+}
+void UExercise_OM::ManageEntry()
+{
 	SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
 }
-
 void UExercise_OM::MiniGame()
 {
 	if (CurrentWorkoutState == EWorkoutStates::NotInExercisePosition)
@@ -271,6 +297,10 @@ float UExercise_OM::GetRepDuration()
 			return BicepCurlDuration;
 		case EExerciseType::OverheadPress:
 			return OverheadPressDuration;
+		case EExerciseType::ChestDip:
+			return ChestDipDuration;
+		case EExerciseType::LegPress:
+			return 4.2f; // ---------------- Magic Number, Sort this whole duration thing out.  Maybe use dynamic?
 		default:
 			return SquatDuration;;
 	}
@@ -309,7 +339,7 @@ void UExercise_OM::SetRep()
 	case EExerciseType::None:
 		break;
 	case EExerciseType::Squat:
-		DoRep([this] { AnimInstance->DoSquatRep(); },
+		DoRep(
 			  [this](float Increase)
 			  {
 				  AddMuscleStat(EBodyPart::Thigh, EBodyPartSide::Left, Increase);
@@ -321,7 +351,7 @@ void UExercise_OM::SetRep()
 		break;
 
 	case EExerciseType::BicepCurl:
-		DoRep([this] { AnimInstance->DoCurlRep(); },
+		DoRep(
 			  [this](float Increase)
 			  {
 				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Left, Increase);
@@ -333,7 +363,7 @@ void UExercise_OM::SetRep()
 		break;
 
 	case EExerciseType::OverheadPress:
-		DoRep([this] { AnimInstance->DoOverheadPressRep(); },
+		DoRep(
 			  [this](float Increase)
 			  {
 				  AddMuscleStat(EBodyPart::Shoulder, EBodyPartSide::Center, Increase);
@@ -344,7 +374,7 @@ void UExercise_OM::SetRep()
 		break;
 
 	case EExerciseType::LeftCurl:
-		DoRep([this] { AnimInstance->DoLeftCurlRep(); },
+		DoRep(
 			  [this](float Increase)
 			  {
 				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Left, Increase);
@@ -355,7 +385,7 @@ void UExercise_OM::SetRep()
 		break;
 
 	case EExerciseType::RightCurl:
-		DoRep([this] { AnimInstance->DoRightCurlRep(); },
+		DoRep(
 			  [this](float Increase)
 			  {
 				  AddMuscleStat(EBodyPart::Arm, EBodyPartSide::Right, Increase);
@@ -364,19 +394,35 @@ void UExercise_OM::SetRep()
 			  ExerciseParameters.BicepCurlEnergyUse,
 			  BicepCurlDuration);
 		break;
+	case EExerciseType::ChestDip:
+		DoRep(
+			[this](float Increase)
+			{
+				AddMuscleStat(EBodyPart::Chest, EBodyPartSide::Center, Increase);
+			},
+			ExerciseParameters.ArmIncrease,
+			ExerciseParameters.ChestDipEnergyUse,
+			ChestDipDuration);
+		break;
+	case EExerciseType::LegPress:
+		DoRep(
+			[this](float Increase)
+			{
+				AddMuscleStat(EBodyPart::Thigh, EBodyPartSide::Left, Increase);
+				AddMuscleStat(EBodyPart::Thigh, EBodyPartSide::Right, Increase);
+			},
+			ExerciseParameters.LowerBodyIncrease,
+			ExerciseParameters.LegPressEnergyUse,
+			4.2f); // --- ----------------------- magic
 	default:
 		break;
 	}
 }
 
 
-void UExercise_OM::DoRep(const TFunction<void()>& AnimFunction, const TFunction<void(float)>& ModifyMuscleValueFunc, const float MuscleIncrease, const float EnergyUse, const float RepDuration)
+void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, const float MuscleIncrease, const float EnergyUse, const float RepDuration)
 {
 	SetCurrentWorkoutState(EWorkoutStates::DoingRep);
-	if (AnimFunction)
-	{
-		AnimFunction();
-	}
 	RepCount++;
 
 	if (!bStartedSet)
@@ -432,28 +478,6 @@ void UExercise_OM::CheckForExerciseAchievements()
 
 void UExercise_OM::LeaveExercise()
 {
-	switch (CurrentExerciseType)
-	{
-	case EExerciseType::None:
-		break;
-	case EExerciseType::Squat:
-		AnimInstance->ExitSquatPosition();
-		break;
-	case EExerciseType::BicepCurl:
-		AnimInstance->ExitCurlPosition();
-		break;
-	case EExerciseType::OverheadPress:
-		AnimInstance->ExitOverheadPressPosition();
-		break;
-	case EExerciseType::LeftCurl:
-		AnimInstance->ExitLeftCurlPosition();
-		break;
-	case EExerciseType::RightCurl:
-		AnimInstance->ExitRightCurlPosition();
-		break;
-	default:
-		break;
-	}
 	SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
 	
 	DetachEquipment();
@@ -486,7 +510,8 @@ void UExercise_OM::DetachEquipment() const
 void UExercise_OM::SetCurrentWorkoutState(const EWorkoutStates InWorkoutState)
 {
 	CurrentWorkoutState = InWorkoutState;
-
+	
+	
 	OnWorkoutStateChanged.Broadcast(CurrentWorkoutState);
 	
 }
