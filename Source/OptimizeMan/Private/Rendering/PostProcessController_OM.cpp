@@ -2,7 +2,11 @@
 
 
 #include "Rendering/PostProcessController_OM.h"
+
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Components/Character/Concrete/Exercise_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
+#include "Kismet/GameplayStatics.h"
 
 
 APostProcessController_OM::APostProcessController_OM()
@@ -54,6 +58,9 @@ void APostProcessController_OM::BeginPlay()
 
 	InitializeEffects();
 
+	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (Player)
+		Player->OnPlayModeChange.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnPlayMode);
 }
 
 void APostProcessController_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -104,6 +111,16 @@ void APostProcessController_OM::InitializeEffects()
 	ChromaticOffset.ValueGetter = [&]() { return GlobalPostProcessVolume->Settings.ChromaticAberrationStartOffset; };
 	ChromaticOffset.ValueSetter = [&](float Value) { GlobalPostProcessVolume->Settings.ChromaticAberrationStartOffset = Value; };
 	Effects.Add(ChromaticOffset);
+
+	FPostProcessEffect Vignette;
+	Vignette.Name = FName("Vignette");
+	Vignette.Min = 0.f;
+	Vignette.Max = 1.f;
+	Vignette.bGoingUp = false;
+	Vignette.OverrideSetter = [&](bool bEnable) { GlobalPostProcessVolume->Settings.bOverride_VignetteIntensity = bEnable; };
+	Vignette.ValueGetter = [&]() { return GlobalPostProcessVolume->Settings.VignetteIntensity; };
+	Vignette.ValueSetter = [&](float Value) { GlobalPostProcessVolume->Settings.VignetteIntensity = Value; };
+	Effects.Add(Vignette);
 }
 
 void APostProcessController_OM::CheckDarkMode()
@@ -125,7 +142,43 @@ void APostProcessController_OM::SetDarkMode(bool bDarkMode)
 		}
 	}
 }
-
+void APostProcessController_OM::ManageEffectsOnPlayMode(EPlayModes CurrentPlayMode)
+{
+	switch (CurrentPlayMode)
+	{
+	case EPlayModes::SocialMode:
+		{
+			StartVignetteEffect(EEffectTickMode::WaveEffect, 4, 10);
+			if (Player)
+			{
+				if (auto* ExerciseComp = Player->GetComponentByClass<UExercise_OM>())
+				{
+					if (ExerciseComp->GetFocus() < 0.7f)
+					{
+						StartChromaticEffects();
+					}
+				}
+			}
+			break;
+		}
+	case EPlayModes::WorkoutMode:
+		{
+			if (Player)
+			{
+				if (auto* ExerciseComp = Player->GetComponentByClass<UExercise_OM>())
+				{
+					if (ExerciseComp->GetEnergy() < 0.7f)
+						StartFilmGrainEffects();
+					if (ExerciseComp->GetEnergy() < 0.5f)
+						StartChromaticEffects();
+				}
+			}
+			break;
+		}
+	default:
+		break;
+	}
+}
 void APostProcessController_OM::StartEffect(const FName InEffectName, int MinTime, int MaxTime, EEffectTickMode InEffectTickMode)
 {
 	int EndTime = FMath::RandRange(MinTime, MaxTime);
@@ -188,6 +241,13 @@ void APostProcessController_OM::StartChromaticEffects()
 	StartEffect(FName("ChromaticIntensity"), 5, 30, EEffectTickMode::WaveEffect);
 	StartEffect(FName("ChromaticOffset"), 5, 30, EEffectTickMode::WaveEffect);
 }
+
+void APostProcessController_OM::StartVignetteEffect(EEffectTickMode EffectType, int MinTime, int MaxTime)
+{
+	StartEffect(FName("Vignette"), MinTime, MaxTime, EffectType);
+}
+
+
 FPostProcessEffect& APostProcessController_OM::GetEffect(FName InName)
 {
 	FPostProcessEffect DefEffect;

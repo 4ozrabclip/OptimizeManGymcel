@@ -47,6 +47,7 @@ void USocialInteractionSystem_OM::InitConversation()
 
 
 	// TICK???????
+	
 
 	SetComponentTickEnabled(true);
 

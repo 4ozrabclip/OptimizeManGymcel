@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utils/Structs/PlayModes.h"
 #include "PostProcessController_OM.generated.h"
 
+class APlayerCharacter_OM;
 class UGameInstance_OM;
-class IPersistentStateProvider_OM;
 
 UENUM()
 enum class EEffectTickMode : uint8
@@ -87,6 +88,10 @@ protected:
 	void CheckDarkMode();
 	UFUNCTION()
 	void SetDarkMode(bool bDark);
+	UFUNCTION()
+	void ManageEffectsOnPlayMode(EPlayModes CurrentPlayMode);
+
+	
 	void StartEffect(FName InEffectName, int MinTime, int MaxTime,
 	                 EEffectTickMode InEffectTickMode);
 
@@ -100,6 +105,8 @@ public:
 	void StartFilmGrainEffects();
 	UFUNCTION(BlueprintCallable)
 	void StartChromaticEffects();
+	UFUNCTION(BlueprintCallable)
+	void StartVignetteEffect(EEffectTickMode EffectType = EEffectTickMode::FadeIn, int MinTime = 2, int MaxTime = 5);
 
 	/** Getters/Setters **/
 	FPostProcessEffect& GetEffect(FName InName);
@@ -133,8 +140,13 @@ private:
 	FTimerHandle ChromaticTickHandle;
 	FTimerHandle FilmGrainIntensityHandle;
 	FTimerHandle FilmGrainTexelSizeHandle;
+
+
+	/** Class Cache **/
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
 
 
 protected:
