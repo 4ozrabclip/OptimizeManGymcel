@@ -64,6 +64,7 @@ void AExerciseEquipment_OM::TurnOffWidget()
 {
 	SelectWorkoutWidget->SetVisibility(false);
 	//InteractableInterfaceProperties.bIsInteractable = true;
+	SetIsInteractable(true);
 	Player->SetToUIMode(false);
 	PlayerController->HideUnhideInteractableWidget(false);
 	SetActorTickEnabled(false);

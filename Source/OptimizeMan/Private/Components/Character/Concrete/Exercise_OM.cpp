@@ -339,6 +339,7 @@ void UExercise_OM::SetRep()
 	case EExerciseType::None:
 		break;
 	case EExerciseType::Squat:
+
 		DoRep(
 			  [this](float Increase)
 			  {
@@ -422,6 +423,10 @@ void UExercise_OM::SetRep()
 
 void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, const float MuscleIncrease, const float EnergyUse, const float RepDuration)
 {
+	if (GameInstance->GetGymResStats().Energy < EnergyUse)
+	{
+		LeaveExercise();
+	}
 	SetCurrentWorkoutState(EWorkoutStates::DoingRep);
 	RepCount++;
 
@@ -479,7 +484,8 @@ void UExercise_OM::CheckForExerciseAchievements()
 void UExercise_OM::LeaveExercise()
 {
 	SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
-	
+
+	Equipment->SetIsInteractable(true);
 	DetachEquipment();
 
 	
