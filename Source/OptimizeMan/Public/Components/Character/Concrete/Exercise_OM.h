@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "Components/Character/Abstract/CharacterComponentBase_OM.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/ExerciseParameters.h"
@@ -19,63 +20,89 @@ class OPTIMIZEMAN_API UExercise_OM : public UCharacterComponentBase_OM
 public:	
 	UExercise_OM();
 protected:
+	/** Class Overrides **/
 	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+
+	
 private:
 	void InitInjurys() const;
 
-
 public:
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
 	void ClearBodyPartsInUse() { BodyParts.Empty(); }
 
 protected:
+	UPROPERTY()
+	AExerciseEquipment_OM* Equipment;
+	
+	/** State Management **/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exercise")
 	EExerciseType CurrentExerciseType;
 
 	EWorkoutStates CurrentWorkoutState;
 
-	TArray<FBodyPartData> BodyParts;
-	
-	UPROPERTY()
-	AExerciseEquipment_OM* Equipment;
 
-public: // Exercise Management
+
+	/** BodyParts And Other Struct Data **/
+	TArray<FBodyPartData> BodyParts;
+	TArray<FGameplayTag> CompletedTodosCheckList;
+
+	FExerciseParameters ExerciseParameters;
+
+
+	/** GAS **/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Effects")
+	TSubclassOf<UGameplayEffect> EnergyNegativeHitEffect;
+
+
+public:
 	
-// Events
+	/** Delegate Events **/
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWorkoutStateChanged OnWorkoutStateChanged;
 
-	//Getters and Setters
+	/** Setters/Adders **/
 	UFUNCTION()
 	void SetBodyPartInUse(const FBodyPartData& InBodyPart);
 	UFUNCTION(BlueprintCallable, Category="Exercise")
 	void SetExerciseType(const EExerciseType InExerciseType);
+	
+	void SetRep();
+	void SetStoppedExercise(const bool InStoppedExercise) { bStoppedExercise = InStoppedExercise; };
+	void SetCurrentWorkoutState(const EWorkoutStates InWorkoutState);
+	void AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const;
 
+
+	/** Getters **/
 	EExerciseType GetCurrentExerciseType();
 	float GetRepDuration();
 	bool GetHasEnergy();
-	// Functional
-	void PrepareExercise();
-	void AddMuscleStat(const EBodyPart Part, const EBodyPartSide Side, float Increase) const;
-	UFUNCTION(BlueprintCallable, Category = "Exercise")
-	void DoASquat();
+	bool GetIsDoingRep() const { return bDoingRep; }
+	int GetRepCount() const { return RepCount; }
+	int GetSetCount() const { return SetCount; }
+	EWorkoutStates GetCurrentWorkoutState() const { return CurrentWorkoutState; }
+	float GetEnergy() const;
+	float GetFocus() const;
+
+
+	
+	/** Functional **/
 
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void LeaveExercise();
+	UFUNCTION(BlueprintCallable, Category = "Exercise")
+	void MiniGame();
 
-	void SetRep();
-
+	void PrepareExercise();
+	
 	void DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc,
 	           float MuscleIncrease, float EnergyUse, float RepDuration);
 	void CheckForExerciseAchievements();
 
 	void Injury(const EInjuryLevel& InInjuryLevel);
 	void MinorInjury();
-
-	UFUNCTION(BlueprintCallable, Category = "Exercise")
-	void MiniGame();
-
+	void UseEnergy(float InLevel = 1.f);
 
 	void EnterExercisePosition();
 	void ManageEntry();
@@ -87,35 +114,33 @@ public: // Exercise Management
 	//void StopExercise();
 	
 protected:
+	/** Class References **/
 	UPROPERTY()
-	class UPlayerVoiceAudio_OM* AudioComponent;
+	class UPlayerVoiceAudio_OM* AudioComponent; // This is just a reference, maybe if cast instead
+	UPROPERTY()
+	class UAbilitySystemComponent_OM* AbSysComp;
+	UPROPERTY()
+	const class UGymSpecificStats_OM* GymStats;
+	
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SocketOffset")
 	FVector NewRelativeLocation;
 
 
+
+	/** Timer Handles **/
 	FTimerHandle ExerciseTimerHandle;
 	FTimerHandle FinishSetTimerHandle;
 
-	TArray<FGameplayTag> CompletedTodosCheckList;
 
-	FExerciseParameters ExerciseParameters;
 
 
 
 
 	
 public: //Getters and Setters
-	void SetStoppedExercise(const bool InStoppedExercise) { bStoppedExercise = InStoppedExercise; };
 
-	bool GetIsDoingRep() const { return bDoingRep; }
-
-	int GetRepCount() const { return RepCount; }
-	int GetSetCount() const { return SetCount; }
-
-	EWorkoutStates GetCurrentWorkoutState() const { return CurrentWorkoutState; }
-
-	void SetCurrentWorkoutState(const EWorkoutStates InWorkoutState);
 
 	
 private:

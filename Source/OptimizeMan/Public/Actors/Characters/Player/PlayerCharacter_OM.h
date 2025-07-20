@@ -26,6 +26,7 @@ class ULevelSequence;
 class AInteractableActor_OM;
 class ANpcBase_OM;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayModeChange, EPlayModes, NewPlayMode);
 UCLASS()
 class OPTIMIZEMAN_API APlayerCharacter_OM : public ACharacter, public IAbilitySystemInterface
 {
@@ -117,6 +118,11 @@ public:
 	bool bTodoOpen = false;
 	bool bPauseMenuOpen = false;
 	bool bInteractableOpen = false;
+
+
+	/** Delegate Events **/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Events)
+	FOnPlayModeChange OnPlayModeChange;
 	
 protected:
 	/**** Muscle Stats ****/
@@ -238,6 +244,7 @@ public:
 public:
 	UFUNCTION()
 	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
+	float GetFocus() const;
 
 	UFUNCTION()
 	EWorkoutStates GetWorkoutState() const;

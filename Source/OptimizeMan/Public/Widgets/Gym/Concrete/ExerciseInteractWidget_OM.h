@@ -18,11 +18,11 @@ UCLASS()
 class OPTIMIZEMAN_API UExerciseInteractWidget_OM : public UMinigameBaseWidget_OM
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+public:
 	virtual void OnExitButtonClicked() override;
-
 	void MiniGame(float InDeltaTime);
 
 	void SetNotificationText();
@@ -61,9 +61,7 @@ protected:
 	FTimerHandle TextPopUpDelayHandle;
 	FTimerHandle ChangeWorkoutButtonHandle;
 
-	
-	UPROPERTY(meta = (BindWidget))
-	UProgressBar* EnergyLevel;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
 	UMaterial* EnergyLevelLightFill;
@@ -74,8 +72,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
 	UMaterial* EnergyLevelBorderDark;
 
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* EnergyText;
+
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* NotificationText;
@@ -115,8 +112,7 @@ protected:
 
 	
 	
-	UPROPERTY()
-	UExercise_OM* ExerciseComponent;
+
 
 // --- images for dark/light mode
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
@@ -128,7 +124,12 @@ protected:
 	UMaterial* SigmaWhite;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
 	UMaterial* SigmaBlack;
-	
+
+
+
+	/** Class Cache **/
+	UPROPERTY()
+	UExercise_OM* ExerciseComponent;
 
 
 private: //Priv variables

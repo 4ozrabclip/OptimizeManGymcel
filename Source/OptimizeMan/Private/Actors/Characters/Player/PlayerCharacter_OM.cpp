@@ -196,7 +196,6 @@ void APlayerCharacter_OM::InitializeConstantEffects()
 {
 	if (AbSysComp)
 	{
-		
 		FGameplayEffectContextHandle EffectContext = AbSysComp->MakeEffectContext();
 		EffectContext.AddSourceObject(this); 
 
@@ -346,6 +345,8 @@ void APlayerCharacter_OM::InitPlayModes()
 
 }
 
+
+
 EWorkoutStates APlayerCharacter_OM::GetWorkoutState() const
 {
 	if (ExerciseComponent)
@@ -367,6 +368,8 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	if (!PlayerController) return;
 	
 	CurrentPlayMode = InPlayMode;
+
+	OnPlayModeChange.Broadcast(CurrentPlayMode);
 
 	if (CachedAnimInstance.IsValid())
 	{
@@ -438,6 +441,8 @@ void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrCl
 		InOpenOrClosedState = false;
 		UE_LOG(LogTemp, Error, TEXT("Toggle off"));
 	}
+
+
 }
 
 

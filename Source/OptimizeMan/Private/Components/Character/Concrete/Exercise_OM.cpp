@@ -8,6 +8,7 @@
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
 UExercise_OM::UExercise_OM()
@@ -29,14 +30,16 @@ UExercise_OM::UExercise_OM()
 void UExercise_OM::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (Player)
+		AbSysComp = Cast<UAbilitySystemComponent_OM>(Player->GetAbilitySystemComponent());
+	if (AbSysComp)
+		GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
 	
 	InitInjurys();
 	
 	AudioComponent = Player->FindComponentByClass<UPlayerVoiceAudio_OM>();
-	if (!AudioComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Audio Component is NULL"));
-	}
+	if (!AudioComponent) return;
 	if (GameInstance)
 	{
 		ExerciseParameters.UpdateParameters(GameInstance);
@@ -266,22 +269,23 @@ void UExercise_OM::MinorInjury()
 		return;
 	}
 	AnimInstance->SetHasInjury(true);
-	FGymResStats& GymResStats = GameInstance->GetGymResStats();
-	GameInstance->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
+	//FGymResStats& GymResStats = GameInstance->GetGymResStats();
+	UseEnergy();
+	//GameInstance->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
 	AddFocus(InjuryFocusDecrease);
 }
-
-void UExercise_OM::DoASquat()
+void UExercise_OM::UseEnergy(float InLevel)
 {
-	if (!Player || !Player->IsValidLowLevel()) return;
-	
-	if (CurrentWorkoutState == EWorkoutStates::NotInExercisePosition)
+	if (EnergyNegativeHitEffect)
 	{
-		EnterExercisePosition();
-	}
-	else
-	{
-		SetRep();
+		FGameplayEffectContextHandle Context = AbSysComp->MakeEffectContext();
+		Context.AddSourceObject(this);
+
+		const FGameplayEffectSpecHandle SpecHandle = AbSysComp->MakeOutgoingSpec(EnergyNegativeHitEffect, InLevel, Context);
+		if (SpecHandle.IsValid())
+		{
+			AbSysComp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
 	}
 }
 
@@ -435,15 +439,16 @@ void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, co
 
 	if (!IsComponentTickEnabled())
 		SetComponentTickEnabled(true);
-	
 
+	
+	
 	GetWorld()->GetTimerManager().ClearTimer(ExerciseTimerHandle);
 	GetWorld()->GetTimerManager().SetTimer(
 		ExerciseTimerHandle,
 		[this]()
 		{
 			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
-			if (GameInstance->GetGymResStats().Energy <= 0.f)
+			if (GymStats->GetEnergy() <= 0.f)
 			{
 				LeaveExercise();
 			}
@@ -460,7 +465,8 @@ void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, co
 		UE_LOG(LogTemp, Error, TEXT("Can't find modify muscle value func"));
 	}
 	FGymResStats& GymRes = GameInstance->GetGymResStats();
-	GameInstance->AddGymResStats(GymRes.Energy, EnergyUse);
+	UseEnergy();
+	//GameInstance->AddGymResStats(GymRes.Energy, EnergyUse);
 	AudioComponent->WorkoutGruntSoundEffects(CurrentExerciseType);
 	CheckForExerciseAchievements();
 }
@@ -480,6 +486,20 @@ void UExercise_OM::CheckForExerciseAchievements()
 	TodoManager->DelayForPlayerAchievements(CompletedTodosCheckList);
 }
 
+
+float UExercise_OM::GetEnergy() const
+{
+	if (GymStats)
+		return GymStats->GetEnergy();
+	return 0.f;
+}
+
+float UExercise_OM::GetFocus() const
+{
+	if (GymStats)
+		return GymStats->GetFocus();
+	return 0.f;
+}
 
 void UExercise_OM::LeaveExercise()
 {

@@ -57,6 +57,8 @@ void UExerciseInteractWidget_OM::NativeConstruct()
 
 
 	ExerciseComponent->PrepareExercise();
+
+	CheckAndSetStyles();
 	
 }
 
@@ -104,8 +106,6 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		EnergyBarStyle.SetBackgroundImage(BackgroundFill);
 		
 		MiniGameSlider->SetWidgetStyle(SliderDarkStyle);
-		EnergyLevel->SetWidgetStyle(EnergyBarStyle);
-		EnergyText->SetColorAndOpacity(White);
 		NotificationText->SetColorAndOpacity(White);
 		SetCountTextBlock->SetColorAndOpacity(White);
 		RepCountTextBlock->SetColorAndOpacity(White);
@@ -127,8 +127,6 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		EnergyBarStyle.SetBackgroundImage(BackgroundFill);
 		
 		MiniGameSlider->SetWidgetStyle(SliderLightStyle);
-		EnergyLevel->SetWidgetStyle(EnergyBarStyle);
-		EnergyText->SetColorAndOpacity(Black);
 		NotificationText->SetColorAndOpacity(Black);
 		SetCountTextBlock->SetColorAndOpacity(Black);
 		RepCountTextBlock->SetColorAndOpacity(Black);
@@ -347,8 +345,8 @@ void UExerciseInteractWidget_OM::SetSpecialSliderOn(const bool InSpecialSliderOn
 
 void UExerciseInteractWidget_OM::UpdateStats()
 {
-	EnergyLevel->SetPercent(GameInstance->GetGymResStats().Energy);
-	if (EnergyLevel->GetPercent() <= 0.f)
+	const float EnergyLevel = ExerciseComponent->GetEnergy();
+	if (EnergyLevel <= 0.f)
 	{
 		NotificationTextPopUp();
 		SetMiniGameOn(false);
@@ -372,6 +370,9 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 
 	MiniGameClickButton->SetIsEnabled(false);
 
+	
+	float EnergyLevel = ExerciseComponent->GetEnergy();
+
 	bDoingRep = true;
 	if (Player)
 		Player->SetIsDoingRep(bDoingRep);
@@ -394,7 +395,7 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		//bMiniGameOn = false;
 		ExerciseComponent->MiniGame();
 
-		if (EnergyLevel->GetPercent() <= 0.4f)
+		if (EnergyLevel <= 0.4f)
 		{
 			Speed += 0.01f;
 		}
@@ -421,7 +422,7 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		
 		SetMiniGameOn(false);
 	}
-	if (!bSpecialSliderOn && (EnergyLevel->GetPercent() > 0.8f || EnergyLevel->GetPercent() < 0.3f && EnergyLevel->GetPercent() > 0.1))
+	if (!bSpecialSliderOn && ( EnergyLevel > 0.8f || EnergyLevel < 0.3f && EnergyLevel > 0.1))
 	{
 		SetSpecialSliderOn(true);
 	}
@@ -447,13 +448,14 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 
 void UExerciseInteractWidget_OM::SetNotificationText()
 {
-	
-	if (EnergyLevel->GetPercent() <= 0.f && CurrentWorkoutState == EWorkoutStates::SetComplete)
+	if (!ExerciseComponent) return;
+	const float EnergyLevel = ExerciseComponent->GetEnergy();
+	if (EnergyLevel <= 0.f && CurrentWorkoutState == EWorkoutStates::SetComplete)
 	{
 		const FText SetCompleteNoEnergyText = FText::FromString("Last Set No Energy");
 		NotificationText->SetText(SetCompleteNoEnergyText);
 	}
-	else if (EnergyLevel->GetPercent() <= 0.f)
+	else if (EnergyLevel <= 0.f)
 	{
 		const FText NoEnergyText = FText::FromString("No Energy");
 		NotificationText->SetText(NoEnergyText);
@@ -468,7 +470,7 @@ void UExerciseInteractWidget_OM::SetNotificationText()
 
 void UExerciseInteractWidget_OM::NotificationTextPopUp() 
 {
-	//if (EnergyLevel->GetPercent() > 0.f) return;
+	//if (EnergyLevel > 0.f) return;
 	SetNotificationText();
 	constexpr float PopUpTimeShown = 2.f;
 

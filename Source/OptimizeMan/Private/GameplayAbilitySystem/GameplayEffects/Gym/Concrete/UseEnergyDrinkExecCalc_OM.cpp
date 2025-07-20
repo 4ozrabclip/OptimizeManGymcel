@@ -16,10 +16,10 @@ void UUseEnergyDrinkExecCalc_OM::Execute_Implementation(const FGameplayEffectCus
 	
 	
 	OutExecutionOutput.AddOutputModifier(
-	FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetFocusAttribute(), EGameplayModOp::Override, 1.f));
+		FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetFocusAttribute(), EGameplayModOp::Override, 1.f));
 	OutExecutionOutput.AddOutputModifier(
 		FGameplayModifierEvaluatedData(UGymSpecificStats_OM::GetEnergyAttribute(), EGameplayModOp::Override, 1.f));
-		
+	
 	/*FGameplayModifierInfo Mod;
 	Mod.Attribute = UGymSpecificStats_OM::GetFocusAttribute();
 	Mod.ModifierOp = EGameplayModOp::Additive;
