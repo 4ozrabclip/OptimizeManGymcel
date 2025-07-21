@@ -18,6 +18,7 @@ AVendingMachine_OM::AVendingMachine_OM()
 
 	VendorWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	VendorWidgetComponent->SetupAttachment(RootComponent);
+	VendorWidgetComponent->SetDrawAtDesiredSize(true);
 	VendorWidgetComponent->SetVisibility(false);
 
 	VendorAudio = CreateDefaultSubobject<UGameAudio_OM>(TEXT("Audio"));
@@ -56,7 +57,7 @@ void AVendingMachine_OM::Tick(float DeltaTime)
 	{
 		FVector2D Delta = FVector2D(this->GetActorLocation()) - FVector2D(Player->GetActorLocation());
 		
-		if (Delta.Size() > 200)
+		if (Delta.Size() > 300)
 		{
 			ExitVendor();
 		}
@@ -88,8 +89,9 @@ void AVendingMachine_OM::PlaySound(USoundBase* InSound) const
 
 void AVendingMachine_OM::ExitVendor()
 {
-	VendorWidgetComponent->SetVisibility(false);
+	UE_LOG(LogTemp, Display, TEXT("Exit vendor called from Actor"));
 	Player->SetToUIMode(false);
+	VendorWidgetComponent->SetVisibility(false);
 	PlayerController->ToggleInteractWidgetFromViewport(false);
 	InteractableInterfaceProperties.bIsInteractable = true;
 	SetActorTickEnabled(false);

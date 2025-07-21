@@ -27,19 +27,22 @@ void UVendingMachineWidget_OM::NativeConstruct()
 		Option3_Button->OnClicked.Clear();
 		Option3_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption3Clicked);
 	}
-	if (VendingMachine && Exit_Button)
+	if (Exit_Button)
 	{
 		Exit_Button->OnClicked.Clear();
-		Exit_Button->OnClicked.AddDynamic(VendingMachine, &AVendingMachine_OM::ExitVendor);
+		Exit_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::ExitVendor);
 	}
 
-	if (NoMoneyOverlay)
-	{
-		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
-	}
 	
 	SetConsumables();
 	
+}
+
+void UVendingMachineWidget_OM::ExitVendor()
+{
+	UE_LOG(LogTemp, Display, TEXT("Exit Vendor Called from widget"));
+	RemoveFromParent();
+	VendingMachine->ExitVendor();
 }
 
 void UVendingMachineWidget_OM::NativeDestruct()
@@ -78,11 +81,11 @@ void UVendingMachineWidget_OM::SetConsumablesText()
 	if (Consumables.Num() <= 0) return;
 
 	if (Consumables.IsValidIndex(0))
-		SetConsumablesTextHelper(Option1Name_Text, FText::FromString(Consumables[0].NameString));
+		SetConsumablesTextHelper(Option1Desc_Text, FText::FromString(Consumables[0].NameString));
 	if (Consumables.IsValidIndex(1))
-		SetConsumablesTextHelper(Option2Name_Text, FText::FromString(Consumables[1].NameString));
+		SetConsumablesTextHelper(Option2Desc_Text, FText::FromString(Consumables[1].NameString));
 	if (Consumables.IsValidIndex(2))
-		SetConsumablesTextHelper(Option3Name_Text, FText::FromString(Consumables[2].NameString));
+		SetConsumablesTextHelper(Option3Desc_Text, FText::FromString(Consumables[2].NameString));
 		
 }
 
@@ -110,7 +113,6 @@ void UVendingMachineWidget_OM::BuyConsumable(const FConsumableType& InConsumable
 	else
 	{
 		VendingMachine->PlayNoMoneySound();
-		ShowNoMoneyWindow();
 	}
 }
 
@@ -128,14 +130,4 @@ void UVendingMachineWidget_OM::OnOption3Clicked()
 {
 	if (Consumables.IsValidIndex(2))
 		BuyConsumable(Consumables[2]);
-}
-void UVendingMachineWidget_OM::ShowNoMoneyWindow()
-{
-	NoMoneyOverlay->SetVisibility(ESlateVisibility::Visible);
-	GetWorld()->GetTimerManager().ClearTimer(NoMoneyTimer);
-	GetWorld()->GetTimerManager().SetTimer(NoMoneyTimer, [this]()
-	{
-		NoMoneyOverlay->SetVisibility(ESlateVisibility::Hidden);
-	}, 2.5f, false);
-	
 }

@@ -185,7 +185,7 @@ public:
 	virtual void Jump() override;
 
 	UFUNCTION()
-	void InteractClick() { Interact(false); }
+	void InteractClick();
 
 	UFUNCTION()
 	void InteractToggle() { Interact(true); }

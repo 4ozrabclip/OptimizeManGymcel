@@ -7,6 +7,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
+class UImage;
 class UOverlay;
 class UTextBlock;
 class UButton;
@@ -19,6 +20,7 @@ class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UParentWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+
 	virtual void NativeDestruct() override;
 	
 protected:
@@ -34,7 +36,8 @@ protected:
 	void OnOption2Clicked();
 	UFUNCTION()
 	void OnOption3Clicked();
-	void ShowNoMoneyWindow();
+	UFUNCTION()
+	void ExitVendor();
 
 private:
 	UPROPERTY()
@@ -64,11 +67,11 @@ protected:
 	UButton* Exit_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option1Name_Text;
+	UTextBlock* Option1Desc_Text;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option2Name_Text;
+	UTextBlock* Option2Desc_Text;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Option3Name_Text;
+	UTextBlock* Option3Desc_Text;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Option1Price_Text;
@@ -77,10 +80,16 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Option3Price_Text;
 
+
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* YourMoney_Text;
+	UImage* Option1_Image;
+	UPROPERTY(meta = (BindWidget))
+	UImage* Option2_Image;
+	UPROPERTY(meta = (BindWidget))
+	UImage* Option3_Image;
+	UPROPERTY(meta = (BindWidget))
+	UImage* Option4_Image;
+
 	
-	UPROPERTY(meta = (BindWidget))
-	UOverlay* NoMoneyOverlay;
 };
 

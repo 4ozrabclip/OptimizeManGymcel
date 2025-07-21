@@ -22,6 +22,7 @@
 #include "Components/Character/Concrete/SocialInteractionSystem_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Camera/CameraActor.h"
+#include "Components/WidgetInteractionComponent.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
@@ -795,6 +796,17 @@ void APlayerCharacter_OM::Jump()
 	GetCharacterMovement()->JumpZVelocity = CurrentJumpHeight;
 	Super::Jump();
 }
+
+void APlayerCharacter_OM::InteractClick()
+{
+	if (PlayerController && PlayerController->WidgInteractionComp)
+	{
+		PlayerController->WidgInteractionComp->PressPointerKey(EKeys::LeftMouseButton);
+		PlayerController->WidgInteractionComp->ReleasePointerKey(EKeys::LeftMouseButton);
+	}
+	Interact(false);
+}
+
 float APlayerCharacter_OM::CalculateJumpHeight(const float LowerBodyStat) const 
 {
 	float NormalizedStat = FMath::Clamp(LowerBodyStat / 100.0f, 0.0f, 1.0f);
