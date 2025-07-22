@@ -65,6 +65,10 @@ void APostProcessController_OM::BeginPlay()
 
 void APostProcessController_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	for (FPostProcessEffect& Effect : Effects)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(Effect.TimerHandle);
+	}
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 	Super::EndPlay(EndPlayReason);
 }

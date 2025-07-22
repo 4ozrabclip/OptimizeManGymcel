@@ -27,10 +27,7 @@ void USocialInteractionWidget_OM::NativeConstruct()
 	{
 		PlayerController = Cast<APlayerController_OM>(Player->GetController());
 	}
-	//if (GameInstance)
-	//{
-	//	GameInstance->OnEmotionalStateChanged.AddDynamic(this, &USocialInteractionWidget_OM::OnEmotionalStateChanged);
-	//}
+
 	Npc = Player->GetCurrentInteractedCharacter();
 	if (!Npc)
 	{
@@ -43,14 +40,9 @@ void USocialInteractionWidget_OM::NativeConstruct()
 			UAnimInstance* ThisTempAnimInstance = Npc->GetMesh()->GetAnimInstance();
 			UE_LOG(LogTemp, Warning, TEXT("Npc Has anim instance: %s"), 
 		*ThisTempAnimInstance->GetClass()->GetFullName());
-		
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("DSGDASGSDGSDGs"));
-	}
-	
-	AnimInstance = Cast<UNpcBaseAnimInstance_OM>(Npc->GetMesh()->GetAnimInstance());
+
+	AnimInstance = Cast<UNpcBaseAnimInstance_OM>(Npc->GetAnimInstance());
 	if (!AnimInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("NpcAnimInstance is NULL"));
@@ -80,7 +72,6 @@ void USocialInteractionWidget_OM::NativeConstruct()
 	}
 
 	SetDesiredSizeInViewport(FVector2D(1920, 1080));
-	
 }
 
 void USocialInteractionWidget_OM::NativeDestruct()

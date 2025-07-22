@@ -28,9 +28,7 @@ AExerciseEquipment_OM::AExerciseEquipment_OM()
 	SelectWorkoutWidget->SetVisibility(false);
 	SelectWorkoutWidget->SetWidgetSpace(EWidgetSpace::Screen);
 	SelectWorkoutWidget->SetDrawSize(FVector2D(320.f, 180.f));
-	
 }
-
 void AExerciseEquipment_OM::BeginPlay()
 {
 	Super::BeginPlay();

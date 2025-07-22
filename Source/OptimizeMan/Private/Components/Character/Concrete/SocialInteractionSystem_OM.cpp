@@ -429,7 +429,8 @@ void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 	}
 
 	CurrentInteractedNpc->EndDialog();
-	Player->SetCurrentPlayMode(EPlayModes::RegularMode);
+	//Player->SetCurrentPlayMode(EPlayModes::RegularMode);
+	Player->TogglePlayMode(EPlayModes::SocialMode, Player->bInteractableOpen);
 	Player->bInteractableOpen = false;
 	SaveNpcFriendshipData();
 	

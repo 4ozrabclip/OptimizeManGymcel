@@ -55,4 +55,9 @@ struct FTodoItem
 
 	UPROPERTY()
 	int Points;
+
+	bool operator==(const FTodoItem& Other) const
+	{
+		return Name == Other.Name;
+	}
 };

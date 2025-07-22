@@ -265,6 +265,16 @@ void UTodoManagementSubsystem::AddToCurrentTodos(const FString& InTodo, const bo
 		}
 	}
 }
+void UTodoManagementSubsystem::RemoveFromCurrentTodos(const FString& InTodo)
+{
+	for (const FTodoItem& Item : TodoArray)
+	{
+		if (Item.Name == InTodo)
+		{
+			CurrentTodoArray.Remove(Item);
+		}
+	}
+}
 
 FString UTodoManagementSubsystem::GetTodoName(const int TodoIndex)
 {

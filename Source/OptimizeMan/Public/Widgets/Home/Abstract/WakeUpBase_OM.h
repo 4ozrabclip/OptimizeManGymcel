@@ -13,12 +13,38 @@ class UGridPanel;
 /**
  * 
  */
+USTRUCT(BlueprintType)
+struct FTaskOptionData
+{
+	GENERATED_BODY()
+	UPROPERTY()
+	UGridPanel* Panel;
+
+	UPROPERTY()
+	UButton* Button;
+
+	UPROPERTY()
+	UTextBlock* Title;
+
+	UPROPERTY()
+	UTextBlock* Description;
+
+	UPROPERTY()
+	bool bIsSelected = false;
+
+	UPROPERTY()
+	FButtonStyle OriginalStyle;
+	
+	UPROPERTY()
+	FButtonStyle SelectedStyle;
+};
 UCLASS(Abstract)
 class OPTIMIZEMAN_API UWakeUpBase_OM : public UMinigameBaseWidget_OM
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	void InitializeTaskOptions();
 
 	virtual void OnExitButtonClicked() override;
 	
@@ -43,6 +69,9 @@ public:
 	virtual void UpdateFakeTodoList();
 
 protected:
+	UPROPERTY()
+	TArray<FTaskOptionData> TaskOptions;
+	
 
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* TaskOptionPanel_0;
@@ -106,4 +135,14 @@ protected:
 
 	UPROPERTY()
 	UNotificationAudio_OM* NotificationAudio;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Styles")
+	FButtonStyle OriginalStyle_1;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Styles")
+	FButtonStyle OriginalStyle_2;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Styles")
+	FButtonStyle CheckedStyle_1;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Styles")
+	FButtonStyle CheckedStyle_2;
+
 };

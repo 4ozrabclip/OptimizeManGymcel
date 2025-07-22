@@ -21,17 +21,26 @@ void UWakeUpBase_OM::NativeConstruct()
 		UE_LOG(LogTemp, Error, TEXT("TodoManager is null.  Cast failed"));
 		return;
 	}
-
-	// NEED TO MAYBE FIGURE OUT HOW YOU WILL REFERENCE THIS COMPONENT COS THERE ARE MULTIPLE UPLAYERAUDIOS ON PLAYER
 	
 	NotificationAudio = Cast<UNotificationAudio_OM>(Player->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
+	ExitButton->SetVisibility(ESlateVisibility::Hidden);
 
+	InitializeTaskOptions();
+}
 
+void UWakeUpBase_OM::InitializeTaskOptions()
+{
 	TaskOptionButton->SetIsEnabled(true);
 	TaskOptionButton_1->SetIsEnabled(true);
 	TaskOptionButton_2->SetIsEnabled(true);
 	TaskOptionButton_3->SetIsEnabled(true);
 	TaskOptionButton_4->SetIsEnabled(true);
+	
+	TaskOptions.Add({TaskOptionPanel_0, TaskOptionButton, TaskOption, TaskOptionDesc, false, OriginalStyle_1, CheckedStyle_1});
+	TaskOptions.Add({TaskOptionPanel_1, TaskOptionButton_1, TaskOption_1, TaskOptionDesc_1, false, OriginalStyle_2, CheckedStyle_2});
+	TaskOptions.Add({TaskOptionPanel_2, TaskOptionButton_2, TaskOption_2, TaskOptionDesc_2, false, OriginalStyle_1, CheckedStyle_1});
+	TaskOptions.Add({TaskOptionPanel_3, TaskOptionButton_3, TaskOption_3, TaskOptionDesc_3, false, OriginalStyle_2, CheckedStyle_2});
+	TaskOptions.Add({TaskOptionPanel_4, TaskOptionButton_4, TaskOption_4, TaskOptionDesc_4, false, OriginalStyle_1, CheckedStyle_1});
 }
 
 void UWakeUpBase_OM::OnExitButtonClicked()
@@ -59,42 +68,31 @@ void UWakeUpBase_OM::SetTodoOptions()
 
 void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 {
-	TArray<FTodoItem>& Options = TodoManager->GetPotentialTodos();
+	if (!TaskOptions.IsValidIndex(InOption)) return;
+	if (!TodoManager->GetPotentialTodos().IsValidIndex(InOption)) return;
 
-	if (!Options.IsValidIndex(InOption))
-	{
-		UE_LOG(LogTemp, Error, TEXT("OPTION INDEX IS INVALID FOR POTENTIAL TODOS"));
-		return;
-	}
+	FTaskOptionData& Opt = TaskOptions[InOption];
 
-	if (TodoManager->GetCurrentTodoArray().Num() == 3)
-	{
-		return;
-	}
+	
 
-	switch (InOption)
+	if (!Opt.bIsSelected)
 	{
-	case 0:
-		TaskOptionButton->SetIsEnabled(false);
-		break;
-	case 1:
-		TaskOptionButton_1->SetIsEnabled(false);
-		break;
-	case 2:
-		TaskOptionButton_2->SetIsEnabled(false);
-		break;
-	case 3:
-		TaskOptionButton_3->SetIsEnabled(false);
-		break;
-	case 4:
-		TaskOptionButton_4->SetIsEnabled(false);
-		break;
-	default:
-		UE_LOG(LogTemp, Error, TEXT("Invalid Option Selected"));
+		if (TodoManager->GetCurrentTodoArray().Num() == 3)
+			return;
+		Opt.bIsSelected = true;
+		Opt.Button->SetStyle(Opt.SelectedStyle);
+		TodoManager->AddToCurrentTodos(TodoManager->GetPotentialTodos()[InOption].Name);
+		NotificationAudio->PlayWritingSound();
 	}
-		
-	TodoManager->AddToCurrentTodos(Options[InOption].Name);
-	NotificationAudio->PlayWritingSound();
+	else
+	{
+		Opt.bIsSelected = false;
+		Opt.Button->SetStyle(Opt.OriginalStyle);
+		TodoManager->RemoveFromCurrentTodos(TodoManager->GetPotentialTodos()[InOption].Name);
+		NotificationAudio->PlayCrossingOutSound();
+	}
+	
+
 	
 	UpdateFakeTodoList();
 }
@@ -102,6 +100,15 @@ void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 
 void UWakeUpBase_OM::UpdateFakeTodoList()
 {
+	if (TodoManager->GetCurrentTodoArray().Num() == 3)
+	{
+		ExitButton->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		ExitButton->SetVisibility(ESlateVisibility::Hidden);
+	}
+	
 	if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
 	{
 		const FString SelectedTaskString = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[0].Name});
@@ -131,96 +138,35 @@ void UWakeUpBase_OM::UpdateFakeTodoList()
 	{
 		SelectedTask_2->SetText(FText::FromString(TEXT("- ")));
 	}
-	
 }
 
 void UWakeUpBase_OM::AssignOptionsToWidget()
 {
-	if (!TaskOption || !TaskOptionButton)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Task option button or text is null"));
-		return;
-	}
 
 	TArray<FTodoItem>& Options = TodoManager->GetPotentialTodos();
-	
-	if (Options.IsValidIndex(0))
-	{
-		TaskOptionPanel_0->SetVisibility(ESlateVisibility::Visible);
-		
-		TaskOption->SetText(FText::FromString(Options[0].Name));
-		TaskOptionDesc->SetText(FText::FromString(Options[0].Desc));
-		
-		TaskOptionButton->OnClicked.RemoveAll(this);
-		TaskOptionButton->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption0Selected);
-	}
-	else
-	{
-		TaskOption->SetText(FText::FromString(""));
-		TaskOptionDesc->SetText(FText::FromString(""));
-	}
-	
-	if (Options.IsValidIndex(1))
-	{
-		TaskOptionPanel_1->SetVisibility(ESlateVisibility::Visible);
-		
-		TaskOption_1->SetText(FText::FromString(Options[1].Name));
-		TaskOptionDesc_1->SetText(FText::FromString(Options[1].Desc));
 
-		TaskOptionButton_1->OnClicked.RemoveAll(this);
-		TaskOptionButton_1->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption1Selected);
-	}
-	else
+	for (size_t i = 0; i < Options.Num(); ++i)
 	{
-		TaskOption_1->SetText(FText::FromString(""));
-		TaskOptionDesc_1->SetText(FText::FromString(""));
-	}
-	
-	if (Options.IsValidIndex(2))
-	{
-		TaskOptionPanel_2->SetVisibility(ESlateVisibility::Visible);
-		
-		TaskOption_2->SetText(FText::FromString(Options[2].Name));
-		TaskOptionDesc_2->SetText(FText::FromString(Options[2].Desc));
-		
-		TaskOptionButton_2->OnClicked.RemoveAll(this);
-		TaskOptionButton_2->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption2Selected);
-	}
-	else
-	{
-		TaskOption_2->SetText(FText::FromString(""));
-		TaskOptionDesc_2->SetText(FText::FromString(""));
-	}
-	
-	if (Options.IsValidIndex(3))
-	{
-		TaskOptionPanel_3->SetVisibility(ESlateVisibility::Visible);
-		
-		TaskOption_3->SetText(FText::FromString(Options[3].Name));
-		TaskOptionDesc_3->SetText(FText::FromString(Options[3].Desc));
+		const bool bValid = Options.IsValidIndex(i);
+		FTaskOptionData& Opt = TaskOptions[i];
 
-		TaskOptionButton_3->OnClicked.RemoveAll(this);
-		TaskOptionButton_3->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption3Selected);
-	}
-	else
-	{
-		TaskOption_3->SetText(FText::FromString(""));
-		TaskOptionDesc_3->SetText(FText::FromString(""));
-	}
-	
-	if (Options.IsValidIndex(4))
-	{
-		TaskOptionPanel_4->SetVisibility(ESlateVisibility::Visible);
-		
-		TaskOption_4->SetText(FText::FromString(Options[4].Name));
-		TaskOptionDesc_4->SetText(FText::FromString(Options[4].Desc));
-		
-		TaskOptionButton_4->OnClicked.RemoveAll(this);
-		TaskOptionButton_4->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption4Selected);
-	}
-	else
-	{
-		TaskOption_4->SetText(FText::FromString(""));
-		TaskOptionDesc_4->SetText(FText::FromString(""));
+		Opt.Panel->SetVisibility(bValid ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+
+		if (bValid)
+		{
+			Opt.Title->SetText(FText::FromString(Options[i].Name));
+			Opt.Description->SetText(FText::FromString(Options[i].Desc));
+			Opt.Button->OnClicked.RemoveAll(this);
+
+			switch (i)
+			{
+			case 0: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption0Selected); break;
+			case 1: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption1Selected); break;
+			case 2: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption2Selected); break;
+			case 3: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption3Selected); break;
+			case 4: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption4Selected); break;
+			default: break;
+			}
+		}
 	}
 }

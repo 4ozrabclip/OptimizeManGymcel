@@ -17,7 +17,8 @@ enum class EPlayModes : uint8
 	PauseMode,
 	ShelfMode,
 	CalenderMode,
-	MuscleViewMode
+	MuscleViewMode,
+	VendingMachine
 };
 
 USTRUCT(BlueprintType) // Will need to do some more setup on the gameplay tag state manager here

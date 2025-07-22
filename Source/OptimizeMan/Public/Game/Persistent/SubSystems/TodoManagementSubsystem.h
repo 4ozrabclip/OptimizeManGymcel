@@ -24,6 +24,7 @@ public:
 	void InitializeTodos();
 	void SetCurrentTodos(const FString& Todo1 = "", const FString& Todo2 = "", const FString& Todo3 = "");
 	void AddToCurrentTodos(const FString& InTodo, const bool bClearCurrentTodo = false);
+	void RemoveFromCurrentTodos(const FString& InTodo);
 	void AddToPotentialTodos(ETodoArrayList InTodo);
 	
 

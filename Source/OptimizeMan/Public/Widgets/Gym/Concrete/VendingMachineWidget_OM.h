@@ -21,6 +21,7 @@ class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UParentWidget_OM
 public:
 	virtual void NativeConstruct() override;
 
+
 	virtual void NativeDestruct() override;
 	
 protected:

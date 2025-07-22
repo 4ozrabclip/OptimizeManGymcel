@@ -3,15 +3,21 @@
 
 #include "Widgets/Gym/Concrete/VendingMachineWidget_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 void UVendingMachineWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	SetIsFocusable(true);
+	if (auto* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+		VendingMachine = Cast<AVendingMachine_OM>(Player->GetCurrentInteractedActor());
+	
+	
 	if (Option1_Button)
 	{
 		Option1_Button->OnClicked.Clear();
@@ -27,7 +33,7 @@ void UVendingMachineWidget_OM::NativeConstruct()
 		Option3_Button->OnClicked.Clear();
 		Option3_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::OnOption3Clicked);
 	}
-	if (Exit_Button)
+	if (VendingMachine && Exit_Button)
 	{
 		Exit_Button->OnClicked.Clear();
 		Exit_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::ExitVendor);
@@ -35,16 +41,18 @@ void UVendingMachineWidget_OM::NativeConstruct()
 
 	
 	SetConsumables();
-	
 }
 
 void UVendingMachineWidget_OM::ExitVendor()
 {
-	UE_LOG(LogTemp, Display, TEXT("Exit Vendor Called from widget"));
-	RemoveFromParent();
-	VendingMachine->ExitVendor();
-}
+	if (auto* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	{
+		Player->SetCurrentPlayMode(EPlayModes::RegularMode);
 
+
+		Player->bInteractableOpen = false;
+	}
+}
 void UVendingMachineWidget_OM::NativeDestruct()
 {
 	Super::NativeDestruct();
@@ -52,7 +60,6 @@ void UVendingMachineWidget_OM::NativeDestruct()
 	GetWorld()->GetTimerManager().ClearTimer(NoMoneyTimer);
 	
 	Consumables.Empty();
-	
 }
 
 void UVendingMachineWidget_OM::SetConsumables()
@@ -86,7 +93,6 @@ void UVendingMachineWidget_OM::SetConsumablesText()
 		SetConsumablesTextHelper(Option2Desc_Text, FText::FromString(Consumables[1].NameString));
 	if (Consumables.IsValidIndex(2))
 		SetConsumablesTextHelper(Option3Desc_Text, FText::FromString(Consumables[2].NameString));
-		
 }
 
 void UVendingMachineWidget_OM::SetConsumablesTextHelper(UTextBlock* InTextBlock, const FText& InText)

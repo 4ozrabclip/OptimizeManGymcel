@@ -74,7 +74,6 @@ void AMirror_OM::Interact_Implementation()
 	}
 
 	Player->TogglePlayMode(EPlayModes::MirrorMode, Player->bInteractableOpen, this);
-	;
 	
 }
 

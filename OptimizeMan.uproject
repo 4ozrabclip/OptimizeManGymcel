@@ -54,6 +54,10 @@
 		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
+		},
+		{
+			"Name": "MLDeformerFramework",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [

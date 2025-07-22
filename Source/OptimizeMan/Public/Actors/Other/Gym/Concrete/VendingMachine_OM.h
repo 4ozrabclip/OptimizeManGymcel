@@ -40,8 +40,6 @@ public:
 protected:
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UWidgetComponent* VendorWidgetComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UGameAudio_OM* VendorAudio;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Spawn Params")
 	USceneComponent* SpawnLocation;

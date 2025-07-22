@@ -344,9 +344,18 @@ void APlayerCharacter_OM::InitPlayModes()
 	TodoConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::TodoMode, TodoConfig);
 
+	FPlayModeConfig VendingConfig;
+	VendingConfig.bSetToUiMode = true;
+	VendingConfig.bAllowGameMovement = false;
+	VendingConfig.bHasWidget = true;
+	VendingConfig.ForcedLocation = FVector();
+	VendingConfig.ForcedRotation = FRotator();
+	VendingConfig.bHasAFadeIn = false;
+	VendingConfig.bNeedsPreSteps = false;
+	TodoConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
+	PlayModeConfigs.Add(EPlayModes::VendingMachine, VendingConfig);
+
 }
-
-
 
 EWorkoutStates APlayerCharacter_OM::GetWorkoutState() const
 {
@@ -425,14 +434,11 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 		ManageCurrentPlayMode();
 }
 
-void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrClosedState, AInteractableActor_OM* InInteractableActor)
+void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrClosedState, AInteractableActor_OM* InInteractableActor, ANpcBase_OM* InInteractedCharacter)
 {
 	if (!InOpenOrClosedState && CurrentPlayMode == EPlayModes::RegularMode)
 	{
-		if (InInteractableActor != nullptr)
-			SetCurrentPlayMode(InPlayMode, InInteractableActor);
-		else
-			SetCurrentPlayMode(InPlayMode);
+		SetCurrentPlayMode(InPlayMode, InInteractableActor, InInteractedCharacter);
 		InOpenOrClosedState = true;
 		UE_LOG(LogTemp, Error, TEXT("Toggle on"));
 	}
@@ -572,7 +578,7 @@ void APlayerCharacter_OM::ManageTodoMode()
  * 
  */
 
-void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement, UUserWidget* InWidget) const
+void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement, UUserWidget* InWidget, bool bAllowCameraRotation) const
 {
 	if (!PlayerController)
 	{
@@ -601,7 +607,8 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 
 		
 		PlayerController->SetInputMode(InputModeUI);
-		PlayerController->SetIgnoreLookInput(true);
+		if (!bAllowCameraRotation)
+			PlayerController->SetIgnoreLookInput(true);
 		PlayerController->SetShowMouseCursor(true);
 
 		int32 ViewportSizeX, ViewportSizeY;

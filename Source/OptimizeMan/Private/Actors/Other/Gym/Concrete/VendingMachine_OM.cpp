@@ -16,10 +16,10 @@ AVendingMachine_OM::AVendingMachine_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	VendorWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
+	/*VendorWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	VendorWidgetComponent->SetupAttachment(RootComponent);
 	VendorWidgetComponent->SetDrawAtDesiredSize(true);
-	VendorWidgetComponent->SetVisibility(false);
+	VendorWidgetComponent->SetVisibility(false);*/
 
 	VendorAudio = CreateDefaultSubobject<UGameAudio_OM>(TEXT("Audio"));
 	VendorAudio->SetupAttachment(RootComponent);
@@ -43,8 +43,8 @@ void AVendingMachine_OM::BeginPlay()
 
 	SetActorTickEnabled(false);
 
-	if (UVendingMachineWidget_OM* Widg = Cast<UVendingMachineWidget_OM>(VendorWidgetComponent->GetWidget()))
-		Widg->InitVendingMachine(this);
+	//if (UVendingMachineWidget_OM* Widg = Cast<UVendingMachineWidget_OM>(VendorWidgetComponent->GetWidget()))
+	//	Widg->InitVendingMachine(this);
 }
 
 void AVendingMachine_OM::Tick(float DeltaTime)
@@ -67,11 +67,12 @@ void AVendingMachine_OM::Tick(float DeltaTime)
 void AVendingMachine_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
+
+	Player->TogglePlayMode(EPlayModes::VendingMachine, Player->bInteractableOpen, this);
 	
-	PlayerController->ToggleInteractWidgetFromViewport(true);
-	InteractableInterfaceProperties.bIsInteractable = false;
-	VendorWidgetComponent->SetVisibility(true);
-	Player->SetToUIMode(true, true, VendorWidgetComponent->GetWidget());
+	//PlayerController->ToggleInteractWidgetFromViewport(true);
+	//InteractableInterfaceProperties.bIsInteractable = false;
+	//Player->SetToUIMode(true, true, VendorWidgetComponent->GetWidget(), true);
 	SetActorTickEnabled(true);
 }
 
@@ -89,12 +90,10 @@ void AVendingMachine_OM::PlaySound(USoundBase* InSound) const
 
 void AVendingMachine_OM::ExitVendor()
 {
-	UE_LOG(LogTemp, Display, TEXT("Exit vendor called from Actor"));
-	Player->SetToUIMode(false);
-	VendorWidgetComponent->SetVisibility(false);
-	PlayerController->ToggleInteractWidgetFromViewport(false);
-	InteractableInterfaceProperties.bIsInteractable = true;
-	SetActorTickEnabled(false);
+
+
+
+
 }
 
 void AVendingMachine_OM::SpawnItem(const FConsumableType& ItemToSpawn)

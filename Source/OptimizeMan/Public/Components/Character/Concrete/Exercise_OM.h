@@ -105,7 +105,6 @@ public:
 	void UseEnergy(float InLevel = 1.f);
 
 	void EnterExercisePosition();
-	void ManageEntry();
 
 	void DetachEquipment() const;
 

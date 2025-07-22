@@ -196,7 +196,7 @@ protected:
 
 	/**** Play Mode State Management ****/
 public:
-	void TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrClosedState, AInteractableActor_OM* InInteractableActor = nullptr);
+	void TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrClosedState, AInteractableActor_OM* InInteractableActor = nullptr, ANpcBase_OM* InInteractedCharacter = nullptr);
 
 	UFUNCTION()
 	void TogglePauseMode() { TogglePlayMode(EPlayModes::PauseMode, bPauseMenuOpen); }
@@ -238,7 +238,7 @@ public:
 	void ShitReaction();
 	void ClearTimers();
 	void ResetPlayer();
-	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false, UUserWidget* InWidget = nullptr) const;
+	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false, UUserWidget* InWidget = nullptr, bool bAllowCameraRotation = false) const;
 
 	/**** Getters / Setters ****/
 public:

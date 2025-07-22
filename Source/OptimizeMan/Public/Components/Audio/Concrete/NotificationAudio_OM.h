@@ -24,6 +24,8 @@ public:
 	UFUNCTION()
 	void PlayWritingSound();
 	UFUNCTION()
+	void PlayCrossingOutSound();
+	UFUNCTION()
 	void PlayTodoCompletedSound();
 
 
@@ -32,6 +34,8 @@ private:
 	APlayerCharacter_OM* Player;
 	UPROPERTY(EditAnywhere, Category = "NotifcationSounds")
 	USoundBase* TodoWritingSound;
+	UPROPERTY(EditAnywhere, Category = "NotifcationSounds")
+	USoundBase* TodoCrossingOutSound;
 
 	UPROPERTY(EditAnywhere, Category = "NotificationSounds")
 	USoundBase* TodoCompletedSound;

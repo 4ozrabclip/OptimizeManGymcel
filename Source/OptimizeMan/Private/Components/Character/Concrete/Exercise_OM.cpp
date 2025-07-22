@@ -20,6 +20,8 @@ UExercise_OM::UExercise_OM()
 	bDoingRep = false;
 	Equipment = nullptr;
 	AudioComponent = nullptr;
+	AbSysComp = nullptr;
+	GymStats = nullptr;
 	RepCount = 0;
 	SetCount = 0;
 	TimeSinceLastRep = 0.f;
@@ -176,7 +178,6 @@ void UExercise_OM::EnterExercisePosition()
 		{
 			SetCurrentWorkoutState(EWorkoutStates::Entry);
 			break;
-			//ManageEntry();
 		}
 	case EExerciseType::LegPress:
 		{
@@ -198,10 +199,6 @@ void UExercise_OM::EnterExercisePosition()
 	SetStoppedExercise(false);
 
 }
-void UExercise_OM::ManageEntry()
-{
-	SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
-}
 void UExercise_OM::MiniGame()
 {
 	if (CurrentWorkoutState == EWorkoutStates::NotInExercisePosition)
@@ -218,61 +215,25 @@ void UExercise_OM::MiniGame()
 
 void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 {
-	AnimInstance->SetInjuryLevel(InInjuryLevel);
-	switch (CurrentExerciseType)
-	{
-	case EExerciseType::None:
-		break;
-	case EExerciseType::Squat:
-		AnimInstance->SetHasInjury(true);
-		AudioComponent->InjurySoundEffects(CurrentExerciseType);
-		break;
-	default:
-		break;
-	}
-
 	if (BodyParts.IsEmpty()) return;
+
+	
+	AnimInstance->SetInjuryLevel(InInjuryLevel);
+	AnimInstance->SetHasInjury(true);
+	AudioComponent->InjurySoundEffects(CurrentExerciseType);
+	constexpr float InjuryFocusDecrease = -0.2f;
 	
 	for (FBodyPartData& Part : GameInstance->GetBodyStatus().BodyParts)
 	{
 		if (BodyParts.Contains(Part))
 		{
 			Part.SetInjury(InInjuryLevel);
+			UseEnergy();
+			AddFocus(InjuryFocusDecrease);
+			break;
 		}
 	}
 		
-}
-void UExercise_OM::MinorInjury()
-{
-	constexpr float InjuryFocusDecrease = -0.2f;
-	constexpr float MinorInjuryEnergyUse = -0.2f;
-	switch (CurrentExerciseType)
-	{
-	case EExerciseType::None:
-		return;
-	case EExerciseType::Squat:
-		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		break;
-	case EExerciseType::BicepCurl:
-		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		break;
-	case EExerciseType::OverheadPress:
-		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		break;
-	case EExerciseType::LeftCurl:
-		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		break;
-	case EExerciseType::RightCurl:
-		AudioComponent->MinorInjurySoundEffects(CurrentExerciseType);
-		break;
-	default:
-		return;
-	}
-	AnimInstance->SetHasInjury(true);
-	//FGymResStats& GymResStats = GameInstance->GetGymResStats();
-	UseEnergy();
-	//GameInstance->AddGymResStats(GymResStats.Energy, MinorInjuryEnergyUse);
-	AddFocus(InjuryFocusDecrease);
 }
 void UExercise_OM::UseEnergy(float InLevel)
 {
@@ -439,8 +400,6 @@ void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, co
 
 	if (!IsComponentTickEnabled())
 		SetComponentTickEnabled(true);
-
-	
 	
 	GetWorld()->GetTimerManager().ClearTimer(ExerciseTimerHandle);
 	GetWorld()->GetTimerManager().SetTimer(

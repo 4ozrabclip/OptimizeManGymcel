@@ -46,6 +46,22 @@ void UNotificationAudio_OM::PlayWritingSound()
 		Play();
 	}
 }
+
+void UNotificationAudio_OM::PlayCrossingOutSound()
+{
+	if (!TodoCrossingOutSound)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No writing sound"));
+		return;
+	}
+	
+	SetSound(TodoCrossingOutSound);
+	if (IsPlaying()) Stop();
+
+	Play();
+	
+}
+
 void UNotificationAudio_OM::PlaySplatSound()
 {
 	if (!SplatSound)

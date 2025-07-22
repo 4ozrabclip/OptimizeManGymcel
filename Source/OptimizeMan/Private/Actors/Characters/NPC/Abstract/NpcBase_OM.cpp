@@ -121,7 +121,7 @@ void ANpcBase_OM::Tick(float DeltaTime)
 	if (!Player) return;
 	if (bIsInDialogue)
 	{
-		if (PlayerRelationship.RelationshipState == ENpcRelationshipState::HatesYou && !bHasMogFace && DeformationComponent)
+		if (!bHasMogFace && DeformationComponent)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Load deformations 1"));
 			DeformationComponent->LoadDeformations();
@@ -249,7 +249,8 @@ void ANpcBase_OM::StartDialogue()
 		UE_LOG(LogTemp, Error, TEXT("player null in start dialogue"));
 		return;
 	}
-	Player->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
+	Player->TogglePlayMode(EPlayModes::SocialMode, Player->bInteractableOpen, nullptr, this);
+	//Player->SetCurrentPlayMode(EPlayModes::SocialMode, nullptr, this);
 }
 
 void ANpcBase_OM::EndDialog()
