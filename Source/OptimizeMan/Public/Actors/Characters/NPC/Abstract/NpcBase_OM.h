@@ -55,7 +55,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void DarkModeToggle(const bool bIsDarkMode);
 
-
 	//Delegates
 	//UPROPERTY(BlueprintAssignable, Category = "Events")
 	//FOnNpcStateChanged OnNpcStateChanged;

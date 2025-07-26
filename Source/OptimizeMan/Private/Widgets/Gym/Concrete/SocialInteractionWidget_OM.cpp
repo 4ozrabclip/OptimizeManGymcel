@@ -79,6 +79,7 @@ void USocialInteractionWidget_OM::NativeDestruct()
 	Super::NativeDestruct();
 	InteractionMap.Empty();
 	SocialInteractionTypes.Empty();
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
 void USocialInteractionWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -321,7 +322,6 @@ void USocialInteractionWidget_OM::ManageInteraction(const UButton* ClickedButton
 	{
 		AnimInstance = Npc->GetAnimInstance();
 	}
-
 	
 	if (IsButtonThisStyle(&ClickedButton->GetStyle(), &NeutralButtonStyle))
 	{
@@ -369,7 +369,7 @@ void USocialInteractionWidget_OM::ManageInteraction(const UButton* ClickedButton
 		return;
 	}
 	/*
-	* 	FButtonStyle HilariousButtonStyle;
+	FButtonStyle HilariousButtonStyle;
 	FButtonStyle WeirdJokeButtonStyle;
 	FButtonStyle AwkwardButtonStyle;
 	FButtonStyle FlexingButtonStyle;
@@ -389,6 +389,8 @@ void USocialInteractionWidget_OM::ManageInteraction(const UButton* ClickedButton
 		ChatTimerHandle,
 		[this]()
 		{
+			if (!IsValid(this) || !Option1Button || !Option2Button || !Option3Button || !AnimInstance) return;
+
 			Option1Button->SetIsEnabled(true);
 			Option2Button->SetIsEnabled(true);
 			Option3Button->SetIsEnabled(true);
@@ -502,4 +504,3 @@ void USocialInteractionWidget_OM::OnExitButtonClicked()
 	Super::OnExitButtonClicked();
 	SocialInteractionComponent->LeaveConversation();
 }
-
