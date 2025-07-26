@@ -3,6 +3,7 @@
 
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 
+#include "Components/Button.h"
 
 
 void UParentWidget_OM::NativeConstruct()
@@ -38,6 +39,22 @@ void UParentWidget_OM::NativeDestruct()
 	if (GameInstance)
 	{
 		GameInstance->OnDarkModeToggled.RemoveDynamic(this, &UParentWidget_OM::DarkModeToggle);
+	}
+}
+
+void UParentWidget_OM::UpdateButtonFocusVisuals(UButton* Button, const FButtonStyle& DefaultStyle, bool bIsFocused)
+{
+	if (!Button) return;
+
+	if (bIsFocused)
+	{
+		FButtonStyle FocusedStyle = DefaultStyle;
+		FocusedStyle.Normal = DefaultStyle.Hovered; 
+		Button->SetStyle(FocusedStyle);
+	}
+	else
+	{
+		Button->SetStyle(DefaultStyle);
 	}
 }
 

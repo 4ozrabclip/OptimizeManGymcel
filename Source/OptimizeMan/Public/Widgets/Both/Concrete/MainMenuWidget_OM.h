@@ -6,6 +6,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "MainMenuWidget_OM.generated.h"
 
+class UButton_OM;
 class UTextBlock;
 class UGameAudio_OM;
 class USlider;
@@ -22,6 +23,7 @@ class OPTIMIZEMAN_API UMainMenuWidget_OM : public UParentWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void OpenWindow(UVerticalBox* InWindow = nullptr, UBorder* InBorder = nullptr) const;
 	void InitButtons();
@@ -133,27 +135,21 @@ protected:
 	class UImage* Title;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "Styles")
+	FButtonStyle DarkModeButtonStyle;
+	UPROPERTY(EditAnywhere, Category = "Styles")
+	FButtonStyle LightModeButtonStyle;
+
+
+	FButtonStyle CurrentButtonStyle;
+	
+
+	
 	UPROPERTY(EditAnywhere, Category = "Images")
 	UTexture* LogoBlack;
 
 	UPROPERTY(EditAnywhere, Category = "Images")
 	UTexture* LogoWhite;
 
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderBlack;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderBlack2;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderBlack_Hover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderBlack_Hover2;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderWhite;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderWhite2;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderWhite_Hover;
-	UPROPERTY(EditAnywhere, Category = "Images")
-	UMaterial* BorderWhite_Hover2;
 
 };

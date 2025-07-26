@@ -7,6 +7,7 @@
 #include "Game/Persistent/GameInstance_OM.h"
 #include "ParentWidget_OM.generated.h"
 
+class UButton;
 /**
  * 
  */
@@ -18,6 +19,9 @@ class OPTIMIZEMAN_API UParentWidget_OM : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+
+	virtual void UpdateButtonFocusVisuals(UButton* Button, const FButtonStyle& DefaultStyle, bool bIsFocused);
 
 
 	UFUNCTION()

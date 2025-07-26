@@ -40,9 +40,34 @@ void UMainMenuWidget_OM::NativeConstruct()
 		NotificationAudio->SetSound(SplatSound);
 		NotificationAudio->SetAudioType(EAudioTypes::NotificationAudio);
 		NotificationAudio->bIsUISound = true;
+
+
+		if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+		{
+			FInputModeUIOnly InputMode;
+			InputMode.SetWidgetToFocus(PlayButton->TakeWidget());
+			PC->SetInputMode(InputMode);
+		}
+		
 	}
 
 }
+
+
+void UMainMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	TSharedPtr<SWidget> FocusedWidget = FSlateApplication::Get().GetKeyboardFocusedWidget();
+	FButtonStyle HoveredStyle = PlayButton->GetStyle();
+	HoveredStyle.Normal = PlayButton->GetStyle().Hovered;
+
+	UpdateButtonFocusVisuals(PlayButton, CurrentButtonStyle, FocusedWidget == PlayButton->GetCachedWidget());
+	UpdateButtonFocusVisuals(SettingsButton, CurrentButtonStyle, FocusedWidget == SettingsButton->GetCachedWidget());
+	UpdateButtonFocusVisuals(QuitButton, CurrentButtonStyle, FocusedWidget == QuitButton->GetCachedWidget());
+
+}
+
 
 void UMainMenuWidget_OM::OpenWindow(UVerticalBox* InWindow, UBorder* InBorder) const
 {
@@ -108,135 +133,33 @@ void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
 	Super::DarkModeToggle(bIsDarkMode);
 
-	if (!BorderWhite || !BorderBlack || !BorderWhite2 || !BorderBlack2 ||
-		!BorderWhite_Hover || !BorderBlack_Hover || !BorderWhite_Hover2 || !BorderBlack_Hover2) return;
+	CurrentButtonStyle = bIsDarkMode ? DarkModeButtonStyle : LightModeButtonStyle;
 
-	if (bIsDarkMode)
-	{
-		FButtonStyle AudioQualityDarkModeStyle;
-		AudioQualityDarkModeStyle.Normal.SetResourceObject(BorderWhite);
-		AudioQualityDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
-		AudioQualityDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
-		
-		FButtonStyle PlayDarkModeStyle;
-		PlayDarkModeStyle.Normal.SetResourceObject(BorderWhite);
-		PlayDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
-		PlayDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
+	PlayButton->SetStyle(CurrentButtonStyle);
+	SettingsButton->SetStyle(CurrentButtonStyle);
+	QuitButton->SetStyle(CurrentButtonStyle);
+	PlayGameBackButton->SetStyle(CurrentButtonStyle);
+	SettingsBackButton->SetStyle(CurrentButtonStyle);
+	NewGameButton->SetStyle(CurrentButtonStyle);
+	LoadGameButton->SetStyle(CurrentButtonStyle);
+	ToggleDarkMode->SetStyle(CurrentButtonStyle);
+	AudioQualitySettingsButton->SetStyle(CurrentButtonStyle);
 
-		FButtonStyle SettingsDarkModeStyle;
-		SettingsDarkModeStyle.Normal.SetResourceObject(BorderWhite2);
-		SettingsDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
-		SettingsDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
-		
-		FButtonStyle QuitDarkModeStyle;
-		QuitDarkModeStyle.Normal.SetResourceObject(BorderWhite);
-		QuitDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
-		QuitDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
+	Play_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	Settings_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	Quit_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	NewGame_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	LoadGame_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	PlayGameBack_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	ToggleDarkMode_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	AudioQualitySettings_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	SettingsBack_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
+	
 
-		FButtonStyle BackButtonDarkModeStyle;
-		BackButtonDarkModeStyle.Normal.SetResourceObject(BorderWhite);
-		BackButtonDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
-		BackButtonDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
-
-		FButtonStyle NewGameDarkModeStyle;
-		NewGameDarkModeStyle.Normal.SetResourceObject(BorderWhite2);
-		NewGameDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
-		NewGameDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
-
-		FButtonStyle LoadGameDarkModeStyle;
-		LoadGameDarkModeStyle.Normal.SetResourceObject(BorderWhite2);
-		LoadGameDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover);
-		LoadGameDarkModeStyle.Pressed.SetResourceObject(BorderWhite);
-
-		FButtonStyle ToggleDarkModeStyle;
-		ToggleDarkModeStyle.Normal.SetResourceObject(BorderWhite);
-		ToggleDarkModeStyle.Hovered.SetResourceObject(BorderWhite_Hover2);
-		ToggleDarkModeStyle.Pressed.SetResourceObject(BorderWhite2);
+	Title->SetBrushResourceObject(bIsDarkMode ? LogoWhite : LogoBlack);
 
 		
-		
-		Title->SetBrushResourceObject(LogoWhite);
-		PlayButton->SetStyle(PlayDarkModeStyle);
-		SettingsButton->SetStyle(SettingsDarkModeStyle);
-		QuitButton->SetStyle(QuitDarkModeStyle);
-		PlayGameBackButton->SetStyle(BackButtonDarkModeStyle);
-		SettingsBackButton->SetStyle(BackButtonDarkModeStyle);
-		NewGameButton->SetStyle(NewGameDarkModeStyle);
-		LoadGameButton->SetStyle(LoadGameDarkModeStyle);
-		ToggleDarkMode->SetStyle(ToggleDarkModeStyle);
-		AudioQualitySettingsButton->SetStyle(AudioQualityDarkModeStyle);
 
-		// Text
-		Play_Text->SetColorAndOpacity(White);
-		Settings_Text->SetColorAndOpacity(White);
-		Quit_Text->SetColorAndOpacity(White);
-		NewGame_Text->SetColorAndOpacity(White);
-		LoadGame_Text->SetColorAndOpacity(White);
-		PlayGameBack_Text->SetColorAndOpacity(White);
-		ToggleDarkMode_Text->SetColorAndOpacity(White);
-		AudioQualitySettings_Text->SetColorAndOpacity(White);
-		SettingsBack_Text->SetColorAndOpacity(White);
-		
-	}
-	else
-	{
-		FButtonStyle AudioQualityLightModeStyle;
-		AudioQualityLightModeStyle.Normal.SetResourceObject(BorderBlack);
-		AudioQualityLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
-		AudioQualityLightModeStyle.Pressed.SetResourceObject(BorderBlack2);
-		
-		FButtonStyle PlayLightModeStyle;
-		PlayLightModeStyle.Normal.SetResourceObject(BorderBlack2);
-		PlayLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
-		PlayLightModeStyle.Pressed.SetResourceObject(BorderBlack);
-		
-		FButtonStyle SettingsLightModeStyle;
-		SettingsLightModeStyle.Normal.SetResourceObject(BorderBlack);
-		SettingsLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
-		SettingsLightModeStyle.Pressed.SetResourceObject(BorderBlack);
-		FButtonStyle QuitLightModeStyle;
-		QuitLightModeStyle.Normal.SetResourceObject(BorderBlack2);
-		QuitLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
-		QuitLightModeStyle.Pressed.SetResourceObject(BorderBlack);
-		FButtonStyle BackButtonLightModeStyle;
-		BackButtonLightModeStyle.Normal.SetResourceObject(BorderBlack);
-		BackButtonLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
-		BackButtonLightModeStyle.Pressed.SetResourceObject(BorderBlack);
-		FButtonStyle NewGameLightModeStyle;
-		NewGameLightModeStyle.Normal.SetResourceObject(BorderBlack2);
-		NewGameLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
-		NewGameLightModeStyle.Pressed.SetResourceObject(BorderBlack);
-		FButtonStyle LoadGameLightModeStyle;
-		LoadGameLightModeStyle.Normal.SetResourceObject(BorderBlack);
-		LoadGameLightModeStyle.Hovered.SetResourceObject(BorderBlack_Hover);
-		LoadGameLightModeStyle.Pressed.SetResourceObject(BorderBlack2);
-		FButtonStyle ToggleDarkModeStyle;
-		ToggleDarkModeStyle.Normal.SetResourceObject(BorderBlack2);
-		ToggleDarkModeStyle.Hovered.SetResourceObject(BorderBlack_Hover2);
-		ToggleDarkModeStyle.Pressed.SetResourceObject(BorderBlack);
-		
-		Title->SetBrushResourceObject(LogoBlack);
-		PlayButton->SetStyle(PlayLightModeStyle);
-		SettingsButton->SetStyle(SettingsLightModeStyle);
-		QuitButton->SetStyle(QuitLightModeStyle);
-		PlayGameBackButton->SetStyle(BackButtonLightModeStyle);
-		SettingsBackButton->SetStyle(BackButtonLightModeStyle);
-		NewGameButton->SetStyle(NewGameLightModeStyle);
-		LoadGameButton->SetStyle(LoadGameLightModeStyle);
-		ToggleDarkMode->SetStyle(ToggleDarkModeStyle);
-		AudioQualitySettingsButton->SetStyle(AudioQualityLightModeStyle);
-
-		// Text
-		Play_Text->SetColorAndOpacity(Black);
-		Settings_Text->SetColorAndOpacity(Black);
-		Quit_Text->SetColorAndOpacity(Black);
-		NewGame_Text->SetColorAndOpacity(Black);
-		LoadGame_Text->SetColorAndOpacity(Black);
-		PlayGameBack_Text->SetColorAndOpacity(Black);
-		ToggleDarkMode_Text->SetColorAndOpacity(Black);
-		AudioQualitySettings_Text->SetColorAndOpacity(Black);
-		SettingsBack_Text->SetColorAndOpacity(Black);
-	}
 }
 
 void UMainMenuWidget_OM::ToggleDarkModeFunction()
