@@ -4,6 +4,8 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 
 #include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
+
 
 
 void UParentWidget_OM::NativeConstruct()
@@ -39,6 +41,62 @@ void UParentWidget_OM::NativeDestruct()
 	if (GameInstance)
 	{
 		GameInstance->OnDarkModeToggled.RemoveDynamic(this, &UParentWidget_OM::DarkModeToggle);
+	}
+}
+
+void UParentWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (TSharedPtr<SWidget> FocusedWidget = FSlateApplication::Get().GetKeyboardFocusedWidget())
+	{
+		if (!CurrentOpenWindow) return;
+		for (UWidget* FocusableWidget : CurrentOpenWindow->FocusableContent)
+		{
+			if (UButton* FocusableButton = Cast<UButton>(FocusableWidget))
+				UpdateButtonFocusVisuals(FocusableButton, CurrentButtonStyle, FocusedWidget == FocusableWidget->GetCachedWidget());
+		}
+	}
+}
+
+FUserInterfaceWindow UParentWidget_OM::InitializeWindow(UPanelWidget* InWindow, TArray<UWidget*> InFocusableContent, FName InWindowName)
+{
+	FUserInterfaceWindow OutWindow;
+
+	if (InWindow)
+		OutWindow.Window = InWindow;
+	for (UWidget* FocusablePiece : InFocusableContent)
+	{
+		if (FocusablePiece && FocusablePiece->IsValidLowLevel())
+		{
+			OutWindow.FocusableContent.Add(FocusablePiece);
+		}
+
+	}
+
+	if (!Windows.Contains(InWindowName))
+		OutWindow.WindowName = InWindowName;
+	
+	return OutWindow;
+}
+
+void UParentWidget_OM::OpenWindow(const FName InWindowName, bool bUsingGameAndUI)
+{
+	for (FUserInterfaceWindow& Window : Windows)
+	{
+		if (Window.WindowName == InWindowName)
+		{
+			Window.bIsOpen = true;
+			Window.Window->SetVisibility(ESlateVisibility::Visible);
+			CurrentOpenWindow = &Window;
+			if (Window.FocusableContent.IsValidIndex(0))
+				Window.FocusableContent[0]->SetFocus();
+		}
+		else
+		{
+			Window.bIsOpen = false;
+			Window.Window->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
 }
 

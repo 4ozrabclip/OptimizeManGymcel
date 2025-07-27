@@ -7,6 +7,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "ShowerWidget_OM.generated.h"
 
+class UGridPanel;
 class UButton;
 /**
  * 
@@ -17,6 +18,7 @@ class OPTIMIZEMAN_API UShowerWidget_OM : public UParentWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void InitWindowsArray() override;
 	void InitShower(const TSoftObjectPtr<AShower_OM>& InShower) { Shower = InShower.Get();}
 
 
@@ -25,8 +27,13 @@ protected:
 	UPROPERTY()
 	AShower_OM* Shower;
 
+	
+
 
 	/**	Widget Objects **/
+	UPROPERTY(meta = (BindWidget))
+	UGridPanel* ShowerGrid;
+	
 	UPROPERTY(meta = (BindWidget))
 	UButton* ColdShowerButton;
 	UPROPERTY(meta = (BindWidget))

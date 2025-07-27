@@ -25,7 +25,9 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void OpenWindow(UVerticalBox* InWindow = nullptr, UBorder* InBorder = nullptr) const;
+	virtual void InitWindowsArray() override;
+
+
 	void InitButtons();
 
 	virtual void DarkModeToggle(const bool bIsDarkMode) override;
@@ -36,16 +38,16 @@ public:
 	void QuitGameNow();
 	
 	UFUNCTION()
-	void PlayButtonClicked() { OpenWindow(PlayGameBox); };
+	void PlayButtonClicked() { OpenWindow(FName("PlayGameWindow")); };
 
 	UFUNCTION()
-	void SettingsButtonClicked() { OpenWindow(SettingsBox); };
+	void SettingsButtonClicked() { OpenWindow(FName("SettingsWindow")); };
 
 	UFUNCTION()
-	void AudioQualitySettingsButtonClicked() { OpenWindow(nullptr, AudioQualitySettings_Layer); }
+	void AudioQualitySettingsButtonClicked() { OpenWindow(FName("AudioQualitySettingsWindow")); }
 
 	UFUNCTION()
-	void BackButtonClicked() { OpenWindow(MainMenuBox); };
+	void BackButtonClicked() { OpenWindow(FName("MainWindow")); };
 
 	UFUNCTION()
 	void UpdateGameSettings();
@@ -141,7 +143,6 @@ private:
 	FButtonStyle LightModeButtonStyle;
 
 
-	FButtonStyle CurrentButtonStyle;
 	
 
 	

@@ -16,10 +16,13 @@
 void UMainMenuWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	OpenWindow(MainMenuBox);
 	
 	InitButtons();
+	InitWindowsArray();
+	
+	OpenWindow(FName("SettingsWindow"));
+	
+
 
 	if (!GameInstance)
 	{
@@ -40,17 +43,9 @@ void UMainMenuWidget_OM::NativeConstruct()
 		NotificationAudio->SetSound(SplatSound);
 		NotificationAudio->SetAudioType(EAudioTypes::NotificationAudio);
 		NotificationAudio->bIsUISound = true;
-
-
-		if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
-		{
-			FInputModeUIOnly InputMode;
-			InputMode.SetWidgetToFocus(PlayButton->TakeWidget());
-			PC->SetInputMode(InputMode);
-		}
 		
 	}
-
+	
 }
 
 
@@ -58,36 +53,53 @@ void UMainMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	TSharedPtr<SWidget> FocusedWidget = FSlateApplication::Get().GetKeyboardFocusedWidget();
-	FButtonStyle HoveredStyle = PlayButton->GetStyle();
-	HoveredStyle.Normal = PlayButton->GetStyle().Hovered;
-
-	UpdateButtonFocusVisuals(PlayButton, CurrentButtonStyle, FocusedWidget == PlayButton->GetCachedWidget());
-	UpdateButtonFocusVisuals(SettingsButton, CurrentButtonStyle, FocusedWidget == SettingsButton->GetCachedWidget());
-	UpdateButtonFocusVisuals(QuitButton, CurrentButtonStyle, FocusedWidget == QuitButton->GetCachedWidget());
 
 }
 
-
-void UMainMenuWidget_OM::OpenWindow(UVerticalBox* InWindow, UBorder* InBorder) const
+void UMainMenuWidget_OM::InitWindowsArray()
 {
-	if (!InWindow && !InBorder) return;
-	if (!MainMenuBox || !PlayGameBox || !SettingsBox)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No window in MainMenuWidget OpenWindow"));
-		return;
-	}
-	
-	MainMenuBox->SetVisibility(ESlateVisibility::Hidden);
-	PlayGameBox->SetVisibility(ESlateVisibility::Hidden);
-	SettingsBox->SetVisibility(ESlateVisibility::Hidden);
-	AudioQualitySettings_Layer->SetVisibility(ESlateVisibility::Hidden);
+	Super::InitWindowsArray();
 
-	if (InWindow)
-		InWindow->SetVisibility(ESlateVisibility::Visible);
-	if (InBorder)
-		InBorder->SetVisibility(ESlateVisibility::Visible);
+	FUserInterfaceWindow MainWindow;
+	MainWindow.WindowName = FName("MainWindow");
+	MainWindow.Window = MainMenuBox;
+	MainWindow.FocusableContent.Add(PlayButton);
+	MainWindow.FocusableContent.Add(SettingsButton);
+	MainWindow.FocusableContent.Add(QuitButton);
+	Windows.Add(MainWindow);
+	
+	FUserInterfaceWindow SettingsWindow;
+	SettingsWindow.WindowName = FName("SettingsWindow");
+	SettingsWindow.Window = SettingsBox;
+	SettingsWindow.FocusableContent.Add(ToggleDarkMode);
+	SettingsWindow.FocusableContent.Add(AudioQualitySettingsButton);
+	SettingsWindow.FocusableContent.Add(SettingsBackButton);
+	Windows.Add(SettingsWindow);
+
+	
+	FUserInterfaceWindow PlayGameWindow;
+	PlayGameWindow.WindowName = FName("PlayGameWindow");
+	PlayGameWindow.Window = PlayGameBox;
+	PlayGameWindow.FocusableContent.Add(NewGameButton);
+	PlayGameWindow.FocusableContent.Add(LoadGameButton);
+	PlayGameWindow.FocusableContent.Add(PlayGameBackButton);
+	Windows.Add(PlayGameWindow);
+
+	FUserInterfaceWindow AudioQualitySettingsWindow;
+	AudioQualitySettingsWindow.WindowName = FName("AudioQualitySettingsWindow");
+	AudioQualitySettingsWindow.Window = AudioQualitySettings_Layer;
+	AudioQualitySettingsWindow.FocusableContent.Add(MasterVolume_Slider);
+	AudioQualitySettingsWindow.FocusableContent.Add(MusicVolume_Slider);
+	AudioQualitySettingsWindow.FocusableContent.Add(VoiceVolume_Slider);
+	AudioQualitySettingsWindow.FocusableContent.Add(NotificationVolume_Slider);
+	AudioQualitySettingsWindow.FocusableContent.Add(SfxVolume_Slider);
+	AudioQualitySettingsWindow.FocusableContent.Add(BackFromSettings_Button);
+	AudioQualitySettingsWindow.FocusableContent.Add(AcceptSettings_Button);
+	Windows.Add(AudioQualitySettingsWindow);
+
 }
+
+
 
 
 void UMainMenuWidget_OM::InitButtons()
