@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "MainMenuWidget_OM.generated.h"
 
@@ -18,7 +19,7 @@ class UButton;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UMainMenuWidget_OM : public UParentWidget_OM
+class OPTIMIZEMAN_API UMainMenuWidget_OM : public UInteractiveWidgetBase_OM
 {
 	GENERATED_BODY()
 public:

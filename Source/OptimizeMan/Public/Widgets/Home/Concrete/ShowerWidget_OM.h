@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Bedroom/Concrete/Shower_OM.h"
+#include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "ShowerWidget_OM.generated.h"
 
@@ -13,7 +14,7 @@ class UButton;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UShowerWidget_OM : public UParentWidget_OM
+class OPTIMIZEMAN_API UShowerWidget_OM : public UInteractiveWidgetBase_OM
 {
 	GENERATED_BODY()
 public:

@@ -6,6 +6,7 @@
 #include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
 #include "WakeUpBase_OM.generated.h"
 
+class UCanvasPanel;
 class UNotificationAudio_OM;
 class UButton;
 class UTextBlock;
@@ -44,11 +45,11 @@ class OPTIMIZEMAN_API UWakeUpBase_OM : public UMinigameBaseWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	void InitializeTaskOptions();
-
+	virtual void InitWindowsArray() override;
 	virtual void OnExitButtonClicked() override;
-	
 	virtual void SetTodoOptions();
+	
+	void InitializeTaskOptions();
 	
 	virtual void AssignOptionsToWidget();
 	virtual void HandleOptionSelected(int InOption);
@@ -71,6 +72,9 @@ public:
 protected:
 	UPROPERTY()
 	TArray<FTaskOptionData> TaskOptions;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MainCanvas;
 	
 
 	UPROPERTY(meta = (BindWidget))
@@ -135,6 +139,7 @@ protected:
 
 	UPROPERTY()
 	UNotificationAudio_OM* NotificationAudio;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Styles")
 	FButtonStyle OriginalStyle_1;

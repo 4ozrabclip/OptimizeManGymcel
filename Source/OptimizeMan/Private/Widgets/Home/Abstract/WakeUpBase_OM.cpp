@@ -5,6 +5,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/GridPanel.h"
 #include "Components/TextBlock.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
@@ -24,8 +25,35 @@ void UWakeUpBase_OM::NativeConstruct()
 	
 	NotificationAudio = Cast<UNotificationAudio_OM>(Player->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
 	ExitButton->SetVisibility(ESlateVisibility::Hidden);
-
+	
 	InitializeTaskOptions();
+
+	CurrentButtonStyle = OriginalStyle_1;
+
+	OpenWindow(FName("MainWindow"));
+}
+
+void UWakeUpBase_OM::InitWindowsArray()
+{
+	Super::InitWindowsArray();
+	
+	TArray<FFocusableWidgetStruct> FocusableButtons = {
+		MakeButton(TaskOptionButton, OriginalStyle_1),
+		MakeButton(TaskOptionButton_1, OriginalStyle_2),
+		MakeButton(TaskOptionButton_2, OriginalStyle_1),
+		MakeButton(TaskOptionButton_3, OriginalStyle_2),
+		MakeButton(TaskOptionButton_4, OriginalStyle_1),
+		MakeButton(ExitButton, ExitButton->GetStyle()),
+	};
+	
+	FUserInterfaceWindow MainWindow;
+	MainWindow.WindowName = FName("MainWindow");
+	MainWindow.Window = MainCanvas;
+	MainWindow.bIsOpen = true;
+	MainWindow.FocusableContent = FocusableButtons;
+	
+	Windows.Add(MainWindow);
+
 }
 
 void UWakeUpBase_OM::InitializeTaskOptions()

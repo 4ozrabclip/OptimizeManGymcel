@@ -18,7 +18,6 @@ void UMainMenuWidget_OM::NativeConstruct()
 	Super::NativeConstruct();
 	
 	InitButtons();
-	InitWindowsArray();
 	
 	OpenWindow(FName("SettingsWindow"));
 	
@@ -60,41 +59,43 @@ void UMainMenuWidget_OM::InitWindowsArray()
 {
 	Super::InitWindowsArray();
 
+	
+
 	FUserInterfaceWindow MainWindow;
 	MainWindow.WindowName = FName("MainWindow");
 	MainWindow.Window = MainMenuBox;
-	MainWindow.FocusableContent.Add(PlayButton);
-	MainWindow.FocusableContent.Add(SettingsButton);
-	MainWindow.FocusableContent.Add(QuitButton);
+	MainWindow.FocusableContent.Add(MakeButton(PlayButton, PlayButton->GetStyle()));
+	MainWindow.FocusableContent.Add(MakeButton(SettingsButton, SettingsButton->GetStyle()));
+	MainWindow.FocusableContent.Add(MakeButton(QuitButton, QuitButton->GetStyle()));
 	Windows.Add(MainWindow);
 	
 	FUserInterfaceWindow SettingsWindow;
 	SettingsWindow.WindowName = FName("SettingsWindow");
 	SettingsWindow.Window = SettingsBox;
-	SettingsWindow.FocusableContent.Add(ToggleDarkMode);
-	SettingsWindow.FocusableContent.Add(AudioQualitySettingsButton);
-	SettingsWindow.FocusableContent.Add(SettingsBackButton);
+	SettingsWindow.FocusableContent.Add(MakeButton(ToggleDarkMode, ToggleDarkMode->GetStyle()));
+	SettingsWindow.FocusableContent.Add(MakeButton(AudioQualitySettingsButton, AudioQualitySettingsButton->GetStyle()));
+	SettingsWindow.FocusableContent.Add(MakeButton(SettingsBackButton, SettingsBackButton->GetStyle()));
 	Windows.Add(SettingsWindow);
 
 	
 	FUserInterfaceWindow PlayGameWindow;
 	PlayGameWindow.WindowName = FName("PlayGameWindow");
 	PlayGameWindow.Window = PlayGameBox;
-	PlayGameWindow.FocusableContent.Add(NewGameButton);
-	PlayGameWindow.FocusableContent.Add(LoadGameButton);
-	PlayGameWindow.FocusableContent.Add(PlayGameBackButton);
+	PlayGameWindow.FocusableContent.Add(MakeButton(NewGameButton, NewGameButton->GetStyle()));
+	PlayGameWindow.FocusableContent.Add(MakeButton(LoadGameButton, LoadGameButton->GetStyle()));
+	PlayGameWindow.FocusableContent.Add(MakeButton(PlayGameBackButton, PlayGameBackButton->GetStyle()));
 	Windows.Add(PlayGameWindow);
 
 	FUserInterfaceWindow AudioQualitySettingsWindow;
 	AudioQualitySettingsWindow.WindowName = FName("AudioQualitySettingsWindow");
 	AudioQualitySettingsWindow.Window = AudioQualitySettings_Layer;
-	AudioQualitySettingsWindow.FocusableContent.Add(MasterVolume_Slider);
+	/*AudioQualitySettingsWindow.FocusableContent.Add(MasterVolume_Slider);
 	AudioQualitySettingsWindow.FocusableContent.Add(MusicVolume_Slider);
 	AudioQualitySettingsWindow.FocusableContent.Add(VoiceVolume_Slider);
 	AudioQualitySettingsWindow.FocusableContent.Add(NotificationVolume_Slider);
 	AudioQualitySettingsWindow.FocusableContent.Add(SfxVolume_Slider);
 	AudioQualitySettingsWindow.FocusableContent.Add(BackFromSettings_Button);
-	AudioQualitySettingsWindow.FocusableContent.Add(AcceptSettings_Button);
+	AudioQualitySettingsWindow.FocusableContent.Add(AcceptSettings_Button);*/
 	Windows.Add(AudioQualitySettingsWindow);
 
 }

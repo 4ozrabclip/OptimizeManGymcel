@@ -44,8 +44,8 @@ void UShowerWidget_OM::InitWindowsArray()
 	MainWindow.WindowName = FName("MainWindow");
 	MainWindow.Window = ShowerGrid;
 	MainWindow.bIsOpen = true;
-	MainWindow.FocusableContent.Add(ColdShowerButton);
-	MainWindow.FocusableContent.Add(HotShowerButton);
+	MainWindow.FocusableContent.Add(MakeButton(ColdShowerButton, ColdShowerButton->GetStyle()));
+	MainWindow.FocusableContent.Add(MakeButton(HotShowerButton, HotShowerButton->GetStyle()));
 	
 }
 

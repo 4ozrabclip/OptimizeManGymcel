@@ -18,6 +18,8 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 	}
 
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	
 	
 }
 

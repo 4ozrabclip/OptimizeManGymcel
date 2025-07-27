@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Gym/Concrete/VendingMachine_OM.h"
+#include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
@@ -15,7 +16,7 @@ class UButton;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UParentWidget_OM
+class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UInteractiveWidgetBase_OM
 {
 	GENERATED_BODY()
 public:

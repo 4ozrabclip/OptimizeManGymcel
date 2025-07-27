@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Character/Concrete/Exercise_OM.h"
+#include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "ExerciseSelectionParentWidget_OM.generated.h"
 
@@ -17,7 +18,7 @@ class UButton;
  * 
  */
 UCLASS(Abstract)
-class OPTIMIZEMAN_API UExerciseSelectionParentWidget_OM : public UParentWidget_OM
+class OPTIMIZEMAN_API UExerciseSelectionParentWidget_OM : public UInteractiveWidgetBase_OM
 {
 	GENERATED_BODY()
 public:
