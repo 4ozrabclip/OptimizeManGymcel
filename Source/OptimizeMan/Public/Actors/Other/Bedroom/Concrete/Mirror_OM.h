@@ -24,6 +24,8 @@ public:
 
 	virtual void Interact_Implementation() override;
 
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	class UBoxComponent* ExtraCollider;
 	

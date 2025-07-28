@@ -5,6 +5,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Components/PointLightComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
@@ -65,6 +66,13 @@ void AShower_OM::Tick(float DeltaSeconds)
 			CloseWidget();
 		}
 	}
+}
+
+void AShower_OM::DarkModeToggle(const bool bIsDarkMode)
+{
+	Super::DarkModeToggle(bIsDarkMode);
+	AuraLight->SetIntensity(bIsDarkMode ? 2 : 6);
+	AuraLight->SetAttenuationRadius(bIsDarkMode ? 10 : 50);
 }
 
 void AShower_OM::TakeShower(bool bCold)

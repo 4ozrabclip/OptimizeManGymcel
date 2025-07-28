@@ -19,7 +19,7 @@ void UMainMenuWidget_OM::NativeConstruct()
 	
 	InitButtons();
 	
-	OpenWindow(FName("SettingsWindow"));
+	OpenWindow(FName("MainWindow"));
 	
 
 

@@ -49,6 +49,19 @@ void AMirror_OM::BeginPlay()
 		return;
 	}
 }
+void AMirror_OM::DarkModeToggle(const bool bIsDarkMode)
+{
+	Super::DarkModeToggle(bIsDarkMode);
+
+	if (AuraLight)
+	{
+		AuraLight->SetIntensity(bIsDarkMode ? 1.f : 10.f);
+		AuraLight->SetAttenuationRadius(bIsDarkMode ? 10.f : 140.f);
+	}
+
+}
+
+
 
 void AMirror_OM::Interact_Implementation()
 {
@@ -76,4 +89,5 @@ void AMirror_OM::Interact_Implementation()
 	Player->TogglePlayMode(EPlayModes::MirrorMode, Player->bInteractableOpen, this);
 	
 }
+
 

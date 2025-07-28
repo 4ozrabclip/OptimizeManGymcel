@@ -8,6 +8,7 @@
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
+class UCanvasPanel;
 class UImage;
 class UOverlay;
 class UTextBlock;
@@ -21,7 +22,7 @@ class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UInteractiveWidgetBase_O
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-
+	virtual void InitWindowsArray() override;
 
 	virtual void NativeDestruct() override;
 	
@@ -56,6 +57,9 @@ protected:
 	FConsumableType Consumable_1;
 	FConsumableType Consumable_2;
 	FConsumableType Consumable_3;
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* MainCanvas;
 	
 	// Widget UOBJECTS
 	UPROPERTY(meta = (BindWidget))

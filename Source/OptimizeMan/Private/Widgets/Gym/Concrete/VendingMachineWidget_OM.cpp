@@ -5,6 +5,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
@@ -38,9 +39,22 @@ void UVendingMachineWidget_OM::NativeConstruct()
 		Exit_Button->OnClicked.Clear();
 		Exit_Button->OnClicked.AddDynamic(this, &UVendingMachineWidget_OM::ExitVendor);
 	}
-
 	
 	SetConsumables();
+
+	OpenWindow(FName("MainWindow"));
+}
+
+void UVendingMachineWidget_OM::InitWindowsArray()
+{
+	Super::InitWindowsArray();
+	FUserInterfaceWindow MainWindow;
+	MainWindow.WindowName = FName("MainWindow");
+	MainWindow.Window = MainCanvas;
+	MainWindow.FocusableContent.Add(MakeButton(Option1_Button, Option1_Button->GetStyle()));
+	MainWindow.FocusableContent.Add(MakeButton(Option2_Button, Option2_Button->GetStyle()));
+	MainWindow.FocusableContent.Add(MakeButton(Option3_Button, Option3_Button->GetStyle()));
+	Windows.Add(MainWindow);
 }
 
 void UVendingMachineWidget_OM::ExitVendor()

@@ -19,6 +19,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Interact_Implementation() override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 
 public:
 	UFUNCTION()

@@ -67,14 +67,9 @@ void ALaptop_OM::BeginPlay()
 void ALaptop_OM::DarkModeToggle(const bool bIsDarkMode)
 {
 	Super::DarkModeToggle(bIsDarkMode);
-	if (bIsDarkMode)
-	{
-		AuraLight->SetAttenuationRadius(50.f);
-	}
-	else
-	{
-		AuraLight->SetAttenuationRadius(100.f);
-	}
+	AuraLight->SetAttenuationRadius(bIsDarkMode ? 50.f : 100.f);
+	AuraLight->SetIntensity(bIsDarkMode ? 1 :  3);
+
 }
 
 void ALaptop_OM::Interact_Implementation()
