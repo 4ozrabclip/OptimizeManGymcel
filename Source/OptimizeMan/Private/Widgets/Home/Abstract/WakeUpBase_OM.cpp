@@ -38,20 +38,17 @@ void UWakeUpBase_OM::InitWindowsArray()
 	Super::InitWindowsArray();
 	
 	TArray<FFocusableWidgetStruct> FocusableButtons = {
-		MakeButton(TaskOptionButton, OriginalStyle_1),
-		MakeButton(TaskOptionButton_1, OriginalStyle_2),
-		MakeButton(TaskOptionButton_2, OriginalStyle_1),
-		MakeButton(TaskOptionButton_3, OriginalStyle_2),
-		MakeButton(TaskOptionButton_4, OriginalStyle_1),
-		MakeButton(ExitButton, ExitButton->GetStyle()),
+		MakeButton(TaskOptionButton, TaskOptionButton->GetStyle()),
+		MakeButton(TaskOptionButton_1, TaskOptionButton_1->GetStyle()),
+		MakeButton(TaskOptionButton_2, TaskOptionButton_2->GetStyle()),
+		MakeButton(TaskOptionButton_3, TaskOptionButton_3->GetStyle()),
+		MakeButton(TaskOptionButton_4, TaskOptionButton_4->GetStyle()),
 	};
 	
 	FUserInterfaceWindow MainWindow;
 	MainWindow.WindowName = FName("MainWindow");
 	MainWindow.Window = MainCanvas;
-	MainWindow.bIsOpen = true;
 	MainWindow.FocusableContent = FocusableButtons;
-	
 	Windows.Add(MainWindow);
 
 }

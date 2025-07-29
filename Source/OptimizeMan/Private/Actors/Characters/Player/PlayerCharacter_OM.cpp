@@ -24,6 +24,7 @@
 #include "Camera/CameraActor.h"
 #include "Components/WidgetInteractionComponent.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
+#include "Components/Character/Concrete/CameraDriftComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 
@@ -34,6 +35,10 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	Camera->SetupAttachment(RootComponent);
 	Camera->bUsePawnControlRotation = true;
+
+	CameraDriftComponent = CreateDefaultSubobject<UCameraDriftComponent_OM>(TEXT("CameraDrift"));
+	CameraDriftComponent->bAutoActivate = true;
+
 
 	PlayerAudioComponent = CreateDefaultSubobject<UPlayerVoiceAudio_OM>(TEXT("AudioComponent"));
 	PlayerAudioComponent->bAutoActivate = true;
@@ -136,6 +141,9 @@ void APlayerCharacter_OM::BeginPlay()
 			return;
 		}
 	}
+	
+	
+
 
 	HeadPosition = GetMesh()->GetBoneLocation("Head");
 	SetCurrentPlayMode(EPlayModes::RegularMode);
@@ -143,6 +151,9 @@ void APlayerCharacter_OM::BeginPlay()
 	
 	InitializeAttributes();
 	InitializeConstantEffects();
+
+	if (Camera && CameraDriftComponent)
+		CameraDriftComponent->SetCamera(Camera);
 }
 
 void APlayerCharacter_OM::Tick(float DeltaTime)

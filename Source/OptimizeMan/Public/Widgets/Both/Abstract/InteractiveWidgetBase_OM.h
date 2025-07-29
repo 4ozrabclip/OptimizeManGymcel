@@ -109,6 +109,7 @@ public:
 	virtual void UpdateButtonFocusVisuals(UButton* Button, const FButtonStyle& DefaultStyle, bool bIsFocused);
 	
 
+	void ManageControllerInteraction();
 	virtual FUserInterfaceWindow InitializeWindow(UPanelWidget* InWindow, TArray<FFocusableWidgetStruct> InFocusableContent, FName InWindowName);
 
 	virtual void InitWindowsArray() { Windows.Empty(); }
@@ -118,13 +119,17 @@ public:
 
 
 protected:
-	
+
 	FButtonStyle CurrentButtonStyle;
 
 	FUserInterfaceWindow* CurrentOpenWindow = nullptr;
 
 	UPROPERTY()
 	TArray<FUserInterfaceWindow> Windows;
+
+
+	bool bIsUsingController = false;
+	
 
 	
 	

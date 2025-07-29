@@ -3,6 +3,7 @@
 
 #include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 
+#include "EnhancedInputSubsystems.h"
 #include "Components/Button.h"
 #include "Components/PanelWidget.h"
 #include "Components/Slider.h"
@@ -24,18 +25,12 @@ void UInteractiveWidgetBase_OM::NativeTick(const FGeometry& MyGeometry, float In
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (TSharedPtr<SWidget> FocusedWidget = FSlateApplication::Get().GetKeyboardFocusedWidget())
-	{
-		UE_LOG(LogTemp, Error, TEXT("Ticking"));
-		if (!CurrentOpenWindow) return;
-		for (FFocusableWidgetStruct& FocusableWidget : CurrentOpenWindow->FocusableContent)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Ticking 2 %s: "), *FocusableWidget.Type.ToString());
-			if (FocusableWidget.IsButton())
-				UpdateButtonFocusVisuals(FocusableWidget.ButtonData.Button, FocusableWidget.ButtonData.DefaultButtonStyle, FocusedWidget == FocusableWidget.ButtonData.Button->GetCachedWidget());
-		}
-	}
+	if (bIsUsingController)
+		ManageControllerInteraction();
+
 }
+
+
 
 FUserInterfaceWindow UInteractiveWidgetBase_OM::InitializeWindow(UPanelWidget* InWindow, TArray<FFocusableWidgetStruct> InFocusableContent, FName InWindowName)
 {
@@ -79,9 +74,9 @@ void UInteractiveWidgetBase_OM::OpenWindow(const FName InWindowName, bool bUsing
 			if (Window.FocusableContent.IsValidIndex(0))
 			{
 				if (Window.FocusableContent[0].IsButton())
-					Window.FocusableContent[0].ButtonData.Button->SetFocus();
+					Window.FocusableContent[0].ButtonData.Button->SetUserFocus(GetOwningPlayer());
 				else
-					Window.FocusableContent[0].SliderData.Slider->SetFocus();
+					Window.FocusableContent[0].SliderData.Slider->SetUserFocus(GetOwningPlayer());
 				
 			}
 
@@ -100,13 +95,46 @@ void UInteractiveWidgetBase_OM::UpdateButtonFocusVisuals(UButton* Button, const 
 
 	if (bIsFocused)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("bIsFocused"));
 		FButtonStyle FocusedStyle = DefaultStyle;
 		FocusedStyle.Normal = DefaultStyle.Hovered; 
 		Button->SetStyle(FocusedStyle);
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Unfocused"));
 		Button->SetStyle(DefaultStyle);
+	}
+}
+
+void UInteractiveWidgetBase_OM::ManageControllerInteraction()
+{
+	
+	if (TSharedPtr<SWidget> FocusedWidget = FSlateApplication::Get().GetKeyboardFocusedWidget())
+	{
+		if (!CurrentOpenWindow) return;
+
+		if (FocusedWidget.IsValid())
+		{
+			UE_LOG(LogTemp, Error, TEXT("Focused Widget: %s"), *FocusedWidget->GetTypeAsString());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("FocusedWidget is invalid"));
+			return;
+		}
+		for (FFocusableWidgetStruct& FocusableWidget : CurrentOpenWindow->FocusableContent)
+		{
+			UButton* Button = FocusableWidget.ButtonData.Button;
+			if (!IsValid(Button)) continue;
+
+			TSharedPtr<SWidget> CachedWidget = Button->GetCachedWidget();
+			if (!CachedWidget.IsValid()) continue;
+
+			bool bIsFocused = Button->HasUserFocus(GetOwningPlayer());
+
+			UpdateButtonFocusVisuals(Button, FocusableWidget.ButtonData.DefaultButtonStyle, bIsFocused);
+		}
 	}
 }
 

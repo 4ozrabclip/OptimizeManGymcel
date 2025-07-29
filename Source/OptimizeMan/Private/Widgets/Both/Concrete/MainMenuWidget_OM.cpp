@@ -20,7 +20,7 @@ void UMainMenuWidget_OM::NativeConstruct()
 	InitButtons();
 	
 	OpenWindow(FName("MainWindow"));
-	
+
 
 
 	if (!GameInstance)
@@ -59,8 +59,6 @@ void UMainMenuWidget_OM::InitWindowsArray()
 {
 	Super::InitWindowsArray();
 
-	
-
 	FUserInterfaceWindow MainWindow;
 	MainWindow.WindowName = FName("MainWindow");
 	MainWindow.Window = MainMenuBox;
@@ -89,13 +87,6 @@ void UMainMenuWidget_OM::InitWindowsArray()
 	FUserInterfaceWindow AudioQualitySettingsWindow;
 	AudioQualitySettingsWindow.WindowName = FName("AudioQualitySettingsWindow");
 	AudioQualitySettingsWindow.Window = AudioQualitySettings_Layer;
-	/*AudioQualitySettingsWindow.FocusableContent.Add(MasterVolume_Slider);
-	AudioQualitySettingsWindow.FocusableContent.Add(MusicVolume_Slider);
-	AudioQualitySettingsWindow.FocusableContent.Add(VoiceVolume_Slider);
-	AudioQualitySettingsWindow.FocusableContent.Add(NotificationVolume_Slider);
-	AudioQualitySettingsWindow.FocusableContent.Add(SfxVolume_Slider);
-	AudioQualitySettingsWindow.FocusableContent.Add(BackFromSettings_Button);
-	AudioQualitySettingsWindow.FocusableContent.Add(AcceptSettings_Button);*/
 	Windows.Add(AudioQualitySettingsWindow);
 
 }
@@ -148,16 +139,19 @@ void UMainMenuWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 
 	CurrentButtonStyle = bIsDarkMode ? DarkModeButtonStyle : LightModeButtonStyle;
 
-	PlayButton->SetStyle(CurrentButtonStyle);
-	SettingsButton->SetStyle(CurrentButtonStyle);
-	QuitButton->SetStyle(CurrentButtonStyle);
-	PlayGameBackButton->SetStyle(CurrentButtonStyle);
-	SettingsBackButton->SetStyle(CurrentButtonStyle);
-	NewGameButton->SetStyle(CurrentButtonStyle);
-	LoadGameButton->SetStyle(CurrentButtonStyle);
-	ToggleDarkMode->SetStyle(CurrentButtonStyle);
-	AudioQualitySettingsButton->SetStyle(CurrentButtonStyle);
+	for (FUserInterfaceWindow& Window : Windows)
+	{
+		for (FFocusableWidgetStruct& Focusable : Window.FocusableContent)
+		{
+			if (Focusable.IsButton())
+			{
+				Focusable.ButtonData.Button->SetStyle(CurrentButtonStyle);
+				Focusable.ButtonData.DefaultButtonStyle = CurrentButtonStyle;
+			}
 
+		}
+	}
+	
 	Play_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
 	Settings_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);
 	Quit_Text->SetColorAndOpacity(bIsDarkMode ? White : Black);

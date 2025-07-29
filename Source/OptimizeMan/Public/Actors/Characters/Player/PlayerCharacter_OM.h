@@ -18,6 +18,7 @@
 
 #include "PlayerCharacter_OM.generated.h"
 
+class UCameraDriftComponent_OM;
 class UCameraComponent;
 class UTodoManagementSubsystem;
 class UGameInstance_OM;
@@ -52,11 +53,15 @@ protected:
 
 	
 	/**** Components ****/
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UCameraComponent> Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<USceneComponent> SelfieCameraLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	TObjectPtr<UCameraDriftComponent_OM> CameraDriftComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerAudioComponent;
