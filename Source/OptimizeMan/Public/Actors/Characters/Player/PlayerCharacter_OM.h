@@ -19,7 +19,6 @@
 #include "PlayerCharacter_OM.generated.h"
 
 class UCameraDriftComponent_OM;
-class UCameraComponent;
 class UTodoManagementSubsystem;
 class UGameInstance_OM;
 class APlayerController_OM;
@@ -55,13 +54,20 @@ protected:
 	/**** Components ****/
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UCameraComponent> Camera;
+	TObjectPtr<class UCameraComponent_OM> Camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components) // _------ Delete this component
 	TObjectPtr<USceneComponent> SelfieCameraLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<UCameraDriftComponent_OM> CameraDriftComponent;
+	TObjectPtr<class USpringArmComponent_OM> SpringArmComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	TObjectPtr<class UPlayerAmbienceControlComponent> AmbienceControlComponent;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	TObjectPtr<class UPlayerAmbience_OM> AmbienceAudioComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerAudioComponent;

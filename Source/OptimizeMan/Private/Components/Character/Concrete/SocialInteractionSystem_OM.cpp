@@ -6,6 +6,7 @@
 #include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
+#include "Components/Audio/Concrete/PlayerAmbience_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
@@ -49,7 +50,14 @@ void USocialInteractionSystem_OM::InitConversation()
 	// TICK???????
 	
 
+	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
+	{
+		Amb->SetBreathingIntensity(EBreathingIntensity::Intense);
+	}
 	SetComponentTickEnabled(true);
+
+
+	
 
 	
 	/*if (Player && CurrentInteractedNpc)
@@ -413,6 +421,11 @@ void USocialInteractionSystem_OM::LeaveConversation()
 	CurrentInteractedNpc = nullptr;
 
 	SetComponentTickEnabled(false);
+	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
+	{
+		Amb->SetBreathingIntensity(EBreathingIntensity::Normal);
+	}
+	
 }
 
 void USocialInteractionSystem_OM::AddFocus(const float InFocus)
@@ -439,6 +452,11 @@ void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 	NpcAnimInstance = nullptr;
 	CurrentInteractedNpc = nullptr;
 	SetComponentTickEnabled(false);
+
+	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
+	{
+		Amb->SetBreathingIntensity(EBreathingIntensity::Normal);
+	}
 
 	
 

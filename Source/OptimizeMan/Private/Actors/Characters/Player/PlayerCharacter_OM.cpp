@@ -23,8 +23,12 @@
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Camera/CameraActor.h"
 #include "Components/WidgetInteractionComponent.h"
+#include "Components/Audio/Concrete/PlayerAmbience_OM.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
+#include "Components/Character/Concrete/CameraComponent_OM.h"
 #include "Components/Character/Concrete/CameraDriftComponent_OM.h"
+#include "Components/Character/Concrete/PlayerAmbienceControlComponent.h"
+#include "Components/Character/Concrete/SpringArmComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 
@@ -32,13 +36,24 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
-	Camera->SetupAttachment(RootComponent);
+
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent_OM>(TEXT("CameraDrift"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->SetRelativeRotation(FRotator(0, 0, 0));
+	SpringArmComponent->SetRelativeLocation(FVector(0, 0, 0));
+	SpringArmComponent->SocketOffset = FVector(20, 0, 80);
+	SpringArmComponent->bEnableCameraLag = false;
+	SpringArmComponent->bUsePawnControlRotation = false;
+	SpringArmComponent->bEnableCameraLag = true;
+	SpringArmComponent->bEnableCameraRotationLag = true;
+	SpringArmComponent->TargetArmLength = 10.f;
+	SpringArmComponent->TargetOffset = FVector(0, 0, 0);
+	
+	Camera = CreateDefaultSubobject<UCameraComponent_OM>(TEXT("PlayerCamera"));
+	Camera->SetupAttachment(SpringArmComponent);
+	Camera->SetRelativeLocation(FVector(0, 0, 0));
 	Camera->bUsePawnControlRotation = true;
-
-	CameraDriftComponent = CreateDefaultSubobject<UCameraDriftComponent_OM>(TEXT("CameraDrift"));
-	CameraDriftComponent->bAutoActivate = true;
-
+	
 
 	PlayerAudioComponent = CreateDefaultSubobject<UPlayerVoiceAudio_OM>(TEXT("AudioComponent"));
 	PlayerAudioComponent->bAutoActivate = true;
@@ -64,6 +79,16 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	AbSysComp = CreateDefaultSubobject<UAbilitySystemComponent_OM>(TEXT("AbilitySystemComponent"));
 	//MentalHealthStats = CreateDefaultSubobject<UMentalHealthStats_OM>(TEXT("Mental Health Attributes"));
 	//GymSpecificStats = CreateDefaultSubobject<UGymSpecificStats_OM>(TEXT("Gym Stats"));
+
+
+	AmbienceControlComponent = CreateDefaultSubobject<UPlayerAmbienceControlComponent>(TEXT("Ambience Visual"));
+	AmbienceControlComponent->bAutoActivate = true;
+
+	AmbienceAudioComponent = CreateDefaultSubobject<UPlayerAmbience_OM>(TEXT("Ambience Audio"));
+	AmbienceAudioComponent->bAutoActivate = true;
+	AmbienceAudioComponent->SetVolumeMultiplier(1.f);
+
+	
 
 	SelfieCameraLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SelfieCameraLocation"));
 	SelfieCameraLocation->SetupAttachment(RootComponent);
@@ -152,8 +177,6 @@ void APlayerCharacter_OM::BeginPlay()
 	InitializeAttributes();
 	InitializeConstantEffects();
 
-	if (Camera && CameraDriftComponent)
-		CameraDriftComponent->SetCamera(Camera);
 }
 
 void APlayerCharacter_OM::Tick(float DeltaTime)
