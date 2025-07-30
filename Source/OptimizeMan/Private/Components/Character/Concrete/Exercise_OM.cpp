@@ -388,9 +388,10 @@ void UExercise_OM::SetRep()
 
 void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, const float MuscleIncrease, const float EnergyUse, const float RepDuration)
 {
-	if (GameInstance->GetGymResStats().Energy < EnergyUse)
+	if (GymStats->GetEnergy() < EnergyUse)
 	{
 		LeaveExercise();
+		return;
 	}
 	SetCurrentWorkoutState(EWorkoutStates::DoingRep);
 	RepCount++;
@@ -400,21 +401,9 @@ void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, co
 
 	if (!IsComponentTickEnabled())
 		SetComponentTickEnabled(true);
+
+
 	
-	GetWorld()->GetTimerManager().ClearTimer(ExerciseTimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-		ExerciseTimerHandle,
-		[this]()
-		{
-			SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
-			if (GymStats->GetEnergy() <= 0.f)
-			{
-				LeaveExercise();
-			}
-		},
-		RepDuration, 
-		false 
-	);
 	if (ModifyMuscleValueFunc)
 	{
 		ModifyMuscleValueFunc(MuscleIncrease);
