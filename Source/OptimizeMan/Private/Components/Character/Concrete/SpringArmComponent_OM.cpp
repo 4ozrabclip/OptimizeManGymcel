@@ -5,17 +5,81 @@
 
 USpringArmComponent_OM::USpringArmComponent_OM()
 {
-	PrimaryComponentTick.bCanEverTick = false;
-	OriginalTargetOffset = TargetOffset;
+	PrimaryComponentTick.bCanEverTick = true;
+	OriginalSocketOffset = SocketOffset;
+
+	MinBreathOffset = OriginalSocketOffset.Z;
+
+	bDoCollisionTest = false;
 }
 
 void USpringArmComponent_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (bPlayBreathing)
-		PlayBreathingMovementInterval();
 }
+
+void USpringArmComponent_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	ManageBreathingTick(DeltaTime);
+
+}
+
+void USpringArmComponent_OM::ManageBreathingTick(float DeltaTime)
+{
+	switch (BreathingPhase)
+	{
+	case EBreathingPhase::Idle:
+		{
+			
+			TimeSinceIdle+=DeltaTime;
+			UE_LOG(LogTemp, Error, TEXT("Idle\n - TimeSinceIdle: %.2f"), TimeSinceIdle);
+			if (TimeSinceIdle >= BreathingTimerInterval)
+			{
+				TimeSinceIdle = 0;
+				SetBreathingPhase(EBreathingPhase::BreathingIn);
+			}
+			break;
+		}
+	case EBreathingPhase::BreathingIn:
+		{
+			BreathingPhaseTime += DeltaTime;
+			
+			float Alpha = FMath::Clamp(BreathingPhaseTime / BreathUpInterpSpeed, 0.0f, 1.0f);
+			SocketOffset.Z = FMath::Lerp(MinBreathOffset, MaxBreathOffset, Alpha);
+			
+			UE_LOG(LogTemp, Error, TEXT("Breathing In\n - PhaseTime: %.3f\n - Alpha: %.5f"), BreathingPhaseTime, Alpha);
+			if (Alpha >= 1.f)
+			{
+				BreathingPhaseTime = 0;
+				SetBreathingPhase(EBreathingPhase::BreathingOut);
+			}
+			break;
+		}
+	case EBreathingPhase::BreathingOut:
+		{
+			BreathingPhaseTime += DeltaTime;
+			
+			float Alpha = FMath::Clamp(BreathingPhaseTime / BreathDownInterpSpeed, 0.0f, 1.0f);
+			SocketOffset.Z = FMath::Lerp(MaxBreathOffset, MinBreathOffset, Alpha);
+			UE_LOG(LogTemp, Error, TEXT("Breathing Out\n PhaseTime: %.3f\n - Alpha: %.5f"), BreathingPhaseTime, Alpha);
+
+			if (Alpha >= 1.f)
+			{
+				BreathingPhaseTime = 0;
+				SetBreathingPhase(EBreathingPhase::Idle);
+			}
+			break;
+		}
+	default:
+		return;
+	}
+	
+}
+
 void USpringArmComponent_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
@@ -23,35 +87,3 @@ void USpringArmComponent_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	
 }
 
-void USpringArmComponent_OM::PlayBreathingMovementInterval()
-{
-	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(BreathingTimerHandle, this, &USpringArmComponent_OM::BreathUp, BreathingTimerInterval, false); 
-}
-
-void USpringArmComponent_OM::BreathUp()
-{
-	float BreathTarget = GetRelativeLocation().Z + MaxBreathOffset;
-	FVector NewLocation = GetRelativeLocation();
-	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(BreathingTimerHandle,[this, BreathTarget, NewLocation]()
-	{
-		if (FMath::IsNearlyEqual(GetRelativeLocation().Z, BreathTarget))
-			BreathDown();
-
-		//NewLocation.Z = FMath::FInterpConstantTo(GetRelativeLocation().Z, BreathTarget, BreathingTimerInterval, BreathUpInterpSpeed);
-		//SetRelativeLocation() = 
-	}, DeltaTime, true);
-}
-
-void USpringArmComponent_OM::BreathDown()
-{
-	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(BreathingTimerHandle,[this]()
-	{
-		if (FMath::IsNearlyEqual(SocketOffset.Z, OriginalTargetOffset.Z))
-			PlayBreathingMovementInterval();
-		
-		SocketOffset.Z = FMath::FInterpConstantTo(TargetOffset.Z, OriginalTargetOffset.Z, BreathingTimerInterval, BreathDownInterpSpeed);
-	}, DeltaTime, true);
-}
