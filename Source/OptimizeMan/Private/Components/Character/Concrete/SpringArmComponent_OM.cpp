@@ -3,20 +3,39 @@
 
 #include "Components/Character/Concrete/SpringArmComponent_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
+
 USpringArmComponent_OM::USpringArmComponent_OM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	OriginalSocketOffset = SocketOffset;
-
-	MinBreathOffset = OriginalSocketOffset.Z;
-
 	bDoCollisionTest = false;
 }
 
 void USpringArmComponent_OM::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OriginalSocketOffset = SocketOffset;
 	
+	TargetInBreath = OriginalSocketOffset.Z + MaxBreathOffset;
+
+	SetBreathingPhase(EBreathingPhase::Idle);
+
+	SetComponentTickEnabled(true);
+
+
+	if (auto* Player = Cast<APlayerCharacter_OM>(GetOwner()))
+	{
+		if (auto* BreathAudioComp = Cast<UPlayerAmbience_OM>(Player->GetComponentByClass<UPlayerAmbience_OM>()))
+		{
+			BreathAudioComp->OnBreathTaken.AddDynamic(this, &USpringArmComponent_OM::TakeBreath);
+		}
+	}
+}
+
+void USpringArmComponent_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
 }
 
 void USpringArmComponent_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
@@ -33,25 +52,14 @@ void USpringArmComponent_OM::ManageBreathingTick(float DeltaTime)
 	switch (BreathingPhase)
 	{
 	case EBreathingPhase::Idle:
-		{
-			
-			TimeSinceIdle+=DeltaTime;
-			UE_LOG(LogTemp, Error, TEXT("Idle\n - TimeSinceIdle: %.2f"), TimeSinceIdle);
-			if (TimeSinceIdle >= BreathingTimerInterval)
-			{
-				TimeSinceIdle = 0;
-				SetBreathingPhase(EBreathingPhase::BreathingIn);
-			}
-			break;
-		}
+		return;
 	case EBreathingPhase::BreathingIn:
 		{
 			BreathingPhaseTime += DeltaTime;
 			
 			float Alpha = FMath::Clamp(BreathingPhaseTime / BreathUpInterpSpeed, 0.0f, 1.0f);
-			SocketOffset.Z = FMath::Lerp(MinBreathOffset, MaxBreathOffset, Alpha);
+			SocketOffset.Z = FMath::Lerp(OriginalSocketOffset.Z, TargetInBreath, Alpha);
 			
-			UE_LOG(LogTemp, Error, TEXT("Breathing In\n - PhaseTime: %.3f\n - Alpha: %.5f"), BreathingPhaseTime, Alpha);
 			if (Alpha >= 1.f)
 			{
 				BreathingPhaseTime = 0;
@@ -64,8 +72,7 @@ void USpringArmComponent_OM::ManageBreathingTick(float DeltaTime)
 			BreathingPhaseTime += DeltaTime;
 			
 			float Alpha = FMath::Clamp(BreathingPhaseTime / BreathDownInterpSpeed, 0.0f, 1.0f);
-			SocketOffset.Z = FMath::Lerp(MaxBreathOffset, MinBreathOffset, Alpha);
-			UE_LOG(LogTemp, Error, TEXT("Breathing Out\n PhaseTime: %.3f\n - Alpha: %.5f"), BreathingPhaseTime, Alpha);
+			SocketOffset.Z = FMath::Lerp(TargetInBreath, OriginalSocketOffset.Z, Alpha);
 
 			if (Alpha >= 1.f)
 			{
@@ -77,13 +84,9 @@ void USpringArmComponent_OM::ManageBreathingTick(float DeltaTime)
 	default:
 		return;
 	}
-	
 }
 
-void USpringArmComponent_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void USpringArmComponent_OM::TakeBreath(EBreathingIntensity InIntensity)
 {
-	Super::EndPlay(EndPlayReason);
-	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
-	
+	SetBreathingPhase(EBreathingPhase::BreathingIn);
 }
-

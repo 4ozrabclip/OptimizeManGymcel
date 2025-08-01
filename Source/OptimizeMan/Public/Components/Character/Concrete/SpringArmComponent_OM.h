@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/Audio/Concrete/PlayerAmbience_OM.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "SpringArmComponent_OM.generated.h"
 
@@ -26,6 +27,9 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 
+	UFUNCTION()
+	void TakeBreath(EBreathingIntensity InIntensity);
+
 	void ManageBreathingTick(float DeltaTime);
 	
 
@@ -34,11 +38,9 @@ protected:
 	bool bPlayBreathing = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "params")
-	float MaxBreathOffset = 10.f;
-
+	float MaxBreathOffset = 20.f;
 
 	
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "params")
 	float BreathUpInterpSpeed = 0.3f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "params")
@@ -52,17 +54,20 @@ protected:
 public:
 	/** Setters **/
 	void SetBreathingPhase(const EBreathingPhase InBreathingPhase) { BreathingPhase = InBreathingPhase; };
+
+
 	
 
 private:
-	FTimerHandle BreathingTimerHandle;
-
 	EBreathingPhase BreathingPhase = EBreathingPhase::Idle;
 	float BreathingPhaseTime = 0.0f;
 	float BreathingDuration = 1.2f; // total time for one breath direction
 
 	float TimeSinceIdle = 0.f;
 	float MinBreathOffset;
+
+	float TargetInBreath;
+	
 	
 	bool bTickToggle = false;
 

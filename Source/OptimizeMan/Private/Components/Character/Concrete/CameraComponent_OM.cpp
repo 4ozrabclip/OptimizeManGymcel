@@ -5,9 +5,10 @@
 
 UCameraComponent_OM::UCameraComponent_OM()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 	
 	DefaultFOV = FieldOfView;
+	TargetFOV = DefaultFOV;
 }
 
 void UCameraComponent_OM::BeginPlay()
@@ -19,34 +20,49 @@ void UCameraComponent_OM::BeginPlay()
 
 }
 
-
-void UCameraComponent_OM::FOVShift(bool bIncreaseFOV)
+void UCameraComponent_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
 {
-	const float TargetFOV = bIncreaseFOV ? MaxFOV : MinFOV;
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	LerpFOV(FOVShiftSpeed, TargetFOV);
-	
+	ManageFOVTick(DeltaTime);
 }
 
-void UCameraComponent_OM::LerpFOV(const float InterpSpeed, const float TargetFOV)
+
+void UCameraComponent_OM::ManageFOVTick(float DeltaTime)
 {
-	constexpr float DeltaTime = 0.065f;
-	
-	GetWorld()->GetTimerManager().ClearTimer(FovShiftHandle);
-	GetWorld()->GetTimerManager().SetTimer(FovShiftHandle, [this, TargetFOV, InterpSpeed]()
+
+	if (FOVState == EFieldOfVisionState::Phasing)
 	{
-		if (FMath::IsNearlyEqual(FieldOfView, TargetFOV))
+		TimeAccumulator += DeltaTime * PhaseSpeed; 
+		float PhaseOffset = FMath::Sin(TimeAccumulator) * PhaseAmplitude;
+		SetFieldOfView(DefaultFOV + PhaseOffset);
+	}
+	else
+	{
+		TargetFOV = FOVState == EFieldOfVisionState::Default ? DefaultFOV :
+					FOVState == EFieldOfVisionState::Tight ? TightFOV : WideFOV;
+
+
+		if (FMath::IsNearlyEqual(FieldOfView, TargetFOV, 0.01f))
 		{
-			// Call Pull back func?
-			GetWorld()->GetTimerManager().ClearTimer(FovShiftHandle);
+			SetComponentTickEnabled(false);
+			return;
 		}
-		FieldOfView = FMath::FInterpConstantTo(FieldOfView, TargetFOV, DeltaTime, InterpSpeed);
+		float FOVLerpSpeed = FOVState == EFieldOfVisionState::Default ? DefaultLerpSpeed : FastLerpSpeed;
 		
-	}, DeltaTime, true);
+		float NewFOV = FMath::FInterpTo(FieldOfView, TargetFOV, DeltaTime, FOVLerpSpeed);
+
+		SetFieldOfView(NewFOV);
+	}
+	
 }
 
-void UCameraComponent_OM::FOVLerpToDefault()
+void UCameraComponent_OM::SetFOVState(const EFieldOfVisionState InFOVState)
 {
-	constexpr float SlowInterp = 0.8f;
-	LerpFOV(FOVLerpToDefaultSpeed, DefaultFOV);
+	if (InFOVState != EFieldOfVisionState::Default)
+		SetComponentTickEnabled(true);
+
+	FOVState = InFOVState;
+
 }

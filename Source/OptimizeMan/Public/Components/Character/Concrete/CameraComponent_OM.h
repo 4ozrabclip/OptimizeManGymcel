@@ -9,7 +9,17 @@
 /**
  * 
  */
-UCLASS()
+
+UENUM(BlueprintType)
+enum class EFieldOfVisionState : uint8
+{
+	Default UMETA(DisplayName = "Default"),
+	Phasing UMETA(DisplayName = "Phasing"),
+	Tight	UMETA(DisplayName = "Tight"),
+	Wide	UMETA(DisplayName = "Wide"),
+};
+
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class OPTIMIZEMAN_API UCameraComponent_OM : public UCameraComponent
 {
 	GENERATED_BODY()
@@ -17,29 +27,56 @@ public:
 	UCameraComponent_OM();
 protected:
 	virtual void BeginPlay() override;
-	
-	
-	UFUNCTION(BlueprintCallable)
-	void FOVShift(bool bIncreaseFOV = true);
-	UFUNCTION(BlueprintCallable)
-	void FOVLerpToDefault();
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void ManageFOVTick(float DeltaTime);
+
+
+
+public:
+	/** Setters **/
+	UFUNCTION(BlueprintCallable, Category = "Fov State")
+	void SetFOVState(EFieldOfVisionState InFOVState);
+
+
+	EFieldOfVisionState GetFOVState() const { return FOVState; };
 
 	
-	void LerpFOV(const float InterpSpeed, float TargetFOV);
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
+	float FastLerpSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
+	float SlowLerpSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
+	float DefaultLerpSpeed;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
+	float WideFOV; // ------- Check Range
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
+	float TightFOV;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
-	float FOVShiftSpeed = 6.f;
+	float PhaseSpeed;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
-	float FOVLerpToDefaultSpeed = 3.f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
-	float MaxFOV; // ------- Check Range
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Fov Params")
-	float MinFOV;
+	float PhaseAmplitude;
 
 
 private:
 	bool bReturnToDefault = false;
 	float DefaultFOV;
+
+	bool bFOVAtTarget = false;
+
+
+	float TargetFOV;
+
+
+	EFieldOfVisionState FOVState = EFieldOfVisionState::Default;
+
+
+	float TimeAccumulator = 0.f;
 
 
 
