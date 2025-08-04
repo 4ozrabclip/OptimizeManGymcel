@@ -38,7 +38,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnMiniGameClick();
 	UFUNCTION(BlueprintCallable)
-	void NotificationTextPopUp();
+	void NotificationTextPopUp(const FString& InString = "");
 	UFUNCTION(BlueprintCallable)
 	bool GetMiniGameOn() const { return bMiniGameOn; }
 	UFUNCTION(BlueprintCallable)

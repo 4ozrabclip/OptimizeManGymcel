@@ -36,61 +36,59 @@ void ULaptopWidget_OM::NativeConstruct()
 
 void ULaptopWidget_OM::InitButtons()
 {
-	if (!PlasticSurgeryButton || !BankButton || !ForSkanForumButton ||
-		!SupplementsShopButton || !YourHeavenXButton || !GeneralStoreButton ||
-		!GeneralStorePostersButton || !GeneralStoreMusicButton || !GeneralStoreSupplyButton)
+	if (!OneMansTrashPostersButton || !OneMansTrashMusicButton || !OneMansTrashSupplyButton)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Buttons null in Home screen for laptop"));
 		return;
 	}
-	/*PlasticSurgeryButton->OnClicked.RemoveAll(this);
-	PlasticSurgeryButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
+	/*OpenBlessedFlesh_Button->OnClicked.RemoveAll(this);
+	OpenBlessedFlesh_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 	BankButton->OnClicked.RemoveAll(this);
 	BankButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 	ForSkanForumButton->OnClicked.RemoveAll(this);
 	ForSkanForumButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-	SupplementsShopButton->OnClicked.RemoveAll(this);
-	SupplementsShopButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
-	YourHeavenXButton->OnClicked.RemoveAll(this);
-	YourHeavenXButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
-	GeneralStoreButton->OnClicked.RemoveAll(this);
-	GeneralStoreButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);*/
-	GeneralStoreMusicButton->OnClicked.RemoveAll(this);
-	GeneralStoreMusicButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::MusicStoreButtonClicked);
-	GeneralStoreSupplyButton->OnClicked.RemoveAll(this);
-	GeneralStoreSupplyButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplyStoreButtonClicked);
-	GeneralStorePostersButton->OnClicked.RemoveAll(this);
-	GeneralStorePostersButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PosterStoreButtonClicked);
+	BulkMythologyButton->OnClicked.RemoveAll(this);
+	BulkMythologyButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
+	TheNattyLieButton->OnClicked.RemoveAll(this);
+	TheNattyLieButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
+	OneMansTrashButton->OnClicked.RemoveAll(this);
+	OneMansTrashButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);*/
+	OneMansTrashMusicButton->OnClicked.RemoveAll(this);
+	OneMansTrashMusicButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::MusicStoreButtonClicked);
+	OneMansTrashSupplyButton->OnClicked.RemoveAll(this);
+	OneMansTrashSupplyButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplyStoreButtonClicked);
+	OneMansTrashPostersButton->OnClicked.RemoveAll(this);
+	OneMansTrashPostersButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PosterStoreButtonClicked);
 	
 
-	if (!PlasticSurgeryButton || !ForSkanBackButton ||
-		!SupplementsShopBackButton || !YourHeavenXBackButton || !BuyDickPumpBackButton ||
-		!GeneralStoreBackButton || !MusicStoreBackButton || !SupplyStoreBackButton ||
+	if (!ForSkanBackButton ||
+		!BulkMythologyBackButton || !TheNattyLieBackButton || !BuyDickPumpBackButton ||
+		!OneMansTrashBackButton || !MusicStoreBackButton || !SupplyStoreBackButton ||
 		!PosterStoreBackButton)
 	{
 		UE_LOG(LogTemp, Error, TEXT("One or more back buttons are null"));
 		return;
 	}
 	
-    PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-    PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
+    BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+    BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
     ForSkanBackButton->OnClicked.RemoveAll(this);
     ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
-    SupplementsShopBackButton->OnClicked.RemoveAll(this);
-    SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
-    YourHeavenXBackButton->OnClicked.RemoveAll(this);
-    YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
+    BulkMythologyBackButton->OnClicked.RemoveAll(this);
+    BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
+    TheNattyLieBackButton->OnClicked.RemoveAll(this);
+    TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
     BuyDickPumpBackButton->OnClicked.RemoveAll(this);
-    BuyDickPumpBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
+    BuyDickPumpBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 	
-    GeneralStoreBackButton->OnClicked.RemoveAll(this);
-    GeneralStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
+    OneMansTrashBackButton->OnClicked.RemoveAll(this);
+    OneMansTrashBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BackButtonClicked);
 	MusicStoreBackButton->OnClicked.RemoveAll(this);
-	MusicStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreChildBackButtonClicked);
+	MusicStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashChildBackButtonClicked);
 	SupplyStoreBackButton->OnClicked.RemoveAll(this);
-	SupplyStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreChildBackButtonClicked);
+	SupplyStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashChildBackButtonClicked);
 	PosterStoreBackButton->OnClicked.RemoveAll(this);
-	PosterStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreChildBackButtonClicked);
+	PosterStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashChildBackButtonClicked);
 
 
 	if (!BuySteroidsButton || !BuyBabyCrackButton || !JawSurgeryButton ||
@@ -130,16 +128,15 @@ void ULaptopWidget_OM::OpenPageHelper(const EWebsites InWebsite, UOverlay* PageT
 {
 	if (!PageToOpenOverlay && !PageToOpenGrid) return;
 	
-	HomePageLayers->SetVisibility(ESlateVisibility::Hidden);
 	PlasticSurgeryLayers->SetVisibility(ESlateVisibility::Hidden);
 	BankLayers->SetVisibility(ESlateVisibility::Hidden);
 	ForSkanLayers->SetVisibility(ESlateVisibility::Hidden);
-	SupplementsShopLayers->SetVisibility(ESlateVisibility::Hidden);
-	YourHeavenXLayers->SetVisibility(ESlateVisibility::Hidden);
-	YourHeavenXHomeGrid->SetVisibility(ESlateVisibility::Hidden);
+	BulkMythologyLayers->SetVisibility(ESlateVisibility::Hidden);
+	TheNattyLieLayers->SetVisibility(ESlateVisibility::Hidden);
+	TheNattyLieHomeGrid->SetVisibility(ESlateVisibility::Hidden);
 	BuyDickPumpGrid->SetVisibility(ESlateVisibility::Hidden);
-	GeneralStoreLayers->SetVisibility(ESlateVisibility::Hidden);
-	GeneralStoreHomeGrid->SetVisibility(ESlateVisibility::Hidden);
+	OneMansTrashLayers->SetVisibility(ESlateVisibility::Hidden);
+	OneMansTrashHomeGrid->SetVisibility(ESlateVisibility::Hidden);
 	SupplyStoreGrid->SetVisibility(ESlateVisibility::Hidden);
 	MusicStoreGrid->SetVisibility(ESlateVisibility::Hidden);
 	PosterStoreGrid->SetVisibility(ESlateVisibility::Hidden);
@@ -197,19 +194,19 @@ void ULaptopWidget_OM::BackButtonClicked()
 			OpenPage(EWebsites::Bank, BankLayers);
 			break;
 		}
-	case EWebsites::GeneralStore:
+	case EWebsites::OneMansTrash:
 		{
-			OpenPageFromBackButton(EWebsites::GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid);
+			OpenPageFromBackButton(EWebsites::OneMansTrash, OneMansTrashLayers, OneMansTrashHomeGrid);
 			break;
 		}
-	case EWebsites::CornSite:
+	case EWebsites::TheNattyLie:
 		{
-			OpenPageFromBackButton(EWebsites::CornSite, YourHeavenXLayers, YourHeavenXHomeGrid);
+			OpenPageFromBackButton(EWebsites::TheNattyLie, TheNattyLieLayers, TheNattyLieHomeGrid);
 			break;
 		}
-	case EWebsites::SupplementsShop:
+	case EWebsites::BulkMythology:
 		{
-			OpenPageFromBackButton(EWebsites::SupplementsShop, SupplementsShopLayers);
+			OpenPageFromBackButton(EWebsites::BulkMythology, BulkMythologyLayers);
 			break;
 		}
 	case EWebsites::ForSkanForum:
@@ -217,15 +214,45 @@ void ULaptopWidget_OM::BackButtonClicked()
 			OpenPageFromBackButton(EWebsites::ForSkanForum, ForSkanLayers);
 			break;
 		}
-	case EWebsites::PlasticSurgeryShop:
+	case EWebsites::BlessedFlesh:
 		{
-			OpenPageFromBackButton(EWebsites::PlasticSurgeryShop, PlasticSurgeryLayers);
+			OpenPageFromBackButton(EWebsites::BlessedFlesh, PlasticSurgeryLayers);
 			break;
 		}
 	default:
 		return;
 	}
 }
+
+FButtonStyle ULaptopWidget_OM::GetRandomAdvertisementStyleFromArray(const TArray<UTexture2D*>& InAdvertisements)
+{
+
+	FButtonStyle OutStyle;
+	
+	if (InAdvertisements.Num() <= 0) return OutStyle;
+
+	const int RandIndex = FMath::RandRange(0, InAdvertisements.Num() - 1);
+
+	if (UTexture2D* Image = InAdvertisements[RandIndex])
+	{
+		OutStyle.Normal.SetResourceObject(Image);
+		OutStyle.Normal.TintColor = FLinearColor::White;
+		OutStyle.Normal.DrawAs = ESlateBrushDrawType::Image;
+		OutStyle.Disabled.SetResourceObject(Image);
+		OutStyle.Disabled.TintColor = FLinearColor::White;
+		OutStyle.Disabled.DrawAs = ESlateBrushDrawType::Image;
+		OutStyle.Hovered.SetResourceObject(Image);
+		OutStyle.Hovered.TintColor = FLinearColor::White;
+		OutStyle.Hovered.DrawAs = ESlateBrushDrawType::Image;
+		OutStyle.Pressed.SetResourceObject(Image);
+		OutStyle.Pressed.TintColor = FLinearColor::White;
+		OutStyle.Pressed.DrawAs = ESlateBrushDrawType::Image;
+	}
+	
+	return OutStyle;
+	
+}
+
 void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 {
 	const bool GodsJudgement = FMath::RandRange(0, 1) == 1;
@@ -238,78 +265,77 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		BankAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*GeneralStoreBackButton->OnClicked.RemoveAll(this);
-			GeneralStoreBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-			PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
-			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
-			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
+			/*OneMansTrashBackButton->OnClicked.RemoveAll(this);
+			OneMansTrashBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
+			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
+			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
+			BankAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
 			BankAdv_H_Text->SetText(FText::FromString("General Store"));
-			BankAdv_V_Text->SetText(FText::FromString("Plastic Surgery"));
 		}
 		else
 		{
-/*			PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-			PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			YourHeavenXBackButton->OnClicked.RemoveAll(this);
-			YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
-			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
-			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
+/*			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			TheNattyLieBackButton->OnClicked.RemoveAll(this);
+			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
+			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
+			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 			BankAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
-			BankAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
+			BankAdv_V_Text->SetText(FText::FromString("The Natty lie"));
 		}
 		break;
 	}
-	case EWebsites::GeneralStore:
+	case EWebsites::OneMansTrash:
 	{
 		GenrAdv_H->OnClicked.RemoveAll(this);
 		GenrAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*YourHeavenXBackButton->OnClicked.RemoveAll(this);
-			YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
-			SupplementsShopBackButton->OnClicked.RemoveAll(this);
-			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);*/
-			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
-			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
+			/*TheNattyLieBackButton->OnClicked.RemoveAll(this);
+			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
+			BulkMythologyBackButton->OnClicked.RemoveAll(this);
+			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);*/
+			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
+			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			GenrAdv_H_Text->SetText(FText::FromString("Brainrot Advertisement"));
 			GenrAdv_V_Text->SetText(FText::FromString("Supplements"));
 			UE_LOG(LogTemp, Error, TEXT("General Store Open1"));
 		}
 		else
 		{
-			/*SupplementsShopBackButton->OnClicked.RemoveAll(this);
-			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);*/
-			//SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::GeneralStoreButtonClicked);
+			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
+			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);*/
+			//BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
 			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
+			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			GenrAdv_H_Text->SetText(FText::FromString("Bank"));
 			GenrAdv_V_Text->SetText(FText::FromString("Supplements"));
-			UE_LOG(LogTemp, Error, TEXT("General Store Open2"));
 		}
 
 		break;
 	}
-	case EWebsites::SupplementsShop:
+	case EWebsites::BulkMythology:
 	{
 		SuppAdv_H->OnClicked.RemoveAll(this);
 		SuppAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*YourHeavenXBackButton->OnClicked.RemoveAll(this);
-			YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
+			/*TheNattyLieBackButton->OnClicked.RemoveAll(this);
+			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			ForSkanBackButton->OnClicked.RemoveAll(this);
-			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);*/
-			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
+			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);*/
+			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
+			SuppAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_V));
 			SuppAdv_H_Text->SetText(FText::FromString("Brainrot Advertisement"));
-			SuppAdv_V_Text->SetText(FText::FromString("ForSkan"));
 		}
 		else
 		{
-			/*PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-			PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);*/
-			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
+			/*BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);*/
+			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			SuppAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
 			SuppAdv_V_Text->SetText(FText::FromString("Bank"));
@@ -322,77 +348,75 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		ForsAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-			PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			YourHeavenXBackButton->OnClicked.RemoveAll(this);
-			YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
-			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
-			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
+			/*BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
+			TheNattyLieBackButton->OnClicked.RemoveAll(this);
+			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
+			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
+			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 			ForsAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
-			ForsAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
+			ForsAdv_V_Text->SetText(FText::FromString("The Natty Lie"));
 		}
 		else
 		{
-			/*SupplementsShopBackButton->OnClicked.RemoveAll(this);
-			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-			PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
-			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
-			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
+			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
+			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
+			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
+			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
+			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			ForsAdv_H_Text->SetText(FText::FromString("Supplements"));
-			ForsAdv_V_Text->SetText(FText::FromString("PlasticSurgery"));
+			ForsAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
 		}
 		break;
 	}
-	case EWebsites::PlasticSurgeryShop:
+	case EWebsites::BlessedFlesh:
 	{
 		PlastAdv_H->OnClicked.RemoveAll(this);
 		PlastAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*YourHeavenXBackButton->OnClicked.RemoveAll(this);
-			YourHeavenXBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);*/
+			/*TheNattyLieBackButton->OnClicked.RemoveAll(this);
+			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);*/
 			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
+			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 			PlastAdv_H_Text->SetText(FText::FromString("Bank"));
 			PlastAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
 		}
 		else
 		{
-			/*SupplementsShopBackButton->OnClicked.RemoveAll(this);
-			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);*/
-			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
-			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
+			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);*/
+			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
+			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
 			PlastAdv_H_Text->SetText(FText::FromString("Supplements"));
-			PlastAdv_V_Text->SetText(FText::FromString("Bank"));
+			PlastAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_V));
 		}
 		break;
 	}
-	case EWebsites::CornSite:
+	case EWebsites::TheNattyLie:
 	{
 		CornAdv_H->OnClicked.RemoveAll(this);
 		CornAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
 			/*ForSkanBackButton->OnClicked.RemoveAll(this);
-			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);
-			PlasticSurgeryBackButton->OnClicked.RemoveAll(this);
-			PlasticSurgeryBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);*/
+			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
+			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
+			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);*/
 			CornAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::PlasticSurgeryButtonClicked);
+			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			CornAdv_H_Text->SetText(FText::FromString("ForsKan"));
-			CornAdv_V_Text->SetText(FText::FromString("Plastic Surgery"));
-			UE_LOG(LogTemp, Error, TEXT("Corn Open 1"));
+			CornAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
 		}
 		else
 		{
-			/*SupplementsShopBackButton->OnClicked.RemoveAll(this);
-			SupplementsShopBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::YourHeavenXButtonClicked);*/
-			CornAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::SupplementsShopButtonClicked);
+			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
+			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);*/
+			CornAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			CornAdv_H_Text->SetText(FText::FromString("Supplements"));
 			CornAdv_V_Text->SetText(FText::FromString("Bank"));
-			UE_LOG(LogTemp, Error, TEXT("Corn Open 2"));
 		}
 		break;
 	}

@@ -27,7 +27,7 @@ protected:
 
 	
 private:
-	void InitInjurys() const;
+	void InitInjurys();
 
 public:
 	void ClearBodyPartsInUse() { BodyParts.Empty(); }
@@ -85,6 +85,8 @@ public:
 	float GetEnergy() const;
 	float GetFocus() const;
 
+	FBodyPartData* GetCurrentInjuredPart() const { return CurrentInjuredPart; }
+
 
 	
 	/** Functional **/
@@ -101,7 +103,6 @@ public:
 	void CheckForExerciseAchievements();
 
 	void Injury(const EInjuryLevel& InInjuryLevel);
-	void MinorInjury();
 	void UseEnergy(float InLevel = 1.f);
 
 	void EnterExercisePosition();
@@ -134,7 +135,8 @@ protected:
 
 
 
-
+private:
+	FBodyPartData* CurrentInjuredPart;
 
 
 	

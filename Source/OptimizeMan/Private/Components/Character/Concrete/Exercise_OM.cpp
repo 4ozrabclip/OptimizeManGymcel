@@ -27,6 +27,7 @@ UExercise_OM::UExercise_OM()
 	TimeSinceLastRep = 0.f;
 	NewRelativeLocation = FVector(21.f, -1.f, 0.f); //bicepcurl
 	CurrentWorkoutState = EWorkoutStates::NotInExercisePosition;
+	CurrentInjuredPart = nullptr;
 }
 
 void UExercise_OM::BeginPlay()
@@ -50,11 +51,13 @@ void UExercise_OM::BeginPlay()
 
 	SetComponentTickEnabled(false);
 }
-void UExercise_OM::InitInjurys() const
+void UExercise_OM::InitInjurys()
 {
 	if (!AnimInstance) return;
-
+	
 	AnimInstance->SetHasInjury(false);
+
+	CurrentInjuredPart = nullptr;
 }
 void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
@@ -222,15 +225,52 @@ void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 	AnimInstance->SetHasInjury(true);
 	AudioComponent->InjurySoundEffects(CurrentExerciseType);
 	constexpr float InjuryFocusDecrease = -0.2f;
+
+	
+
+	if (BodyParts.Num() < 1) return;
+
+	FBodyPartData* MostInjuredBodyPart = &BodyParts[0];
+
+	
+	// Update most injured body part
+	if (BodyParts.Num() == 2)
+	{
+		MostInjuredBodyPart =  BodyParts[1].InjuryLevel > BodyParts[0].InjuryLevel ? &BodyParts[1] : &BodyParts[0];
+	}
+	else if (BodyParts.Num() > 2)
+	{
+		for (FBodyPartData& Part : GameInstance->GetBodyStatus().BodyParts)
+		{
+			if (BodyParts.Contains(Part))
+			{
+				if (Part.InjuryLevel > MostInjuredBodyPart->InjuryLevel)
+					MostInjuredBodyPart = &Part;
+			}
+		}
+	}
+
+	CurrentInjuredPart = MostInjuredBodyPart;
+	
 	
 	for (FBodyPartData& Part : GameInstance->GetBodyStatus().BodyParts)
 	{
 		if (BodyParts.Contains(Part))
 		{
-			Part.SetInjury(InInjuryLevel);
+			if (BodyParts.Num() == 1)
+			{
+				EInjuryLevel NewLevel = Part.InjuryLevel == EInjuryLevel::None ? InInjuryLevel :
+										Part.InjuryLevel == EInjuryLevel::Minor ? EInjuryLevel::Medium : EInjuryLevel::Major;
+				Part.SetInjury(NewLevel);
+				UseEnergy();
+				AddFocus(InjuryFocusDecrease);
+				break;
+			}
+			EInjuryLevel NewLevel = Part.InjuryLevel == EInjuryLevel::None ? InInjuryLevel :
+									Part.InjuryLevel == EInjuryLevel::Minor ? EInjuryLevel::Medium : EInjuryLevel::Major;
+			Part.SetInjury(NewLevel);
 			UseEnergy();
 			AddFocus(InjuryFocusDecrease);
-			break;
 		}
 	}
 		

@@ -22,6 +22,8 @@ protected:
 	/** Class Overrides **/
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION()
+	virtual void ManageSideEffects(ETemporaryEmotionalStates InState) override;
 public:
 	/** Inits **/
 	void InitConversation();

@@ -60,7 +60,11 @@ void APostProcessController_OM::BeginPlay()
 
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (Player)
+	{
 		Player->OnPlayModeChange.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnPlayMode);
+		Player->OnTempEmotionsChanged.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnTempEmotion);
+	}
+
 }
 
 void APostProcessController_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -146,13 +150,14 @@ void APostProcessController_OM::SetDarkMode(bool bDarkMode)
 		}
 	}
 }
+
+// Eventually can remove this function and use only temp emotions
 void APostProcessController_OM::ManageEffectsOnPlayMode(EPlayModes CurrentPlayMode)
 {
 	switch (CurrentPlayMode)
 	{
 	case EPlayModes::SocialMode:
 		{
-			StartVignetteEffect(EEffectTickMode::WaveEffect, 4, 10);
 			if (Player)
 			{
 				if (auto* ExerciseComp = Player->GetComponentByClass<UExercise_OM>())
@@ -183,6 +188,16 @@ void APostProcessController_OM::ManageEffectsOnPlayMode(EPlayModes CurrentPlayMo
 		break;
 	}
 }
+
+void APostProcessController_OM::ManageEffectsOnTempEmotion(ETemporaryEmotionalStates InState)
+{
+	if (InState == ETemporaryEmotionalStates::Anxious)
+	{
+		StartVignetteEffect(EEffectTickMode::WaveEffect, 4, 10);
+
+	}
+}
+
 void APostProcessController_OM::StartEffect(const FName InEffectName, int MinTime, int MaxTime, EEffectTickMode InEffectTickMode)
 {
 	int EndTime = FMath::RandRange(MinTime, MaxTime);

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utils/Structs/PlayerData.h"
 #include "Utils/Structs/PlayModes.h"
 #include "PostProcessController_OM.generated.h"
 
@@ -90,6 +91,8 @@ protected:
 	void SetDarkMode(bool bDark);
 	UFUNCTION()
 	void ManageEffectsOnPlayMode(EPlayModes CurrentPlayMode);
+	UFUNCTION()
+	void ManageEffectsOnTempEmotion(ETemporaryEmotionalStates InState);
 
 	
 	void StartEffect(FName InEffectName, int MinTime, int MaxTime,

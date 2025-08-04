@@ -11,6 +11,12 @@ enum class EPlayerStatTypes : uint8
 };
 
 UENUM(BlueprintType)
+enum class ETemporaryEmotionalStates : uint8
+{
+	Default		UMETA(DisplayName = "Default"),
+	Anxious		UMETA(DisplayName = "Anxious")
+};
+UENUM(BlueprintType)
 enum class EPlayerEmotionalStates : uint8
 {
 	Doomer,
@@ -74,11 +80,12 @@ struct FBodyPartData
 	Side(EBodyPartSide::Center),
 	InjuryLevel(EInjuryLevel::None)
 	{}
-	FBodyPartData(const EBodyPart& InPart, const EBodyPartSide& InSide) :
+	FBodyPartData(const EBodyPart& InPart, const EBodyPartSide& InSide, const FName& InName) :
 	Strength(0.f),
 	Part(InPart),
 	Side(InSide),
-	InjuryLevel(EInjuryLevel::None)
+	InjuryLevel(EInjuryLevel::None),
+	Name(InName)
 	{}
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -89,6 +96,8 @@ struct FBodyPartData
 	EBodyPartSide Side;
 	UPROPERTY(BlueprintReadOnly)
 	EInjuryLevel InjuryLevel;
+	UPROPERTY(BlueprintReadOnly)
+	FName Name;
 
 	void SetInjury(const EInjuryLevel& InInjuryLevel)
 	{
@@ -117,15 +126,15 @@ struct FBodyStatus
 	bCurrentlyOnSteroids(false),
 	bIsBulking(false)
 	{
-		BodyParts.Add(FBodyPartData(EBodyPart::Jaw, EBodyPartSide::Center));
-		BodyParts.Add(FBodyPartData(EBodyPart::Arm, EBodyPartSide::Left));
-		BodyParts.Add(FBodyPartData(EBodyPart::Arm, EBodyPartSide::Right));
-		BodyParts.Add(FBodyPartData(EBodyPart::Chest, EBodyPartSide::Center));
-		BodyParts.Add(FBodyPartData(EBodyPart::Back, EBodyPartSide::Center));
-		BodyParts.Add(FBodyPartData(EBodyPart::Thigh, EBodyPartSide::Left));
-		BodyParts.Add(FBodyPartData(EBodyPart::Thigh, EBodyPartSide::Right));
-		BodyParts.Add(FBodyPartData(EBodyPart::Calve, EBodyPartSide::Left));
-		BodyParts.Add(FBodyPartData(EBodyPart::Calve, EBodyPartSide::Right));
+		BodyParts.Add(FBodyPartData(EBodyPart::Jaw, EBodyPartSide::Center, FName("Jaw")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Arm, EBodyPartSide::Left, FName("Left Arm")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Arm, EBodyPartSide::Right, FName("Right Arm")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Chest, EBodyPartSide::Center, FName("Chest")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Back, EBodyPartSide::Center, FName("Back")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Thigh, EBodyPartSide::Left, FName("Left Thigh")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Thigh, EBodyPartSide::Right, FName("Right Thigh")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Calve, EBodyPartSide::Left, FName("Left Calve")));
+		BodyParts.Add(FBodyPartData(EBodyPart::Calve, EBodyPartSide::Right, FName("Right Calve")));
 	}
 
 	/*

@@ -10,7 +10,7 @@ void URepComplete_OM::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase
                              const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
-
+	
 	if (auto* Player = Cast<APlayerCharacter_OM>(MeshComp->GetOwner()))
 	{
 		if (auto* ExerciseComp = Cast<UExercise_OM>(Player->GetComponentByClass<UExercise_OM>()))

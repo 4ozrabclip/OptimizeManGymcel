@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
+#include "Utils/Structs/PlayerData.h"
 #include "CharacterComponentBase_OM.generated.h"
 
 
@@ -18,6 +19,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void AddFocus(const float InFocus);
+	virtual void ManageSideEffects(ETemporaryEmotionalStates InState) {};
 
 	UPROPERTY()
 	class UTodoManagementSubsystem* TodoManager;

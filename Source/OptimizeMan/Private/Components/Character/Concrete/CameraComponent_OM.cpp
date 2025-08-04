@@ -3,6 +3,8 @@
 
 #include "Components/Character/Concrete/CameraComponent_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
+
 UCameraComponent_OM::UCameraComponent_OM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -16,7 +18,7 @@ void UCameraComponent_OM::BeginPlay()
 	Super::BeginPlay();
 
 	SetComponentTickEnabled(false);
-
+	
 
 }
 
@@ -60,8 +62,7 @@ void UCameraComponent_OM::ManageFOVTick(float DeltaTime)
 
 void UCameraComponent_OM::SetFOVState(const EFieldOfVisionState InFOVState)
 {
-	if (InFOVState != EFieldOfVisionState::Default)
-		SetComponentTickEnabled(true);
+	SetComponentTickEnabled(true);
 
 	FOVState = InFOVState;
 

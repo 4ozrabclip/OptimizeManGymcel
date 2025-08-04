@@ -7,6 +7,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
 #include "Components/Audio/Concrete/PlayerAmbience_OM.h"
+#include "Components/Character/Concrete/CameraComponent_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
@@ -22,7 +23,13 @@ void USocialInteractionSystem_OM::BeginPlay()
 {
 	Super::BeginPlay();
 	SetComponentTickEnabled(false);
+
+	if (Player)
+	{
+		Player->OnTempEmotionsChanged.AddDynamic(this, &USocialInteractionSystem_OM::ManageSideEffects);
+	}
 }
+
 
 
 void USocialInteractionSystem_OM::InitConversation()
@@ -47,36 +54,14 @@ void USocialInteractionSystem_OM::InitConversation()
 	CurrentNpcMood = CurrentInteractedNpc->GetCurrentMood();
 
 
-	// TICK???????
-	
+	Player->SetTempEmotionalState(ETemporaryEmotionalStates::Anxious);
 
-	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
-	{
-		Amb->SetBreathingIntensity(EBreathingIntensity::Intense);
-	}
+	
 	SetComponentTickEnabled(true);
 
 
-	
-
-	
-	/*if (Player && CurrentInteractedNpc)
-	{
-		FVector PlayerLocation = Player->GetActorLocation();
-		FVector NpcLocation = CurrentInteractedNpc->GetActorLocation();
-
-		FVector Direction = (NpcLocation - PlayerLocation);
-		Direction.Z = 0.0f;
-
-		TargetRotation = Direction.Rotation();
-		bShouldRotateToNPC = true;
-		//Player->bUseControllerRotationYaw = true;
-
-	}*/
-
-
-
 }
+
 
 void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
@@ -115,6 +100,35 @@ void USocialInteractionSystem_OM::TickComponent(float DeltaTime, enum ELevelTick
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player null needs to be recasted"));
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
+	}
+}
+
+void USocialInteractionSystem_OM::ManageSideEffects(ETemporaryEmotionalStates InState)
+{
+	Super::ManageSideEffects(InState);
+
+	if (!Player) return;
+	if (InState == ETemporaryEmotionalStates::Anxious)
+		UE_LOG(LogTemp, Error, TEXT("Anxious2"))
+	else
+		UE_LOG(LogTemp, Error, TEXT("Default2"))
+
+	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
+	{
+		const EBreathingIntensity BreathingIntensity = InState == ETemporaryEmotionalStates::Anxious ?
+													   EBreathingIntensity::Intense : EBreathingIntensity::Normal;
+		Amb->SetBreathingIntensity(BreathingIntensity);
+	}
+	if (auto* Cam = Player->GetComponentByClass<UCameraComponent_OM>())
+	{
+		const EFieldOfVisionState FOVState = InState == ETemporaryEmotionalStates::Anxious ?
+											 EFieldOfVisionState::Wide : EFieldOfVisionState::Default;
+
+		if (InState == ETemporaryEmotionalStates::Anxious)
+			UE_LOG(LogTemp, Error, TEXT("Anxious2"))
+		else
+			UE_LOG(LogTemp, Error, TEXT("Default2"))
+		Cam->SetFOVState(FOVState);
 	}
 }
 
@@ -421,10 +435,8 @@ void USocialInteractionSystem_OM::LeaveConversation()
 	CurrentInteractedNpc = nullptr;
 
 	SetComponentTickEnabled(false);
-	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
-	{
-		Amb->SetBreathingIntensity(EBreathingIntensity::Normal);
-	}
+
+	Player->SetTempEmotionalState(ETemporaryEmotionalStates::Default);
 	
 }
 
@@ -453,10 +465,7 @@ void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 	CurrentInteractedNpc = nullptr;
 	SetComponentTickEnabled(false);
 
-	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
-	{
-		Amb->SetBreathingIntensity(EBreathingIntensity::Normal);
-	}
+	Player->SetTempEmotionalState(ETemporaryEmotionalStates::Default);
 
 	
 

@@ -927,6 +927,14 @@ void APlayerCharacter_OM::SetEmotionalState()
 	GameInstance->SetCurrentEmotionalState(NewState);
 }
 
+void APlayerCharacter_OM::SetTempEmotionalState(const ETemporaryEmotionalStates InState)
+{
+	if (CurrentTempEmotionalState == InState) return;
+	
+	CurrentTempEmotionalState = InState;
+	OnTempEmotionsChanged.Broadcast(CurrentTempEmotionalState);
+}
+
 
 void APlayerCharacter_OM::ShitDay()
 {

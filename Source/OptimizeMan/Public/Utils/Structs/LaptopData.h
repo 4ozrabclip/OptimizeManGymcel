@@ -8,12 +8,12 @@ UENUM()
 enum class EWebsites : uint8
 {
 	Bank UMETA(DisplayName = "SexyBank"),
-	SupplementsShop UMETA(DisplayName = "SupplementNation"),
+	BulkMythology UMETA(DisplayName = "BulkMythology"),
 	ForSkanForum UMETA(DisplayName = "ForSkanForum"),
-	CornSite UMETA(DisplayName = "YourHeavenX"),
-	GeneralStore UMETA(DisplayName = "GeneralStore"),
+	TheNattyLie UMETA(DisplayName = "TheNattyLie"),
+	OneMansTrash UMETA(DisplayName = "OneMansTrash"),
 	MusicStore UMETA(DisplayName = "MusicStore"),
 	PosterStore UMETA(DisplayName = "PosterStore"),
 	SupplyStore UMETA(DisplayName = "SupplyStore"),
-	PlasticSurgeryShop UMETA(DisplayName = "PlasticSurgeryShop")
+	BlessedFlesh UMETA(DisplayName = "BlessedFlesh")
 };

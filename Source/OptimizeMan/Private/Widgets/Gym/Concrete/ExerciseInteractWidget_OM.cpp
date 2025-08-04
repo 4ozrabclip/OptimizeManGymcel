@@ -140,7 +140,7 @@ void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float I
 
 	if (CurrentWorkoutState == EWorkoutStates::SetComplete)
 	{
-		NotificationTextPopUp();
+		NotificationTextPopUp(TEXT("Set Complete"));
 		SetWorkoutState(EWorkoutStates::InExercisePosition);
 	}
 	
@@ -348,7 +348,7 @@ void UExerciseInteractWidget_OM::UpdateStats()
 	const float EnergyLevel = ExerciseComponent->GetEnergy();
 	if (EnergyLevel <= 0.f)
 	{
-		NotificationTextPopUp();
+		NotificationTextPopUp(TEXT("No Energy"));
 		SetMiniGameOn(false);
 	}
 }
@@ -413,6 +413,11 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		ExerciseComponent->Injury(EInjuryLevel::Minor);
 
 		UpdateStats();
+
+		FName InjuredPartName = ExerciseComponent->GetCurrentInjuredPart()->Name;
+		
+		FString InjuryString = FString::Printf(TEXT("You have injured your: %s"), *InjuredPartName.ToString());
+		NotificationTextPopUp(InjuryString);
 		
 	}
 	else   //			M A J O R  I N J U R Y 
@@ -468,14 +473,13 @@ void UExerciseInteractWidget_OM::SetNotificationText()
 	}
 }
 
-void UExerciseInteractWidget_OM::NotificationTextPopUp() 
+void UExerciseInteractWidget_OM::NotificationTextPopUp(const FString& InString) 
 {
 	//if (EnergyLevel > 0.f) return;
 	SetNotificationText();
 	constexpr float PopUpTimeShown = 2.f;
 
-	UE_LOG(LogTemp, Error, TEXT("NotificationTextPopUp function called"));
-
+	NotificationText->SetText(FText::FromString(InString));
 	NotificationText->SetVisibility(ESlateVisibility::Visible);
 	
 	GetWorld()->GetTimerManager().ClearTimer(TextPopUpDelayHandle);

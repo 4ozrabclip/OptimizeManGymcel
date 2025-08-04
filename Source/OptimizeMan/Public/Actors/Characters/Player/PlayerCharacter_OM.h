@@ -27,6 +27,7 @@ class AInteractableActor_OM;
 class ANpcBase_OM;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayModeChange, EPlayModes, NewPlayMode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTempEmotionsChanged, ETemporaryEmotionalStates, NewState);
 UCLASS()
 class OPTIMIZEMAN_API APlayerCharacter_OM : public ACharacter, public IAbilitySystemInterface
 {
@@ -112,10 +113,19 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	EPlayModes CurrentPlayMode;
 	TMap<EPlayModes, FPlayModeConfig> PlayModeConfigs;
+
+	/** Other States **/
+	ETemporaryEmotionalStates CurrentTempEmotionalState = ETemporaryEmotionalStates::Default;
+
+	/** Current Interacted Actors Cache**/
+	
 	UPROPERTY()
 	AInteractableActor_OM* CurrentInteractedActor;
 	UPROPERTY()
 	ANpcBase_OM* CurrentInteractedCharacter;
+
+	
+	
 
 	/****** AnimCache *******/
 	UPROPERTY()
@@ -134,6 +144,8 @@ public:
 	/** Delegate Events **/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Events)
 	FOnPlayModeChange OnPlayModeChange;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Events)
+	FOnTempEmotionsChanged OnTempEmotionsChanged;
 	
 protected:
 	/**** Muscle Stats ****/
@@ -294,5 +306,9 @@ public:
 	float GetMinimumMovementThreshold() const { return MinimumMovementThreshold; }
 
 	void SetEmotionalState();
+
+
+	void SetTempEmotionalState(const ETemporaryEmotionalStates InState);
+	ETemporaryEmotionalStates GetTempEmotionalState() const { return CurrentTempEmotionalState; } 
 };
 

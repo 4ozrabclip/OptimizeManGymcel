@@ -49,27 +49,27 @@ protected: //UFUNCS
 	UFUNCTION()
 	void BackButtonClicked();
 	UFUNCTION()
-	void PlasticSurgeryButtonClicked() { OpenPage(EWebsites::PlasticSurgeryShop, PlasticSurgeryLayers); }
+	void OpenBlessedFlesh_ButtonClicked() { OpenPage(EWebsites::BlessedFlesh, PlasticSurgeryLayers); }
 	UFUNCTION()
 	void BankButtonClicked() { OpenPage(EWebsites::Bank, BankLayers); }
 	UFUNCTION()
 	void ForSkanButtonClicked() { OpenPage(EWebsites::ForSkanForum, ForSkanLayers); }
 	UFUNCTION()
-	void SupplementsShopButtonClicked() { OpenPage(EWebsites::SupplementsShop, SupplementsShopLayers); }
+	void BulkMythologyButtonClicked() { OpenPage(EWebsites::BulkMythology, BulkMythologyLayers); }
 	UFUNCTION()
-	void YourHeavenXButtonClicked() { OpenPage(EWebsites::CornSite, YourHeavenXLayers, YourHeavenXHomeGrid); }
+	void TheNattyLieButtonClicked() { OpenPage(EWebsites::TheNattyLie, TheNattyLieLayers, TheNattyLieHomeGrid); }
 	UFUNCTION()
-	void DickPumpSiteButtonClicked() { OpenPage(EWebsites::CornSite, YourHeavenXLayers, BuyDickPumpGrid); }
+	void DickPumpSiteButtonClicked() { OpenPage(EWebsites::TheNattyLie, TheNattyLieLayers, BuyDickPumpGrid); }
 	UFUNCTION()
-	void GeneralStoreChildBackButtonClicked() { OpenPage(EWebsites::GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid, false);}
+	void OneMansTrashChildBackButtonClicked() { OpenPage(EWebsites::OneMansTrash, OneMansTrashLayers, OneMansTrashHomeGrid, false);}
     UFUNCTION()
-    void GeneralStoreButtonClicked() { OpenPage(EWebsites::GeneralStore, GeneralStoreLayers, GeneralStoreHomeGrid); }
+    void OneMansTrashButtonClicked() { OpenPage(EWebsites::OneMansTrash, OneMansTrashLayers, OneMansTrashHomeGrid); }
     UFUNCTION()
-    void MusicStoreButtonClicked() {  OpenPage(EWebsites::MusicStore, GeneralStoreLayers, MusicStoreGrid); }
+    void MusicStoreButtonClicked() {  OpenPage(EWebsites::MusicStore, OneMansTrashLayers, MusicStoreGrid); }
     UFUNCTION()
-    void PosterStoreButtonClicked() {  OpenPage(EWebsites::PosterStore, GeneralStoreLayers, PosterStoreGrid); }
+    void PosterStoreButtonClicked() {  OpenPage(EWebsites::PosterStore, OneMansTrashLayers, PosterStoreGrid); }
     UFUNCTION()
-    void SupplyStoreButtonClicked() {  OpenPage(EWebsites::SupplyStore, GeneralStoreLayers, SupplyStoreGrid); }
+    void SupplyStoreButtonClicked() {  OpenPage(EWebsites::SupplyStore, OneMansTrashLayers, SupplyStoreGrid); }
     UFUNCTION()
     void BuySteroidsButtonClicked() { BuyItem(EShopAndBook::Steroids); }
     UFUNCTION()
@@ -82,8 +82,6 @@ protected: //UFUNCS
     void ChadPosterBuyButtonClicked() { BuyItem(EShopAndBook::ChadPoster); }
     UFUNCTION()
     void WaifuPosterBuyButtonClicked() { BuyItem(EShopAndBook::WaifuPoster); }
-    UFUNCTION()
-    void OpenHomePage() { OpenPage(EWebsites::Bank, HomePageLayers); }
 
 private:
 	EWebsites CurrentWebsite;
@@ -92,28 +90,15 @@ private:
 	bool bIsFadingIn = false;
 	EForSkanType CurrentForSkanState;
 
+	FButtonStyle GetRandomAdvertisementStyleFromArray(const TArray<UTexture2D*>& InAdvertisements);
+
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
-	TMap<EWebsites, UTexture2D*> AdvertisementMap;
+	TArray<UTexture2D*> ForSkanAdvertisements_V;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> BlessedFleshAdvertisements_V;
 	
-	// -------------------------------- HomePageLayer
-	UPROPERTY(meta = (BindWidget))
-	UOverlay* HomePageLayers;
-	UPROPERTY(meta = (BindWidget))
-	UUniformGridPanel* HomePageGridLayer;
-	UPROPERTY(meta = (BindWidget))
-	UButton* PlasticSurgeryButton;
-	UPROPERTY(meta = (BindWidget))
-	UButton* BankButton;
-	UPROPERTY(meta = (BindWidget))
-	UButton* ForSkanForumButton;
-	UPROPERTY(meta = (BindWidget))
-	UButton* SupplementsShopButton;
-	UPROPERTY(meta = (BindWidget))
-	UButton* YourHeavenXButton;
-	UPROPERTY(meta = (BindWidget))
-	UButton* GeneralStoreButton;
 
 	// -------------------------------- PlasticSurgeryLayer
 	UPROPERTY(meta = (BindWidget))
@@ -129,7 +114,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* PlastAdv_V_Text;
 	UPROPERTY(meta = (BindWidget))
-	UButton* PlasticSurgeryBackButton;
+	UButton* BlessedFleshBack_Button;
 	UPROPERTY(meta = (BindWidget))
 	UButton* JawSurgeryButton;
 	UPROPERTY(meta = (BindWidget))
@@ -190,11 +175,11 @@ protected:
 	TArray<UTexture2D*> UserPicturesBad;
 	
 	
-	// -------------------------------- SupplementsShopLayer
+	// -------------------------------- BulkMythologyLayer
 	UPROPERTY(meta = (BindWidget))
-	UOverlay* SupplementsShopLayers;
+	UOverlay* BulkMythologyLayers;
 	UPROPERTY(meta = (BindWidget))
-	UGridPanel* SupplementsShopGrid;
+	UGridPanel* BulkMythologyGrid;
 	UPROPERTY(meta = (BindWidget))
 	UButton* SuppAdv_H;
 	UPROPERTY(meta = (BindWidget))
@@ -205,7 +190,7 @@ protected:
 	UTextBlock* SuppAdv_V_Text;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* SupplementsShopBackButton;
+	UButton* BulkMythologyBackButton;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* BuySteroidsButton;
@@ -214,9 +199,9 @@ protected:
 
 	// -------------------------------- YourHeavenLayer
 	UPROPERTY(meta = (BindWidget))
-	UOverlay* YourHeavenXLayers;
+	UOverlay* TheNattyLieLayers;
 	UPROPERTY(meta = (BindWidget))
-	UGridPanel* YourHeavenXHomeGrid;
+	UGridPanel* TheNattyLieHomeGrid;
 	UPROPERTY(meta = (BindWidget))
 	UButton* CornAdv_H;
 	UPROPERTY(meta = (BindWidget))
@@ -227,7 +212,7 @@ protected:
 	UTextBlock* CornAdv_V_Text;
 	
 	UPROPERTY(meta = (BindWidget))
-	UButton* YourHeavenXBackButton;
+	UButton* TheNattyLieBackButton;
 	UPROPERTY(meta = (BindWidget))
 	UButton* WatchPornButton;
 	UPROPERTY(meta = (BindWidget))
@@ -240,12 +225,12 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* BuyPumpButton;
 
-	// -------------------------------- GeneralStoreLayer
+	// -------------------------------- OneMansTrashLayer
 	UPROPERTY(meta = (BindWidget))
-	UOverlay* GeneralStoreLayers;
+	UOverlay* OneMansTrashLayers;
 	// ----------------------------frontpage
 	UPROPERTY(meta = (BindWidget))
-	UGridPanel* GeneralStoreHomeGrid;
+	UGridPanel* OneMansTrashHomeGrid;
 	UPROPERTY(meta = (BindWidget))
 	UButton* GenrAdv_H;
 	UPROPERTY(meta = (BindWidget))
@@ -256,13 +241,13 @@ protected:
 	UTextBlock* GenrAdv_V_Text;
 	
 	UPROPERTY(meta = (BindWidget))
-	UButton* GeneralStoreBackButton;
+	UButton* OneMansTrashBackButton;
 	UPROPERTY(meta = (BindWidget))
-	UButton* GeneralStorePostersButton;
+	UButton* OneMansTrashPostersButton;
 	UPROPERTY(meta = (BindWidget))
-	UButton* GeneralStoreMusicButton;
+	UButton* OneMansTrashMusicButton;
 	UPROPERTY(meta = (BindWidget))
-	UButton* GeneralStoreSupplyButton;
+	UButton* OneMansTrashSupplyButton;
 	// ----------------------------poster store
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* PosterStoreGrid;
