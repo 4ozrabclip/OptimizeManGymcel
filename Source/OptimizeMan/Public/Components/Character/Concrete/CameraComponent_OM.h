@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CineCameraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "CameraComponent_OM.generated.h"
 
@@ -20,7 +21,7 @@ enum class EFieldOfVisionState : uint8
 };
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class OPTIMIZEMAN_API UCameraComponent_OM : public UCameraComponent
+class OPTIMIZEMAN_API UCameraComponent_OM : public UCineCameraComponent
 {
 	GENERATED_BODY()
 public:

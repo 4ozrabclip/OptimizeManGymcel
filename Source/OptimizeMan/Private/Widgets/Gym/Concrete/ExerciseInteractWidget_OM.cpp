@@ -138,15 +138,48 @@ void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float I
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (CurrentWorkoutState == EWorkoutStates::SetComplete)
+	switch (CurrentWorkoutState)
 	{
-		NotificationTextPopUp(TEXT("Set Complete"));
-		SetWorkoutState(EWorkoutStates::InExercisePosition);
+	case EWorkoutStates::InExercisePosition:
+		{
+			if (!MiniGameClickButton->GetIsEnabled())
+				MiniGameClickButton->SetIsEnabled(true);
+			if (GetMiniGameOn())
+				MiniGame(InDeltaTime);
+			
+			break;
+		}
+	case EWorkoutStates::SetComplete:
+		{
+			NotificationTextPopUp(TEXT("Set Complete"));
+			if (ExerciseComponent)
+				ExerciseComponent->SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			break;
+		}
+	default:
+		if (MiniGameClickButton->GetIsEnabled())
+			MiniGameClickButton->SetIsEnabled(false);
+		return;
 	}
-	
-	if (GetMiniGameOn() && CurrentWorkoutState != EWorkoutStates::DoingRep)
+}
+
+void UExerciseInteractWidget_OM::DarkModeToggle(const bool bIsDarkMode)
+{
+	Super::DarkModeToggle(bIsDarkMode);
+		
+	if (bIsDarkMode)
 	{
-		MiniGame(InDeltaTime);
+		DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
+		DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
+		DarkExitStyle.Pressed.SetResourceObject(WhiteExitButton);
+		ExitButton->SetStyle(DarkExitStyle);
+	}
+	else
+	{
+		DarkExitStyle.Normal.SetResourceObject(BlackExitButton);
+		DarkExitStyle.Hovered.SetResourceObject(BlackHoveredExitButton);
+		DarkExitStyle.Pressed.SetResourceObject(BlackExitButton);
+		ExitButton->SetStyle(DarkExitStyle);
 	}
 }
 
@@ -436,19 +469,11 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		SetSpecialSliderOn(false);
 	}
 
-	const float RepDuration = ExerciseComponent->GetRepDuration();
 	SetInjuryRisk();
 
-	GetWorld()->GetTimerManager().ClearTimer(RepTimeHandle);
-	GetWorld()->GetTimerManager().SetTimer(RepTimeHandle, [this]()
-	{
-		MiniGameClickButton->SetIsEnabled(true);
-		bDoingRep = false;
-		if (Player)
-			Player->SetIsDoingRep(bDoingRep);
-		SetSetAndRepCountTextBlocks();
-	
-	}, RepDuration, false);
+	SetSetAndRepCountTextBlocks();
+
+
 }
 
 void UExerciseInteractWidget_OM::SetNotificationText()

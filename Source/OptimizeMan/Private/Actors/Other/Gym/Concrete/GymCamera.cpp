@@ -2,12 +2,14 @@
 
 
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
+
+#include "CineCameraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Game/Persistent/GameInstance_OM.h"
 
-AGymCamera::AGymCamera()
+AGymCamera::AGymCamera(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	GameInstance = nullptr;
 
@@ -27,14 +29,68 @@ void AGymCamera::BeginPlay()
 		GameInstance->OnEmotionalStateChanged.AddDynamic(this, &AGymCamera::OnEmotionalStateChanged);
 	}
 }
-
+// Rewrite this
 void AGymCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!GetCineCameraComponent()) return;
+
+	switch (AutoState)
+	{
+	case ECameraAutoState::Idle:
+		HoldTimer += DeltaTime;
+		if (HoldTimer >= HoldDuration)
+		{
+			AutoState = ECameraAutoState::ZoomingOut;
+			HoldTimer = 0.0f;
+		}
+			break;
+
+	case ECameraAutoState::ZoomingIn:
+		{
+			float CurrentFOV = GetCineCameraComponent()->FieldOfView;
+			CurrentFOV = FMath::FInterpTo(CurrentFOV, ZoomedFOV, DeltaTime, FOVInterpSpeed);
+			GetCineCameraComponent()->SetFieldOfView(CurrentFOV);
+
+			float& Focus = GetCineCameraComponent()->FocusSettings.ManualFocusDistance;
+			Focus = FMath::FInterpTo(Focus, FocusNear, DeltaTime, FocusInterpSpeed);
+
+			if (FMath::IsNearlyEqual(CurrentFOV, ZoomedFOV, 0.1f))
+			{
+				AutoState = ECameraAutoState::Hold;
+				HoldTimer = 0.0f;
+			}
+			break;
+		}
+
+	case ECameraAutoState::Hold:
+		HoldTimer += DeltaTime;
+		if (HoldTimer >= HoldDuration)
+		{
+			AutoState = ECameraAutoState::ZoomingOut;
+			HoldTimer = 0.0f;
+		}
+		break;
+
+	case ECameraAutoState::ZoomingOut:
+		{
+			float CurrentFOV = GetCineCameraComponent()->FieldOfView;
+			CurrentFOV = FMath::FInterpTo(CurrentFOV, NormalFOV, DeltaTime, FOVInterpSpeed);
+			GetCineCameraComponent()->SetFieldOfView(CurrentFOV);
+
+			float& Focus = GetCineCameraComponent()->FocusSettings.ManualFocusDistance;
+			Focus = FMath::FInterpTo(Focus, FocusFar, DeltaTime, FocusInterpSpeed);
+
+			if (FMath::IsNearlyEqual(CurrentFOV, NormalFOV, 0.1f))
+			{
+				AutoState = ECameraAutoState::Idle; 
+			}
+			break;
+		}
+	}
 	
 }
-
-
 
 void AGymCamera::OnEmotionalStateChanged(EPlayerEmotionalStates NewState)
 {

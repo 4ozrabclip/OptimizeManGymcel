@@ -7,7 +7,7 @@
 
 UCameraComponent_OM::UCameraComponent_OM()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 	
 	DefaultFOV = FieldOfView;
 	TargetFOV = DefaultFOV;
