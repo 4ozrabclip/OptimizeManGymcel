@@ -7,6 +7,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
 #include "Components/Audio/Concrete/PlayerAmbience_OM.h"
+#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/CameraComponent_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/Persistent/GameInstance_OM.h"
@@ -113,7 +114,7 @@ void USocialInteractionSystem_OM::ManageSideEffects(ETemporaryEmotionalStates In
 	else
 		UE_LOG(LogTemp, Error, TEXT("Default2"))
 
-	if (auto* Amb = Player->GetComponentByClass<UPlayerAmbience_OM>())
+	if (auto* Amb = Player->GetComponentByClass<UPlayerVoiceAudio_OM>())
 	{
 		const EBreathingIntensity BreathingIntensity = InState == ETemporaryEmotionalStates::Anxious ?
 													   EBreathingIntensity::Intense : EBreathingIntensity::Normal;

@@ -22,8 +22,48 @@ void UPlayerVoiceAudio_OM::BeginPlay()
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 	
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(GetOwner());
+
+
+	PlayBreathingInterval();
+
+	OnAudioFinished.AddDynamic(this, &UPlayerVoiceAudio_OM::PlayBreathingInterval);
+	
 }
 
+void UPlayerVoiceAudio_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
+}
+void UPlayerVoiceAudio_OM::PlayBreathingSound()
+{
+	if (IsPlaying()) return;
+	TArray<USoundBase*>* BreathingArray = nullptr;
+	const int RandIndex = FMath::RandRange(0, BreathingSounds_Soft.Num());
+
+	BreathingArray = CurrentBreathingIntensity == EBreathingIntensity::Soft ? &BreathingSounds_Soft :
+					 CurrentBreathingIntensity == EBreathingIntensity::Normal ? &BreathingSounds_Normal : &BreathingSounds_Intense;
+	
+	if (BreathingArray && BreathingArray->IsValidIndex(RandIndex) && (*BreathingArray)[RandIndex]->IsValidLowLevel())
+	{
+		SetSound((*BreathingArray)[RandIndex]);
+		Play();
+		OnBreathTaken.Broadcast(CurrentBreathingIntensity);
+	}
+}
+
+void UPlayerVoiceAudio_OM::PlayBreathingInterval()
+{
+	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
+
+	GetWorld()->GetTimerManager().SetTimer(BreathingTimerHandle, [this]()
+	{
+		PlayBreathingSound();
+	}, BreathingTimerInterval, true);
+}
 
 void UPlayerVoiceAudio_OM::InjurySoundEffects(const EExerciseType CurrentExerciseType)
 {
@@ -204,8 +244,6 @@ void UPlayerVoiceAudio_OM::UpsetSoundEffects()
 }
 void UPlayerVoiceAudio_OM::GrumpySoundEffects()
 {
-	if (IsPlaying()) return;
-
 	if (GrumpySounds.Num() <= 0 || GrumpySounds_Intense.Num() <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("NOT ENOUGH GRUMPY SOUNDS"));
@@ -215,6 +253,12 @@ void UPlayerVoiceAudio_OM::GrumpySoundEffects()
 
 	if (!Player)
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
+
+
+	if (IsPlaying())
+	{
+		Stop();
+	}
 
 	EPlayerEmotionalStates CurrentEmotionalState = EPlayerEmotionalStates::Cope;
 	if (UGameInstance_OM* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
+#include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
 #include "Shower_OM.generated.h"
 
 class UGameAudio_OM;

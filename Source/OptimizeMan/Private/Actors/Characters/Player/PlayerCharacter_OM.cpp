@@ -5,7 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
+#include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Kismet/GameplayStatics.h"

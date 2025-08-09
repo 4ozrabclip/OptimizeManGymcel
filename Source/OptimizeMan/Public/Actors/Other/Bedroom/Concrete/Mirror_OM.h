@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Other/Abstract/InteractableMirrorBase_OM.h"
+#include "Actors/Other/Both/Abstract/InteractableMirrorBase_OM.h"
 #include "Mirror_OM.generated.h"
 
 /**

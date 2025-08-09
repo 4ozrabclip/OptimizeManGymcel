@@ -1,6 +1,6 @@
 // Copyright © 2025 4ozStudio. All rights reserved.
 
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
+#include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"

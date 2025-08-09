@@ -9,8 +9,6 @@ UCameraComponent_OM::UCameraComponent_OM()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	
-	DefaultFOV = FieldOfView;
-	TargetFOV = DefaultFOV;
 }
 
 void UCameraComponent_OM::BeginPlay()
@@ -18,7 +16,8 @@ void UCameraComponent_OM::BeginPlay()
 	Super::BeginPlay();
 
 	SetComponentTickEnabled(false);
-	
+	DefaultFOV = FieldOfView;
+	TargetFOV = DefaultFOV;
 
 }
 

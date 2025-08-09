@@ -4,6 +4,7 @@
 #include "Components/Character/Concrete/SpringArmComponent_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 
 USpringArmComponent_OM::USpringArmComponent_OM()
 {
@@ -26,7 +27,7 @@ void USpringArmComponent_OM::BeginPlay()
 
 	if (auto* Player = Cast<APlayerCharacter_OM>(GetOwner()))
 	{
-		if (auto* BreathAudioComp = Cast<UPlayerAmbience_OM>(Player->GetComponentByClass<UPlayerAmbience_OM>()))
+		if (auto* BreathAudioComp = Cast<UPlayerVoiceAudio_OM>(Player->GetComponentByClass<UPlayerVoiceAudio_OM>()))
 		{
 			BreathAudioComp->OnBreathTaken.AddDynamic(this, &USpringArmComponent_OM::TakeBreath);
 		}

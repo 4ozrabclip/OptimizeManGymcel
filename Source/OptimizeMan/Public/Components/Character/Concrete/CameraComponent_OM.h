@@ -20,7 +20,7 @@ enum class EFieldOfVisionState : uint8
 	Wide	UMETA(DisplayName = "Wide"),
 };
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class OPTIMIZEMAN_API UCameraComponent_OM : public UCineCameraComponent
 {
 	GENERATED_BODY()

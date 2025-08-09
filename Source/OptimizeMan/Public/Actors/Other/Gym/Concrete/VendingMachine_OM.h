@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Consumables/Abstract/Consumable_OM.h"
-#include "Actors/Other/Abstract/InteractableActor_OM.h"
+#include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
 #include "VendingMachine_OM.generated.h"
 
 class UWidgetComponent;
