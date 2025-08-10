@@ -36,33 +36,41 @@ void AAmbientNoiseActor::BeginPlay()
     PlayMusic();
 }
 
+void AAmbientNoiseActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);
+
+    if (MusicPlayer)
+    {
+        MusicPlayer->OnAudioFinished.RemoveAll(this);
+        MusicPlayer->Stop();
+    }
+}
+
 void AAmbientNoiseActor::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
-
-
     
 }
 
 void AAmbientNoiseActor::PlayMusic()
 {
-    if (bMusicPlaying) return;
-    
-    if (!MusicPlayer)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Music player component on gymspeaker is null"));
-        return;
-    }
-    
+    if (bMusicPlaying || !MusicPlayer) return;
+
     if (!Player)
         Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-    
+
     if (!GameInstance)
         GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-    
+
     if (!Player)
     {
         UE_LOG(LogTemp, Error, TEXT("Player is null"));
+        return;
+    }
+    if (!GameInstance)
+    {
+        UE_LOG(LogTemp, Error, TEXT("GameInstance is null"));
         return;
     }
     
@@ -119,7 +127,6 @@ void AAmbientNoiseActor::PlayMusic()
     
     SetSong((*MusicToUse)[RandomSongIndex]);
     MusicPlayer->Play();
-
     bMusicPlaying = true;
 
    

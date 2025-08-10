@@ -37,6 +37,7 @@ public:
 protected:
 	/**** Class Overrides ****/
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 public:
@@ -65,10 +66,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerAmbienceControlComponent> AmbienceControlComponent;
-
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	TObjectPtr<class UPlayerAmbience_OM> AmbienceAudioComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
 	TObjectPtr<class UPlayerVoiceAudio_OM> PlayerAudioComponent;

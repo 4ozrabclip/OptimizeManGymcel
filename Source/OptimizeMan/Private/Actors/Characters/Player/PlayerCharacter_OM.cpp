@@ -83,10 +83,6 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	AmbienceControlComponent = CreateDefaultSubobject<UPlayerAmbienceControlComponent>(TEXT("Ambience Visual"));
 	AmbienceControlComponent->bAutoActivate = true;
 
-	AmbienceAudioComponent = CreateDefaultSubobject<UPlayerAmbience_OM>(TEXT("Ambience Audio"));
-	AmbienceAudioComponent->bAutoActivate = true;
-	AmbienceAudioComponent->SetVolumeMultiplier(1.f);
-
 	
 
 	SelfieCameraLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SelfieCameraLocation"));
@@ -109,7 +105,21 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	DefaultSkeletalMesh = nullptr;
 	
 }
+void APlayerCharacter_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
 
+	if (FootstepAudioComponent && FootstepAudioComponent->IsPlaying())
+		FootstepAudioComponent->Stop();
+
+	if (NotificationAudioComponent && NotificationAudioComponent->IsPlaying())
+		NotificationAudioComponent->Stop();
+
+	if (PlayerAudioComponent && PlayerAudioComponent->IsPlaying())
+		PlayerAudioComponent->Stop();
+
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+}
 void APlayerCharacter_OM::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -177,6 +187,8 @@ void APlayerCharacter_OM::BeginPlay()
 	InitializeConstantEffects();
 
 }
+
+
 
 void APlayerCharacter_OM::Tick(float DeltaTime)
 {
