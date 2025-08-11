@@ -28,6 +28,7 @@ class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance
 	
 public: // Initialization
 	virtual void Init() override;
+	virtual void Shutdown() override;
 
 
 	void FirstDay();

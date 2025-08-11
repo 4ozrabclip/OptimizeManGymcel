@@ -47,6 +47,25 @@ void UMainMenuWidget_OM::NativeConstruct()
 	
 }
 
+void UMainMenuWidget_OM::NativeDestruct()
+{
+	Super::NativeDestruct();
+	
+	if (MenuMusic)
+	{
+		MenuMusic->Stop();
+		MenuMusic->UnregisterComponent();
+		MenuMusic = nullptr;
+	}
+
+	if (NotificationAudio)
+	{
+		NotificationAudio->Stop();
+		NotificationAudio->UnregisterComponent();
+		NotificationAudio = nullptr;
+	}
+}
+
 
 void UMainMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {

@@ -9,6 +9,48 @@
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
+
+
+void UGameInstance_OM::Init()
+{
+	Super::Init();
+
+	UE_LOG(LogTemp, Warning, TEXT("GameInstance Init Called: %p"), this);
+	InitializePlayerData();
+	InitializePostersOwned();
+	InitializeGameSettings();
+	SetHasBeenToGymToday(false);
+	SetHasOpenedTodoListInitial(false);
+	SetHasInteractedInitial(false);
+	SetHasOpenedPauseMenuInitial(false);
+	
+	ResetAllSaves();
+	
+	TodoManagement = GetSubsystem<UTodoManagementSubsystem>();
+	if (!TodoManagement)
+	{
+		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
+		return;
+	}
+	TodoManagement->InitializeTodos();
+}
+
+void UGameInstance_OM::Shutdown()
+{
+	if (TodoManagement)
+	{
+		TodoManagement = nullptr;
+	}
+	
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearAllTimersForObject(this);
+	}
+
+	Super::Shutdown();
+}
+
+
 void UGameInstance_OM::FirstDay()
 {
 	const FString FirstDayTodo1 = "Complete Workout";
@@ -44,29 +86,6 @@ void UGameInstance_OM::FinishDemo()
 	});
 }
 
-void UGameInstance_OM::Init()
-{
-	Super::Init();
-
-	UE_LOG(LogTemp, Warning, TEXT("GameInstance Init Called: %p"), this);
-	InitializePlayerData();
-	InitializePostersOwned();
-	InitializeGameSettings();
-	SetHasBeenToGymToday(false);
-	SetHasOpenedTodoListInitial(false);
-	SetHasInteractedInitial(false);
-	SetHasOpenedPauseMenuInitial(false);
-	
-	ResetAllSaves();
-	
-	TodoManagement = GetSubsystem<UTodoManagementSubsystem>();
-	if (!TodoManagement)
-	{
-		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
-		return;
-	}
-	TodoManagement->InitializeTodos();
-}
 
 void UGameInstance_OM::SetPosterAsOwned(const int PosterIndex, const FString& PosterType)
 {

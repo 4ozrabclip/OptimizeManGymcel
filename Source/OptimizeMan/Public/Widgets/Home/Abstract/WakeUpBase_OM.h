@@ -45,6 +45,9 @@ class OPTIMIZEMAN_API UWakeUpBase_OM : public UMinigameBaseWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	
+	
 	virtual void InitWindowsArray() override;
 	virtual void OnExitButtonClicked() override;
 	virtual void SetTodoOptions();

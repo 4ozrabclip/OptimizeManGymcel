@@ -29,9 +29,6 @@ ANpcBase_OM::ANpcBase_OM()
 	bCanInteract = true;
 	bIsInDialogue = false;
 	
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-
-	
 	AuraLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("AuraLight"));
 	AuraLight->SetupAttachment(RootComponent);
 	AuraLight->SetVisibility(true);

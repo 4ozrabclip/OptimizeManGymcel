@@ -130,20 +130,6 @@ void APlayerCharacter_OM::PostInitializeComponents()
 	InitializeConstantEffects();
 }
 
-void APlayerCharacter_OM::SpawnSelfieCamera()
-{
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = this;
-	//SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	FTransform SpawnTransform = SelfieCameraLocation->GetComponentTransform();
-	FRotator SpawnRotator = SpawnTransform.Rotator();
-	
-	if (ACameraActor* Cam = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), SpawnTransform.GetLocation(), SpawnRotator, SpawnParams))
-	{
-		Cam->GetCameraComponent()->SetConstraintAspectRatio(false);
-		PlayerController->SetViewTargetWithBlend(Cam, 2, VTBlend_Linear);
-	}
-}
 
 void APlayerCharacter_OM::BeginPlay()
 {

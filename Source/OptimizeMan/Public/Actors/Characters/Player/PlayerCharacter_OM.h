@@ -49,8 +49,6 @@ protected:
 	void InitializeConstantEffects();
 
 	/**** Camera Tricks ****/
-	UFUNCTION(BlueprintCallable)
-	void SpawnSelfieCamera();
 
 	
 	/**** Components ****/

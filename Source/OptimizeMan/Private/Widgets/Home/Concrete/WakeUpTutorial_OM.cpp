@@ -30,6 +30,12 @@ void UWakeUpTutorial_OM::NativeConstruct()
 	bWaitingForInput = false;
 }
 
+void UWakeUpTutorial_OM::NativeDestruct()
+{
+	Super::NativeDestruct();
+	GetWorld()->GetTimerManager().ClearTimer(Handle);
+}
+
 void UWakeUpTutorial_OM::InitiateTutorialSequence()
 {
 	TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Visible);
@@ -58,22 +64,26 @@ void UWakeUpTutorial_OM::PlayContPrompt()
 	{
 	case 0:
 		{
-			PlayAnimation(TutPart1_Cont, 0.f, 0);
+			if (TutPart1_Cont)
+				PlayAnimation(TutPart1_Cont, 0.f, 0);
 			break;
 		}
 	case 1:
 		{
-			PlayAnimation(TutPart2_Cont, 0.f, 0);
+			if (TutPart2_Cont)
+				PlayAnimation(TutPart2_Cont, 0.f, 0);
 			break;
 		}
 	case 2:
 		{
-			PlayAnimation(TutPart3_Cont, 0.f, 0);
+			if (TutPart3_Cont)
+				PlayAnimation(TutPart3_Cont, 0.f, 0);
 			break;
 		}
 	case 3:
 		{
-			PlayAnimation(TutPart4_Cont, 0.f, 0);
+			if (TutPart4_Cont)
+				PlayAnimation(TutPart4_Cont, 0.f, 0);
 			break;
 		}
 	default:

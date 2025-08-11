@@ -24,6 +24,7 @@ class OPTIMIZEMAN_API UMainMenuWidget_OM : public UInteractiveWidgetBase_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	virtual void InitWindowsArray() override;

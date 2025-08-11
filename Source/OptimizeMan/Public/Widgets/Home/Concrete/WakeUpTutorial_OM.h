@@ -17,6 +17,7 @@ class OPTIMIZEMAN_API UWakeUpTutorial_OM : public UWakeUpBase_OM
 public:
 	explicit UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	
 	void InitiateTutorialSequence();
 	void PlayTutorialAnimation(UWidgetAnimation* InAnimationPart);

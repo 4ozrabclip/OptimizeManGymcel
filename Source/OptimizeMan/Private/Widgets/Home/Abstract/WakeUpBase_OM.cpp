@@ -33,6 +33,12 @@ void UWakeUpBase_OM::NativeConstruct()
 	OpenWindow(FName("MainWindow"));
 }
 
+void UWakeUpBase_OM::NativeDestruct()
+{
+	Super::NativeDestruct();
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+}
+
 void UWakeUpBase_OM::InitWindowsArray()
 {
 	Super::InitWindowsArray();
@@ -83,11 +89,15 @@ void UWakeUpBase_OM::SetTodoOptions()
 
 	UE_LOG(LogTemp, Warning, TEXT("Set Todo Options Called"));
 
+	if (!TodoManager)
+		TodoManager = GameInstance->GetSubsystem<UTodoManagementSubsystem>();
 
-	TodoManager->ProcessPotentialTodos();
-
+	if (TodoManager)
+	{
+		TodoManager->ProcessPotentialTodos();
+		AssignOptionsToWidget();
+	}
 	
-	AssignOptionsToWidget();
 }
 
 
@@ -170,19 +180,19 @@ void UWakeUpBase_OM::AssignOptionsToWidget()
 
 	TArray<FTodoItem>& Options = TodoManager->GetPotentialTodos();
 
-	for (size_t i = 0; i < Options.Num(); ++i)
+	const int32 NumItems = FMath::Min(TaskOptions.Num(), Options.Num());
+
+	for (int32 i = 0; i < NumItems; ++i)
 	{
-		const bool bValid = Options.IsValidIndex(i);
-		FTaskOptionData& Opt = TaskOptions[i];
-
-		Opt.Panel->SetVisibility(bValid ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
-
+		const bool bValid = Options.IsValidIndex(i) && TaskOptions.IsValidIndex(i);
 		if (bValid)
 		{
+			FTaskOptionData& Opt = TaskOptions[i];
+			Opt.Panel->SetVisibility(ESlateVisibility::Visible);
 			Opt.Title->SetText(FText::FromString(Options[i].Name));
 			Opt.Description->SetText(FText::FromString(Options[i].Desc));
+    
 			Opt.Button->OnClicked.RemoveAll(this);
-
 			switch (i)
 			{
 			case 0: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption0Selected); break;
@@ -193,5 +203,12 @@ void UWakeUpBase_OM::AssignOptionsToWidget()
 			default: break;
 			}
 		}
+
+
+	}
+	
+	for (int32 i = NumItems; i < TaskOptions.Num(); ++i)
+	{
+		TaskOptions[i].Panel->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
