@@ -32,6 +32,7 @@ public:
 	virtual void Interact_Implementation() override;
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 
 
@@ -93,8 +94,11 @@ protected:
 	UGameAudio_OM* TalkingAudioComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deformation")
 	UNPCBodyDeformationsComponent_OM* DeformationComponent;
+
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
-	UNpcBaseAnimInstance_OM* AnimInstance;
+	TWeakObjectPtr<UNpcBaseAnimInstance_OM> AnimInstance;
+	
 
 	//AI
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta=(AllowPrivateAccess=true))
@@ -185,7 +189,7 @@ public:
 	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; }
 	float GetCurrentTalkTime() const { return CurrentTalkTime; }
 	UBehaviorTree* GetBehaviorTree() const { return Tree; };
-	UNpcBaseAnimInstance_OM* GetAnimInstance();
+	TWeakObjectPtr<UNpcBaseAnimInstance_OM> GetAnimInstance();
 	EExerciseType GetCurrentExerciseType() const { return CurrentExerciseType; };
 	bool GetIsOpenForConversation() const { return bOpenForConversationWithOtherNpcs; }
 	bool GetIsInConversationWithNpc() const { return bIsInConversationWithOtherNpc;}
@@ -219,7 +223,7 @@ protected:
 	UPROPERTY()
 	TSoftObjectPtr<ANpcBase_OM> CurrentInteractedNpc;
 
-private:
+protected:
 	
 	bool bCanInteract;
 	bool bIsInDialogue;

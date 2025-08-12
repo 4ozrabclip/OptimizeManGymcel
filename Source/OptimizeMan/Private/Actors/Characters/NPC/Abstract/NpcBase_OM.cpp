@@ -62,13 +62,11 @@ void ANpcBase_OM::BeginPlay()
 		return;
 	}
 
-	if (!AnimInstance)
+
+	AnimInstance = Cast<UNpcBaseAnimInstance_OM>(GetMesh()->GetAnimInstance());
+	if (AnimInstance.IsValid())
 	{
-		AnimInstance = Cast<UNpcBaseAnimInstance_OM>(GetMesh()->GetAnimInstance());
-		if (AnimInstance)
-		{
-			AnimInstance->SetPlayer(Player);
-		}
+		AnimInstance->SetPlayer(Player);
 	}
 	
 	if (GetCharacterMovement())
@@ -98,6 +96,26 @@ void ANpcBase_OM::BeginPlay()
 	InteractableInterfaceProperties.InteractableWidget = InteractableWidget;
 }
 
+void ANpcBase_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	if (GameInstance)
+	{
+		GameInstance->OnDarkModeToggled.RemoveDynamic(this, &ANpcBase_OM::DarkModeToggle);
+	}
+	if (TalkingAudioComponent && TalkingAudioComponent->IsPlaying())
+	{
+		TalkingAudioComponent->Stop();
+	}
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	}
+	
+
+
+}
 
 
 void ANpcBase_OM::Interact_Implementation()
@@ -118,14 +136,7 @@ void ANpcBase_OM::Tick(float DeltaTime)
 	if (!Player) return;
 	if (bIsInDialogue)
 	{
-		if (!bHasMogFace && DeformationComponent)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Load deformations 1"));
-			DeformationComponent->LoadDeformations();
-			bHasMogFace = true;
 
-			Player->SetCurrentInteractedCharacter(this);
-		}
 		DistanceFromPlayerVector = Player->GetActorLocation() - GetActorLocation();
 		if (GymSpeaker && GetFriendshipLevel() < -0.8 && CurrentMusicPitch > -2.f)
 		{
@@ -360,7 +371,7 @@ void ANpcBase_OM::Talk(USoundBase* InChatAudio) const
 
 void ANpcBase_OM::PlayRandomTalkingAnimForMood()
 {
-	if (!AnimInstance) return;
+	if (!AnimInstance.IsValid()) return;
 	if (!AnimInstance->GetIsTalking()) return;
 
 	UE_LOG(LogTemp, Warning, TEXT("Play random Talkeranim for mood called "));
@@ -416,7 +427,7 @@ void ANpcBase_OM::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InCh
 	
 	if (UAnimMontage* MontageToPlay = ChatMapIterator.Value())
 	{
-		if (AnimInstance)
+		if (AnimInstance.IsValid())
 			AnimInstance->Montage_Play(MontageToPlay);
 
 		CurrentTalkTime = MontageToPlay->GetPlayLength();
@@ -428,7 +439,7 @@ void ANpcBase_OM::PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InCh
 	}
 }
 
-UNpcBaseAnimInstance_OM* ANpcBase_OM::GetAnimInstance()
+TWeakObjectPtr<UNpcBaseAnimInstance_OM> ANpcBase_OM::GetAnimInstance()
 {
 	return AnimInstance;
 }

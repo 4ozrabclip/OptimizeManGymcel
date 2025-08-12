@@ -13,5 +13,8 @@ UCLASS()
 class OPTIMIZEMAN_API AFemaleBase_OM : public ANpcBase_OM
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void Tick(float DeltaTime) override;
 	
 };

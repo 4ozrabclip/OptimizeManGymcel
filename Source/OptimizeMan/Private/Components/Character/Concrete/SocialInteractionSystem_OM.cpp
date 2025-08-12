@@ -278,7 +278,7 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
     }
 
 	if (!NpcAnimInstance)
-		NpcAnimInstance = CurrentInteractedNpc->GetAnimInstance();
+		NpcAnimInstance = CurrentInteractedNpc->GetAnimInstance().Get();
 
 	const EPlayerEmotionalStates CurrentEmotionalState = GameInstance->GetCurrentEmotionalState();
 	
@@ -454,13 +454,18 @@ void USocialInteractionSystem_OM::LeaveConversationOnWalkingOff()
 		return;
 	}
 
-	CurrentInteractedNpc->EndDialog();
+	if (CurrentInteractedNpc)
+	{
+		CurrentInteractedNpc->EndDialog();
+		GetWorld()->GetTimerManager().ClearAllTimersForObject(CurrentInteractedNpc);
+	}
+	
 	//Player->SetCurrentPlayMode(EPlayModes::RegularMode);
 	Player->TogglePlayMode(EPlayModes::SocialMode, Player->bInteractableOpen);
 	Player->bInteractableOpen = false;
 	SaveNpcFriendshipData();
-	
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(CurrentInteractedNpc);
+
+
 
 	NpcAnimInstance = nullptr;
 	CurrentInteractedNpc = nullptr;
