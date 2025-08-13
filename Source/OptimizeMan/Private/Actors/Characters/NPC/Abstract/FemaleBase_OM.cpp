@@ -10,13 +10,16 @@ void AFemaleBase_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!bHasMogFace && DeformationComponent)
+	if (bIsInDialogue)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Load deformations 1"));
-		DeformationComponent->LoadDeformations();
-		bHasMogFace = true;
+		if (!bHasMogFace && DeformationComponent)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Load deformations 1"));
+			DeformationComponent->LoadDeformations();
+			bHasMogFace = true;
 
-		if (Player)
-			Player->SetCurrentInteractedCharacter(this);
+			if (Player)
+				Player->SetCurrentInteractedCharacter(this);
+		}
 	}
 }

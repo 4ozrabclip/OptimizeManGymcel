@@ -19,14 +19,14 @@ void UHintsWidget_OM::ShowHint(const FText& HintTextString, float DisplayTime)
 		UE_LOG(LogTemp, Error, TEXT("HintText TextBlock is NULL"));
 		return;
 	}
-	if (GameInstance->GetDarkMode())
+	/*if (GameInstance->GetDarkMode())
 	{
 		HintText->SetColorAndOpacity(White);
 	}
 	else
 	{
 		HintText->SetColorAndOpacity(Black);
-	}
+	}*/
 
 
 	HintText->SetText(HintTextString);

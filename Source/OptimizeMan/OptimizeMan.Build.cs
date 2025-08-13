@@ -24,7 +24,9 @@ public class OptimizeMan : ModuleRules
 			"NavigationSystem",
 			"MetasoundEngine",
 			"UMG", 
-			"CinematicCamera"
+			"CinematicCamera",
+			"Niagara",
+			"NiagaraCore",
 		});
 		if (Target.bBuildEditor)
 		{

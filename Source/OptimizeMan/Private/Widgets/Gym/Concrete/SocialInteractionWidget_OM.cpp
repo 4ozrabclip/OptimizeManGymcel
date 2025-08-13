@@ -320,7 +320,7 @@ void USocialInteractionWidget_OM::ManageInteraction(const UButton* ClickedButton
 	}
 	if (!AnimInstance)
 	{
-		AnimInstance = Npc->GetAnimInstance();
+		AnimInstance = Npc->GetAnimInstance().Get();
 	}
 	
 	if (IsButtonThisStyle(&ClickedButton->GetStyle(), &NeutralButtonStyle))

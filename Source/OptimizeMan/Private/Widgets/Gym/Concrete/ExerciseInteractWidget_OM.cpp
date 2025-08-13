@@ -441,9 +441,10 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 	//				M I N O R  I N J U R Y
 	else if (MiniGameSlider->GetValue() >= MajorInjuryBoundsValueLeft && MiniGameSlider->GetValue() <= MajorInjuryBoundsValueRight)
 	{
-		ExerciseComponent->MiniGame();
-
+		
 		ExerciseComponent->Injury(EInjuryLevel::Minor);
+		
+		ExerciseComponent->MiniGame();
 
 		UpdateStats();
 

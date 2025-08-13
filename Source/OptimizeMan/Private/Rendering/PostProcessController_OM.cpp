@@ -201,49 +201,63 @@ void APostProcessController_OM::ManageEffectsOnTempEmotion(ETemporaryEmotionalSt
 void APostProcessController_OM::StartEffect(const FName InEffectName, int MinTime, int MaxTime, EEffectTickMode InEffectTickMode)
 {
 	int EndTime = FMath::RandRange(MinTime, MaxTime);
-	FPostProcessEffect& EffectToPlay = GetEffect(InEffectName);
 
-	const FName InvalidName = FName("Invalid");
-	if (EffectToPlay.Name == InvalidName)
+	int32 EffectIndex = INDEX_NONE;
+	for (int32 i = 0; i < Effects.Num(); ++i)
+	{
+		if (Effects[i].Name == InEffectName)
+		{
+			EffectIndex = i;
+			break;
+		}
+	}
+	
+	const FName InvalidName("Invalid");
+	if (EffectIndex == INDEX_NONE || Effects[EffectIndex].Name == InvalidName)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Invalid Effect in StartEffect: %s"), *InEffectName.ToString());
 		return;
 	}
+
+	
+	FPostProcessEffect& EffectToPlay = Effects[EffectIndex];
 	EffectToPlay.OverrideSetter(true);
-
 	EffectToPlay.bCurrentlyOn = true;
-
 	EffectToPlay.TickCounter = 0.f;
-
+	
 	GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(EffectToPlay.TimerHandle, [this, &EffectToPlay, EndTime, InEffectTickMode]()
+
+	
+	GetWorld()->GetTimerManager().SetTimer(EffectToPlay.TimerHandle, [this, EffectIndex, EndTime, InEffectTickMode]()
 	{
-		if (!EffectToPlay.bCurrentlyOn)
+		if (!Effects.IsValidIndex(EffectIndex))
+			return;
+
+		FPostProcessEffect& Effect = Effects[EffectIndex];
+		
+		if (!Effect.bCurrentlyOn)
 		{
-			GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+			GetWorld()->GetTimerManager().ClearTimer(Effect.TimerHandle);
+			return;
 		}
+
 		switch (InEffectTickMode)
 		{
 			case EEffectTickMode::None:
-			{
-				GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+				GetWorld()->GetTimerManager().ClearTimer(Effect.TimerHandle);
 				break;
-			}
+
 			case EEffectTickMode::WaveEffect:
-			{
-				EffectToPlay.WaveEffectTick(EndTime, TickRate);
+				Effect.WaveEffectTick(EndTime, TickRate);
 				break;
-			}
+
 			case EEffectTickMode::FadeIn:
-			{
-				EffectToPlay.FadeIn();
+				Effect.FadeIn();
 				break;
-			}
+
 			default:
-			{
-				GetWorld()->GetTimerManager().ClearTimer(EffectToPlay.TimerHandle);
+				GetWorld()->GetTimerManager().ClearTimer(Effect.TimerHandle);
 				break;
-			}
 		}
 		
 	}, TickRate, true);

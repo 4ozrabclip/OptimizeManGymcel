@@ -17,6 +17,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Utils/Structs/AudioTypes.h"
+#include "NiagaraFunctionLibrary.h"
 
 ANpcBase_OM::ANpcBase_OM()
 {
@@ -44,6 +45,9 @@ ANpcBase_OM::ANpcBase_OM()
 	TalkingAudioComponent->SetupAttachment(RootComponent);
 	TalkingAudioComponent->SetAudioType(EAudioTypes::VoiceAudio);
 	MaxPlayerLookAtRange = 1600.f;
+
+	ParticleSpawnLoc = CreateDefaultSubobject<USceneComponent>(TEXT("ParticleSpawnLoc"));
+	ParticleSpawnLoc->SetupAttachment(RootComponent);
 
 	bHasMogFace = false;
 
@@ -231,6 +235,69 @@ FVector ANpcBase_OM::LookAtLocation(const float DeltaTime)
 	return SmoothedLookAtLocation;
 }
 
+void ANpcBase_OM::SpawnParticles(const FName& InName)
+{
+	if (UNiagaraSystem* ParticleToSpawn = GetParticleSystem(InName))
+	{
+		constexpr float SpawnOffset = 20.f;
+		const FVector SpawnLocation = ParticleSpawnLoc->GetComponentLocation();
+
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ParticleToSpawn, SpawnLocation);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Couldn't find particles to spawn in Particles array on: %s "), *GetName());
+	}
+}
+
+void ANpcBase_OM::SpawnParticlesOnMood()
+{
+	if (UNiagaraSystem* ParticleToSpawn = GetParticleSystem(CurrentMood))
+	{
+		constexpr float SpawnOffset = 20.f;
+		const FVector SpawnLocation = ParticleSpawnLoc->GetComponentLocation();
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ParticleToSpawn, SpawnLocation);
+		UE_LOG(LogTemp, Display, TEXT("Spawning Particles on mood"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Couldn't find particles to spawn in Particles array on: %s "), *GetName());
+	}
+}
+UNiagaraSystem* ANpcBase_OM::GetParticleSystem(const ENpcMood& InMood)
+{
+	if (Particles.Num() == 0) return nullptr;
+	
+	FName PName;
+	switch (InMood)
+	{
+	case ENpcMood::Angry: PName = FName("Angry"); break;
+	case ENpcMood::Disgusted: PName = FName("Disgusted"); break;
+	case ENpcMood::Happy: PName = FName("Happy"); break;
+	case ENpcMood::Randy: PName = FName("Randy"); break;
+	case ENpcMood::Uncomfortable: PName = FName("Uncomfortable"); break;
+	default: return nullptr;
+	}
+
+	for (size_t Index = 0; Index < Particles.Num(); ++Index)
+	{
+		if (Particles[Index].Name == PName && Particles[Index].ParticleSystem != nullptr) return Particles[Index].ParticleSystem;
+	}
+
+	return nullptr;
+}
+
+UNiagaraSystem* ANpcBase_OM::GetParticleSystem(const FName& InName)
+{
+	if (Particles.Num() == 0) return nullptr;
+
+	for (size_t Index = 0; Index < Particles.Num(); ++Index)
+	{
+		if (Particles[Index].Name == InName && Particles[Index].ParticleSystem != nullptr) return Particles[Index].ParticleSystem;
+	}
+
+	return nullptr;
+}
 
 ENpcRelationshipState ANpcBase_OM::GetCurrentRelationshipState()
 {

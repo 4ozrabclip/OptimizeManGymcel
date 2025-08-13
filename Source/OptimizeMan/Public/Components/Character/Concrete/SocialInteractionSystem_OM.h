@@ -33,6 +33,7 @@ public:
 	void ProcessFriendshipLevel();
 	void CheckForSocialAchievements();
 	void ManageInteractionLogic(ESocialType InSocialType);
+	void CheckAndSpawnParticles();
 
 	/** Exit Convo **/
 	void LeaveConversationOnWalkingOff();

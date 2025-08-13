@@ -9,6 +9,7 @@
 #include "Game/Persistent/SaveData/NpcDataSave.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/NpcStates.h"
+#include "Utils/Structs/ParticleTypes.h"
 #include "Utils/Structs/SocialData.h"
 #include "NpcBase_OM.generated.h"
 
@@ -41,7 +42,9 @@ public:
 	void Talk(USoundBase* InChatAudio) const;
 	void PlayRandomTalkingAnimForMood();
 	FVector LookAtLocation(const float DeltaTime);
-	
+	void SpawnParticles(const FName& InName);
+	void SpawnParticlesOnMood();
+
 	//Helpers
 	void PlayRandomTalkingHelper(TMap<USoundBase*, UAnimMontage*>& InChatMap);
 
@@ -87,13 +90,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	AGymSpeaker_OM* GymSpeaker;
 
-	//Components
+	/** Components **/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AuraLight")
 	UPointLightComponent* AuraLight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	UGameAudio_OM* TalkingAudioComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Deformation")
 	UNPCBodyDeformationsComponent_OM* DeformationComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	USceneComponent* ParticleSpawnLoc;
+	
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation")
@@ -163,8 +169,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
 	TArray<USoundBase*> HelloTalking_Sounds;
 
+
+
+	/** Niagara Systems **/ 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Particles")
+	TArray<FParticleType> Particles;
+
+
 public:
-	//GETTERS AND SETTERS
+	/** Getters/Finders **/
+
+	UFUNCTION()
+	UNiagaraSystem* GetParticleSystem(const FName& InName);
+	UNiagaraSystem* GetParticleSystem(const ENpcMood& InMood);
+	
 	UFUNCTION(BlueprintCallable)
 	FName GetUniqueNpcID() const { return FName(NpcID); }
 	UFUNCTION(BlueprintCallable)
@@ -179,12 +197,9 @@ public:
 	ENpcRelationshipState GetCurrentRelationshipState();
 	UFUNCTION(BlueprintCallable, Category = "NPC Social")
 	ENpcMood GetCurrentMood() const { return CurrentMood;};
-	UFUNCTION(BlueprintCallable, Category = "NPC Social")
-	virtual void SetCurrentMood(ENpcMood InMood) { CurrentMood = InMood;};
-	UFUNCTION(BlueprintCallable, Category = "NPC States")
-	void SetCurrentState(const ENpcState InState);
 	UFUNCTION(BlueprintCallable, Category = "NPC States")
 	ENpcState GetCurrentState() const { return CurrentState; };
+
 	float GetFriendshipLevel() const { return PlayerRelationship.FriendshipLevel; }
 	bool GetHasMetPlayer() const { return PlayerRelationship.bHasMetPlayer; }
 	float GetCurrentTalkTime() const { return CurrentTalkTime; }
@@ -193,17 +208,24 @@ public:
 	EExerciseType GetCurrentExerciseType() const { return CurrentExerciseType; };
 	bool GetIsOpenForConversation() const { return bOpenForConversationWithOtherNpcs; }
 	bool GetIsInConversationWithNpc() const { return bIsInConversationWithOtherNpc;}
+	AActor* GetCurrentInteractedItem() const { return CurrentInteractedItem; }
+	TSoftObjectPtr<ANpcBase_OM> GetCurrentInteractedNpc() const { return CurrentInteractedNpc; }
 
+
+
+	/** Setters / Adders **/
+	
+	UFUNCTION(BlueprintCallable, Category = "NPC Social")
+	virtual void SetCurrentMood(ENpcMood InMood) { CurrentMood = InMood;};
+	UFUNCTION(BlueprintCallable, Category = "NPC States")
+	void SetCurrentState(const ENpcState InState);
+	
 	void SetIsInConversationWithNpc(const bool bIsInConvo) { bIsInConversationWithOtherNpc = bIsInConvo; };
 	void SetIsOpenForConversation(const bool bInOpenForConversation) { bOpenForConversationWithOtherNpcs = bInOpenForConversation; }
-	
 	void SetCurrentExerciseType(const EExerciseType InExerciseType) { CurrentExerciseType = InExerciseType; }
 	virtual void SetFriendshipLevel(const float InAmount, const bool bReset = false);
 	void SetHasMetPlayer(const bool InHasMet) { PlayerRelationship.bHasMetPlayer = InHasMet; }
-	AActor* GetCurrentInteractedItem() const { return CurrentInteractedItem; }
 	void SetCurrentInteractedItem(AActor* InItem) { CurrentInteractedItem = InItem; }
-
-	TSoftObjectPtr<ANpcBase_OM> GetCurrentInteractedNpc() const { return CurrentInteractedNpc; }
 	void SetCurrentInteractedNpc(ANpcBase_OM* InNpc);
 
 
@@ -242,6 +264,4 @@ protected:
 
 	
 };
-
-
 

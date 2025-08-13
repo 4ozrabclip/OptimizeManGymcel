@@ -374,7 +374,11 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
         	ENpcMood Mood = (bIsFriend ? ENpcMood::Happy : bIsEnemy ? ENpcMood::Disgusted : ENpcMood::Happy);
         	CurrentInteractedNpc->SetCurrentMood(Mood);
         	bool bPositiveReaction = (bIsFriend || !bIsEnemy);
-			if (bPositiveReaction) NpcAnimInstance->SetIsLaughing(true);
+			if (bPositiveReaction)
+			{
+				NpcAnimInstance->SetIsLaughing(true);
+				CurrentInteractedNpc->SpawnParticles(FName("Laughing"));
+			}
         	else NpcAnimInstance->SetIsDisagreeing(true);
         	break;
         }
@@ -406,7 +410,11 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
         	bool bPositiveReaction = false;
         	ModifyMoodByEmotionalState(Mood, bPositiveReaction);
         	if (bHatesYou) break;
-        	if (bPositiveReaction) NpcAnimInstance->SetIsLaughing(true);
+        	if (bPositiveReaction)
+        	{
+        		NpcAnimInstance->SetIsLaughing(true);
+        		CurrentInteractedNpc->SpawnParticles(FName("Laughing"));
+        	}
         	else NpcAnimInstance->SetIsDisagreeing(true);
         	break;
         }
@@ -416,7 +424,11 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
         	bool bPositiveReaction = (GodsJudgement >= 0.5f);
         	CurrentInteractedNpc->SetCurrentMood(Mood);
         	if (bHatesYou) break;
-        	if (bPositiveReaction) NpcAnimInstance->SetIsLaughing(true);
+        	if (bPositiveReaction)
+        	{
+        		NpcAnimInstance->SetIsLaughing(true);
+        		CurrentInteractedNpc->SpawnParticles(FName("Laughing"));
+        	}
         	else NpcAnimInstance->SetIsDisagreeing(true);
 	        break;
         }
@@ -424,6 +436,21 @@ void USocialInteractionSystem_OM::ManageInteractionLogic(ESocialType InSocialTyp
             CurrentInteractedNpc->SetCurrentMood(ENpcMood::Neutral);
             break;
     }
+
+	CheckAndSpawnParticles();
+}
+
+void USocialInteractionSystem_OM::CheckAndSpawnParticles()
+{
+	if (!CurrentInteractedNpc) return;
+	if (CurrentInteractedNpc->GetCurrentMood() == ENpcMood::Neutral) return;
+
+	// Don't want to spawn particles every time.  only ever "other" time.
+	if (FMath::RandBool())
+	{
+		UE_LOG(LogTemp, Display, TEXT("RandBool Success on CheckAndSpawnParticles"));
+		CurrentInteractedNpc->SpawnParticlesOnMood();
+	}
 }
 
 void USocialInteractionSystem_OM::LeaveConversation()

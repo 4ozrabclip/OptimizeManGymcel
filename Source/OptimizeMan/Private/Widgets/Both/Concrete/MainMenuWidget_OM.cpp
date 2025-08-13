@@ -20,9 +20,7 @@ void UMainMenuWidget_OM::NativeConstruct()
 	InitButtons();
 	
 	OpenWindow(FName("MainWindow"));
-
-
-
+	
 	if (!GameInstance)
 	{
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
@@ -42,9 +40,7 @@ void UMainMenuWidget_OM::NativeConstruct()
 		NotificationAudio->SetSound(SplatSound);
 		NotificationAudio->SetAudioType(EAudioTypes::NotificationAudio);
 		NotificationAudio->bIsUISound = true;
-		
 	}
-	
 }
 
 void UMainMenuWidget_OM::NativeDestruct()
