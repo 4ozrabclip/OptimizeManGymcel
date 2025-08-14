@@ -50,7 +50,13 @@ void ASpeaker_OM::BeginPlay()
 	
 	SetActorTickEnabled(false);
 	SongIndex = Songs.Num();
+
+	if (Player)
+	{
+		Player->OnPlayModeChange.AddDynamic(this, &ASpeaker_OM::OnPlayModeChanged);
+	}
 }
+
 
 
 void ASpeaker_OM::Interact_Implementation()
@@ -99,6 +105,20 @@ void ASpeaker_OM::TurnOffWidget()
 	Player->SetToUIMode(false);
 	PlayerController->ToggleInteractWidgetFromViewport(false);
 	SetActorTickEnabled(false);
+}
+
+void ASpeaker_OM::OnPlayModeChanged(EPlayModes InPlayMode)
+{
+	switch (InPlayMode)
+	{
+	case EPlayModes::PauseMode:
+		{
+			TurnOffWidget();
+			break;
+		}
+	default:
+		return;
+	}
 }
 
 

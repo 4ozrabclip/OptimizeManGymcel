@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Game/Persistent/GameInstance_OM.h"
+#include "Utils/Structs/PlayModes.h"
 #include "ParentWidget_OM.generated.h"
 
 class UButton;
@@ -21,7 +22,8 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-
+	virtual void UpdateOnPlayMode(const EPlayModes InPlayMode) {}
+	
 	UFUNCTION()
 	virtual void DarkModeToggle(const bool bIsDarkMode) {}
 	

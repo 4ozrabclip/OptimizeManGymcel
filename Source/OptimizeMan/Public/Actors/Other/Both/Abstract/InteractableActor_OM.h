@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Utils/Structs/PlayModes.h"
 #include "OptimizeMan/Public/Interfaces/InteractableInterface_OM.h"
 #include "InteractableActor_OM.generated.h"
 
@@ -21,6 +22,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	virtual void DarkModeToggle(const bool bIsDarkMode) {}
+	virtual void OnPlayModeChanged(EPlayModes InPlayMode) {};
 
 
 protected:

@@ -17,6 +17,8 @@ UNotificationAudio_OM::UNotificationAudio_OM()
 	Player = nullptr;
 }
 
+
+
 void UNotificationAudio_OM::BeginPlay()
 {
 	Super::BeginPlay();
@@ -46,7 +48,6 @@ void UNotificationAudio_OM::PlayWritingSound()
 		Play();
 	}
 }
-
 void UNotificationAudio_OM::PlayCrossingOutSound()
 {
 	if (!TodoCrossingOutSound)

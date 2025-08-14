@@ -41,7 +41,26 @@ void AExerciseEquipment_OM::BeginPlay()
 	{
 		Widg->InitEquipment(this);
 	}
+	if (Player)
+	{
+		Player->OnPlayModeChange.AddDynamic(this, &AExerciseEquipment_OM::OnPlayModeChanged);
+	}
 }
+
+void AExerciseEquipment_OM::OnPlayModeChanged(EPlayModes InPlayMode)
+{
+	switch (InPlayMode)
+	{
+	case EPlayModes::PauseMode:
+		{
+			TurnOffWidget();
+			break;
+		}
+	default:
+		return;
+	}
+}
+
 void AExerciseEquipment_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

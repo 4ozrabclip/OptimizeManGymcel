@@ -19,6 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAudioSettingsChanged,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQualitySettingsChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionalStateChanged, EPlayerEmotionalStates, NewState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGymStatsChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGamePointsChanged, int, ChangedPoints);
 
 class APoster_OM;
 UCLASS(BlueprintType)
@@ -26,21 +27,24 @@ class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance
 {
 	GENERATED_BODY()
 	
-public: // Initialization
+public: 
+	/** Overrides **/
 	virtual void Init() override;
 	virtual void Shutdown() override;
-
-
-	void FirstDay();
-	void ResetGame();
-	void FinishDemo();
-
 	
+
+	/** Inits **/
 	void InitializePlayerData();
 	void InitializePostersOwned();
 	void InitializeGameSettings();
 
+	void FirstDay();
+	void ResetGame();
+	void FinishDemo();
 	
+
+
+	/** Getters / Finders **/
 	FBodyPartData* FindBodyPart(const EBodyPart& Part, const EBodyPartSide& Side);
 	float GetBodyPartStrengthValue(const EBodyPart& Part, const EBodyPartSide& Side);
 	float GetBodyPartLeftRightCombinedStrengthValue(const EBodyPart& Part);
@@ -59,6 +63,8 @@ public: //delegates
 	FOnGymStatsChanged OnGymStatsChanged;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnEmotionalStateChanged OnEmotionalStateChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnGamePointsChanged OnGamePointsChanged;
 	
 
 protected:
@@ -83,6 +89,7 @@ public:
 //General Non-UFUNCS
 	void SetWaveDetails();
 	void Check3DayScore();
+	void BroadcastNotEnoughPoints();
 
 //General UFUNCTIONS
 	UFUNCTION(BlueprintCallable)

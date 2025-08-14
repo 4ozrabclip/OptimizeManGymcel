@@ -15,21 +15,28 @@
 void UWakeUpBase_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager)
+	if (!GameInstance)
 	{
-		UE_LOG(LogTemp, Error, TEXT("TodoManager is null.  Cast failed"));
+		UE_LOG(LogTemp, Error, TEXT("GameInstance is null in WakeUpBase"));
 		return;
 	}
-	
-	NotificationAudio = Cast<UNotificationAudio_OM>(Player->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
+
+	TodoManager = GameInstance->GetSubsystem<UTodoManagementSubsystem>();
+	if (!TodoManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("TodoManager is null in WakeUpBase"));
+		return;
+	}
+
+	if (const APawn* OwningPawn = GetOwningPlayerPawn())
+	{
+		NotificationAudio = Cast<UNotificationAudio_OM>(
+			OwningPawn->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
+	}
+
 	ExitButton->SetVisibility(ESlateVisibility::Hidden);
-	
 	InitializeTaskOptions();
-
 	CurrentButtonStyle = OriginalStyle_1;
-
 	OpenWindow(FName("MainWindow"));
 }
 
@@ -109,22 +116,21 @@ void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 	FTaskOptionData& Opt = TaskOptions[InOption];
 
 	
-
 	if (!Opt.bIsSelected)
 	{
-		if (TodoManager->GetCurrentTodoArray().Num() == 3)
+		if (TodoManager->GetCurrentTodoArray().Num() >= 3)
 			return;
 		Opt.bIsSelected = true;
 		Opt.Button->SetStyle(Opt.SelectedStyle);
 		TodoManager->AddToCurrentTodos(TodoManager->GetPotentialTodos()[InOption].Name);
-		NotificationAudio->PlayWritingSound();
+		if (NotificationAudio) NotificationAudio->PlayWritingSound();
 	}
 	else
 	{
 		Opt.bIsSelected = false;
 		Opt.Button->SetStyle(Opt.OriginalStyle);
 		TodoManager->RemoveFromCurrentTodos(TodoManager->GetPotentialTodos()[InOption].Name);
-		NotificationAudio->PlayCrossingOutSound();
+		if (NotificationAudio) NotificationAudio->PlayCrossingOutSound();
 	}
 	
 

@@ -109,6 +109,10 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		NotificationText->SetColorAndOpacity(White);
 		SetCountTextBlock->SetColorAndOpacity(White);
 		RepCountTextBlock->SetColorAndOpacity(White);
+		DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
+		DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
+		DarkExitStyle.Pressed.SetResourceObject(WhiteExitButton);
+		ExitButton->SetStyle(DarkExitStyle);
 	}
 	else
 	{
@@ -130,8 +134,11 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		NotificationText->SetColorAndOpacity(Black);
 		SetCountTextBlock->SetColorAndOpacity(Black);
 		RepCountTextBlock->SetColorAndOpacity(Black);
+		DarkExitStyle.Normal.SetResourceObject(BlackExitButton);
+		DarkExitStyle.Hovered.SetResourceObject(BlackHoveredExitButton);
+		DarkExitStyle.Pressed.SetResourceObject(BlackExitButton);
+		ExitButton->SetStyle(DarkExitStyle);
 	}
-	
 }
 
 void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -160,26 +167,6 @@ void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float I
 		if (MiniGameClickButton->GetIsEnabled())
 			MiniGameClickButton->SetIsEnabled(false);
 		return;
-	}
-}
-
-void UExerciseInteractWidget_OM::DarkModeToggle(const bool bIsDarkMode)
-{
-	Super::DarkModeToggle(bIsDarkMode);
-		
-	if (bIsDarkMode)
-	{
-		DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
-		DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
-		DarkExitStyle.Pressed.SetResourceObject(WhiteExitButton);
-		ExitButton->SetStyle(DarkExitStyle);
-	}
-	else
-	{
-		DarkExitStyle.Normal.SetResourceObject(BlackExitButton);
-		DarkExitStyle.Hovered.SetResourceObject(BlackHoveredExitButton);
-		DarkExitStyle.Pressed.SetResourceObject(BlackExitButton);
-		ExitButton->SetStyle(DarkExitStyle);
 	}
 }
 

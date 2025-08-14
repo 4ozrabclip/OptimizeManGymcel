@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
 #include "Utils/Structs/ExerciseData.h"
+#include "Utils/Structs/PlayModes.h"
 #include "ExerciseEquipment_OM.generated.h"
 class UCameraComponent;
 class UWidgetComponent;
@@ -22,9 +23,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 protected:
 	virtual void BeginPlay() override;
+
+
 public:
 	UFUNCTION()
 	void TurnOffWidget();
+	UFUNCTION()
+	virtual void OnPlayModeChanged(EPlayModes InPlayMode) override;
+
 	
 	virtual void Interact_Implementation() override;
 	void StartWorkoutMode();
@@ -32,6 +38,7 @@ public:
 	virtual void SetWeightClass();
 
 
+	/** Getters/Finders **/
 	
 	FRotator GetLookAtCameraRotation() const;
 	FVector GetLookAtCameraPosition() const;

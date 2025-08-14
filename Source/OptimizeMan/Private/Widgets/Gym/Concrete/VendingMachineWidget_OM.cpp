@@ -122,17 +122,21 @@ void UVendingMachineWidget_OM::BuyConsumable(const FConsumableType& InConsumable
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
-	int PlayerMoney = GameInstance->GetMoney();
+	if (!GameInstance) return;
+	
+	int PlayerPoints = GameInstance->GetGamePoints();
 
-	if (PlayerMoney >= InConsumable.Price)
+	if (PlayerPoints >= InConsumable.Price)
 	{
 		VendingMachine->PlayBuySound();
 		VendingMachine->SpawnItem(InConsumable);
-		GameInstance->SetMoney(-InConsumable.Price);
+		GameInstance->AddGamePoints(-InConsumable.Price);
+		
 	}
 	else
 	{
 		VendingMachine->PlayNoMoneySound();
+		GameInstance->AddGamePoints(0);
 	}
 }
 

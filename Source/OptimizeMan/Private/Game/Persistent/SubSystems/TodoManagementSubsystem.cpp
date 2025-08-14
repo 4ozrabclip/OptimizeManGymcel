@@ -323,7 +323,7 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 
 			OnTodoComplete.Broadcast();
 
-			if (Item.Points > 0) OnPointsChanged.Broadcast();
+			if (Item.Points > 0) GameInstance->AddGamePoints(Item.Points);
 
 			for (TPair<EPlayerStatTypes, float>& TodoStatBuffPair : Item.StatBuffs)
 			{

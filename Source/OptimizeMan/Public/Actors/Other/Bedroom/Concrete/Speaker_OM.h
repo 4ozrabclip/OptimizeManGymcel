@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
+
 #include "Speaker_OM.generated.h"
 
 class UGameAudio_OM;
@@ -17,18 +18,24 @@ class OPTIMIZEMAN_API ASpeaker_OM : public AInteractableActor_OM
 
 public:
 	ASpeaker_OM();
-	
+protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void Interact_Implementation() override;
+
+public:
+	void PlaySong();
+	
 	UFUNCTION()
 	void PlayNextSong();
-	void PlaySong();
-	virtual void Tick(float DeltaSeconds) override;
+	UFUNCTION()
+    void StopSong();
 	UFUNCTION()
 	void TurnOffWidget();
-
 	UFUNCTION()
-	void StopSong();
+	virtual void OnPlayModeChanged(EPlayModes InPlayMode) override;
+
+
 
 	void SetSongIndex(const int InIndex) {	SongIndex = InIndex; }
 

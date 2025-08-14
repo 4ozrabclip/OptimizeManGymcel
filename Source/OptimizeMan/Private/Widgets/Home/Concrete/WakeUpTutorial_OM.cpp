@@ -18,14 +18,22 @@ UWakeUpTutorial_OM::UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializ
 void UWakeUpTutorial_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-	TaskOptionPanel_0->SetVisibility(ESlateVisibility::Visible);
-	TaskOptionPanel_1->SetVisibility(ESlateVisibility::Visible);
-	TaskOptionPanel_2->SetVisibility(ESlateVisibility::Visible);
-	TaskOptionPanel_3->SetVisibility(ESlateVisibility::Visible);
-	TaskOptionPanel_4->SetVisibility(ESlateVisibility::Visible);
+	ensureMsgf(TaskOptionPanel_0, TEXT("TaskOptionPanel_0 is null in WakeUpTutorial"));
+	ensureMsgf(TaskOptionPanel_1, TEXT("TaskOptionPanel_1 is null in WakeUpTutorial"));
+	ensureMsgf(TaskOptionPanel_2, TEXT("TaskOptionPanel_2 is null in WakeUpTutorial"));
+	ensureMsgf(TaskOptionPanel_3, TEXT("TaskOptionPanel_3 is null in WakeUpTutorial"));
+	ensureMsgf(TaskOptionPanel_4, TEXT("TaskOptionPanel_4 is null in WakeUpTutorial"));
+
+	if (TaskOptionPanel_0) TaskOptionPanel_0->SetVisibility(ESlateVisibility::Visible);
+	if (TaskOptionPanel_1) TaskOptionPanel_1->SetVisibility(ESlateVisibility::Visible);
+	if (TaskOptionPanel_2) TaskOptionPanel_2->SetVisibility(ESlateVisibility::Visible);
+	if (TaskOptionPanel_3) TaskOptionPanel_3->SetVisibility(ESlateVisibility::Visible);
+	if (TaskOptionPanel_4) TaskOptionPanel_4->SetVisibility(ESlateVisibility::Visible);
+
 	SetTodoOptions();
 	UpdateFakeTodoList();
 	InitiateTutorialSequence();
+
 	CurrentTutorialStep = 0;
 	bWaitingForInput = false;
 }
@@ -133,14 +141,14 @@ void UWakeUpTutorial_OM::FinishTutorial()
 
 void UWakeUpTutorial_OM::OnExitButtonClicked()
 {
-	Super::OnExitButtonClicked();
+	if (!TodoManager || TodoManager->GetCurrentTodoArray().Num() < 3)
+		return;
 
-	if (TodoManager->GetCurrentTodoArray().Num() < 3) return;
-	
 	if (ABedroomGameModeBase_OM* Gm = Cast<ABedroomGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
-	{
 		Gm->TutorialDay();
-	}
+	
+	
+	Super::OnExitButtonClicked();
 }
 
 
