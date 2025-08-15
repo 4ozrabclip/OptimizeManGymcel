@@ -77,12 +77,14 @@ void AShower_OM::DarkModeToggle(const bool bIsDarkMode)
 
 void AShower_OM::TakeShower(bool bCold)
 {
-	//Play Shower Sequence
+	
+
 
 	/*
 	 * Probably want to add something here that stops input during shower sequence.  
 	 * --- Will do that after i get the sequence ready
 	 */
+	if (bHavingShower) return;
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 
@@ -90,6 +92,23 @@ void AShower_OM::TakeShower(bool bCold)
 
 	auto* TodoMan = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	if (!TodoMan) return;
+
+	bHavingShower = true;
+	CloseWidget();
+	if (APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager)
+	{
+		constexpr float InFadeDuration = 1.5f;
+
+		CameraManager->StartCameraFade(0.f, 1.f, InFadeDuration, FLinearColor::Black, false, true);
+
+		GetWorld()->GetTimerManager().ClearTimer(ShowerTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(ShowerTimerHandle, [this, CameraManager]()
+		{
+			constexpr float OutFadeDuration = 0.5f;
+			CameraManager->StartCameraFade(1.f, 0.f, OutFadeDuration, FLinearColor::Black, false, true);
+			bHavingShower = false;
+		}, 2.f, false);
+	}
 	
 	if (bCold)
 	{

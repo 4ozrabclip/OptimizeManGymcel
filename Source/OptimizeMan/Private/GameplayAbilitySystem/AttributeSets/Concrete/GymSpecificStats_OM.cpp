@@ -3,9 +3,43 @@
 
 #include "GameplayAbilitySystem/AttributeSets/Concrete/GymSpecificStats_OM.h"
 
+
 UGymSpecificStats_OM::UGymSpecificStats_OM()
 {
 	InitBladder(0.f);
 	InitEnergy(1.f);
 	InitFocus(1.f);
+}
+
+void UGymSpecificStats_OM::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if (bCanTriggerFocusLow)
+	{
+		if (float FocusVal = GetFocus())
+		{
+			if (FocusVal <= 0.f || FocusThreshold <= 0.f)
+				bCanTriggerFocusLow = false;
+			if (FocusVal < FocusThreshold)
+			{
+				OnFocusBelowThreshold.Broadcast(FocusVal);
+				FocusThreshold -= 0.1f;
+			}
+		}
+	}
+
+	if (bCanTriggerEnergyLow)
+	{
+		if (float EnergyVal = GetEnergy())
+		{
+			if (EnergyVal <= 0.f || EnergyThreshold <= 0.f)
+				bCanTriggerEnergyLow = false;
+			if (EnergyVal < EnergyThreshold)
+			{
+				OnEnergyBelowThreshold.Broadcast(EnergyVal);
+				EnergyThreshold -= 0.1f;
+			}
+		}
+	}
 }

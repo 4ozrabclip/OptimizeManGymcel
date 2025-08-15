@@ -46,4 +46,10 @@ protected:
 public:
 	UFUNCTION()
 	void CloseWidget();
+
+
+private:
+	FTimerHandle ShowerTimerHandle;
+
+	bool bHavingShower = false;
 };

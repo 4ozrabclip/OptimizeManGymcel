@@ -10,12 +10,27 @@
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatBelowThreshold, float, NewValue);
+
 UCLASS()
 class OPTIMIZEMAN_API UGymSpecificStats_OM : public UPlayerAttributeSet_OM
 {
 	GENERATED_BODY()
 public:
 	UGymSpecificStats_OM();
+
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	UPROPERTY(BlueprintAssignable, Category = "Stats")
+	FOnStatBelowThreshold OnFocusBelowThreshold;
+
+	UPROPERTY(BlueprintAssignable, Category = "Stats")
+	FOnStatBelowThreshold OnEnergyBelowThreshold;
+
+
+
+
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gym Stats")
 	FGameplayAttributeData Focus;
@@ -25,6 +40,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gym Stats")
 	FGameplayAttributeData Bladder;
+
+
+private:
+	float EnergyThreshold = 0.5f;
+	float FocusThreshold = 0.5f;
+	bool bCanTriggerFocusLow = true;
+	bool bCanTriggerEnergyLow = true;
 
 public:
 	ATTRIBUTE_ACCESSORS_BASIC(UGymSpecificStats_OM, Focus);

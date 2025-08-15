@@ -57,8 +57,6 @@ void ASpeaker_OM::BeginPlay()
 	}
 }
 
-
-
 void ASpeaker_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
