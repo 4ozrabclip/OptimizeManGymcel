@@ -86,6 +86,8 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 	
 	const bool bDarkMode = GameInstance->GetDarkMode();
 
+	ExitButton->SetStyle(DarkExitStyle);
+
 	if (bDarkMode)
 	{
 		FSlateBrush WhiteThumb;
@@ -112,7 +114,6 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
 		DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
 		DarkExitStyle.Pressed.SetResourceObject(WhiteExitButton);
-		ExitButton->SetStyle(DarkExitStyle);
 	}
 	else
 	{
@@ -137,7 +138,6 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		DarkExitStyle.Normal.SetResourceObject(BlackExitButton);
 		DarkExitStyle.Hovered.SetResourceObject(BlackHoveredExitButton);
 		DarkExitStyle.Pressed.SetResourceObject(BlackExitButton);
-		ExitButton->SetStyle(DarkExitStyle);
 	}
 }
 

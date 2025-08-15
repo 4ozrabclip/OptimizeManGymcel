@@ -109,15 +109,19 @@ void UWakeUpTutorial_OM::AdvanceTutorial()
 	{
 		case 1:
 			{
+				PlayTutorialAnimation(TutPart1_2);
+			}
+		case 2:
+			{
 				PlayTutorialAnimation(TutPart2);
 				break;
 			}
-		case 2:
+		case 3:
 			{
 				PlayTutorialAnimation(TutPart3);
 				break;
 			}
-		case 3:
+		case 4:
 			{
 				PlayTutorialAnimation(TutPart4);
 				break;
