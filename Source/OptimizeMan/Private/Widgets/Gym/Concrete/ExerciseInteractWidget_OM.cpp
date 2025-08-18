@@ -45,6 +45,8 @@ void UExerciseInteractWidget_OM::NativeConstruct()
 		ExerciseComponent->OnWorkoutStateChanged.AddDynamic(this, &UExerciseInteractWidget_OM::SetWorkoutState);
 	}
 
+	
+
 
 	UpdateStats();
 	SetMiniGameOn(true);
@@ -361,6 +363,12 @@ void UExerciseInteractWidget_OM::SetSpecialSliderOn(const bool InSpecialSliderOn
 	{
 		SpecialSlider->SetVisibility(ESlateVisibility::Hidden);
 	}
+}
+
+void UExerciseInteractWidget_OM::OnPlayModeChanged(EPlayModes InPlayMode)
+{
+	if (InPlayMode == EPlayModes::PauseMode)
+		OnExitButtonClicked();
 }
 
 void UExerciseInteractWidget_OM::UpdateStats()

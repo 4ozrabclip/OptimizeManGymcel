@@ -6,16 +6,21 @@
 #include "TodoData.generated.h"
 
 UENUM(BlueprintType)
-enum ETodoArrayList : uint8
+enum class ETodoArrayList : uint8
 {
-	CompleteWorkout = 0,
+	None,
+	CompleteWorkout,
 	BuySomething,
 	TalkToAGirl,
 	BuySteroids,
 	MakeSomeoneLikeYou,
 	HitTenSquats,
 	StartBulking,
-	GetARealGirlfriend
+	GetARealGirlfriend,
+	HitFiveDips,
+	IncreaseSquatLift,
+	TakeColdShower,
+	HitFiveSquats
 };
 
 USTRUCT()
@@ -26,7 +31,7 @@ struct FTodoItem
 	FTodoItem()
 	: Name(""),
 	Level(""),
-	CompletedName(""),
+	Todo(ETodoArrayList::None),
 	Desc(""),
 	Tag(FGameplayTag::EmptyTag),
 	bIsCompleted(false),
@@ -40,7 +45,7 @@ struct FTodoItem
 	FString Level;
 
 	UPROPERTY()
-	FString CompletedName;
+	ETodoArrayList Todo;
 
 	TMap<EPlayerStatTypes, float> StatBuffs;
 
@@ -58,6 +63,7 @@ struct FTodoItem
 
 	bool operator==(const FTodoItem& Other) const
 	{
-		return Name == Other.Name;
+		return Name == Other.Name && Todo == Other.Todo;
 	}
+
 };

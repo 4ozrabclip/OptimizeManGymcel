@@ -63,11 +63,12 @@ void ABed_OM::Interact_Implementation()
 	
 	const FInputModeUIOnly Input;
 	PlayerController->SetInputMode(Input);
+	/*
 	if (GameInstance->GetDayNumber() == 1)
 	{
 		GameInstance->FinishDemo();
 		return;
-	}
+	}*/
 	
 	SetIsSleeping(true);
 

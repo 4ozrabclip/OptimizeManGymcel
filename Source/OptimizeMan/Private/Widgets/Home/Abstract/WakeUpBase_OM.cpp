@@ -73,12 +73,14 @@ void UWakeUpBase_OM::InitializeTaskOptions()
 	TaskOptionButton_2->SetIsEnabled(true);
 	TaskOptionButton_3->SetIsEnabled(true);
 	TaskOptionButton_4->SetIsEnabled(true);
+
+	TaskOptions.Empty();
 	
-	TaskOptions.Add({TaskOptionPanel_0, TaskOptionButton, TaskOption, TaskOptionDesc, false, OriginalStyle_1, CheckedStyle_1});
-	TaskOptions.Add({TaskOptionPanel_1, TaskOptionButton_1, TaskOption_1, TaskOptionDesc_1, false, OriginalStyle_2, CheckedStyle_2});
-	TaskOptions.Add({TaskOptionPanel_2, TaskOptionButton_2, TaskOption_2, TaskOptionDesc_2, false, OriginalStyle_1, CheckedStyle_1});
-	TaskOptions.Add({TaskOptionPanel_3, TaskOptionButton_3, TaskOption_3, TaskOptionDesc_3, false, OriginalStyle_2, CheckedStyle_2});
-	TaskOptions.Add({TaskOptionPanel_4, TaskOptionButton_4, TaskOption_4, TaskOptionDesc_4, false, OriginalStyle_1, CheckedStyle_1});
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_0, TaskOptionButton, TaskOption, TaskOptionDesc, OriginalStyle_1, CheckedStyle_1));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_1, TaskOptionButton_1, TaskOption_1, TaskOptionDesc_1, OriginalStyle_2, CheckedStyle_2));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_2, TaskOptionButton_2, TaskOption_2, TaskOptionDesc_2, OriginalStyle_1, CheckedStyle_1));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_3, TaskOptionButton_3, TaskOption_3, TaskOptionDesc_3, OriginalStyle_2, CheckedStyle_2));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_4, TaskOptionButton_4, TaskOption_4, TaskOptionDesc_4, OriginalStyle_1, CheckedStyle_1));
 }
 
 void UWakeUpBase_OM::OnExitButtonClicked()
@@ -93,9 +95,6 @@ void UWakeUpBase_OM::OnExitButtonClicked()
 
 void UWakeUpBase_OM::SetTodoOptions()
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("Set Todo Options Called"));
-
 	if (!TodoManager)
 		TodoManager = GameInstance->GetSubsystem<UTodoManagementSubsystem>();
 
@@ -110,6 +109,17 @@ void UWakeUpBase_OM::SetTodoOptions()
 
 void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 {
+	if (!GameInstance)
+		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
+	if (!GameInstance) return;
+	
+	if (!TodoManager)
+		TodoManager = GameInstance->GetSubsystem<UTodoManagementSubsystem>();
+	if (!TodoManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("cl(WakeUpBase), fn(HandleOptionSelected): Cant get Todo Manager."));
+		return;
+	}
 	if (!TaskOptions.IsValidIndex(InOption)) return;
 	if (!TodoManager->GetPotentialTodos().IsValidIndex(InOption)) return;
 
@@ -150,6 +160,7 @@ void UWakeUpBase_OM::UpdateFakeTodoList()
 		ExitButton->SetVisibility(ESlateVisibility::Hidden);
 	}
 	
+	
 	if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
 	{
 		const FString SelectedTaskString = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[0].Name});
@@ -183,7 +194,7 @@ void UWakeUpBase_OM::UpdateFakeTodoList()
 
 void UWakeUpBase_OM::AssignOptionsToWidget()
 {
-
+	
 	TArray<FTodoItem>& Options = TodoManager->GetPotentialTodos();
 
 	const int32 NumItems = FMath::Min(TaskOptions.Num(), Options.Num());

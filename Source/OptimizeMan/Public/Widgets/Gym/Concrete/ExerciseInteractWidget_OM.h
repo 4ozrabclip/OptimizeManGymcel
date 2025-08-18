@@ -21,6 +21,7 @@ class OPTIMIZEMAN_API UExerciseInteractWidget_OM : public UMinigameBaseWidget_OM
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
 public:
 	virtual void OnExitButtonClicked() override;
 	void MiniGame(float InDeltaTime);
@@ -47,6 +48,8 @@ public:
 	void SetSpecialSliderOn(const bool InSpecialSliderOn);
 	UFUNCTION(BlueprintCallable)
 	bool GetSpecialSliderOn() const { return bSpecialSliderOn; };
+	UFUNCTION()
+	void OnPlayModeChanged(EPlayModes InPlayMode);
 
 protected:
 	EWorkoutStates CurrentWorkoutState;

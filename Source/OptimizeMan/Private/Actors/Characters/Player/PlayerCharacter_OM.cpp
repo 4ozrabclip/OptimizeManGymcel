@@ -412,6 +412,7 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 
 	OnPlayModeChange.Broadcast(CurrentPlayMode);
 
+
 	if (CachedAnimInstance.IsValid())
 	{
 		CachedAnimInstance.Get()->SetCurrentPlayMode(CurrentPlayMode);
@@ -475,12 +476,22 @@ void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrCl
 	}
 	else
 	{
-		SetCurrentPlayMode(EPlayModes::RegularMode);
+		if (InPlayMode == EPlayModes::PauseMode)
+			OnPauseMenuToggled.Broadcast(bPauseMenuOpen);
+		else
+			SetCurrentPlayMode(EPlayModes::RegularMode);
 		InOpenOrClosedState = false;
 		UE_LOG(LogTemp, Error, TEXT("Toggle off"));
 	}
 
 
+}
+
+void APlayerCharacter_OM::TogglePauseMode()
+{
+	if (CurrentPlayMode == EPlayModes::WakeUpMode) return;
+	
+	TogglePlayMode(EPlayModes::PauseMode, bPauseMenuOpen); 
 }
 
 

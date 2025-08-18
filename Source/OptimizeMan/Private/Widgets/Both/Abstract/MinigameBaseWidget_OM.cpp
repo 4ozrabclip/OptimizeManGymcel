@@ -6,6 +6,7 @@
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 
 void UMinigameBaseWidget_OM::NativeConstruct()
 {
@@ -17,7 +18,17 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 		ExitButton->OnClicked.AddDynamic(this, &UMinigameBaseWidget_OM::OnExitButtonClicked);
 	}
 
+	if (!PlayerController)
+		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	
+
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+	if (Player)
+	{
+		if (!Player->OnPauseMenuToggled.IsAlreadyBound(this, &UMinigameBaseWidget_OM::PauseMenuToggled))
+			Player->OnPauseMenuToggled.AddDynamic(this, &UMinigameBaseWidget_OM::PauseMenuToggled);
+	}
 
 	if (!WhiteExitButton || !WhiteHoveredExitButton || !BlackExitButton || !BlackHoveredExitButton)
 	{
@@ -31,6 +42,10 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 	
 }
 
+void UMinigameBaseWidget_OM::PauseMenuToggled(bool bIsOpen)
+{
+	OnExitButtonClicked();
+}
 
 void UMinigameBaseWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {

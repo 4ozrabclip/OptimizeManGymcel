@@ -18,6 +18,21 @@ USTRUCT(BlueprintType)
 struct FTaskOptionData
 {
 	GENERATED_BODY()
+
+	FTaskOptionData() :
+	Panel(nullptr),
+	Button(nullptr),
+	Title(nullptr),
+	Description(nullptr)
+	{}
+
+	FTaskOptionData(UGridPanel* InPanel, UButton* InButton, UTextBlock* InTitle, UTextBlock* InDescription, FButtonStyle InOriginalStyle, FButtonStyle InSelectedStyle) :
+	Panel(InPanel),
+	Button(InButton),
+	Title(InTitle),
+	Description(InDescription)
+	{}
+	
 	UPROPERTY()
 	UGridPanel* Panel;
 
@@ -46,7 +61,6 @@ class OPTIMIZEMAN_API UWakeUpBase_OM : public UMinigameBaseWidget_OM
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	
 	
 	virtual void InitWindowsArray() override;
 	virtual void OnExitButtonClicked() override;

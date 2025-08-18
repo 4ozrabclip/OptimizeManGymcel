@@ -27,6 +27,7 @@ class AInteractableActor_OM;
 class ANpcBase_OM;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayModeChange, EPlayModes, NewPlayMode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPauseMenuToggled, bool, bInOpened);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTempEmotionsChanged, ETemporaryEmotionalStates, NewState);
 UCLASS()
 class OPTIMIZEMAN_API APlayerCharacter_OM : public ACharacter, public IAbilitySystemInterface
@@ -141,6 +142,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Events)
 	FOnPlayModeChange OnPlayModeChange;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Events)
+	FOnPauseMenuToggled OnPauseMenuToggled;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Events)
 	FOnTempEmotionsChanged OnTempEmotionsChanged;
 	
 protected:
@@ -218,7 +221,7 @@ public:
 	void TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrClosedState, AInteractableActor_OM* InInteractableActor = nullptr, ANpcBase_OM* InInteractedCharacter = nullptr);
 
 	UFUNCTION()
-	void TogglePauseMode() { TogglePlayMode(EPlayModes::PauseMode, bPauseMenuOpen); }
+	void TogglePauseMode();
 
 	UFUNCTION()
 	void ToggleTodoMode() { TogglePlayMode(EPlayModes::TodoMode, bTodoOpen); }

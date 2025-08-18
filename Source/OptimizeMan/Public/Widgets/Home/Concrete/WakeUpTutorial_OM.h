@@ -45,8 +45,6 @@ protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* TutPart1_Cont;
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart1_2;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* TutPart2;
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* TutPart2_Cont;

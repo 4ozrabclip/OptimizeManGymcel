@@ -39,6 +39,7 @@ void UExerciseSelectionParentWidget_OM::NativeConstruct()
 
 		WeightSelect_Slider->OnValueChanged.Clear();
 		WeightSelect_Slider->OnValueChanged.AddDynamic(this, &UExerciseSelectionParentWidget_OM::UpdateWeightSelect);
+		UpdateWeightSelect(0.f);
 
 		EquipmentMaxWeight = ExerciseEquipment->GetMaxWeight();
 		EquipmentMinWeight = ExerciseEquipment->GetMinWeight();

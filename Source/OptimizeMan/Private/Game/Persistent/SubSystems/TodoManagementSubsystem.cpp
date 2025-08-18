@@ -22,24 +22,11 @@ void UTodoManagementSubsystem::InitializeTodos()
 	TakeColdShower.StatBuffs = {
 		{EPlayerStatTypes::SexAppeal, 0.1f}
 	};
-	TakeColdShower.CompletedName = TEXT("Took a cold shower!");
+	TakeColdShower.Todo = ETodoArrayList::TakeColdShower;
 	TakeColdShower.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.TakeColdShower");
 	TakeColdShower.Points = 1;
 	TodoArray.Add(TakeColdShower);
 	
-	FTodoItem CompleteWorkout;
-	CompleteWorkout.Name = TEXT("Complete Workout");
-	CompleteWorkout.Level = TEXT("Gym");
-	CompleteWorkout.Desc = TEXT("+1 Ego, +1 SexAppeal");
-	CompleteWorkout.StatBuffs = {
-		{ EPlayerStatTypes::Ego, 0.1f },
-		{ EPlayerStatTypes::SexAppeal, 0.1f }
-	};
-	CompleteWorkout.CompletedName = TEXT("Workout FIN :D");
-	CompleteWorkout.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.Workout");
-	CompleteWorkout.Points = 0;
-	TodoArray.Add(CompleteWorkout);
-
 	FTodoItem BuySomething; 
 	BuySomething.Name = TEXT("Buy Something");
 	BuySomething.Level = TEXT("Bedroom");
@@ -47,7 +34,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	BuySomething.StatBuffs = {
 		{EPlayerStatTypes::Ego, 0.1f}
 	};
-	BuySomething.CompletedName = TEXT("Buy Something DONE");
+	BuySomething.Todo = ETodoArrayList::BuySomething;
 	BuySomething.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething");
 	BuySomething.Points = 0;
 	TodoArray.Add(BuySomething);
@@ -59,22 +46,10 @@ void UTodoManagementSubsystem::InitializeTodos()
 	TalkToAGirl.StatBuffs = {
 	{EPlayerStatTypes::Social, 0.1f}
 		};
-	TalkToAGirl.CompletedName = TEXT("Talked To Girl!!");
+	TalkToAGirl.Todo = ETodoArrayList::TalkToAGirl;
 	TalkToAGirl.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.TalkToAGirl");
 	TalkToAGirl.Points = 0;
 	TodoArray.Add(TalkToAGirl);
-
-	FTodoItem BuySteroids;
-	BuySteroids.Name = TEXT("Buy Steroids");
-	BuySteroids.Level = TEXT("Bedroom");
-	BuySteroids.Desc = TEXT("+1 Ego");
-	BuySteroids.StatBuffs = {
-	{EPlayerStatTypes::Ego, 0.1f}
-	};
-	BuySteroids.CompletedName = TEXT("Buy Steroids DONE");
-	BuySteroids.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySteroids");
-	BuySteroids.Points = 0;
-	TodoArray.Add(BuySteroids);
 
 	FTodoItem StartBulking; // ----- Awaiting Win Condition
 	StartBulking.Name = TEXT("Start a bulk");
@@ -83,7 +58,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	StartBulking.StatBuffs = {
 		{EPlayerStatTypes::Ego, 0.1f}
 	};
-	StartBulking.CompletedName = TEXT("Started my bulk");
+	StartBulking.Todo = ETodoArrayList::StartBulking;
 	StartBulking.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.StartBulking");
 	StartBulking.Points = 0;
 	TodoArray.Add(StartBulking);
@@ -96,7 +71,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 		{EPlayerStatTypes::Social, 0.2f},
 		{EPlayerStatTypes::Ego, 0.1f}
 	};
-	MakeSomeoneLikeYou.CompletedName = TEXT("Make Someone Like You DONE");
+	MakeSomeoneLikeYou.Todo = ETodoArrayList::MakeSomeoneLikeYou;
 	MakeSomeoneLikeYou.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.MakeSomeoneLikeYou");
 	MakeSomeoneLikeYou.Points = 2;
 	TodoArray.Add(MakeSomeoneLikeYou);
@@ -108,10 +83,34 @@ void UTodoManagementSubsystem::InitializeTodos()
 	HitTenSquats.StatBuffs = {
 		{EPlayerStatTypes::Ego, 0.1f}
 	};
-	HitTenSquats.CompletedName = TEXT("HIT TEN SQUATS!!");
+	HitTenSquats.Todo = ETodoArrayList::HitTenSquats;
 	HitTenSquats.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.HitTenSquats");
 	HitTenSquats.Points = 2;
 	TodoArray.Add(HitTenSquats);
+
+	FTodoItem HitFiveSquats;
+	HitFiveSquats.Name = TEXT("Hit 5 squats in a set");
+	HitFiveSquats.Level = TEXT("Gym");
+	HitFiveSquats.Desc = TEXT("+1 Ego");
+	HitFiveSquats.StatBuffs = {
+		{EPlayerStatTypes::Ego, 0.1f}
+	};
+	HitFiveSquats.Todo = ETodoArrayList::HitFiveSquats;
+	HitFiveSquats.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.HitFiveSquats");
+	HitFiveSquats.Points = 1;
+	TodoArray.Add(HitFiveSquats);
+
+	FTodoItem HitFiveDips;
+	HitFiveDips.Name = TEXT("Hit 5 dips in a set");
+	HitFiveDips.Level = TEXT("Gym");
+	HitFiveDips.Desc = TEXT("+1 Ego");
+	HitFiveDips.StatBuffs = {
+		{EPlayerStatTypes::Ego, 0.1f}
+	};
+	HitFiveDips.Todo = ETodoArrayList::HitFiveDips;
+	HitFiveDips.Tag = FGameplayTag::RequestGameplayTag(("Todos.Gym.HitFiveDips"));
+	HitFiveDips.Points = 2;
+	TodoArray.Add(HitFiveDips);
 
 	FTodoItem IncreaseSquatLift; // --------- Awaiting Win Condition
 	IncreaseSquatLift.Name = TEXT("Increase Squat Lift");
@@ -121,7 +120,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 		{EPlayerStatTypes::Ego, 0.1f},
 		{EPlayerStatTypes::SexAppeal, 0.1f},
 	};
-	IncreaseSquatLift.CompletedName = TEXT("INCREASED");
+	IncreaseSquatLift.Todo = ETodoArrayList::IncreaseSquatLift;
 	IncreaseSquatLift.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.IncreaseSquatLift");
 	IncreaseSquatLift.Points = 2;
 	TodoArray.Add(IncreaseSquatLift);
@@ -133,7 +132,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	GetARealGirlfriend.StatBuffs = {
 		{EPlayerStatTypes::Ego, 1.f}
 	};
-	GetARealGirlfriend.CompletedName = TEXT("OMG");
+	GetARealGirlfriend.Todo = ETodoArrayList::GetARealGirlfriend;
 	GetARealGirlfriend.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.GetARealGirlfriend");
 	GetARealGirlfriend.Points = 4;
 	TodoArray.Add(GetARealGirlfriend);
@@ -141,15 +140,17 @@ void UTodoManagementSubsystem::InitializeTodos()
 
 void UTodoManagementSubsystem::AddToPotentialTodos(const ETodoArrayList InTodo)
 {
-	if (TodoArray.IsValidIndex(InTodo))
+	for (FTodoItem& Item : TodoArray)
 	{
-		PotentialTodos.Add(TodoArray[InTodo]);
+		if (Item.Todo == InTodo)
+		{
+			PotentialTodos.Add(Item);
+			return;
+		}
 	}
-	else
-	{
-		const FString TodoName = UEnum::GetValueAsString(InTodo);
-		UE_LOG(LogTemp, Error, TEXT("Cant Find %s in TodoArray"), *TodoName);
-	}
+	const FString TodoName = UEnum::GetValueAsString(InTodo);
+	UE_LOG(LogTemp, Error, TEXT("Cant Find %s in TodoArray"), *TodoName);
+
 }
 void UTodoManagementSubsystem::ProcessPotentialTodos()
 {
@@ -158,22 +159,22 @@ void UTodoManagementSubsystem::ProcessPotentialTodos()
 	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
 
 	PotentialTodos.Empty();
-
-	AddToPotentialTodos(CompleteWorkout);
-
-	AddToPotentialTodos(GetARealGirlfriend);
 	
-	ProcessTodoHelper(!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3, StartBulking);
+
+	ProcessTodoHelper(!BodyStatus.bIsBulking && GameInstance->GetDayNumber() > 3, ETodoArrayList::StartBulking);
 
 	float ThighStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Thigh);
-	ProcessTodoHelper(ThighStrength > 0 && ThighStrength < 0.5, HitTenSquats);
+	ProcessTodoHelper(ThighStrength > 0.1 && ThighStrength < 0.5, ETodoArrayList::HitTenSquats);
+	ProcessTodoHelper(ThighStrength >= 0 && ThighStrength < 0.3, ETodoArrayList::HitFiveSquats);
+
+	float ChestStrength = GameInstance->GetBodyPartLeftRightCombinedStrengthValue(EBodyPart::Chest);
+	ProcessTodoHelper(ChestStrength >= 0 && ChestStrength < 0.2, ETodoArrayList::HitFiveDips);
 	
-	ProcessTodoHelper(InventoryData.Money > 5 && !InventoryData.bOwnsSteroids, BuySteroids);
-	ProcessTodoHelper(InventoryData.Money > 0 && InventoryData.bOwnsSteroids, BuySomething);
+	ProcessTodoHelper(InventoryData.Money > 0 && InventoryData.bOwnsSteroids, ETodoArrayList::BuySomething);
 	
 
-	ProcessTodoHelper(InnerStatus.Social <= 0, TalkToAGirl);
-	ProcessTodoHelper(InnerStatus.Social >0, MakeSomeoneLikeYou);
+	ProcessTodoHelper(InnerStatus.Social <= 0, ETodoArrayList::TalkToAGirl);
+	ProcessTodoHelper(InnerStatus.Social >= 0, ETodoArrayList::MakeSomeoneLikeYou);
 
 	Algo::RandomShuffle(PotentialTodos);
 }
@@ -255,7 +256,6 @@ void UTodoManagementSubsystem::AddToCurrentTodos(const FString& InTodo, const bo
 		UE_LOG(LogTemp, Error, TEXT("Cant add anymore to current todo array.  Just clear it with the boolean parameter? "));
 		return;
 	}
-
 	
 	for (const FTodoItem& Item : TodoArray)
 	{
@@ -362,7 +362,7 @@ void UTodoManagementSubsystem::UpdateTodoList()
 	{
 		if (Item.bIsCompleted)
 		{
-			Item.Name = Item.CompletedName;
+			//Item.Name = Item.CompletedName;
 		}
 	}
 }

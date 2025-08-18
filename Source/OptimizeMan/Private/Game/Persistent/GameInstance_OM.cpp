@@ -192,9 +192,9 @@ void UGameInstance_OM::SetGymResStats(float& Stat, float Value)
 
 void UGameInstance_OM::AddGamePoints(const int InPoints)
 {
-	OnGamePointsChanged.Broadcast(InPoints);
 	if (InPoints == 0) return;
 	GamePointsData.GamePoints += InPoints;
+	OnGamePointsChanged.Broadcast(InPoints);
 }
 
 void UGameInstance_OM::DarkModeToggle()

@@ -9,6 +9,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/Structs/AudioTypes.h"
 #include "Widgets/Home/Concrete/ShowerWidget_OM.h"
@@ -78,8 +79,7 @@ void AShower_OM::DarkModeToggle(const bool bIsDarkMode)
 void AShower_OM::TakeShower(bool bCold)
 {
 	
-
-
+	
 	/*
 	 * Probably want to add something here that stops input during shower sequence.  
 	 * --- Will do that after i get the sequence ready
@@ -97,6 +97,12 @@ void AShower_OM::TakeShower(bool bCold)
 	CloseWidget();
 	if (APlayerCameraManager* CameraManager = PlayerController->PlayerCameraManager)
 	{
+		if (Player && PlayerController)
+		{
+			Player->GetCharacterMovement()->SetMovementMode(MOVE_None);
+			PlayerController->SetIgnoreLookInput(true);
+		}
+
 		constexpr float InFadeDuration = 1.5f;
 
 		CameraManager->StartCameraFade(0.f, 1.f, InFadeDuration, FLinearColor::Black, false, true);
@@ -107,6 +113,11 @@ void AShower_OM::TakeShower(bool bCold)
 			constexpr float OutFadeDuration = 0.5f;
 			CameraManager->StartCameraFade(1.f, 0.f, OutFadeDuration, FLinearColor::Black, false, true);
 			bHavingShower = false;
+			if (Player && PlayerController)
+			{
+				Player->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+				PlayerController->SetIgnoreLookInput(false);
+			}
 		}, 2.f, false);
 	}
 	

@@ -20,9 +20,14 @@ class OPTIMIZEMAN_API UMinigameBaseWidget_OM : public UInteractiveWidgetBase_OM
 
 public:
 	virtual void NativeConstruct() override;
+	UFUNCTION()
+	virtual void PauseMenuToggled(bool bIsOpen);
+
 
 	UFUNCTION()
 	virtual void OnExitButtonClicked();
+
+	
 
 	UFUNCTION()
 	void SetHasHint(const bool InHasHint) { bHasHint = InHasHint; }
