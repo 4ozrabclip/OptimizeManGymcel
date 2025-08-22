@@ -336,8 +336,8 @@ void UExercise_OM::SetRep()
 		UE_LOG(LogTemp, Error, TEXT("Todomanager is null in exercise SetRep"));
 		return;
 	}
-	
-	GameInstance->AddStat(InnerStatus.Ego, EgoIncrease);
+
+	GameInstance->AddEgo(EgoIncrease);
 	
 	switch (CurrentExerciseType)
 	{
@@ -463,13 +463,46 @@ void UExercise_OM::DoRep(const TFunction<void(float)>& ModifyMuscleValueFunc, co
 void UExercise_OM::CheckForExerciseAchievements()
 {
 	//CompletedTodosCheckList.Empty();
-	if (RepCount >= 10 && !CompletedTodosCheckList.Contains(FGameplayTag::RequestGameplayTag("Todos.Gym.HitTenSquats")))
+	if (!TodoManager)
+		TodoManager = GameInstance->GetSubsystem<UTodoManagementSubsystem>();
+
+	if (!TodoManager)
 	{
-		CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Gym.HitTenSquats"));
+		UE_LOG(LogTemp, Error, TEXT("UExercise_OM::CheckForExerciseAchievements.  Couldn't retrieve TodoManager from GI."));
+		return;
 	}
-	if (RepCount >= 1 && !CompletedTodosCheckList.Contains(FGameplayTag::RequestGameplayTag("Todos.Gym.Workout")))
+	
+	TArray<FTodoItem>& TodoList = TodoManager->GetCurrentTodoArray();
+
+
+	for (FTodoItem& Todo : TodoList)
 	{
-		CompletedTodosCheckList.Add(FGameplayTag::RequestGameplayTag("Todos.Gym.Workout"));
+		if (Todo.bIsCompleted) continue;
+		if (Todo.Level == TEXT("Home")) continue;
+		if (CompletedTodosCheckList.Contains(Todo.Tag)) continue;
+
+		switch (CurrentExerciseType)
+		{
+			case EExerciseType::Squat:
+				{
+					if (Todo.Todo == ETodoArrayList::HitFiveSquats && RepCount >= 5 ||
+						Todo.Todo == ETodoArrayList::HitTenSquats && RepCount >= 10)
+					{
+						CompletedTodosCheckList.Add(Todo.Tag);
+					}
+					continue;
+				}
+			case EExerciseType::ChestDip:
+				{
+					if (Todo.Todo == ETodoArrayList::HitFiveDips && RepCount >= 5)
+					{
+						CompletedTodosCheckList.Add(Todo.Tag);
+					}
+					continue;
+				}
+			default:
+				continue;
+		}
 	}
 
 	TodoManager->DelayForPlayerAchievements(CompletedTodosCheckList);

@@ -47,8 +47,7 @@ void AGymGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerControll
 	if (!MentalHealth) return;
 	GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
 	if (!GymStats) return;*/
-
-	PlayerController->SetGymHud();
+	
 
 	InitializeConstantEffects();
 

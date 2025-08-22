@@ -21,6 +21,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEmotionalStateChanged, EPlayerEmo
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGymStatsChanged);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGamePointsChanged, int, ChangedPoints);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEgoChanged, float, NewEgo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSexAppealChanged, float, NewSexAppeal);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSocialChanged, float, NewSocial);
+
 class APoster_OM;
 UCLASS(BlueprintType)
 class OPTIMIZEMAN_API UGameInstance_OM : public UGameInstance 
@@ -53,6 +57,16 @@ public:
 
 
 public: //delegates
+	/** Delegates **/
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnEgoChanged OnEgoChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnSocialChanged OnSocialChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnSexAppealChanged OnSexAppealChanged;
+
+	
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnAudioSettingsChanged OnAudioSettingsChanged;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
@@ -126,6 +140,21 @@ public:
 	{
 		Stat = FMath::Clamp(Stat + Value, -1.f, 1.0f);
 	}
+	void AddEgo(float InValue)
+	{
+		InnerStatus.Ego = FMath::Clamp(InnerStatus.Ego + InValue, -1.f, 1.0f);
+		OnEgoChanged.Broadcast(InnerStatus.Ego);
+	}
+	void AddSexAppeal(float InValue)
+	{
+		InnerStatus.SexAppeal = FMath::Clamp(InnerStatus.SexAppeal + InValue, -1.f, 1.0f);
+		OnSexAppealChanged.Broadcast(InnerStatus.SexAppeal);
+	}
+	void AddSocial(float InValue)
+	{
+		InnerStatus.Social = FMath::Clamp(InnerStatus.Social + InValue, -1.f, 1.0f);
+		OnSocialChanged.Broadcast(InnerStatus.Social);
+	}
 	void SetPossesion(bool& bPossesable, const bool bInPossesion)
 	{
 		bPossesable = bInPossesion;
@@ -135,7 +164,7 @@ public:
 //General Getters/Setters
 
 	/*** GAS ***/
-	void SetInnerStatus(const FInnerStatus& InInnerStatus) {InnerStatus = InInnerStatus;}
+	void SetInnerStatus(const FInnerStatus& InInnerStatus);
 
 	
 	float GetBaseDifficultyMultiplier() const { return BaseDifficultyMultiplier; }

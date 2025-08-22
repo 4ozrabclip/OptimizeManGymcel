@@ -13,6 +13,22 @@ class UImage;
 class UOverlay;
 class UTextBlock;
 class UButton;
+
+USTRUCT()
+struct FVendorItem
+{
+	GENERATED_BODY()
+	
+	FConsumableType ConsumableData;
+	UPROPERTY()
+	UTextBlock* DescriptionTextBlock;
+	UPROPERTY()
+	UTextBlock* PriceTextBlock;
+	UPROPERTY()
+	UImage* IconImage;
+	UPROPERTY()
+	UButton* BuyButton;
+};
 /**
  * 
  */
@@ -28,7 +44,7 @@ public:
 	
 protected:
 	void SetConsumables();
-	void SetConsumablesText();
+	void SetConsumableTextAndImage(FVendorItem& InItem);
 
 	void SetConsumablesTextHelper(UTextBlock* InTextBlock, const FText& InText);
 	void BuyConsumable(const FConsumableType& InConsumable);

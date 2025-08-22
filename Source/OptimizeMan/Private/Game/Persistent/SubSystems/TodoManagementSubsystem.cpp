@@ -29,7 +29,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 	
 	FTodoItem BuySomething; 
 	BuySomething.Name = TEXT("Buy Something");
-	BuySomething.Level = TEXT("Bedroom");
+	BuySomething.Level = TEXT("Home");
 	BuySomething.Desc = TEXT("+?");
 	BuySomething.StatBuffs = {
 		{EPlayerStatTypes::Ego, 0.1f}
@@ -53,7 +53,7 @@ void UTodoManagementSubsystem::InitializeTodos()
 
 	FTodoItem StartBulking; // ----- Awaiting Win Condition
 	StartBulking.Name = TEXT("Start a bulk");
-	StartBulking.Level = TEXT("Bedroom");
+	StartBulking.Level = TEXT("Home");
 	StartBulking.Desc = TEXT("+1 Ego");
 	StartBulking.StatBuffs = {
 		{EPlayerStatTypes::Ego, 0.1f}
@@ -333,13 +333,13 @@ void UTodoManagementSubsystem::CompleteTodo(const FGameplayTag TodoCompletedTag)
 				switch (BuffType)
 				{
 					case EPlayerStatTypes::Ego:
-						GameInstance->AddStat(InnerStatus.Ego, BuffAmount);
+						GameInstance->AddEgo(BuffAmount);
 						break;
 					case EPlayerStatTypes::Social:
-						GameInstance->AddStat(InnerStatus.Social, BuffAmount);
+						GameInstance->AddSocial(BuffAmount);
 						break;
 					case EPlayerStatTypes::SexAppeal:
-						GameInstance->AddStat(InnerStatus.SexAppeal, BuffAmount);
+						GameInstance->AddSexAppeal(BuffAmount);
 						break;
 					default:
 						break;

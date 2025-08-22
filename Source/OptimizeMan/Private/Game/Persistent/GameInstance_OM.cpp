@@ -87,6 +87,14 @@ void UGameInstance_OM::FinishDemo()
 }
 
 
+void UGameInstance_OM::SetInnerStatus(const FInnerStatus& InInnerStatus)
+{
+	InnerStatus = InInnerStatus;
+	OnEgoChanged.Broadcast(InnerStatus.Ego);
+	OnSexAppealChanged.Broadcast(InnerStatus.SexAppeal);
+	OnSocialChanged.Broadcast(InnerStatus.Social);
+}
+
 void UGameInstance_OM::SetPosterAsOwned(const int PosterIndex, const FString& PosterType)
 {
 	const FString ChadPosterType_String = "Chad";

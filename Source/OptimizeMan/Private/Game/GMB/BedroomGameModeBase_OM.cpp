@@ -45,8 +45,6 @@ void ABedroomGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerCont
 
 	Player->SwitchLevelTag(FGameplayTag::RequestGameplayTag("Level.Home"));
 	
-	PlayerController->SetGymHud(false);
-
 	
 	if (!GameInstance->GetHasBeenToGymToday())
 	{
@@ -83,7 +81,7 @@ void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 		if (!Todo.bIsCompleted)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Incomplete Todo Found"));
-			GameInstance->AddStat(InnerStatus.Ego, -1.f);
+			GameInstance->AddEgo(-1.f);
 			bPlayerUpset = true;
 		}
 	}
@@ -213,7 +211,7 @@ void ABedroomGameModeBase_OM::ShowCurrentDay()
 		ShowDayWidget->SetRenderOpacity(1.0f);
 		if (!ShowDayWidget->IsInViewport())
 		{
-			ShowDayWidget->AddToViewport();
+			ShowDayWidget->AddToViewport(2);
 			SetWidgetIsVisible(true);
 		}
 		

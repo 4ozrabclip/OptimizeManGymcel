@@ -259,10 +259,12 @@ void UPauseMenuWidget_OM::UpdatePlayerStats()
 	GameInstance->SetStat(*LeftCalveStrength, CalvesValue);
 	GameInstance->SetStat(*RightCalveStrength, CalvesValue);
 
-	
-	GameInstance->SetStat(InnerStatus.Social, SocialValue);
-	GameInstance->SetStat(InnerStatus.Ego, EgoValue);
-	GameInstance->SetStat(InnerStatus.SexAppeal, SexAppealValue);
+	FInnerStatus NewStatus;
+	NewStatus.Ego = EgoValue;
+	NewStatus.Social = SocialValue;
+	NewStatus.SexAppeal = SexAppealValue;
+	GameInstance->SetInnerStatus(NewStatus);
+
 
 	Player->InitializeAttributes();
 

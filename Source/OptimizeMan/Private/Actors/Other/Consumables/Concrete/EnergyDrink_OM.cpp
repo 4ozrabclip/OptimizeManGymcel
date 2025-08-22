@@ -12,7 +12,7 @@ AEnergyDrink_OM::AEnergyDrink_OM()
 	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Energy, 5);
 	ConsumableType.ConsumableEffects.Add(EConsumableEffectTypes::Focus, 3);
 	ConsumableType.LifeTime = 60*3;
-	ConsumableType.Price = 5;
+	ConsumableType.Price = 1;
 	
 }
 

@@ -90,10 +90,7 @@ void AVendingMachine_OM::PlaySound(USoundBase* InSound) const
 
 void AVendingMachine_OM::ExitVendor()
 {
-
-
-
-
+	
 }
 
 void AVendingMachine_OM::SpawnItem(const FConsumableType& ItemToSpawn)

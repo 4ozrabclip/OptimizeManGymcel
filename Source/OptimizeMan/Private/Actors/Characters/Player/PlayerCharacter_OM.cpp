@@ -418,11 +418,6 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 		CachedAnimInstance.Get()->SetCurrentPlayMode(CurrentPlayMode);
 	}
 
-	if (CurrentPlayMode == EPlayModes::MirrorMode)
-		PlayerController->HideGamePointsHud(true);
-	else
-		PlayerController->HideGamePointsHud(false);
-
 	if (CurrentPlayMode == EPlayModes::RegularMode)
 	{
 		ManageRegularMode();

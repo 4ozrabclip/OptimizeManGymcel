@@ -3,9 +3,11 @@
 
 #include "Widgets/Gym/Concrete/VendingMachineWidget_OM.h"
 
+#include "IDetailTreeNode.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
+#include "Components/Image.h"
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,6 +19,19 @@ void UVendingMachineWidget_OM::NativeConstruct()
 	SetIsFocusable(true);
 	if (auto* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 		VendingMachine = Cast<AVendingMachine_OM>(Player->GetCurrentInteractedActor());
+
+	Option1_Button->SetVisibility(ESlateVisibility::Hidden);
+	Option2_Button->SetVisibility(ESlateVisibility::Hidden);
+	Option3_Button->SetVisibility(ESlateVisibility::Hidden);
+	Option1Price_Text->SetVisibility(ESlateVisibility::Hidden);
+	Option2Price_Text->SetVisibility(ESlateVisibility::Hidden);
+	Option3Price_Text->SetVisibility(ESlateVisibility::Hidden);
+	Option1_Image->SetVisibility(ESlateVisibility::Hidden);
+	Option2_Image->SetVisibility(ESlateVisibility::Hidden);
+	Option3_Image->SetVisibility(ESlateVisibility::Hidden);
+	Option1Desc_Text->SetVisibility(ESlateVisibility::Hidden);
+	Option2Desc_Text->SetVisibility(ESlateVisibility::Hidden);
+	Option3Desc_Text->SetVisibility(ESlateVisibility::Hidden);
 	
 	
 	if (Option1_Button)
@@ -83,31 +98,62 @@ void UVendingMachineWidget_OM::SetConsumables()
 
 	if (VendingMachine)
 	{
-		for (TSubclassOf<AConsumable_OM> Item : VendingMachine->GetVendorInventory())
+		if (VendingMachine->GetVendorInventory().Num() <= 0) return;
+		
+		for (size_t Index = 0; Index < VendingMachine->GetVendorInventory().Num(); ++Index)
 		{
-			if (Item)
+			if (VendingMachine->GetVendorInventory().IsValidIndex(Index) &&
+				VendingMachine->GetVendorInventory()[Index])
 			{
-				if (AConsumable_OM* DefaultObject = Item->GetDefaultObject<AConsumable_OM>())
+				if (TSubclassOf<AConsumable_OM> ItemObj = VendingMachine->GetVendorInventory()[Index])
 				{
-					Consumables.Add(DefaultObject->GetConsumableType());
+					if (AConsumable_OM* DefaultObject = ItemObj->GetDefaultObject<AConsumable_OM>())
+					{
+						FVendorItem Item;
+						Item.ConsumableData = DefaultObject->GetConsumableType();
+						if (Index == 0)
+						{
+							Item.PriceTextBlock = Option1Price_Text;
+							Item.DescriptionTextBlock = Option1Desc_Text;
+							Item.BuyButton = Option1_Button;
+							Item.IconImage = Option1_Image;
+						}
+						else if (Index == 1)
+						{
+							Item.PriceTextBlock = Option2Price_Text;
+							Item.DescriptionTextBlock = Option2Desc_Text;
+							Item.BuyButton = Option2_Button;
+							Item.IconImage = Option2_Image;
+						}
+						else if (Index == 2)
+						{
+							Item.PriceTextBlock = Option3Price_Text;
+							Item.DescriptionTextBlock = Option3Desc_Text;
+							Item.BuyButton = Option3_Button;
+							Item.IconImage = Option3_Image;
+						}
+						SetConsumableTextAndImage(Item);
+					}
 				}
 			}
 		}
 	}
-	SetConsumablesText();
 }
-
-void UVendingMachineWidget_OM::SetConsumablesText()
+void UVendingMachineWidget_OM::SetConsumableTextAndImage(FVendorItem& InItem)
 {
-	if (Consumables.Num() <= 0) return;
+	FConsumableType& Data = InItem.ConsumableData;
+	if (!InItem.PriceTextBlock || !InItem.DescriptionTextBlock || !InItem.BuyButton) return;
 
-	if (Consumables.IsValidIndex(0))
-		SetConsumablesTextHelper(Option1Desc_Text, FText::FromString(Consumables[0].NameString));
-	if (Consumables.IsValidIndex(1))
-		SetConsumablesTextHelper(Option2Desc_Text, FText::FromString(Consumables[1].NameString));
-	if (Consumables.IsValidIndex(2))
-		SetConsumablesTextHelper(Option3Desc_Text, FText::FromString(Consumables[2].NameString));
+	Consumables.Add(Data);
+	
+	InItem.BuyButton->SetVisibility(ESlateVisibility::Visible);
+	InItem.DescriptionTextBlock->SetVisibility(ESlateVisibility::Visible);
+	InItem.IconImage->SetVisibility(ESlateVisibility::Visible);
+	InItem.PriceTextBlock->SetVisibility(ESlateVisibility::Visible);
+	SetConsumablesTextHelper(InItem.DescriptionTextBlock, FText::FromString(Data.NameString));
+	SetConsumablesTextHelper(InItem.PriceTextBlock, FText::FromString(FString::FromInt(Data.Price)));
 }
+
 
 void UVendingMachineWidget_OM::SetConsumablesTextHelper(UTextBlock* InTextBlock, const FText& InText)
 {
@@ -125,6 +171,8 @@ void UVendingMachineWidget_OM::BuyConsumable(const FConsumableType& InConsumable
 	if (!GameInstance) return;
 	
 	int PlayerPoints = GameInstance->GetGamePoints();
+
+	UE_LOG(LogTemp, Display, TEXT("Points (Widget): %d\n Consumables Price: %d"), PlayerPoints, InConsumable.Price);
 
 	if (PlayerPoints >= InConsumable.Price)
 	{
