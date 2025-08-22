@@ -12,15 +12,16 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	if (ExitButton)
-	{
-		ExitButton->OnClicked.RemoveAll(this);
-		ExitButton->OnClicked.AddDynamic(this, &UMinigameBaseWidget_OM::OnExitButtonClicked);
-	}
+
 
 	if (!PlayerController)
 		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	
+
+	if (PlayerController)
+	{
+		if (!PlayerController->OnWidgetExited.IsAlreadyBound(this, &UMinigameBaseWidget_OM::OnExitButtonClicked))
+			PlayerController->OnWidgetExited.AddDynamic(this, &UMinigameBaseWidget_OM::OnExitButtonClicked);
+	}
 
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
@@ -30,16 +31,7 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 			Player->OnPauseMenuToggled.AddDynamic(this, &UMinigameBaseWidget_OM::PauseMenuToggled);
 	}
 
-	if (!WhiteExitButton || !WhiteHoveredExitButton || !BlackExitButton || !BlackHoveredExitButton)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No dark/light mode exit buttons in the widget"));
-		return;
-	}
-	DarkExitStyle.Normal.SetResourceObject(WhiteExitButton);
-	DarkExitStyle.Hovered.SetResourceObject(WhiteHoveredExitButton);
-	DarkExitStyle.Pressed.SetResourceObject(WhiteExitButton);
-	ExitButton->SetStyle(DarkExitStyle);
-	
+
 }
 
 void UMinigameBaseWidget_OM::PauseMenuToggled(bool bIsOpen)
@@ -50,12 +42,7 @@ void UMinigameBaseWidget_OM::PauseMenuToggled(bool bIsOpen)
 void UMinigameBaseWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 {
 	Super::DarkModeToggle(bIsDarkMode);
-
-	if (!WhiteExitButton || !WhiteHoveredExitButton || !BlackExitButton || !BlackHoveredExitButton)
-	{
-		UE_LOG(LogTemp, Error, TEXT("No dark/light mode exit buttons in the widget"));
-		return;
-	}
+	
 
 }
 

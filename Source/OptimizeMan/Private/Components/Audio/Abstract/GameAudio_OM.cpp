@@ -24,6 +24,11 @@ void UGameAudio_OM::BeginPlay()
 	}
 }
 
+void UGameAudio_OM::Play(float StartTime)
+{
+	Super::Play(StartTime);
+}
+
 void UGameAudio_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);

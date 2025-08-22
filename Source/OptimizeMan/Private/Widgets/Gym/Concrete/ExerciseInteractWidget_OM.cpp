@@ -87,8 +87,7 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 	};
 	
 	const bool bDarkMode = GameInstance->GetDarkMode();
-
-	ExitButton->SetStyle(DarkExitStyle);
+	
 
 	if (bDarkMode)
 	{

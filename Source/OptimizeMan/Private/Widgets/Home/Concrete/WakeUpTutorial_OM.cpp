@@ -134,9 +134,7 @@ void UWakeUpTutorial_OM::FinishTutorial()
 
 	TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
 	ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
-
 	
-	ExitButton->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UWakeUpTutorial_OM::OnExitButtonClicked()

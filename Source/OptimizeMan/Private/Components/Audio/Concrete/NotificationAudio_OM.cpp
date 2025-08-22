@@ -41,6 +41,9 @@ void UNotificationAudio_OM::PlayWritingSound()
 		UE_LOG(LogTemp, Error, TEXT("No writing sound"));
 		return;
 	}
+
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 	
 	SetSound(TodoWritingSound);
 	if (!IsPlaying())

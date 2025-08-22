@@ -17,12 +17,15 @@ class OPTIMIZEMAN_API UGameAudio_OM : public UAudioComponent
 	GENERATED_BODY()
 public:
 	UGameAudio_OM();
+	virtual void Play(float StartTime = 0) override;
 protected:
 	virtual void BeginPlay() override;
+
 public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	void GetAndSetVolume();
+
 
 	UFUNCTION()
 	void UpdateAudioSettings(const float InMasterVolume, const float InVoiceVolume, const float InMusicVolume, const float InNotificationVolume, const float InSfxVolume);
@@ -38,6 +41,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Audio", meta=(AllowPrivateAccess="true"))
 	EAudioTypes AudioType;
 
+
+	UPROPERTY(EditAnywhere, Category = "Randomization Params")
+	float MinPitchOffset = 0.112;
+	UPROPERTY(EditAnywhere, Category = "Randomization Params")
+	float MaxPitchOffset = 0.1;
+	UPROPERTY(EditAnywhere, Category = "Randomization Params")
+	float MinVolumeOffset = 0.1;
+	UPROPERTY(EditAnywhere, Category = "Randomization Params")
+	float MaxVolumeOffset = 0.1;
 	
 	
 	

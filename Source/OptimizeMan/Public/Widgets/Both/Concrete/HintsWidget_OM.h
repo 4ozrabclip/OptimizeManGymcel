@@ -16,8 +16,9 @@ class OPTIMIZEMAN_API UHintsWidget_OM : public UParentWidget_OM
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
-	void ShowHint(const FText& HintTextString, float DisplayTime = 0.f);
+	void ShowHint(const FText& HintTextString, float DisplayTime = 0.f, bool bFlash = false);
 	void HideHint();
 
 
@@ -26,6 +27,19 @@ protected:
 	class UTextBlock* HintText;
 
 	FTimerHandle HintTimerHandle;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UWidgetAnimation* FlashingAnim;
+
+
+
+
+private:
+	bool bHintOnScreen = false;
+	bool bFlashing = false;
+
+	float TimeTilFlashingStarts;
+	float TimeSinceHintOnScreen = 0.f;
 	
 };
 

@@ -27,6 +27,7 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void Play(float StartTime = 0) override;
 	
 	
 	void InjurySoundEffects(const EExerciseType CurrentExerciseType);

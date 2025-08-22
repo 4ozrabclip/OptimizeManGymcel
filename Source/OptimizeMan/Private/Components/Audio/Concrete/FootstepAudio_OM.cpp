@@ -23,6 +23,13 @@ void UFootstepAudio_OM::BeginPlay()
 		Player = Cast<APlayerCharacter_OM>(GetOwner());
 }
 
+void UFootstepAudio_OM::Play(float StartTime)
+{
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
+	Super::Play(StartTime);
+}
+
 void UFootstepAudio_OM::Footsteps(float DeltaTime)
 {
 	if (Player->GetIsWalking())

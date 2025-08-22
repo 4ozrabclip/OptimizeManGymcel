@@ -4,6 +4,7 @@
 #include "Widgets/Home/Abstract/WakeUpBase_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/GridPanel.h"
@@ -34,7 +35,11 @@ void UWakeUpBase_OM::NativeConstruct()
 			OwningPawn->GetComponentByClass(UNotificationAudio_OM::StaticClass()));
 	}
 
-	ExitButton->SetVisibility(ESlateVisibility::Hidden);
+	pc = Cast<APlayerController_OM>(GetOwningPlayer());
+	if (pc)
+		pc->ShowExitButton(false);
+
+
 	InitializeTaskOptions();
 	CurrentButtonStyle = OriginalStyle_1;
 	OpenWindow(FName("MainWindow"));
@@ -151,15 +156,17 @@ void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 
 void UWakeUpBase_OM::UpdateFakeTodoList()
 {
-	if (TodoManager->GetCurrentTodoArray().Num() == 3)
+	if (pc)
 	{
-		ExitButton->SetVisibility(ESlateVisibility::Visible);
+		if (TodoManager->GetCurrentTodoArray().Num() == 3)
+		{
+			pc->ShowExitButton();
+		}
+		else
+		{
+			pc->ShowExitButton(true);
+		}
 	}
-	else
-	{
-		ExitButton->SetVisibility(ESlateVisibility::Hidden);
-	}
-	
 	
 	if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
 	{

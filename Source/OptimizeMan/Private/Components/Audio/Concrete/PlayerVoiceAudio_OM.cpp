@@ -38,6 +38,13 @@ void UPlayerVoiceAudio_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	
 	GetWorld()->GetTimerManager().ClearTimer(BreathingTimerHandle);
 }
+
+void UPlayerVoiceAudio_OM::Play(float StartTime)
+{
+
+	Super::Play(StartTime);
+}
+
 void UPlayerVoiceAudio_OM::PlayBreathingSound()
 {
 	if (IsPlaying()) return;
@@ -50,6 +57,8 @@ void UPlayerVoiceAudio_OM::PlayBreathingSound()
 	if (BreathingArray && BreathingArray->IsValidIndex(RandIndex) && (*BreathingArray)[RandIndex]->IsValidLowLevel())
 	{
 		SetSound((*BreathingArray)[RandIndex]);
+		SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+		SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 		Play();
 		OnBreathTaken.Broadcast(CurrentBreathingIntensity);
 	}
@@ -98,7 +107,8 @@ void UPlayerVoiceAudio_OM::InjurySoundEffects(const EExerciseType CurrentExercis
 		SoundsToUse = &MajorInjurySounds;
 		break;
 	}
-	
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 	const int SoundToUseRandIndex = FMath::RandRange(0, SoundsToUse->Num() - 1);
 	switch (CurrentExerciseType)
 	{
@@ -145,7 +155,8 @@ void UPlayerVoiceAudio_OM::MinorInjurySoundEffects(const EExerciseType CurrentEx
 		SoundsToUse = &MinorInjurySounds;
 		break;
 	}
-    
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 	const int SoundToUseRandIndex = FMath::RandRange(0, SoundsToUse->Num() - 1);
 	switch (CurrentExerciseType)
 	{
@@ -194,6 +205,9 @@ void UPlayerVoiceAudio_OM::WorkoutGruntSoundEffects(const EExerciseType CurrentE
 	}
     
 	const int SoundToUseRandIndex = FMath::RandRange(0, SoundsToUse->Num() - 1);
+
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 	switch (CurrentExerciseType)
 	{
 	case EExerciseType::None:
@@ -235,7 +249,8 @@ void UPlayerVoiceAudio_OM::UpsetSoundEffects()
 		SoundsToUse = &UpsetSounds;
 		break;
 	}
-    
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 	const int SoundToUseRandIndex = FMath::RandRange(0, SoundsToUse->Num() - 1);
 	if (!SoundsToUse->IsValidIndex(SoundToUseRandIndex)) return;
     
@@ -285,7 +300,8 @@ void UPlayerVoiceAudio_OM::GrumpySoundEffects()
     
 	const int SoundToUseRandIndex = FMath::RandRange(0, SoundsToUse->Num() - 1);
 	if (!SoundsToUse->IsValidIndex(SoundToUseRandIndex)) return;
-    
+	SetVolumeMultiplier(FMath::RandRange(VolumeMultiplier - MinVolumeOffset, VolumeMultiplier + MaxVolumeOffset));
+	SetPitchMultiplier(FMath::RandRange(PitchMultiplier - MinPitchOffset, PitchMultiplier + MaxPitchOffset));
 	SetSound((*SoundsToUse)[SoundToUseRandIndex]);
 	Play();
 	UE_LOG(LogTemp, Error, TEXT("Grumpy Sound played"));

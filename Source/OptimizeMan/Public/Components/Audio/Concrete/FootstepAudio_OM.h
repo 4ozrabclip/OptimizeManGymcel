@@ -18,7 +18,7 @@ public:
 	UFootstepAudio_OM();
 
 	virtual void BeginPlay() override;
-	
+	virtual void Play(float StartTime = 0) override;
 	void Footsteps(float DeltaTime);
 	
 	void PlayFootstepSound();

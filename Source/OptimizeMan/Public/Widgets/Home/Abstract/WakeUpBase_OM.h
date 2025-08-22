@@ -87,6 +87,11 @@ public:
 	virtual void UpdateFakeTodoList();
 
 protected:
+
+
+	UPROPERTY()
+	APlayerController_OM* pc;
+	
 	UPROPERTY()
 	TArray<FTaskOptionData> TaskOptions;
 

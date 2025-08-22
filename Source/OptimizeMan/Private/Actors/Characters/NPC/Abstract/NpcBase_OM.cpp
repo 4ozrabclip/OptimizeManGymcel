@@ -431,6 +431,13 @@ void ANpcBase_OM::Talk(USoundBase* InChatAudio) const
 		return;
 	}
 
+	constexpr float VolumeRandomizationOffset = 0.1f;
+	constexpr float PitchRandomizationOffset = 0.01f;
+	const float VolumeRandomizeOffsetVal = FMath::RandRange(TalkingAudioComponent->VolumeMultiplier - VolumeRandomizationOffset, TalkingAudioComponent->VolumeMultiplier + VolumeRandomizationOffset);
+	const float PitchRandomizeOffsetVal = FMath::RandRange(TalkingAudioComponent->PitchMultiplier - PitchRandomizationOffset, TalkingAudioComponent->PitchMultiplier + PitchRandomizationOffset);
+	TalkingAudioComponent->SetVolumeMultiplier(VolumeRandomizeOffsetVal);
+	TalkingAudioComponent->SetPitchMultiplier(PitchRandomizeOffsetVal);
+	
 	TalkingAudioComponent->SetSound(InChatAudio);
 	TalkingAudioComponent->Play();
 	

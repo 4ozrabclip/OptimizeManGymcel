@@ -238,7 +238,7 @@ void APlayerCharacter_OM::InitializeConstantEffects()
 
 void APlayerCharacter_OM::SyncStatsToGameInstance()
 {
-	if (!AbSysComp) return;
+	/*if (!AbSysComp) return;
 	const UMentalHealthStats_OM* MentalStats = AbSysComp->GetSet<UMentalHealthStats_OM>();
 	if (!MentalStats) return;
 
@@ -247,7 +247,7 @@ void APlayerCharacter_OM::SyncStatsToGameInstance()
 	NewInnerStatus.Social = MentalStats->GetSocial();
 	NewInnerStatus.SexAppeal = MentalStats->GetSexAppeal();
 
-	GameInstance->SetInnerStatus(NewInnerStatus);
+	//GameInstance->SetInnerStatus(NewInnerStatus);*/
 }
 
 

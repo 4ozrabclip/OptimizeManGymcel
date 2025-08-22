@@ -38,9 +38,7 @@ public:
 	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 	
 protected:
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* ExitButton;
+	
 
 	UPROPERTY()
 	APlayerCharacter_OM* Player;
