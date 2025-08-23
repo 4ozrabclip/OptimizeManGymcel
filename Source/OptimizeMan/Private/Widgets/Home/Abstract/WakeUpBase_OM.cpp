@@ -22,6 +22,7 @@ void UWakeUpBase_OM::NativeConstruct()
 		return;
 	}
 
+
 	TodoManager = GameInstance->GetSubsystem<UTodoManagementSubsystem>();
 	if (!TodoManager)
 	{
@@ -36,8 +37,7 @@ void UWakeUpBase_OM::NativeConstruct()
 	}
 
 	pc = Cast<APlayerController_OM>(GetOwningPlayer());
-	if (pc)
-		pc->ShowExitButton(false);
+	
 
 
 	InitializeTaskOptions();
@@ -156,17 +156,19 @@ void UWakeUpBase_OM::HandleOptionSelected(const int InOption)
 
 void UWakeUpBase_OM::UpdateFakeTodoList()
 {
-	if (pc)
+	if (!TodoManager) return;
+	if (TodoManager->GetCurrentTodoArray().Num() == 3)
 	{
-		if (TodoManager->GetCurrentTodoArray().Num() == 3)
-		{
+		if (pc)
 			pc->ShowExitButton();
-		}
-		else
-		{
-			pc->ShowExitButton(true);
-		}
 	}
+	else
+	{
+		if (pc)
+			pc->ShowExitButton(true);
+		
+	}
+	
 	
 	if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
 	{

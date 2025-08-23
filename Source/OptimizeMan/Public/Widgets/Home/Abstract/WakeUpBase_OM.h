@@ -30,7 +30,9 @@ struct FTaskOptionData
 	Panel(InPanel),
 	Button(InButton),
 	Title(InTitle),
-	Description(InDescription)
+	Description(InDescription),
+	OriginalStyle(InOriginalStyle),
+	SelectedStyle(InSelectedStyle)
 	{}
 	
 	UPROPERTY()
@@ -61,15 +63,19 @@ class OPTIMIZEMAN_API UWakeUpBase_OM : public UMinigameBaseWidget_OM
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	
-	virtual void InitWindowsArray() override;
 	virtual void OnExitButtonClicked() override;
+	virtual void InitWindowsArray() override;
 	virtual void SetTodoOptions();
 	
 	void InitializeTaskOptions();
 	
 	virtual void AssignOptionsToWidget();
 	virtual void HandleOptionSelected(int InOption);
+
+	UFUNCTION()
+	virtual void ExitButtonWakeUpClicked() { OnExitButtonClicked();};
+	
+
 	
 	UFUNCTION()
 	void HandleOption0Selected() { HandleOptionSelected(0); }
@@ -144,6 +150,8 @@ protected:
 	UTextBlock* TaskOption_4;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TaskOptionDesc_4;
+
+
 	
 
 

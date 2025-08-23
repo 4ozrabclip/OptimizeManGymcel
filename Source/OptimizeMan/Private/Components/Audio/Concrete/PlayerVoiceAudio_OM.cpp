@@ -28,6 +28,9 @@ void UPlayerVoiceAudio_OM::BeginPlay()
 
 	PlayBreathingInterval();
 
+	MinPitchOffset = 0.02f;
+	MaxPitchOffset = 0.02f;
+
 	OnAudioFinished.AddDynamic(this, &UPlayerVoiceAudio_OM::PlayBreathingInterval);
 	
 }
