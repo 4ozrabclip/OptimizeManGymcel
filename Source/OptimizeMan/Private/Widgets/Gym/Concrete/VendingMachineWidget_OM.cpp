@@ -3,12 +3,10 @@
 
 #include "Widgets/Gym/Concrete/VendingMachineWidget_OM.h"
 
-#include "IDetailTreeNode.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Image.h"
-#include "Components/Overlay.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 

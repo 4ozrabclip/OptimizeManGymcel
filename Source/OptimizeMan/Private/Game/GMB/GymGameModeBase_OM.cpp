@@ -8,7 +8,6 @@
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/ConsumablesSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
-#include "Kismet/GameplayStatics.h"
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 
 AGymGameModeBase_OM::AGymGameModeBase_OM()

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
 #include "Widgets/Home/Abstract/WakeUpBase_OM.h"
 #include "WakeUpWidget_OM.generated.h"
 

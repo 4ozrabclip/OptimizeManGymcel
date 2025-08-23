@@ -3,19 +3,16 @@
 
 #include "Actors/Other/Bedroom/Concrete/Mirror_OM.h"
 
-#include "Components/SceneCaptureComponent2D.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Other/Bedroom/Concrete/Shelf_OM.h"
 #include "Components/AudioComponent.h"
 #include "Game/Persistent/GameInstance_OM.h"
-#include "Widgets/Home/Concrete/MirrorWidget_OM.h"
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 #include "Utils/Structs/AudioTypes.h"
-#include "Widgets/Home/Concrete/MirrorWidget_OM.h"
 
 AMirror_OM::AMirror_OM()
 {

@@ -3,7 +3,6 @@
 
 #include "Components/Character/Concrete/CameraComponent_OM.h"
 
-#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 
 UCameraComponent_OM::UCameraComponent_OM()
 {

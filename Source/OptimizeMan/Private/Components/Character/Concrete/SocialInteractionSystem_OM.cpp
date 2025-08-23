@@ -6,7 +6,6 @@
 #include "Actors/Characters/NPC/Abstract/NpcBase_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "AnimInstances/NpcBaseAnimInstance_OM.h"
-#include "Components/Audio/Concrete/PlayerAmbience_OM.h"
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Components/Character/Concrete/CameraComponent_OM.h"
 #include "Kismet/GameplayStatics.h"

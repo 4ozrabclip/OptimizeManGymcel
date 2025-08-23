@@ -3,7 +3,6 @@
 
 #include "Components/Audio/Abstract/GameAudio_OM.h"
 
-#include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Utils/Structs/AudioTypes.h"
 
