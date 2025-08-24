@@ -49,8 +49,6 @@ void UWakeUpTutorial_OM::InitiateTutorialSequence()
 	TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Visible);
 	ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Visible);
 	PlayTutorialAnimation(TutPart1);
-
-	
 }
 
 void UWakeUpTutorial_OM::PlayTutorialAnimation(UWidgetAnimation* InAnimationPart)

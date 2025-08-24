@@ -282,7 +282,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
 			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
-			BankAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
+			BankAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_H));
 			BankAdv_V_Text->SetText(FText::FromString("The Natty lie"));
 		}
 		break;
@@ -297,10 +297,10 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
 			BulkMythologyBackButton->OnClicked.RemoveAll(this);
 			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);*/
-			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
-			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			GenrAdv_H_Text->SetText(FText::FromString("Brainrot Advertisement"));
-			GenrAdv_V_Text->SetText(FText::FromString("Supplements"));
+			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
+			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
+			GenrAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
+			GenrAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
 			UE_LOG(LogTemp, Error, TEXT("General Store Open1"));
 		}
 		else
@@ -310,10 +310,9 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			//BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
 			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			GenrAdv_H_Text->SetText(FText::FromString("Bank"));
-			GenrAdv_V_Text->SetText(FText::FromString("Supplements"));
+			GenrAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_H));
+			GenrAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_V));
 		}
-
 		break;
 	}
 	case EWebsites::BulkMythology:
@@ -337,7 +336,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);*/
 			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			SuppAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
+			SuppAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_H));
 			SuppAdv_V_Text->SetText(FText::FromString("Bank"));
 		}
 		break;
@@ -353,9 +352,9 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			TheNattyLieBackButton->OnClicked.RemoveAll(this);
 			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
 			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
-			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
-			ForsAdv_H_Text->SetText(FText::FromString("Plastic Surgery"));
-			ForsAdv_V_Text->SetText(FText::FromString("The Natty Lie"));
+			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
+			ForsAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_H));
+			ForsAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_V));
 		}
 		else
 		{
@@ -365,7 +364,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
 			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
-			ForsAdv_H_Text->SetText(FText::FromString("Supplements"));
+			ForsAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
 			ForsAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
 		}
 		break;
@@ -380,7 +379,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);*/
 			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
-			PlastAdv_H_Text->SetText(FText::FromString("Bank"));
+			PlastAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_H));
 			PlastAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
 		}
 		else
@@ -389,7 +388,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);*/
 			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			PlastAdv_H_Text->SetText(FText::FromString("Supplements"));
+			PlastAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
 			PlastAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_V));
 		}
 		break;
@@ -415,7 +414,7 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);*/
 			CornAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			CornAdv_H_Text->SetText(FText::FromString("Supplements"));
+			CornAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
 			CornAdv_V_Text->SetText(FText::FromString("Bank"));
 		}
 		break;

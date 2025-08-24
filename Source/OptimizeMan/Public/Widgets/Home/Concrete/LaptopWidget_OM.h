@@ -95,9 +95,22 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> SexyBankAdvertisements_H;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
 	TArray<UTexture2D*> ForSkanAdvertisements_V;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
 	TArray<UTexture2D*> BlessedFleshAdvertisements_V;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> BlessedFleshAdvertisements_H;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> BulkMythologyAdvertisements_V;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> BulkMythologyAdvertisements_H;
+	
+
 	
 
 	// -------------------------------- PlasticSurgeryLayer

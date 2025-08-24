@@ -80,7 +80,7 @@ void UGameInstance_OM::FinishDemo()
 {
 	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
 	{
-		const FString MainMenuLevelString = "/Game/Levels/MainMenu";
+		const FString MainMenuLevelString = "/Game/Levels/EndPlaytest";
 		const FName LevelToChangeTo = FName(MainMenuLevelString);
 		UGameplayStatics::OpenLevel(this, LevelToChangeTo);
 	});
