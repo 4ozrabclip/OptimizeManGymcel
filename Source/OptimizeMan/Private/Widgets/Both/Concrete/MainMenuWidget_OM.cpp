@@ -28,14 +28,14 @@ void UMainMenuWidget_OM::NativeConstruct()
 
 	if (GameInstance)
 	{
-		MenuMusic = NewObject<UGameAudio_OM>(GameInstance);
+		MenuMusic = NewObject<UGameAudio_OM>();
 		MenuMusic->RegisterComponentWithWorld(GetWorld());
 		MenuMusic->SetSound(MenuSong);
 		MenuMusic->SetAudioType(EAudioTypes::MusicAudio);
 		MenuMusic->bIsUISound = true;
 		MenuMusic->Play();
 
-		NotificationAudio = NewObject<UGameAudio_OM>(GameInstance);
+		NotificationAudio = NewObject<UGameAudio_OM>();
 		NotificationAudio->RegisterComponentWithWorld(GetWorld());
 		NotificationAudio->SetSound(SplatSound);
 		NotificationAudio->SetAudioType(EAudioTypes::NotificationAudio);

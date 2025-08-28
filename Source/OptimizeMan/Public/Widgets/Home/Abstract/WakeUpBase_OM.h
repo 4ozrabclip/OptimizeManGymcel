@@ -92,6 +92,11 @@ public:
 	UFUNCTION()
 	virtual void UpdateFakeTodoList();
 
+
+
+	/** Helper funcs **/
+	UTodoManagementSubsystem* GetTodoManagerSafe() const;
+
 protected:
 
 
@@ -162,10 +167,7 @@ protected:
 	UTextBlock* SelectedTask_1;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* SelectedTask_2;
-
 	
-	UPROPERTY()
-	UTodoManagementSubsystem* TodoManager;
 
 	UPROPERTY()
 	UNotificationAudio_OM* NotificationAudio;

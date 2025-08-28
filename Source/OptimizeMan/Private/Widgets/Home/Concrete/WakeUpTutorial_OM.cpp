@@ -56,11 +56,16 @@ void UWakeUpTutorial_OM::PlayTutorialAnimation(UWidgetAnimation* InAnimationPart
 	if (!InAnimationPart) return;
 
 	GetWorld()->GetTimerManager().ClearTimer(Handle);
-	
-	PlayAnimation(InAnimationPart, 0.f, 1);
+
+	if (IsValid(InAnimationPart))
+		PlayAnimation(InAnimationPart, 0.f, 1);
 	float Duration = InAnimationPart->GetEndTime();
 
-	GetWorld()->GetTimerManager().SetTimer(Handle, this, &UWakeUpTutorial_OM::PlayContPrompt, Duration, false);
+	GetWorld()->GetTimerManager().SetTimer(Handle, [this]()
+	{
+		if (!IsValid(this) || !IsValid(TutPart1)) return;
+		PlayContPrompt();
+	}, Duration, false);
 }
 void UWakeUpTutorial_OM::PlayContPrompt()
 {
@@ -70,25 +75,25 @@ void UWakeUpTutorial_OM::PlayContPrompt()
 	{
 	case 0:
 		{
-			if (TutPart1_Cont)
+			if (IsValid(TutPart1_Cont))
 				PlayAnimation(TutPart1_Cont, 0.f, 0);
 			break;
 		}
 	case 1:
 		{
-			if (TutPart2_Cont)
+			if (IsValid(TutPart2_Cont))
 				PlayAnimation(TutPart2_Cont, 0.f, 0);
 			break;
 		}
 	case 2:
 		{
-			if (TutPart3_Cont)
+			if (IsValid(TutPart3_Cont))
 				PlayAnimation(TutPart3_Cont, 0.f, 0);
 			break;
 		}
 	case 3:
 		{
-			if (TutPart4_Cont)
+			if (IsValid(TutPart4_Cont))
 				PlayAnimation(TutPart4_Cont, 0.f, 0);
 			break;
 		}
@@ -129,20 +134,29 @@ void UWakeUpTutorial_OM::AdvanceTutorial()
 }
 void UWakeUpTutorial_OM::FinishTutorial()
 {
-
-	TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
-	ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
+	if (IsValid(TodoLisTut_Overlay))
+		TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
+	else
+		UE_LOG(LogTemp, Error, TEXT("TodoLisTut_Overlay invalid"));
+	if (IsValid(ChooseTasksTut_Overlay))
+		ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
+	else
+		UE_LOG(LogTemp, Error, TEXT("TodoTasksTut_Overlay invalid"));
 	
 }
 
 void UWakeUpTutorial_OM::OnExitButtonClicked()
 {
-	if (!TodoManager || TodoManager->GetCurrentTodoArray().Num() < 3)
-		return;
+	if (auto* TodoManager = GetTodoManagerSafe())
+	{
+		if (TodoManager->GetCurrentTodoArray().Num() < 3)
+			return;
 
-	if (ABedroomGameModeBase_OM* Gm = Cast<ABedroomGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
-		Gm->TutorialDay();
+		if (ABedroomGameModeBase_OM* Gm = Cast<ABedroomGameModeBase_OM>(GetWorld()->GetAuthGameMode()))
+			Gm->TutorialDay();
 	
+	}
+
 	
 	Super::OnExitButtonClicked();
 }

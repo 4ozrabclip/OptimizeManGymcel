@@ -40,21 +40,21 @@ protected:
 	UOverlay* ChooseTasksTut_Overlay;
 	
 
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart1;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart1_Cont;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart2;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart2_Cont;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart3;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart3_Cont;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart4;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UPROPERTY(meta = (BindWidgetAnim))
 	UWidgetAnimation* TutPart4_Cont;
 
 private:

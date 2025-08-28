@@ -238,11 +238,18 @@ void ABedroomGameModeBase_OM::StartFadeOut()
 		FadeTimerHandle,
 		[this]()
 		{
+			if (!IsValid(ShowDayWidget))
+			{
+				bIsFadingOut = false;
+				GetWorld()->GetTimerManager().ClearTimer(FadeTimerHandle);
+				return;
+			}
+
 			const float CurrentOpacity = ShowDayWidget->GetRenderOpacity();
 			const float NewOpacity = FMath::FInterpConstantTo(CurrentOpacity, 0.0f, GetWorld()->GetDeltaSeconds(), 1.0f);
-            
+        
 			ShowDayWidget->SetRenderOpacity(NewOpacity);
-			
+
 			if (NewOpacity <= 0.0f)
 			{
 				ShowDayWidget->RemoveFromParent();
@@ -252,7 +259,7 @@ void ABedroomGameModeBase_OM::StartFadeOut()
 			}
 		},
 		0.016f, 
-		true    
+		true
 	);
 
 }
