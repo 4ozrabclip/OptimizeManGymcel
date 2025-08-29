@@ -265,25 +265,17 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		BankAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*OneMansTrashBackButton->OnClicked.RemoveAll(this);
-			OneMansTrashBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
-			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
 			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
+			BankAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(OneMansTrashAdvertisements_H));
 			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			BankAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
-			BankAdv_H_Text->SetText(FText::FromString("General Store"));
 		}
 		else
 		{
-/*			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
-			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			TheNattyLieBackButton->OnClicked.RemoveAll(this);
-			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);*/
-			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
-			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
-			BankAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_H));
-			BankAdv_V_Text->SetText(FText::FromString("The Natty lie"));
+			BankAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
+			BankAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
+			BankAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
+			BankAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_V));
 		}
 		break;
 	}
@@ -293,25 +285,17 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		GenrAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*TheNattyLieBackButton->OnClicked.RemoveAll(this);
-			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
-			BulkMythologyBackButton->OnClicked.RemoveAll(this);
-			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);*/
-			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			GenrAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
 			GenrAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
-			UE_LOG(LogTemp, Error, TEXT("General Store Open1"));
+			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
+			GenrAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
 		}
 		else
 		{
-			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
-			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);*/
-			//BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
-			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			GenrAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_H));
-			GenrAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_V));
+			GenrAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
+			GenrAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_H));
+			GenrAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			GenrAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_V));
 		}
 		break;
 	}
@@ -321,23 +305,17 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		SuppAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*TheNattyLieBackButton->OnClicked.RemoveAll(this);
-			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			ForSkanBackButton->OnClicked.RemoveAll(this);
-			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);*/
-			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
+			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
+			SuppAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(OneMansTrashAdvertisements_H));
 			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
 			SuppAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_V));
-			SuppAdv_H_Text->SetText(FText::FromString("Brainrot Advertisement"));
 		}
 		else
 		{
-			/*BlessedFleshBack_Button->OnClicked.RemoveAll(this);
-			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);*/
 			SuppAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
-			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			SuppAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_H));
-			SuppAdv_V_Text->SetText(FText::FromString("Bank"));
+			SuppAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			SuppAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_V));
 		}
 		break;
 	}
@@ -347,25 +325,17 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		ForsAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*BlessedFleshBack_Button->OnClicked.RemoveAll(this);
-			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			TheNattyLieBackButton->OnClicked.RemoveAll(this);
-			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
 			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
-			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			ForsAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_H));
+			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
 			ForsAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_V));
 		}
 		else
 		{
-			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
-			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
-			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
-			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);*/
 			ForsAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
 			ForsAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
-			ForsAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
+			ForsAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			ForsAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_V));
 		}
 		break;
 	}
@@ -375,20 +345,16 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		PlastAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*TheNattyLieBackButton->OnClicked.RemoveAll(this);
-			TheNattyLieBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);*/
 			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
-			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
 			PlastAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_H));
-			PlastAdv_V_Text->SetText(FText::FromString("Brainrot Advertisement"));
+			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OneMansTrashButtonClicked);
+			PlastAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(OneMansTrashAdvertisements_V));
 		}
 		else
 		{
-			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
-			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);*/
 			PlastAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
 			PlastAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
+			PlastAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
 			PlastAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_V));
 		}
 		break;
@@ -399,23 +365,17 @@ void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 		CornAdv_V->OnClicked.RemoveAll(this);
 		if (GodsJudgement)
 		{
-			/*ForSkanBackButton->OnClicked.RemoveAll(this);
-			ForSkanBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);
-			BlessedFleshBack_Button->OnClicked.RemoveAll(this);
-			BlessedFleshBack_Button->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);*/
 			CornAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::ForSkanButtonClicked);
+			CornAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(ForSkanAdvertisements_H));
 			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::OpenBlessedFlesh_ButtonClicked);
-			CornAdv_H_Text->SetText(FText::FromString("ForsKan"));
 			CornAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(BlessedFleshAdvertisements_V));
 		}
 		else
 		{
-			/*BulkMythologyBackButton->OnClicked.RemoveAll(this);
-			BulkMythologyBackButton->OnClicked.AddDynamic(this, &ULaptopWidget_OM::TheNattyLieButtonClicked);*/
 			CornAdv_H->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BulkMythologyButtonClicked);
-			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
 			CornAdv_H->SetStyle(GetRandomAdvertisementStyleFromArray(BulkMythologyAdvertisements_H));
-			CornAdv_V_Text->SetText(FText::FromString("Bank"));
+			CornAdv_V->OnClicked.AddDynamic(this, &ULaptopWidget_OM::BankButtonClicked);
+			CornAdv_V->SetStyle(GetRandomAdvertisementStyleFromArray(SexyBankAdvertisements_V));
 		}
 		break;
 	}
@@ -474,7 +434,6 @@ void ULaptopWidget_OM::SetForSkanText()
 		}
 	}
 
-	
 	
 	switch (DayInfo.CurrentDay)
 	{
@@ -553,27 +512,21 @@ void ULaptopWidget_OM::SetForSkanState()
 	{
 	case EPlayerEmotionalStates::Doomer:
 		CurrentForSkanState = EForSkanType::Bad;
-		UE_LOG(LogTemp, Display, TEXT("Doomer"));
 		break;
 	case EPlayerEmotionalStates::Cope:
 		CurrentForSkanState = EForSkanType::Mixed;
-		UE_LOG(LogTemp, Display, TEXT("Cope"));
 		break;
 	case EPlayerEmotionalStates::Grindset:
 		CurrentForSkanState = EForSkanType::Good;
-		UE_LOG(LogTemp, Display, TEXT("Grindset"));
 		break;
 	case EPlayerEmotionalStates::Gigachad:
 		CurrentForSkanState = EForSkanType::Good;
-		UE_LOG(LogTemp, Display, TEXT("Gigachad"));
 		break;
 	case EPlayerEmotionalStates::GoblinMode:
 		CurrentForSkanState = EForSkanType::Crazy;
-		UE_LOG(LogTemp, Display, TEXT("GoblinMode"));
 		break;
 	default:
 		CurrentForSkanState = EForSkanType::Mixed;
-		UE_LOG(LogTemp, Display, TEXT("WASAFASFASFASFASFASFS"));
 		break;
 	}
 }

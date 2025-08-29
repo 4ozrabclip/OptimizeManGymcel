@@ -37,16 +37,17 @@ void UMainMenuWidget_OM::NativeConstruct()
 
 		NotificationAudio = NewObject<UGameAudio_OM>();
 		NotificationAudio->RegisterComponentWithWorld(GetWorld());
-		NotificationAudio->SetSound(SplatSound);
+		if (SplatSound)
+			NotificationAudio->SetSound(SplatSound);
 		NotificationAudio->SetAudioType(EAudioTypes::NotificationAudio);
 		NotificationAudio->bIsUISound = true;
+
+
 	}
 }
 
 void UMainMenuWidget_OM::NativeDestruct()
 {
-	Super::NativeDestruct();
-	
 	if (MenuMusic)
 	{
 		MenuMusic->Stop();
@@ -60,14 +61,14 @@ void UMainMenuWidget_OM::NativeDestruct()
 		NotificationAudio->UnregisterComponent();
 		NotificationAudio = nullptr;
 	}
+	Super::NativeDestruct();
+
 }
 
 
 void UMainMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-
 }
 
 void UMainMenuWidget_OM::InitWindowsArray()

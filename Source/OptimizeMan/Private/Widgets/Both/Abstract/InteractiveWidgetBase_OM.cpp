@@ -3,17 +3,22 @@
 
 #include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 
-#include "EnhancedInputSubsystems.h"
+#include "Actors/Characters/Player/PlayerControllerBase_OM.h"
 #include "Components/Button.h"
 #include "Components/PanelWidget.h"
 #include "Components/Slider.h"
+#include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Utils/Structs/AudioTypes.h"
 
 
 void UInteractiveWidgetBase_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	
+
 	InitWindowsArray();
+	
 }
 
 void UInteractiveWidgetBase_OM::NativeDestruct()
@@ -27,10 +32,8 @@ void UInteractiveWidgetBase_OM::NativeTick(const FGeometry& MyGeometry, float In
 
 	if (bIsUsingController)
 		ManageControllerInteraction();
-
+	
 }
-
-
 
 FUserInterfaceWindow UInteractiveWidgetBase_OM::InitializeWindow(UPanelWidget* InWindow, TArray<FFocusableWidgetStruct> InFocusableContent, FName InWindowName)
 {
@@ -77,7 +80,6 @@ void UInteractiveWidgetBase_OM::OpenWindow(const FName InWindowName, bool bUsing
 					Window.FocusableContent[0].ButtonData.Button->SetUserFocus(GetOwningPlayer());
 				else
 					Window.FocusableContent[0].SliderData.Slider->SetUserFocus(GetOwningPlayer());
-				
 			}
 
 		}
@@ -87,6 +89,10 @@ void UInteractiveWidgetBase_OM::OpenWindow(const FName InWindowName, bool bUsing
 			Window.Window->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+
+	PlayClickSound();
+
+
 }
 
 void UInteractiveWidgetBase_OM::UpdateButtonFocusVisuals(UButton* Button, const FButtonStyle& DefaultStyle, bool bIsFocused)
@@ -104,6 +110,15 @@ void UInteractiveWidgetBase_OM::UpdateButtonFocusVisuals(UButton* Button, const 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Unfocused"));
 		Button->SetStyle(DefaultStyle);
+	}
+}
+
+void UInteractiveWidgetBase_OM::PlayClickSound()
+{
+	if (auto* PC = Cast<APlayerControllerBase_OM>(GetOwningPlayer()))
+	{
+		if (ClickSound)
+			PC->PlayUISound(ClickSound);
 	}
 }
 

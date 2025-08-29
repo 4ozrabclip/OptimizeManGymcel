@@ -62,10 +62,13 @@ public:
 	UPROPERTY()
 	UGameAudio_OM* MenuMusic;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Music")
 	USoundBase* MenuSong;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NotificationAudio")
 	USoundBase* SplatSound;
+
+
 		
 	void PlaySplat();
 

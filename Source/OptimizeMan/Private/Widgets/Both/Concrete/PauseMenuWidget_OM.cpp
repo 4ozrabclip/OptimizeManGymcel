@@ -4,6 +4,7 @@
 #include "Widgets/Both/Concrete/PauseMenuWidget_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerControllerBase_OM.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
 #include "Components/Character/Concrete/PlayerDeformationsComponent_OM.h"
 #include "Components/Button.h"
@@ -78,6 +79,8 @@ void UPauseMenuWidget_OM::NativeConstruct()
 		OpenQuitScreenButton->OnClicked.RemoveAll(this);
 		OpenQuitScreenButton->OnClicked.AddDynamic(this, &UPauseMenuWidget_OM::OpenQuitScreen);
 	}
+	
+	
 	OpenBase();
 
 	if (!Player)
@@ -133,6 +136,38 @@ void UPauseMenuWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 			}
 		}
 	}
+}
+
+void UPauseMenuWidget_OM::InitWindowsArray()
+{
+	Super::InitWindowsArray();
+
+	FUserInterfaceWindow MainWindow;
+	MainWindow.WindowName = FName("MainWindow");
+	MainWindow.Window = Base_VBox;
+	Windows.Add(MainWindow);
+
+	FUserInterfaceWindow MoreOptionsWindow;
+	MoreOptionsWindow.WindowName = FName("MoreOptionsWindow");
+	MoreOptionsWindow.Window = MoreOptions_VBox;
+	Windows.Add(MoreOptionsWindow);
+
+	FUserInterfaceWindow ChangeStatsWindow;
+	ChangeStatsWindow.WindowName = FName("ChangeStatsWindow");
+	ChangeStatsWindow.Window = ChangeStats_Grid;
+	Windows.Add(ChangeStatsWindow);
+
+	FUserInterfaceWindow SettingsWindow;
+	SettingsWindow.WindowName = FName("SettingsWindow");
+	SettingsWindow.Window = Settings_Grid;
+	Windows.Add(SettingsWindow);
+
+	FUserInterfaceWindow AreYouSureWindow;
+	AreYouSureWindow.WindowName = FName("AreYouSureWindow");
+	AreYouSureWindow.Window = AreYouSure_Grid;
+	Windows.Add(AreYouSureWindow);
+
+	
 }
 
 void UPauseMenuWidget_OM::OnClickToggleLightDark()
@@ -301,7 +336,7 @@ void UPauseMenuWidget_OM::OpenSettings()
 	VoiceVolume_Slider->SetValue(GameSettings.VoiceVolume);
 	NotificationVolume_Slider->SetValue(GameSettings.NotificationVolume);
 
-	OpenLayer(nullptr, Settings_Grid);
+	OpenWindow(FName("SettingsWindow"));
 }
 void UPauseMenuWidget_OM::OpenChangeStats()
 {
@@ -338,7 +373,7 @@ void UPauseMenuWidget_OM::OpenChangeStats()
 	{
 		WojakState_Image->SetBrushFromTexture(Image);
 	}
-	OpenLayer(nullptr, ChangeStats_Grid);
+	OpenWindow(FName("ChangeStatsWindow"));
 
 	
 }
@@ -359,18 +394,4 @@ void UPauseMenuWidget_OM::OnClickQuitToTitleScreen()
 			UGameplayStatics::OpenLevel(this, LevelToChangeTo);
 		});
     }
-}
-
-void UPauseMenuWidget_OM::OpenLayer(UVerticalBox* InVbox, UGridPanel* InGridPanel)
-{
-	if (!InVbox && !InGridPanel) return;
-
-	Base_VBox->SetVisibility(ESlateVisibility::Hidden);
-	MoreOptions_VBox->SetVisibility(ESlateVisibility::Hidden);
-	ChangeStats_Grid->SetVisibility(ESlateVisibility::Hidden);
-	Settings_Grid->SetVisibility(ESlateVisibility::Hidden);
-	AreYouSure_Grid->SetVisibility(ESlateVisibility::Hidden);
-
-	if (InVbox) InVbox->SetVisibility(ESlateVisibility::Visible);
-	if (InGridPanel) InGridPanel->SetVisibility(ESlateVisibility::Visible);
 }

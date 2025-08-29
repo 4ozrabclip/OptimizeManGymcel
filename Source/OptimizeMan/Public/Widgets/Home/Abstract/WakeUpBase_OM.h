@@ -98,6 +98,7 @@ public:
 	UTodoManagementSubsystem* GetTodoManagerSafe() const;
 
 protected:
+	
 
 
 	UPROPERTY()

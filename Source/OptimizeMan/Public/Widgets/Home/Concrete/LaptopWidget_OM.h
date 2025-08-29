@@ -95,10 +95,14 @@ private:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> SexyBankAdvertisements_V;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
 	TArray<UTexture2D*> SexyBankAdvertisements_H;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
 	TArray<UTexture2D*> ForSkanAdvertisements_V;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> ForSkanAdvertisements_H;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
 	TArray<UTexture2D*> BlessedFleshAdvertisements_V;
@@ -109,7 +113,11 @@ protected:
 	TArray<UTexture2D*> BulkMythologyAdvertisements_V;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
 	TArray<UTexture2D*> BulkMythologyAdvertisements_H;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> OneMansTrashAdvertisements_V;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Advertisements")
+	TArray<UTexture2D*> OneMansTrashAdvertisements_H;
 
 	
 
@@ -121,11 +129,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* PlastAdv_H;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* PlastAdv_H_Text;
-	UPROPERTY(meta = (BindWidget))
 	UButton* PlastAdv_V;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* PlastAdv_V_Text;
 	UPROPERTY(meta = (BindWidget))
 	UButton* BlessedFleshBack_Button;
 	UPROPERTY(meta = (BindWidget))
@@ -142,11 +146,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* BankAdv_H;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* BankAdv_H_Text;
-	UPROPERTY(meta = (BindWidget))
 	UButton* BankAdv_V;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* BankAdv_V_Text;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* MoneyTextBlock;
 
@@ -159,11 +159,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* ForsAdv_H;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* ForsAdv_H_Text;
-	UPROPERTY(meta = (BindWidget))
 	UButton* ForsAdv_V;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* ForsAdv_V_Text;
 	UPROPERTY(meta = (BindWidget))
 	UButton* ForSkanBackButton;
 	UPROPERTY(meta = (BindWidget))
@@ -196,11 +192,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* SuppAdv_H;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* SuppAdv_H_Text;
-	UPROPERTY(meta = (BindWidget))
 	UButton* SuppAdv_V;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* SuppAdv_V_Text;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* BulkMythologyBackButton;
@@ -218,11 +210,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* CornAdv_H;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* CornAdv_H_Text;
-	UPROPERTY(meta = (BindWidget))
 	UButton* CornAdv_V;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* CornAdv_V_Text;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* TheNattyLieBackButton;
@@ -247,11 +235,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* GenrAdv_H;
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* GenrAdv_H_Text;
-	UPROPERTY(meta = (BindWidget))
 	UButton* GenrAdv_V;
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* GenrAdv_V_Text;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* OneMansTrashBackButton;

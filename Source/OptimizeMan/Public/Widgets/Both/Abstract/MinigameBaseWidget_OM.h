@@ -38,7 +38,7 @@ public:
 	virtual void DarkModeToggle(const bool bIsDarkMode) override;
 	
 protected:
-	
+
 
 	UPROPERTY()
 	APlayerCharacter_OM* Player;
@@ -61,6 +61,13 @@ protected:
 	UMaterial* BlackExitButton;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dark/Light Mode")
 	UMaterial* BlackHoveredExitButton;
+
+
+	/** Audio **/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundBase* OpenSound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundBase* CloseSound;
 private:
 	bool bHasHint = false;;
 	

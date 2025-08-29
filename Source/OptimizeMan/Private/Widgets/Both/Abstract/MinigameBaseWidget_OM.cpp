@@ -30,7 +30,14 @@ void UMinigameBaseWidget_OM::NativeConstruct()
 		if (!Player->OnPauseMenuToggled.IsAlreadyBound(this, &UMinigameBaseWidget_OM::PauseMenuToggled))
 			Player->OnPauseMenuToggled.AddDynamic(this, &UMinigameBaseWidget_OM::PauseMenuToggled);
 	}
-
+	
+	if (OpenSound)
+	{
+		if (auto* pc = Cast<APlayerControllerBase_OM>(GetOwningPlayer()))
+		{
+			pc->PlayUISound(OpenSound);
+		}
+	}
 
 }
 
@@ -55,6 +62,6 @@ void UMinigameBaseWidget_OM::OnExitButtonClicked()
 	Player->SetCurrentPlayMode(EPlayModes::RegularMode);
 
 
+
 	Player->bInteractableOpen = false;
 }
-

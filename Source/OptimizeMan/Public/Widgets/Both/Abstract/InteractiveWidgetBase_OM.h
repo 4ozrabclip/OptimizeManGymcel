@@ -107,6 +107,9 @@ public:
 	virtual void NativeDestruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void UpdateButtonFocusVisuals(UButton* Button, const FButtonStyle& DefaultStyle, bool bIsFocused);
+
+
+	void PlayClickSound();
 	
 
 	void ManageControllerInteraction();
@@ -129,6 +132,11 @@ protected:
 
 
 	bool bIsUsingController = false;
+
+	
+	/** Audio **/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	USoundBase* ClickSound;
 	
 
 	

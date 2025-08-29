@@ -23,6 +23,8 @@ public:
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	virtual void InitWindowsArray() override;
+
 	UFUNCTION()
 	void OnClickToggleLightDark();
 	UFUNCTION()
@@ -33,18 +35,17 @@ public:
 	void OpenSettings();
 
 	UFUNCTION()
-	void OpenMoreOptions() { OpenLayer(MoreOptions_VBox); }
+	void OpenMoreOptions() { OpenWindow(FName("MoreOptionsWindow")); }
 	UFUNCTION()
-	void OpenBase() { OpenLayer(Base_VBox); }
+	void OpenBase() { OpenWindow(FName("MainWindow")); }
 	UFUNCTION()
-	void OpenQuitScreen() { OpenLayer(nullptr, AreYouSure_Grid); }
+	void OpenQuitScreen() { OpenWindow(FName("AreYouSureWindow"));}
 	UFUNCTION()
 	void OpenChangeStats();
 
 	UFUNCTION()
 	void OnClickQuitToTitleScreen();
 
-	void OpenLayer(UVerticalBox* InVbox = nullptr, UGridPanel* InGridPanel = nullptr);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
