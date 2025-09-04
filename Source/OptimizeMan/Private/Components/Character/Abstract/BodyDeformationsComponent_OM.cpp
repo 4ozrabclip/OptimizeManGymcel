@@ -87,6 +87,48 @@ void UBodyDeformationsComponent_OM::SetDeformation(ULevelSequence* InDeformation
 	}
 }
 
+void UBodyDeformationsComponent_OM::PlayTemporaryDeformationSequence(ULevelSequence* InDeformationSequence)
+{
+	if (!InDeformationSequence)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Sequence that you inputted is null"));
+		return;
+	}
+    
+	FMovieSceneSequencePlaybackSettings PlaybackSettings;
+	PlaybackSettings.bAutoPlay = true;
+
+	ALevelSequenceActor* SequenceActor = nullptr;
+	ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+		GetWorld(),
+		InDeformationSequence,
+		PlaybackSettings,
+		SequenceActor
+	);
+
+	if (!SequencePlayer || !SequenceActor)
+	{
+		UE_LOG(LogTemp, Error, TEXT("BodyDeformationsComponent: Failed to create sequence player or actor"));
+		return;
+	}
+
+	FName CharacterBindingTag = FName(*CharacterTag);
+	TArray<FMovieSceneObjectBindingID> BindingIDArray = InDeformationSequence->FindBindingsByTag(CharacterBindingTag);
+  
+	if (BindingIDArray.Num() > 0)
+	{
+		for (FMovieSceneObjectBindingID BindingID : BindingIDArray)
+		{
+			SequenceActor->AddBinding(BindingID, GetOwner(), true);
+		}
+		SequencePlayer->Play();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Havent set binding id on the sequence"));
+	}
+}
+
 void UBodyDeformationsComponent_OM::SetDeformationForBodyPart(ULevelSequence* InDeformationSequence, const FBodyPartData BodyPart)
 {
 	ClearDeformationForBodyPart(BodyPart);

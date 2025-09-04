@@ -23,6 +23,7 @@ void UGameInstance_OM::Init()
 	SetHasOpenedTodoListInitial(false);
 	SetHasInteractedInitial(false);
 	SetHasOpenedPauseMenuInitial(false);
+	SetHasDoneWorkoutInitial(false);
 	
 	ResetAllSaves();
 	

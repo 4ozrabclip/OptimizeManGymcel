@@ -61,8 +61,17 @@ void UExerciseInteractWidget_OM::NativeConstruct()
 	ExerciseComponent->PrepareExercise();
 
 	CheckAndSetStyles();
+
+	
+	GetWorld()->GetTimerManager().SetTimer(TutorialDelayHandle, [this]()
+	{
+		bHasWorkedOutInitial = GameInstance->GetHasDoneWorkoutInitial();
+	},2.f, false);
+
 	
 }
+
+
 
 void UExerciseInteractWidget_OM::CheckAndSetStyles()
 {
@@ -141,7 +150,33 @@ void UExerciseInteractWidget_OM::CheckAndSetStyles()
 		DarkExitStyle.Pressed.SetResourceObject(BlackExitButton);
 	}
 }
+void UExerciseInteractWidget_OM::WorkoutTutorial(float DeltaTime)
+{
+	if (!ClickImage) return;
+	TimeSinceWorkoutTutorial += DeltaTime;
 
+	if (ClickImage->GetVisibility() == ESlateVisibility::Hidden)
+		ClickImage->SetVisibility(ESlateVisibility::Visible);
+
+	if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 3.f, 0.7f)
+		|| FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 5.2f, 0.5f))
+	{ 
+		if (ClickHand_Clicking)
+			ClickImage->SetBrushResourceObject(ClickHand_Clicking);
+	}
+	else if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 4.6f, 0.5f))
+	{
+		if (ClickHand)
+			ClickImage->SetBrushResourceObject(ClickHand);
+	}
+	else if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 7.f, 0.5f))
+	{
+		if (ClickHand)
+			ClickImage->SetBrushResourceObject(ClickHand);
+		TimeSinceWorkoutTutorial = 0.f;
+	}
+
+}
 void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -154,6 +189,11 @@ void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float I
 				MiniGameClickButton->SetIsEnabled(true);
 			if (GetMiniGameOn())
 				MiniGame(InDeltaTime);
+
+			if (!bHasWorkedOutInitial)
+			{
+				WorkoutTutorial(InDeltaTime);
+			}
 			
 			break;
 		}
@@ -169,6 +209,12 @@ void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float I
 			MiniGameClickButton->SetIsEnabled(false);
 		return;
 	}
+}
+
+void UExerciseInteractWidget_OM::NativeDestruct()
+{
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	Super::NativeDestruct();
 }
 
 void UExerciseInteractWidget_OM::OnExitButtonClicked()
@@ -394,6 +440,14 @@ void UExerciseInteractWidget_OM::OnMiniGameClick()
 		UE_LOG(LogTemp, Error, TEXT("ExerciseComponent Pointer is NULL"));
 		return;
 	}
+
+	if (!bHasWorkedOutInitial)
+	{
+		GameInstance->SetHasDoneWorkoutInitial(true);
+		bHasWorkedOutInitial = true;
+		ClickImage->SetVisibility(ESlateVisibility::Hidden);
+	}
+		
 
 	MiniGameClickButton->SetIsEnabled(false);
 

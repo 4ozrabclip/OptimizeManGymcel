@@ -20,7 +20,8 @@ enum class ETodoArrayList : uint8
 	HitFiveDips,
 	IncreaseSquatLift,
 	TakeColdShower,
-	HitFiveSquats
+	HitFiveSquats,
+	FlexInChangingRooms
 };
 
 USTRUCT()

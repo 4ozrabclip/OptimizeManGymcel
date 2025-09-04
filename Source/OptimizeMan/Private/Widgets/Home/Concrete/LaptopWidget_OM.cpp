@@ -255,7 +255,7 @@ FButtonStyle ULaptopWidget_OM::GetRandomAdvertisementStyleFromArray(const TArray
 
 void ULaptopWidget_OM::SetAdvertisementsForCurrentPage()
 {
-	const bool GodsJudgement = FMath::RandRange(0, 1) == 1;
+	const bool GodsJudgement = FMath::RandBool();
 	
 	switch (CurrentWebsite)
 	{
@@ -536,8 +536,7 @@ void ULaptopWidget_OM::SetForSkanImage()
 	if (constexpr int MaxPosts = 4; UserPicturesBad.Num() < MaxPosts ||
 		UserPicturesGood.Num() < MaxPosts) return;
 	
-
-	UE_LOG(LogTemp, Error, TEXT("CALLED SETUP IMAGE"));
+	
 	switch (CurrentForSkanState)
 	{
 	case EForSkanType::Bad:

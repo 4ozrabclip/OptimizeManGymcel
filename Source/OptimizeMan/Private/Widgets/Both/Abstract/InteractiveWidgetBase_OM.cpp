@@ -65,7 +65,7 @@ FFocusableWidgetStruct UInteractiveWidgetBase_OM::MakeButton(UButton* InButton, 
 	Focusable.ButtonData = BtnStruct;
 	return Focusable;
 };
-void UInteractiveWidgetBase_OM::OpenWindow(const FName InWindowName, bool bUsingGameAndUI)
+void UInteractiveWidgetBase_OM::OpenWindow(const FName InWindowName, bool bUsingGameAndUI, bool bPlayClick)
 {
 	for (FUserInterfaceWindow& Window : Windows)
 	{
@@ -90,7 +90,8 @@ void UInteractiveWidgetBase_OM::OpenWindow(const FName InWindowName, bool bUsing
 		}
 	}
 
-	PlayClickSound();
+	if (bPlayClick)
+		PlayClickSound();
 
 
 }

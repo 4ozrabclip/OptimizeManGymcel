@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameModeBase_OM.h"
 #include "GameFramework/GameModeBase.h"
 #include "BedroomGameModeBase_OM.generated.h"
 
@@ -10,7 +11,7 @@
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API ABedroomGameModeBase_OM : public AGameModeBase
+class OPTIMIZEMAN_API ABedroomGameModeBase_OM : public AGameModeBase_OM
 {
 	GENERATED_BODY()
 
@@ -19,7 +20,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
-
 public:
 	void ProcessIncompleteTodos();
 	void WakeUp();
@@ -47,9 +47,7 @@ protected:
 
 	UPROPERTY()
 	class UGameInstance_OM* GameInstance;
-
-	UPROPERTY()
-	class UTodoManagementSubsystem* TodoManager;
+	
 
 
 	UPROPERTY()

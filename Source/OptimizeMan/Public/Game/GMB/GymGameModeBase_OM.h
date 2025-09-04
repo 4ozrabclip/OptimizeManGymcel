@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
+#include "GameModeBase_OM.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/EnergyTick_OM.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
@@ -21,7 +22,7 @@ class UConsumablesSubsystem;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API AGymGameModeBase_OM : public AGameModeBase
+class OPTIMIZEMAN_API AGymGameModeBase_OM : public AGameModeBase_OM
 {
 	GENERATED_BODY()
 

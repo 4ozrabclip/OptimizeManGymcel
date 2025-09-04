@@ -52,7 +52,7 @@ void UPlayerVoiceAudio_OM::PlayBreathingSound()
 {
 	if (IsPlaying()) return;
 	TArray<USoundBase*>* BreathingArray = nullptr;
-	const int RandIndex = FMath::RandRange(0, BreathingSounds_Soft.Num());
+	const int RandIndex = FMath::RandRange(0, BreathingSounds_Soft.Num() - 1);
 
 	BreathingArray = CurrentBreathingIntensity == EBreathingIntensity::Soft ? &BreathingSounds_Soft :
 					 CurrentBreathingIntensity == EBreathingIntensity::Normal ? &BreathingSounds_Normal : &BreathingSounds_Intense;

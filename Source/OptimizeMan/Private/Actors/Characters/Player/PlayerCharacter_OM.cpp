@@ -30,12 +30,12 @@
 #include "Components/Character/Concrete/SpringArmComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
+#include "Utils/Static Helpers/Helper.h"
 
 APlayerCharacter_OM::APlayerCharacter_OM()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-
+	
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent_OM>(TEXT("CameraDrift"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->SetRelativeRotation(FRotator(0, 0, 0));
@@ -53,7 +53,6 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	Camera->SetRelativeLocation(FVector(0, 0, 0));
 	Camera->bUsePawnControlRotation = true;
 	
-
 	PlayerAudioComponent = CreateDefaultSubobject<UPlayerVoiceAudio_OM>(TEXT("AudioComponent"));
 	PlayerAudioComponent->bAutoActivate = true;
 	PlayerAudioComponent->SetVolumeMultiplier(1.f);
@@ -78,11 +77,9 @@ APlayerCharacter_OM::APlayerCharacter_OM()
 	AbSysComp = CreateDefaultSubobject<UAbilitySystemComponent_OM>(TEXT("AbilitySystemComponent"));
 	//MentalHealthStats = CreateDefaultSubobject<UMentalHealthStats_OM>(TEXT("Mental Health Attributes"));
 	//GymSpecificStats = CreateDefaultSubobject<UGymSpecificStats_OM>(TEXT("Gym Stats"));
-
-
+	
 	AmbienceControlComponent = CreateDefaultSubobject<UPlayerAmbienceControlComponent>(TEXT("Ambience Visual"));
 	AmbienceControlComponent->bAutoActivate = true;
-
 	
 
 	SelfieCameraLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SelfieCameraLocation"));
@@ -145,10 +142,7 @@ void APlayerCharacter_OM::BeginPlay()
 	
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	if (!GameInstance) return;
-
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager) return;
-
+	
 	
 	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
 	{
@@ -179,14 +173,15 @@ void APlayerCharacter_OM::BeginPlay()
 void APlayerCharacter_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UpdateMovementState();
-	if (FootstepAudioComponent)
-		FootstepAudioComponent->Footsteps(DeltaTime);
-	
-	bIsJumping = GetIsJumping();
 	
 	if (CurrentPlayMode == EPlayModes::RegularMode)
 	{
+		UpdateMovementState();
+		if (FootstepAudioComponent)
+			FootstepAudioComponent->Footsteps(DeltaTime);
+	
+		bIsJumping = GetIsJumping();
+		
 		CheckInteractable();
 	}
 }
@@ -963,11 +958,9 @@ void APlayerCharacter_OM::ClearTimers()
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(ExerciseComponent);
 	if (!GameInstance)
 		GameInstance = Cast<UGameInstance_OM>(GetGameInstance());
-	if (!TodoManager)
-		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
 	if (!PlayerController)
 		PlayerController = Cast<APlayerController_OM>(GetController());
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(TodoManager);
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(Helper::GetTodoManager(this));
 	if (PlayerController)
 		GetWorld()->GetTimerManager().ClearAllTimersForObject(PlayerController);
 }

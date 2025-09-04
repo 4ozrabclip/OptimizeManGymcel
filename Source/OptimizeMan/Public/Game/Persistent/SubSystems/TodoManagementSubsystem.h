@@ -28,9 +28,11 @@ public:
 	
 
 	void CompleteTodo(const FGameplayTag TodoCompletedTags);
+	void CompleteTodo(const ETodoArrayList InTodo);
 	void UpdateTodoList();
 	//Helpers
-	bool CurrentTodoListContainsName(const FString& InName, bool InIsComplete = false);
+	bool CurrentTodoListContains(const FString& InName, bool InIsComplete = false);
+	bool CurrentTodoListContains(const ETodoArrayList InTodo, bool InIsComplete = false);
 	bool CurrentTodoListContainsLayer(const FString& InLayer, bool InIsComplete = false);
 	void DelayForPlayerAchievements(TArray<FGameplayTag> TodoCompletedTags, float TimeTilCheck = 3.f);
 

@@ -118,7 +118,7 @@ public:
 	virtual void InitWindowsArray() { Windows.Empty(); }
 	static FFocusableWidgetStruct MakeButton(UButton* InButton, const FButtonStyle& InStyle);
 
-	virtual void OpenWindow(const FName InWindowName, bool bUsingGameAndUI = false);
+	virtual void OpenWindow(const FName InWindowName, bool bUsingGameAndUI = false, bool bPlayClick = true);
 
 
 protected:

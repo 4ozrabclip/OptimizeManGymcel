@@ -181,6 +181,9 @@ public:
 	bool GetHasBeenToGymToday() const { return bHasBeenToGymToday; }
 	void SetHasBeenToGymToday(const bool InHasBeenToGymToday) { bHasBeenToGymToday = InHasBeenToGymToday; }
 
+	bool GetHasDoneWorkoutInitial() const { return bHasDoneWorkoutInitial; }
+	void SetHasDoneWorkoutInitial(const bool InHasDoneWorkoutInitial) { bHasDoneWorkoutInitial = InHasDoneWorkoutInitial; }
+
 	UFUNCTION(BlueprintCallable) //for use with bedroom door
 	bool GetHasOpenedTodoListInitial() const { return bHasOpenedTodoListInitial; }
 	void SetHasOpenedTodoListInitial(const bool InHasOpenedTodoListInitial) { bHasOpenedTodoListInitial = InHasOpenedTodoListInitial; }	
@@ -286,6 +289,7 @@ private:
 	bool bHasOpenedTodoListInitial;
 	bool bHasOpenedPauseMenuInitial;
 	bool bHasInteractedInitial;
+	bool bHasDoneWorkoutInitial;
 
 	float BaseDifficultyMultiplier = 1.f;
 	float TempWaveDifficultyMultiplier = 1.f;
@@ -293,6 +297,9 @@ private:
 	int DaysSinceBaseDifficultyIncreased = 0;
 	int DaysSinceScoreChecked = 0;
 	int GameScoreSincePreviousCheck = 0;
+
+
+	
 	
 
 };

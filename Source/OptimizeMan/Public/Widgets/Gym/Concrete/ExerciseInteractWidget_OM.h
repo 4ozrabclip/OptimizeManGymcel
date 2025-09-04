@@ -20,8 +20,9 @@ class OPTIMIZEMAN_API UExerciseInteractWidget_OM : public UMinigameBaseWidget_OM
 	GENERATED_BODY()
 protected:
 	virtual void NativeConstruct() override;
+	void WorkoutTutorial(float DeltaTime);
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
+	virtual void NativeDestruct() override;
 public:
 	virtual void OnExitButtonClicked() override;
 	void MiniGame(float InDeltaTime);
@@ -113,7 +114,17 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* SetCountTextBlock;
 
-	
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UImage* ClickImage;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
+	UTexture2D* ClickHand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
+	UTexture2D* ClickHand_Clicking;
+
+	FTimerHandle TutorialDelayHandle;
 	
 
 
@@ -139,6 +150,8 @@ private: //Priv variables
 	bool bSpecialSliderOn = false;
 	bool bMiniGameOn = false;
 
+	bool bHasWorkedOutInitial = true;
+
 	bool bDoingRep = false;
 	
 	float InjuryBoundsLeftValue = 0.f;
@@ -147,6 +160,8 @@ private: //Priv variables
 	float MinorInjuryBoundsRightValue = 1.f;
 	
 	float SliderValue = 0.f;
+
+	float TimeSinceWorkoutTutorial = 0.f;
 	
 	float MainSliderTime;
 	float MainSliderPhase;

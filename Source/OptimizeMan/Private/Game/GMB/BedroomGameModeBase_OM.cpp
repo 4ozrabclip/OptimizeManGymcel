@@ -9,6 +9,7 @@
 #include "Widgets/Home/Concrete/DisplayDayWidget_OM.h"
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Utils/Static Helpers/Helper.h"
 
 
 ABedroomGameModeBase_OM::ABedroomGameModeBase_OM()
@@ -19,7 +20,6 @@ ABedroomGameModeBase_OM::ABedroomGameModeBase_OM()
 	bHasOpenedTodoList = false;
 	ShowDayWidget = nullptr;
 	Player = nullptr;
-	TodoManager = nullptr;
 }
 
 void ABedroomGameModeBase_OM::BeginPlay()
@@ -40,8 +40,6 @@ void ABedroomGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerCont
 	if (!PlayerController) return;
 	Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
 	if (!Player) return;
-	TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	if (!TodoManager) return;
 
 	Player->SwitchLevelTag(FGameplayTag::RequestGameplayTag("Level.Home"));
 	
@@ -61,33 +59,34 @@ void ABedroomGameModeBase_OM::HandleStartingNewPlayer_Implementation(APlayerCont
 	}
 }
 
+
 void ABedroomGameModeBase_OM::ProcessIncompleteTodos()
 {
-	if (!TodoManager)
-	{
-		TodoManager = Cast<UTodoManagementSubsystem>(GameInstance->GetSubsystem<UTodoManagementSubsystem>());
-	}
 	if (!GameInstance)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameInstance needs to be recasted in bedroom game mode base"));
 		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	}
-	TArray<FTodoItem>& CurrentTodos = TodoManager->GetCurrentTodoArray();
-	FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
-	bool bPlayerUpset = false;
-	for (FTodoItem& Todo: CurrentTodos)
+
+	if (auto* TodoManager = Helper::GetTodoManager(this))
 	{
-		UE_LOG(LogTemp, Display, TEXT("Processing Incomplete Todos"));
-		if (!Todo.bIsCompleted)
+		TArray<FTodoItem>& CurrentTodos = TodoManager->GetCurrentTodoArray();
+		FInnerStatus& InnerStatus = GameInstance->GetInnerStatus();
+		bool bPlayerUpset = false;
+		for (FTodoItem& Todo: CurrentTodos)
 		{
-			UE_LOG(LogTemp, Display, TEXT("Incomplete Todo Found"));
-			GameInstance->AddEgo(-1.f);
-			bPlayerUpset = true;
+			UE_LOG(LogTemp, Display, TEXT("Processing Incomplete Todos"));
+			if (!Todo.bIsCompleted)
+			{
+				UE_LOG(LogTemp, Display, TEXT("Incomplete Todo Found"));
+				GameInstance->AddEgo(-1.f);
+				bPlayerUpset = true;
+			}
 		}
-	}
-	if (bPlayerUpset)
-	{
-		Player->ShitDay();
+		if (bPlayerUpset)
+		{
+			Player->ShitDay();
+		}
 	}
 }
 void ABedroomGameModeBase_OM::WakeUp()

@@ -83,7 +83,6 @@ void AAmbientNoiseActor::PlayMusic()
     {
     case EPlayerEmotionalStates::Cope:
         MusicToUse = &Songs_Cope;
-        UE_LOG(LogTemp, Error, TEXT("Cope music"));
         break;
     case EPlayerEmotionalStates::Doomer:
         MusicToUse = &Songs_Cope;

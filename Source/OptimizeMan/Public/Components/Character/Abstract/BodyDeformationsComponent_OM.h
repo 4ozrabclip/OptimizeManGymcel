@@ -26,6 +26,8 @@ protected:
 	virtual void SetDeformationForBodyPart(ULevelSequence* InDeformationSequence, FBodyPartData BodyPart);
 	virtual void SetDeformation(ULevelSequence* InDeformationSequence);
 
+	virtual void PlayTemporaryDeformationSequence(ULevelSequence* InDeformationSequence);
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Sequence Tag")
 	FString CharacterTag;
 

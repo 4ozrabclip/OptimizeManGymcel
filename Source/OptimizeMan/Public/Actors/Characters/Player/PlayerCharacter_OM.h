@@ -187,8 +187,6 @@ private:
 	APlayerController_OM* PlayerController;
 	UPROPERTY()
 	UGameInstance_OM* GameInstance;
-	UPROPERTY()
-	UTodoManagementSubsystem* TodoManager;
 	
 	/**** Movement Tracking State ****/
 	FVector LastPosition;
