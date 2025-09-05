@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MetasoundSource.h"
+#include "NonInteractableActor_OM.h"
 #include "Utils/Structs/AudioTypes.h"
 #include "AmbientNoiseActor.generated.h"
 
 class UGameAudio_OM;
 
 UCLASS(Abstract)
-class OPTIMIZEMAN_API AAmbientNoiseActor : public AActor
+class OPTIMIZEMAN_API AAmbientNoiseActor : public ANonInteractableActor_OM
 {
 	GENERATED_BODY()
 public:

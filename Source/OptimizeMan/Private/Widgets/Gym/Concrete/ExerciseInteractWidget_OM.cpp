@@ -158,18 +158,18 @@ void UExerciseInteractWidget_OM::WorkoutTutorial(float DeltaTime)
 	if (ClickImage->GetVisibility() == ESlateVisibility::Hidden)
 		ClickImage->SetVisibility(ESlateVisibility::Visible);
 
-	if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 3.f, 0.7f)
-		|| FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 5.2f, 0.5f))
+	if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 1.5f, 0.1f)
+		|| FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 4.3f, 0.1f))
 	{ 
 		if (ClickHand_Clicking)
 			ClickImage->SetBrushResourceObject(ClickHand_Clicking);
 	}
-	else if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 4.6f, 0.5f))
+	else if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 3.f, 0.1f))
 	{
 		if (ClickHand)
 			ClickImage->SetBrushResourceObject(ClickHand);
 	}
-	else if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 7.f, 0.5f))
+	else if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 5.f, 0.1f))
 	{
 		if (ClickHand)
 			ClickImage->SetBrushResourceObject(ClickHand);
@@ -180,7 +180,7 @@ void UExerciseInteractWidget_OM::WorkoutTutorial(float DeltaTime)
 void UExerciseInteractWidget_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
+	
 	switch (CurrentWorkoutState)
 	{
 	case EWorkoutStates::InExercisePosition:
