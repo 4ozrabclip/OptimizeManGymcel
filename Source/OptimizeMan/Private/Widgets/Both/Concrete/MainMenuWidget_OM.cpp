@@ -19,7 +19,7 @@ void UMainMenuWidget_OM::NativeConstruct()
 	
 	InitButtons();
 	
-	OpenWindow(FName("MainWindow"), false, true);
+	OpenWindow(FName("MainWindow"), false, false);
 	
 	if (!GameInstance)
 	{

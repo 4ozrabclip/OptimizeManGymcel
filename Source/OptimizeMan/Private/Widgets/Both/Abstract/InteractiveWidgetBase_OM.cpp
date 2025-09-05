@@ -102,14 +102,12 @@ void UInteractiveWidgetBase_OM::UpdateButtonFocusVisuals(UButton* Button, const 
 
 	if (bIsFocused)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("bIsFocused"));
 		FButtonStyle FocusedStyle = DefaultStyle;
 		FocusedStyle.Normal = DefaultStyle.Hovered; 
 		Button->SetStyle(FocusedStyle);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Unfocused"));
 		Button->SetStyle(DefaultStyle);
 	}
 }
@@ -141,7 +139,7 @@ void UInteractiveWidgetBase_OM::ManageControllerInteraction()
 		}
 		for (FFocusableWidgetStruct& FocusableWidget : CurrentOpenWindow->FocusableContent)
 		{
-			UButton* Button = FocusableWidget.ButtonData.Button;
+			UButton* Button = FocusableWidget.ButtonData.Button.Get();
 			if (!IsValid(Button)) continue;
 
 			TSharedPtr<SWidget> CachedWidget = Button->GetCachedWidget();

@@ -140,7 +140,7 @@ void UVendingMachineWidget_OM::SetConsumables()
 void UVendingMachineWidget_OM::SetConsumableTextAndImage(FVendorItem& InItem)
 {
 	FConsumableType& Data = InItem.ConsumableData;
-	if (!InItem.PriceTextBlock || !InItem.DescriptionTextBlock || !InItem.BuyButton) return;
+	if (!InItem.PriceTextBlock.IsValid() || !InItem.DescriptionTextBlock.IsValid() || !InItem.BuyButton.IsValid()) return;
 
 	Consumables.Add(Data);
 	
@@ -148,8 +148,8 @@ void UVendingMachineWidget_OM::SetConsumableTextAndImage(FVendorItem& InItem)
 	InItem.DescriptionTextBlock->SetVisibility(ESlateVisibility::Visible);
 	InItem.IconImage->SetVisibility(ESlateVisibility::Visible);
 	InItem.PriceTextBlock->SetVisibility(ESlateVisibility::Visible);
-	SetConsumablesTextHelper(InItem.DescriptionTextBlock, FText::FromString(Data.NameString));
-	SetConsumablesTextHelper(InItem.PriceTextBlock, FText::FromString(FString::FromInt(Data.Price)));
+	SetConsumablesTextHelper(InItem.DescriptionTextBlock.Get(), FText::FromString(Data.NameString));
+	SetConsumablesTextHelper(InItem.PriceTextBlock.Get(), FText::FromString(FString::FromInt(Data.Price)));
 }
 
 

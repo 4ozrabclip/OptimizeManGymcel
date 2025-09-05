@@ -20,14 +20,11 @@ struct FVendorItem
 	GENERATED_BODY()
 	
 	FConsumableType ConsumableData;
-	UPROPERTY()
-	UTextBlock* DescriptionTextBlock;
-	UPROPERTY()
-	UTextBlock* PriceTextBlock;
-	UPROPERTY()
-	UImage* IconImage;
-	UPROPERTY()
-	UButton* BuyButton;
+
+	TWeakObjectPtr<UTextBlock> DescriptionTextBlock;
+	TWeakObjectPtr<UTextBlock> PriceTextBlock;
+	TWeakObjectPtr<UImage> IconImage;
+	TWeakObjectPtr<UButton> BuyButton;
 };
 /**
  * 

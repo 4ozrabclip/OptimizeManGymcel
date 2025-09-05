@@ -15,8 +15,7 @@ struct FButtonStruct
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY()
-	UButton* Button;
+	TWeakObjectPtr<UButton> Button;
 	UPROPERTY()
 	FButtonStyle DefaultButtonStyle;
 
@@ -26,8 +25,7 @@ struct FSliderStruct
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY()
-	USlider* Slider;
+	TWeakObjectPtr<USlider> Slider;
 	UPROPERTY()
 	FButtonStyle DefaultButtonStyle;
 
