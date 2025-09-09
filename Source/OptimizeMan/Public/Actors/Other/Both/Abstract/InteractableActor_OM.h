@@ -24,6 +24,8 @@ public:
 	virtual void DarkModeToggle(const bool bIsDarkMode) {}
 	virtual void OnPlayModeChanged(EPlayModes InPlayMode) {};
 
+	bool GetIsInteractable() const { return InteractableInterfaceProperties.bIsInteractable; }
+
 
 protected:
 	UPROPERTY()
