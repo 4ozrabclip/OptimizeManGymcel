@@ -5,11 +5,13 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actors/Other/Gym/Concrete/Barbell_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Audio/Concrete/PlayerVoiceAudio_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 UExercise_OM::UExercise_OM()
 {
@@ -226,7 +228,19 @@ void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 	AudioComponent->InjurySoundEffects(CurrentExerciseType);
 	constexpr float InjuryFocusDecrease = -0.2f;
 
-	
+
+	if (InInjuryLevel == EInjuryLevel::Major)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Injury: Major"));
+		if (auto* pc = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
+		{
+			UE_LOG(LogTemp, Display, TEXT("PC casted"));
+			pc->ShowYouDiedWidget();
+			return;
+		}
+	}
+
+	Equipment->PlayInjurySequence();
 
 	if (BodyParts.Num() < 1) return;
 

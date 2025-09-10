@@ -122,6 +122,8 @@ public:
 	EMonth GetCurrentMonth() const { return DayInfo.CurrentMonth; };
 	UFUNCTION(BlueprintPure)
 	int32 GetDayNumber() const;
+	UFUNCTION()
+	void SetDayNumber(const int InDayNumber) { DayInfo.DayNumber = InDayNumber;}
 	UFUNCTION(BlueprintPure)
 	FString GetCurrentDayName() const;
 	UFUNCTION(BlueprintCallable)

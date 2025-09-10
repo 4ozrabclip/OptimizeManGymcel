@@ -50,6 +50,7 @@ void UParentWidget_OM::FadeIn()
 	if (IsInViewport() || bIsFadingIn)
 		return;
 
+	UE_LOG(LogTemp, Display, TEXT("Fade iN called on: %s"), *this->GetName());
 	bIsFadingIn = true;
 	SetRenderOpacity(0.f);
 	AddToViewport();

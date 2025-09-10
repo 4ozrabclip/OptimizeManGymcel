@@ -19,6 +19,11 @@ void ANPC_AIController_OM::BeginPlay()
 	
 }
 
+void ANPC_AIController_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
 void ANPC_AIController_OM::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

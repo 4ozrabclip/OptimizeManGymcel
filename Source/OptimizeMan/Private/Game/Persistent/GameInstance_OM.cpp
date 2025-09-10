@@ -71,10 +71,18 @@ void UGameInstance_OM::ResetGame()
 	SetHasOpenedTodoListInitial(false);
 	SetHasInteractedInitial(false);
 	SetHasOpenedPauseMenuInitial(false);
+	
 
 	CurrentWaveType = EDifficultyWaveType::RestWave;
 	
 	ResetAllSaves();
+	if (TodoManagement)
+		TodoManagement->InitializeTodos();
+	else
+		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
+
+	SetDayNumber(1);
+	
 }
 
 void UGameInstance_OM::FinishDemo()

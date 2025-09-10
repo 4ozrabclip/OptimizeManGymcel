@@ -102,8 +102,6 @@ void ANpcBase_OM::BeginPlay()
 
 void ANpcBase_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::EndPlay(EndPlayReason);
-	
 	if (GameInstance)
 	{
 		GameInstance->OnDarkModeToggled.RemoveDynamic(this, &ANpcBase_OM::DarkModeToggle);
@@ -115,9 +113,14 @@ void ANpcBase_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (GetWorld())
 	{
 		GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+		GetWorld()->GetTimerManager().ClearAllTimersForObject(Blackboard);
+		if (GetController())
+		{
+			GetWorld()->GetTimerManager().ClearAllTimersForObject(GetController());
+		}
 	}
-	
 
+	Super::EndPlay(EndPlayReason);
 
 }
 

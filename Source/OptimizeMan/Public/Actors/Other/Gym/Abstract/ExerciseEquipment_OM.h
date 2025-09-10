@@ -4,9 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
+#include "Animation/SkeletalMeshActor.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/PlayModes.h"
 #include "ExerciseEquipment_OM.generated.h"
+class ALevelSequenceActor;
+class ULevelSequencePlayer;
+class ULevelSequence;
 class UCameraComponent;
 class UWidgetComponent;
 class AGymCamera;
@@ -25,7 +29,25 @@ protected:
 	virtual void BeginPlay() override;
 
 
+	UFUNCTION()
+	void OnSequenceFinished();
+	
+
+	UPROPERTY(EditInstanceOnly, Category = "Sequences")
+	TSoftObjectPtr<ASkeletalMeshActor> PlayerMesh;
+
+	UPROPERTY(EditInstanceOnly, Category = "Flexing")
+	TArray<ULevelSequence*> InjurySequences; 
+
+	UPROPERTY()
+	ULevelSequencePlayer* SequencePlayer;
+	UPROPERTY()
+	ALevelSequenceActor* SequenceActor;
 public:
+
+	void PlayInjurySequence();
+
+	
 	UFUNCTION()
 	void TurnOffWidget();
 	UFUNCTION()

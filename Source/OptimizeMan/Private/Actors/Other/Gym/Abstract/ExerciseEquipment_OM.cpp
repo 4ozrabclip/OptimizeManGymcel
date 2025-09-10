@@ -3,6 +3,9 @@
 
 #include "Actors/Other/Gym/Abstract/ExerciseEquipment_OM.h"
 
+#include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
+#include "MovieSceneSequencePlaybackSettings.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
@@ -45,6 +48,38 @@ void AExerciseEquipment_OM::BeginPlay()
 	{
 		Player->OnPlayModeChange.AddDynamic(this, &AExerciseEquipment_OM::OnPlayModeChanged);
 	}
+
+	if (InjurySequences.Num() > 0)
+	{
+		FMovieSceneSequencePlaybackSettings PlaybackSettings;
+		PlaybackSettings.bAutoPlay = false;
+
+		SequenceActor = nullptr;
+		SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
+			GetWorld(),
+			InjurySequences[0], 
+			PlaybackSettings,
+			SequenceActor
+		);
+
+		if (SequencePlayer)
+		{
+			SequencePlayer->OnFinished.AddDynamic(this, &AExerciseEquipment_OM::OnSequenceFinished);
+		}
+		else
+		{
+			
+			UE_LOG(LogTemp, Error, TEXT("%s: Failed to create initial sequence player"), *this->GetName());
+		}
+	}
+}
+
+void AExerciseEquipment_OM::OnSequenceFinished()
+{
+	//PlayerMesh->SetActorHiddenInGame(true);
+	//Player->SetActorHiddenInGame(false);
+
+	PlayerController->ShowExitButton();
 }
 
 void AExerciseEquipment_OM::OnPlayModeChanged(EPlayModes InPlayMode)
@@ -75,6 +110,33 @@ void AExerciseEquipment_OM::Tick(float DeltaTime)
 			TurnOffWidget();
 		}
 	}
+}
+
+void AExerciseEquipment_OM::PlayInjurySequence()
+{
+	//if (!PlayerMesh) return;
+	if (InjurySequences.Num() <= 0) return;
+
+	/*if (!PlayerMesh || !SequencePlayer)
+	{
+		UE_LOG(LogTemp, Error, TEXT("MuscleViewMirror: PlayerMesh or SequencePlayer is NULL"));
+		return;
+	}*/
+
+	//Player->SetActorHiddenInGame(true);
+	//PlayerMesh->SetActorHiddenInGame(false);
+
+
+	PlayerController->ShowExitButton(true);
+
+
+
+	int RandIndex = FMath::RandRange(0, InjurySequences.Num() - 1);
+	ULevelSequence* Seq = InjurySequences[RandIndex];
+	
+	SequencePlayer->Initialize(Seq, GetWorld()->GetCurrentLevel(), SequenceActor->CameraSettings);
+
+	SequencePlayer->Play();
 }
 
 void AExerciseEquipment_OM::TurnOffWidget()

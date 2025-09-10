@@ -18,6 +18,7 @@ class OPTIMIZEMAN_API ANPC_AIController_OM : public AAIController
 public:
 	explicit ANPC_AIController_OM(const FObjectInitializer& ObjectInitializer);
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void OnPossess(APawn* InPawn) override;
 	

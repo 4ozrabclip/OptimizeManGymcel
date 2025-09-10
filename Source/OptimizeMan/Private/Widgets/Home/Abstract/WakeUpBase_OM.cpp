@@ -32,7 +32,6 @@ void UWakeUpBase_OM::NativeConstruct()
 	pc = Cast<APlayerController_OM>(GetOwningPlayer());
 	
 
-
 	InitializeTaskOptions();
 	CurrentButtonStyle = OriginalStyle_1;
 	OpenWindow(FName("MainWindow"));
@@ -150,7 +149,7 @@ void UWakeUpBase_OM::UpdateFakeTodoList()
 		if (TodoManager->GetCurrentTodoArray().Num() == 3)
 		{
 			if (pc)
-				pc->ShowExitButton();
+				pc->FlashExitButton();
 		}
 		else
 		{
