@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/GridPanel.h"
 #include "Components/Overlay.h"
+#include "Components/TextBlock.h"
 #include "Game/GMB/BedroomGameModeBase_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 
@@ -36,6 +37,15 @@ void UWakeUpTutorial_OM::NativeConstruct()
 
 	CurrentTutorialStep = 0;
 	bWaitingForInput = false;
+}
+
+void UWakeUpTutorial_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	
+	/*UE_LOG(LogTemp, Warning, TEXT("%s"),
+		Welcome_Text->GetVisibility() == ESlateVisibility::Hidden ?
+		TEXT("Hidden") : TEXT("Not Hidden"));*/
 }
 
 void UWakeUpTutorial_OM::NativeDestruct()
@@ -79,69 +89,44 @@ void UWakeUpTutorial_OM::PlayContPrompt()
 				PlayAnimation(TutPart1_Cont, 0.f, 0);
 			break;
 		}
-	case 1:
-		{
-			if (IsValid(TutPart2_Cont))
-				PlayAnimation(TutPart2_Cont, 0.f, 0);
-			break;
-		}
-	case 2:
-		{
-			if (IsValid(TutPart3_Cont))
-				PlayAnimation(TutPart3_Cont, 0.f, 0);
-			break;
-		}
-	case 3:
-		{
-			if (IsValid(TutPart4_Cont))
-				PlayAnimation(TutPart4_Cont, 0.f, 0);
-			break;
-		}
 	default:
 		break;
 	}
 }
+
+void UWakeUpTutorial_OM::HandleOptionSelected(int InOption)
+{
+	
+	if (TodoLisTut_Overlay->GetVisibility() == ESlateVisibility::Visible)
+	{
+		TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
+	}
+	Super::HandleOptionSelected(InOption);
+}
+
 void UWakeUpTutorial_OM::AdvanceTutorial()
 {
 	if (!bWaitingForInput) return;
 
 	bWaitingForInput = false;
-	StopAllAnimations();
+	StopAnimation(TutPart1_Cont);
 	CurrentTutorialStep++;
-	switch (CurrentTutorialStep)
-	{
-		case 1:
-			{
-				PlayTutorialAnimation(TutPart2);
-				break;
-			}
-		case 2:
-			{
-				PlayTutorialAnimation(TutPart3);
-				break;
-			}
-		case 3:
-			{
-				PlayTutorialAnimation(TutPart4);
-				break;
-			}
-		default:
-			{
-				FinishTutorial();
-				break;
-			}
-	}
+
+	FinishTutorial();
+
 }
 void UWakeUpTutorial_OM::FinishTutorial()
 {
-	if (IsValid(TodoLisTut_Overlay))
-		TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
-	else
-		UE_LOG(LogTemp, Error, TEXT("TodoLisTut_Overlay invalid"));
-	if (IsValid(ChooseTasksTut_Overlay))
-		ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
-	else
-		UE_LOG(LogTemp, Error, TEXT("TodoTasksTut_Overlay invalid"));
+	GetWorld()->GetTimerManager().ClearTimer(Handle);
+	
+	Welcome_Text->SetVisibility(ESlateVisibility::Hidden);
+	Welcome_Text_1->SetVisibility(ESlateVisibility::Hidden);
+	Welcome_Text_2->SetVisibility(ESlateVisibility::Hidden);
+	PressAnyKey_Text->SetVisibility(ESlateVisibility::Hidden);
+
+
+	PleaseChooseTasksTut_Text->SetVisibility(ESlateVisibility::HitTestInvisible);
+	ChooseTasksTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
 	
 }
 

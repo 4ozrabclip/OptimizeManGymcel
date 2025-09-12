@@ -156,7 +156,7 @@ void UExerciseInteractWidget_OM::WorkoutTutorial(float DeltaTime)
 	TimeSinceWorkoutTutorial += DeltaTime;
 
 	if (ClickImage->GetVisibility() == ESlateVisibility::Hidden)
-		ClickImage->SetVisibility(ESlateVisibility::Visible);
+		ClickImage->SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	if (FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 1.5f, 0.1f)
 		|| FMath::IsNearlyEqual(TimeSinceWorkoutTutorial, 4.3f, 0.1f))

@@ -17,11 +17,14 @@ class OPTIMIZEMAN_API UWakeUpTutorial_OM : public UWakeUpBase_OM
 public:
 	explicit UWakeUpTutorial_OM(const FObjectInitializer& ObjectInitializer);
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeDestruct() override;
 	
 	void InitiateTutorialSequence();
 	void PlayTutorialAnimation(UWidgetAnimation* InAnimationPart);
 	void PlayContPrompt();
+
+	virtual void HandleOptionSelected(int InOption) override;
 
 	UFUNCTION()
 	void AdvanceTutorial();
@@ -44,19 +47,20 @@ protected:
 	UWidgetAnimation* TutPart1;
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	UWidgetAnimation* TutPart1_Cont;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart2;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart2_Cont;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart3;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart3_Cont;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart4;
-	UPROPERTY(meta = (BindWidgetAnim), Transient)
-	UWidgetAnimation* TutPart4_Cont;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Welcome_Text;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Welcome_Text_1;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Welcome_Text_2;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* PressAnyKey_Text;
+	
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* PleaseChooseTasksTut_Text;
+
+	
 private:
 
 

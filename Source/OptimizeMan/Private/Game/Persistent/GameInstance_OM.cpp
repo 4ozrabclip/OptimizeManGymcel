@@ -95,7 +95,6 @@ void UGameInstance_OM::FinishDemo()
 	});
 }
 
-
 void UGameInstance_OM::SetInnerStatus(const FInnerStatus& InInnerStatus)
 {
 	InnerStatus = InInnerStatus;
