@@ -39,8 +39,12 @@ void UWakeUpBase_OM::NativeConstruct()
 
 void UWakeUpBase_OM::NativeDestruct()
 {
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearAllTimersForObject(this);
+	}
+
 	Super::NativeDestruct();
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
 void UWakeUpBase_OM::InitWindowsArray()
@@ -73,11 +77,12 @@ void UWakeUpBase_OM::InitializeTaskOptions()
 
 	TaskOptions.Empty();
 	
-	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_0, TaskOptionButton, TaskOption, TaskOptionDesc, OriginalStyle_1, CheckedStyle_1));
-	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_1, TaskOptionButton_1, TaskOption_1, TaskOptionDesc_1, OriginalStyle_2, CheckedStyle_2));
-	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_2, TaskOptionButton_2, TaskOption_2, TaskOptionDesc_2, OriginalStyle_1, CheckedStyle_1));
-	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_3, TaskOptionButton_3, TaskOption_3, TaskOptionDesc_3, OriginalStyle_2, CheckedStyle_2));
-	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_4, TaskOptionButton_4, TaskOption_4, TaskOptionDesc_4, OriginalStyle_1, CheckedStyle_1));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_0, TaskOptionButton,   TaskOption,   TaskOptionDesc,   TaskOptionPenal,   TaskOption_OPScore,   OriginalStyle_1, CheckedStyle_1));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_1, TaskOptionButton_1, TaskOption_1, TaskOptionDesc_1, TaskOptionPenal_1, TaskOption_OPScore_1, OriginalStyle_2, CheckedStyle_2));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_2, TaskOptionButton_2, TaskOption_2, TaskOptionDesc_2, TaskOptionPenal_2, TaskOption_OPScore_2, OriginalStyle_1, CheckedStyle_1));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_3, TaskOptionButton_3, TaskOption_3, TaskOptionDesc_3, TaskOptionPenal_3, TaskOption_OPScore_3, OriginalStyle_2, CheckedStyle_2));
+	TaskOptions.Add(FTaskOptionData(TaskOptionPanel_4, TaskOptionButton_4, TaskOption_4, TaskOptionDesc_4, TaskOptionPenal_4, TaskOption_OPScore_4, OriginalStyle_1, CheckedStyle_1));
+
 }
 
 void UWakeUpBase_OM::OnExitButtonClicked()
@@ -217,6 +222,8 @@ void UWakeUpBase_OM::AssignOptionsToWidget()
 				Opt.Panel->SetVisibility(ESlateVisibility::Visible);
 				Opt.Title->SetText(FText::FromString(Options[i].Name));
 				Opt.Description->SetText(FText::FromString(Options[i].Desc));
+				Opt.Penalty->SetText(FText::FromString(Options[i].Penal));
+				Opt.OP->SetText(FText::AsNumber(Options[i].Points));
     
 				Opt.Button->OnClicked.RemoveAll(this);
 				switch (i)

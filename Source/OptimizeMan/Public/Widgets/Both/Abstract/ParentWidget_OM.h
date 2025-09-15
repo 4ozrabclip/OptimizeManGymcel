@@ -13,7 +13,7 @@ class UButton;
  * 
  */
 
-UCLASS(Abstract)
+UCLASS(Abstract, Blueprintable)
 class OPTIMIZEMAN_API UParentWidget_OM : public UUserWidget
 {
 	GENERATED_BODY()

@@ -18,141 +18,124 @@ void UTodoManagementSubsystem::InitializeTodos()
 	FTodoItem TakeColdShower;
 	TakeColdShower.Name = TEXT("Take a cold shower");
 	TakeColdShower.Level = TEXT("Home");
-	TakeColdShower.Desc = TEXT("1 Game Point.  +1 SexAppeal");
-	TakeColdShower.StatBuffs = {
-		{EPlayerStatTypes::SexAppeal, 0.1f}
-	};
+	TakeColdShower.Desc = TEXT("+1 SexAppeal");
+	TakeColdShower.StatBuffs = { {EPlayerStatTypes::SexAppeal, 0.1f} };
 	TakeColdShower.Todo = ETodoArrayList::TakeColdShower;
 	TakeColdShower.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.TakeColdShower");
 	TakeColdShower.Points = 1;
+	TakeColdShower.Penal = TEXT("-1 Ego");
 	TodoArray.Add(TakeColdShower);
-	
+
 	FTodoItem BuySomething; 
 	BuySomething.Name = TEXT("Buy Something");
 	BuySomething.Level = TEXT("Home");
 	BuySomething.Desc = TEXT("+?");
-	BuySomething.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f}
-	};
+	BuySomething.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f} };
 	BuySomething.Todo = ETodoArrayList::BuySomething;
 	BuySomething.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.BuySomething");
 	BuySomething.Points = 0;
+	BuySomething.Penal = TEXT("-1 Ego");
 	TodoArray.Add(BuySomething);
 
 	FTodoItem TalkToAGirl;
 	TalkToAGirl.Name = TEXT("Talk to A Girl");
 	TalkToAGirl.Level = TEXT("Gym");
 	TalkToAGirl.Desc = TEXT("+1 Social");
-	TalkToAGirl.StatBuffs = {
-	{EPlayerStatTypes::Social, 0.1f}
-		};
+	TalkToAGirl.StatBuffs = { {EPlayerStatTypes::Social, 0.1f} };
 	TalkToAGirl.Todo = ETodoArrayList::TalkToAGirl;
 	TalkToAGirl.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.TalkToAGirl");
-	TalkToAGirl.Points = 0;
+	TalkToAGirl.Points = 1;
+	TalkToAGirl.Penal = TEXT("-1 Ego");
 	TodoArray.Add(TalkToAGirl);
-
-
 
 	FTodoItem MakeSomeoneLikeYou; 
 	MakeSomeoneLikeYou.Name = TEXT("Make Someone Like You");
 	MakeSomeoneLikeYou.Level = TEXT("Gym");
 	MakeSomeoneLikeYou.Desc = TEXT("+2 Social, +1 Ego");
-	MakeSomeoneLikeYou.StatBuffs = {
-		{EPlayerStatTypes::Social, 0.2f},
-		{EPlayerStatTypes::Ego, 0.1f}
-	};
+	MakeSomeoneLikeYou.StatBuffs = { {EPlayerStatTypes::Social, 0.2f}, {EPlayerStatTypes::Ego, 0.1f} };
 	MakeSomeoneLikeYou.Todo = ETodoArrayList::MakeSomeoneLikeYou;
 	MakeSomeoneLikeYou.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.MakeSomeoneLikeYou");
 	MakeSomeoneLikeYou.Points = 2;
+	MakeSomeoneLikeYou.Penal = TEXT("-1 Ego");
 	TodoArray.Add(MakeSomeoneLikeYou);
 
 	FTodoItem HitFiveSquats;
 	HitFiveSquats.Name = TEXT("Hit 5 squats in a set");
 	HitFiveSquats.Level = TEXT("Gym");
 	HitFiveSquats.Desc = TEXT("+1 Ego");
-	HitFiveSquats.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f}
-	};
+	HitFiveSquats.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f} };
 	HitFiveSquats.Todo = ETodoArrayList::HitFiveSquats;
 	HitFiveSquats.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.HitFiveSquats");
 	HitFiveSquats.Points = 1;
+	HitFiveSquats.Penal = TEXT("-1 Ego");
 	TodoArray.Add(HitFiveSquats);
 
 	FTodoItem FlexInChangingRooms;
 	FlexInChangingRooms.Name = TEXT("Flex In Changing Rooms");
 	FlexInChangingRooms.Level = TEXT("Gym");
 	FlexInChangingRooms.Desc = TEXT("+1 Ego, +1 SexAppeal");
-	FlexInChangingRooms.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f},
-		{EPlayerStatTypes::SexAppeal, 0.1f}
-	};
+	FlexInChangingRooms.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f}, {EPlayerStatTypes::SexAppeal, 0.1f} };
 	FlexInChangingRooms.Todo = ETodoArrayList::FlexInChangingRooms;
 	FlexInChangingRooms.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.FlexInChangingRooms");
 	FlexInChangingRooms.Points = 1;
+	FlexInChangingRooms.Penal = TEXT("-1 Ego");
 	TodoArray.Add(FlexInChangingRooms);
 
-	FTodoItem StartBulking; // ----- Awaiting Win Condition
+	FTodoItem StartBulking;
 	StartBulking.Name = TEXT("Start a bulk");
 	StartBulking.Level = TEXT("Home");
 	StartBulking.Desc = TEXT("+1 Ego");
-	StartBulking.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f}
-	};
+	StartBulking.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f} };
 	StartBulking.Todo = ETodoArrayList::StartBulking;
 	StartBulking.Tag = FGameplayTag::RequestGameplayTag("Todos.Bedroom.StartBulking");
 	StartBulking.Points = 0;
+	StartBulking.Penal = TEXT("-1 Ego");
 	TodoArray.Add(StartBulking);
-	
+
 	FTodoItem HitTenSquats;
 	HitTenSquats.Name = TEXT("Hit 10 squats in a set");
 	HitTenSquats.Level = TEXT("Gym");
 	HitTenSquats.Desc = TEXT("+1 Ego");
-	HitTenSquats.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f}
-	};
+	HitTenSquats.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f} };
 	HitTenSquats.Todo = ETodoArrayList::HitTenSquats;
 	HitTenSquats.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.HitTenSquats");
 	HitTenSquats.Points = 2;
+	HitTenSquats.Penal = TEXT("-1 Ego");
 	TodoArray.Add(HitTenSquats);
-
-
 
 	FTodoItem HitFiveDips;
 	HitFiveDips.Name = TEXT("Hit 5 dips in a set");
 	HitFiveDips.Level = TEXT("Gym");
 	HitFiveDips.Desc = TEXT("+1 Ego");
-	HitFiveDips.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f}
-	};
+	HitFiveDips.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f} };
 	HitFiveDips.Todo = ETodoArrayList::HitFiveDips;
 	HitFiveDips.Tag = FGameplayTag::RequestGameplayTag(("Todos.Gym.HitFiveDips"));
 	HitFiveDips.Points = 2;
+	HitFiveDips.Penal = TEXT("-1 Ego");
 	TodoArray.Add(HitFiveDips);
 
-	FTodoItem IncreaseSquatLift; // --------- Awaiting Win Condition
+	FTodoItem IncreaseSquatLift;
 	IncreaseSquatLift.Name = TEXT("Increase Squat Lift");
 	IncreaseSquatLift.Level = TEXT("Gym");
 	IncreaseSquatLift.Desc = TEXT("+1 Ego, +1 SexAppeal");
-	IncreaseSquatLift.StatBuffs = {
-		{EPlayerStatTypes::Ego, 0.1f},
-		{EPlayerStatTypes::SexAppeal, 0.1f},
-	};
+	IncreaseSquatLift.StatBuffs = { {EPlayerStatTypes::Ego, 0.1f}, {EPlayerStatTypes::SexAppeal, 0.1f} };
 	IncreaseSquatLift.Todo = ETodoArrayList::IncreaseSquatLift;
 	IncreaseSquatLift.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.IncreaseSquatLift");
 	IncreaseSquatLift.Points = 2;
+	IncreaseSquatLift.Penal = TEXT("-1 Ego");
 	TodoArray.Add(IncreaseSquatLift);
-	
-	FTodoItem GetARealGirlfriend; // ----- Awaiting Win Condition
+
+	FTodoItem GetARealGirlfriend;
 	GetARealGirlfriend.Name = TEXT("Get a real girlfriend");
 	GetARealGirlfriend.Level = TEXT("Gym");
 	GetARealGirlfriend.Desc = TEXT("+10 Ego");
-	GetARealGirlfriend.StatBuffs = {
-		{EPlayerStatTypes::Ego, 1.f}
-	};
+	GetARealGirlfriend.StatBuffs = { {EPlayerStatTypes::Ego, 1.f} };
 	GetARealGirlfriend.Todo = ETodoArrayList::GetARealGirlfriend;
 	GetARealGirlfriend.Tag = FGameplayTag::RequestGameplayTag("Todos.Gym.GetARealGirlfriend");
 	GetARealGirlfriend.Points = 4;
+	GetARealGirlfriend.Penal = TEXT("-1 Ego");
 	TodoArray.Add(GetARealGirlfriend);
+
 }
 
 void UTodoManagementSubsystem::AddToPotentialTodos(const ETodoArrayList InTodo)

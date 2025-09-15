@@ -10,17 +10,18 @@ class UButton;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class OPTIMIZEMAN_API UEndPlaytestWidget_OM : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
 	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
 
-	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
-
+	UFUNCTION()
+	void OnEndAnimFinished();
+	UFUNCTION()
+	void OnGoodbyeAnimFinished();
 	UFUNCTION()
 	void EndPlaytest();
 protected:

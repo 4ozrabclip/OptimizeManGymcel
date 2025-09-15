@@ -3,6 +3,7 @@
 
 #include "Widgets/Both/Concrete/EndPlaytestWidget_OM.h"
 #include "Components/Button.h"
+#include "Game/Persistent/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
 
 void UEndPlaytestWidget_OM::NativeConstruct()
@@ -15,35 +16,38 @@ void UEndPlaytestWidget_OM::NativeConstruct()
 			ExitButton->OnClicked.AddDynamic(this, &UEndPlaytestWidget_OM::EndPlaytest);
 	}
 
-
 	if (EndAnim)
+	{
+		FWidgetAnimationDynamicEvent EndDelegate;
+		EndDelegate.BindDynamic(this, &UEndPlaytestWidget_OM::OnEndAnimFinished);
+		BindToAnimationFinished(EndAnim, EndDelegate);
+
 		PlayAnimation(EndAnim);
-	
+	}
 }
 
-void UEndPlaytestWidget_OM::NativeDestruct()
+void UEndPlaytestWidget_OM::OnEndAnimFinished()
 {
-	if (GoodbyeAnim && GetAnimationState(GoodbyeAnim)->IsPlayingForward())
-		GetAnimationState(GoodbyeAnim)->Stop();
-	if (EndAnim && GetAnimationState(EndAnim)->IsPlayingForward())
-		GetAnimationState(EndAnim)->Stop();
-
-	Super::NativeDestruct();
 
 }
 
-void UEndPlaytestWidget_OM::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+void UEndPlaytestWidget_OM::OnGoodbyeAnimFinished()
 {
-	Super::OnAnimationFinished_Implementation(Animation);
-
 	UGameplayStatics::OpenLevel(GetWorld(), FName("/Game/Levels/MainMenu"));
-	
 }
 
 void UEndPlaytestWidget_OM::EndPlaytest()
 {
+	if (auto* GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance()))
+	{
+		GameInstance->ResetGame();
+	}
 	if (GoodbyeAnim)
-		PlayAnimation(GoodbyeAnim);
+	{
+		FWidgetAnimationDynamicEvent GoodbyeDelegate;
+		GoodbyeDelegate.BindDynamic(this, &UEndPlaytestWidget_OM::OnGoodbyeAnimFinished);
+		BindToAnimationFinished(GoodbyeAnim, GoodbyeDelegate);
 
-	OnAnimationFinished_Implementation(GoodbyeAnim);
+		PlayAnimation(GoodbyeAnim);
+	}
 }

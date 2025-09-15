@@ -76,10 +76,10 @@ void UHintsWidget_OM::ShowHint(const FText& HintTextString, float DisplayTime, b
 
 void UHintsWidget_OM::HideHint()
 {
-	if (FlashingAnim && bFlashing && GetAnimationState(FlashingAnim)->IsPlayingForward())
+	if (FlashingAnim && bFlashing && IsAnimationPlaying(FlashingAnim))
 	{
 		bFlashing = false;
-		GetAnimationState(FlashingAnim)->Stop();
+		StopAnimation(FlashingAnim);
 	}
 	TimeSinceHintOnScreen = 0;
 	SetVisibility(ESlateVisibility::Hidden);

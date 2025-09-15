@@ -34,9 +34,10 @@ struct FTodoItem
 	Level(""),
 	Todo(ETodoArrayList::None),
 	Desc(""),
+	Penal(""),
 	Tag(FGameplayTag::EmptyTag),
 	bIsCompleted(false),
-	Points(0)
+	Points(1)
 	{}
 
 	UPROPERTY()
@@ -52,6 +53,9 @@ struct FTodoItem
 
 	UPROPERTY()
 	FString Desc;
+
+	UPROPERTY()
+	FString Penal;
 
 	UPROPERTY()
 	FGameplayTag Tag;

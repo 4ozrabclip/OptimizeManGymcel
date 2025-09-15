@@ -22,9 +22,6 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	UPROPERTY(BlueprintAssignable, Category = "Stats")
-	FOnStatBelowThreshold OnFocusBelowThreshold;
-
-	UPROPERTY(BlueprintAssignable, Category = "Stats")
 	FOnStatBelowThreshold OnEnergyBelowThreshold;
 
 
@@ -43,7 +40,7 @@ protected:
 
 
 private:
-	float EnergyThreshold = 0.5f;
+	float EnergyThreshold = 0.7f;
 	float FocusThreshold = 0.5f;
 	bool bCanTriggerFocusLow = true;
 	bool bCanTriggerEnergyLow = true;

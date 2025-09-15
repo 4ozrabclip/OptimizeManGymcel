@@ -21,6 +21,8 @@ void UDisplayDayWidget_OM::DarkModeToggle(const bool bIsDarkMode)
 		return;
 	}
 
+	if (GetRenderOpacity() < 1.f) return;
+	
 	if (bIsDarkMode)
 	{
 		DisplayDayText->SetColorAndOpacity(White);

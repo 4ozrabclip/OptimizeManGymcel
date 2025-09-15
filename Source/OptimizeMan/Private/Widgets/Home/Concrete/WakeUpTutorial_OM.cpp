@@ -97,7 +97,7 @@ void UWakeUpTutorial_OM::PlayContPrompt()
 void UWakeUpTutorial_OM::HandleOptionSelected(int InOption)
 {
 	
-	if (TodoLisTut_Overlay->GetVisibility() == ESlateVisibility::Visible)
+	if (TodoLisTut_Overlay->GetVisibility() != ESlateVisibility::Hidden)
 	{
 		TodoLisTut_Overlay->SetVisibility(ESlateVisibility::Hidden);
 	}
@@ -109,10 +109,12 @@ void UWakeUpTutorial_OM::AdvanceTutorial()
 	if (!bWaitingForInput) return;
 
 	bWaitingForInput = false;
-	StopAnimation(TutPart1_Cont);
+	StopAllAnimations();
 	CurrentTutorialStep++;
 
-	FinishTutorial();
+	FWidgetAnimationDynamicEvent Delegate;
+	Delegate.BindDynamic(this, &UWakeUpTutorial_OM::FinishTutorial);
+	BindToAnimationFinished(TutPart1_Cont, Delegate);
 
 }
 void UWakeUpTutorial_OM::FinishTutorial()

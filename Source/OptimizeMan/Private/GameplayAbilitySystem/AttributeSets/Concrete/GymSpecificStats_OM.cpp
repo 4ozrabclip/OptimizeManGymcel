@@ -15,19 +15,6 @@ void UGymSpecificStats_OM::PostGameplayEffectExecute(const FGameplayEffectModCal
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	if (bCanTriggerFocusLow)
-	{
-		if (float FocusVal = GetFocus())
-		{
-			if (FocusVal <= 0.f || FocusThreshold <= 0.f)
-				bCanTriggerFocusLow = false;
-			if (FocusVal < FocusThreshold)
-			{
-				OnFocusBelowThreshold.Broadcast(FocusVal);
-				FocusThreshold -= 0.1f;
-			}
-		}
-	}
 
 	if (bCanTriggerEnergyLow)
 	{

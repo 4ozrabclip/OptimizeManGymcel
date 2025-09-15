@@ -197,7 +197,6 @@ void UMainMenuWidget_OM::ToggleDarkModeFunction()
 
 void UMainMenuWidget_OM::StartNewGame() 
 {
-	GameInstance->ResetGame();
 
 	
 	const FString HomeLevelString = "/Game/Levels/Home";

@@ -28,6 +28,7 @@ public:
 
 	UFUNCTION()
 	void AdvanceTutorial();
+	UFUNCTION()
 	void FinishTutorial();
 
 	virtual void OnExitButtonClicked() override;

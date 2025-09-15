@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "BedroomGameModeBase_OM.generated.h"
 
+class UDisplayDayWidget_OM;
 /**
  * 
  */
@@ -35,7 +36,8 @@ public:
 
 	bool GetIsFadingOut();
 
-	UUserWidget* GetShowDayWidget() { return ShowDayWidget;}
+	UDisplayDayWidget_OM* GetShowDayWidget() const;
+	TSubclassOf<UDisplayDayWidget_OM> GetShowDayWidgetClass() const { return ShowDayWidgetClass; }
 
 	bool GetWidgetIsVisible() const;
 
@@ -43,7 +45,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "UI")
-	UUserWidget* ShowDayWidget;
+	TSubclassOf<UDisplayDayWidget_OM> ShowDayWidgetClass;
+
+	UPROPERTY()
+	UDisplayDayWidget_OM* ShowDayWidget;
 
 	UPROPERTY()
 	class UGameInstance_OM* GameInstance;

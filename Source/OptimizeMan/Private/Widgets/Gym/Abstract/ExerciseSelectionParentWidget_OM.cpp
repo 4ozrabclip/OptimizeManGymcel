@@ -106,7 +106,7 @@ void UExerciseSelectionParentWidget_OM::UpdateWeightSelect(float InValue)
 	const float MuscleExertionRatio = FMath::Clamp((NormalizedInput - MuscleGroupCurrentStrength) * 5.f, 0.f, 1.f);
 
 	
-	const FLinearColor SafeColour = FLinearColor::FromSRGBColor(FColor(0, 120, 255));
+	const FLinearColor SafeColour = FLinearColor::FromSRGBColor(FColor(0, 255, 90));
 	const FLinearColor DangerColour = FLinearColor::Red;
 	const FLinearColor ResultColour = FLinearColor::LerpUsingHSV(SafeColour, DangerColour, MuscleExertionRatio);
 

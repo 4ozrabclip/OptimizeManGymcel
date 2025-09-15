@@ -195,35 +195,44 @@ void ABedroomGameModeBase_OM::ShowPauseMenuHint()
 
 void ABedroomGameModeBase_OM::ShowCurrentDay()
 {
-	if (const TSubclassOf<UUserWidget> WidgetClass = ShowDayWidget->GetClass())
+	TSubclassOf<UDisplayDayWidget_OM> WidgetClass = GetShowDayWidgetClass();
+	if (!WidgetClass && IsValid(ShowDayWidget))
 	{
-		ShowDayWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
-		
-		if (UDisplayDayWidget_OM* DisplayDayWidget = Cast<UDisplayDayWidget_OM>(ShowDayWidget))
-		{
-			const FString CurrentDay = GameInstance->GetCurrentDayName();
-			const int32 DayNumber = GameInstance->GetDayNumber();
-			const FString DisplayDayText = FString::Format(TEXT("Day {0}, {1}"), {DayNumber, CurrentDay});
-
-			DisplayDayWidget->SetText(DisplayDayText);
-		}
-		ShowDayWidget->SetRenderOpacity(1.0f);
-		if (!ShowDayWidget->IsInViewport())
-		{
-			ShowDayWidget->AddToViewport(2);
-			SetWidgetIsVisible(true);
-		}
-		
-		GetWorld()->GetTimerManager().SetTimer(
-			DelayTilFadeHandle,
-			[this]()
-			{
-				StartFadeOut();
-			},
-			5.0f,
-			false
-		);
+		WidgetClass = ShowDayWidget->GetClass();
 	}
+
+	if (!WidgetClass) return;
+
+	ShowDayWidget = CreateWidget<UDisplayDayWidget_OM>(GetWorld(), WidgetClass);
+	if (!ShowDayWidget)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ShowCurrentDay: Failed to create ShowDayWidget instance."));
+		return;
+	}
+
+	if (UDisplayDayWidget_OM* DisplayDayWidget = Cast<UDisplayDayWidget_OM>(ShowDayWidget))
+	{
+		const FString CurrentDay = GameInstance->GetCurrentDayName();
+		const int32 DayNumber = GameInstance->GetDayNumber();
+		const FString DisplayDayText = FString::Format(TEXT("Day {0}, {1}"), {DayNumber, CurrentDay});
+		DisplayDayWidget->SetText(DisplayDayText);
+	}
+
+	ShowDayWidget->SetRenderOpacity(1.0f);
+	if (!ShowDayWidget->IsInViewport())
+	{
+		ShowDayWidget->AddToViewport(2);
+		SetWidgetIsVisible(true);
+	}
+
+	GetWorld()->GetTimerManager().ClearTimer(DelayTilFadeHandle);
+	GetWorld()->GetTimerManager().SetTimer(
+		DelayTilFadeHandle,
+		this,
+		&ABedroomGameModeBase_OM::StartFadeOut,
+		5.0f,
+		false
+	);
 }
 
 
@@ -251,10 +260,16 @@ void ABedroomGameModeBase_OM::StartFadeOut()
 
 			if (NewOpacity <= 0.0f)
 			{
-				ShowDayWidget->RemoveFromParent();
+				if (IsValid(ShowDayWidget))
+				{
+					ShowDayWidget->RemoveFromParent();
+				}
+				
 				SetWidgetIsVisible(false);
 				bIsFadingOut = false;
 				GetWorld()->GetTimerManager().ClearTimer(FadeTimerHandle);
+
+				ShowDayWidget = nullptr;
 			}
 		},
 		0.016f, 
@@ -266,6 +281,11 @@ void ABedroomGameModeBase_OM::StartFadeOut()
 bool ABedroomGameModeBase_OM::GetIsFadingOut()
 {
 	return bIsFadingOut;
+}
+
+UDisplayDayWidget_OM* ABedroomGameModeBase_OM::GetShowDayWidget() const
+{
+	return IsValid(ShowDayWidget) ? ShowDayWidget : nullptr;
 }
 
 bool ABedroomGameModeBase_OM::GetWidgetIsVisible() const

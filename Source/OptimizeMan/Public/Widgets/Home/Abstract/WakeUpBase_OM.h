@@ -23,14 +23,18 @@ struct FTaskOptionData
 	Panel(nullptr),
 	Button(nullptr),
 	Title(nullptr),
-	Description(nullptr)
+	Description(nullptr),
+	Penalty(nullptr),
+	OP(nullptr)
 	{}
 
-	FTaskOptionData(UGridPanel* InPanel, UButton* InButton, UTextBlock* InTitle, UTextBlock* InDescription, FButtonStyle InOriginalStyle, FButtonStyle InSelectedStyle) :
+	FTaskOptionData(UGridPanel* InPanel, UButton* InButton, UTextBlock* InTitle, UTextBlock* InDescription, UTextBlock* InPenalty, UTextBlock* InOP, FButtonStyle InOriginalStyle, FButtonStyle InSelectedStyle) :
 	Panel(InPanel),
 	Button(InButton),
 	Title(InTitle),
 	Description(InDescription),
+	Penalty(InPenalty),
+	OP(InOP),
 	OriginalStyle(InOriginalStyle),
 	SelectedStyle(InSelectedStyle)
 	{}
@@ -46,6 +50,12 @@ struct FTaskOptionData
 
 	UPROPERTY()
 	UTextBlock* Description;
+
+	UPROPERTY()
+	UTextBlock* Penalty;
+
+	UPROPERTY()
+	UTextBlock* OP;
 
 	UPROPERTY()
 	bool bIsSelected = false;
@@ -119,6 +129,10 @@ protected:
 	UTextBlock* TaskOption;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TaskOptionDesc;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOptionPenal;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOption_OPScore;
 
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* TaskOptionPanel_1;
@@ -128,6 +142,10 @@ protected:
 	UTextBlock* TaskOption_1;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TaskOptionDesc_1;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOptionPenal_1;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOption_OPScore_1;
 
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* TaskOptionPanel_2;
@@ -137,6 +155,10 @@ protected:
 	UTextBlock* TaskOption_2;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TaskOptionDesc_2;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOptionPenal_2;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOption_OPScore_2;
 	
 
 	UPROPERTY(meta = (BindWidget))
@@ -147,6 +169,10 @@ protected:
 	UTextBlock* TaskOption_3;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TaskOptionDesc_3;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOptionPenal_3;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOption_OPScore_3;
 
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* TaskOptionPanel_4;
@@ -156,6 +182,10 @@ protected:
 	UTextBlock* TaskOption_4;
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TaskOptionDesc_4;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOptionPenal_4;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TaskOption_OPScore_4;
 
 
 	
