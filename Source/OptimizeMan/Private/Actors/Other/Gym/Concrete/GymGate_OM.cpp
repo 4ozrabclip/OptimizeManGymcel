@@ -79,7 +79,6 @@ void AGymGate_OM::CheckIfInwardOrOutward()
 	else
 	{
 		DoorOpenRotation = GymToRecRot;
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, "GymToRec");
 	}
 }
 

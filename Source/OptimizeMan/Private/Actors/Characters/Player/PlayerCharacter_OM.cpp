@@ -3,6 +3,7 @@
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 
+#include "EngineUtils.h"
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
 #include "Actors/Other/Both/Abstract/InteractableActor_OM.h"
@@ -29,6 +30,7 @@
 #include "Components/Character/Concrete/PlayerAmbienceControlComponent.h"
 #include "Components/Character/Concrete/SpringArmComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "GameFramework/PlayerStart.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
 #include "Utils/Static Helpers/Helper.h"
 
@@ -166,13 +168,40 @@ void APlayerCharacter_OM::BeginPlay()
 	InitializeAttributes();
 	InitializeConstantEffects();
 
+
+	
+	AActor* Spawn = nullptr;
+	for (TActorIterator<APlayerStart> It(GetWorld()); It; ++It)
+	{
+		if (It->ActorHasTag("MainSpawn")) // or just pick the first
+		{
+			Spawn = *It;
+			FString SpawnLoc = FString::Printf( TEXT("Main Spawn Loc: %.2f/%.2f/%.2f"), Spawn->GetActorLocation().X, Spawn->GetActorLocation().Y, Spawn->GetActorLocation().Z);
+			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Orange, SpawnLoc);
+			UE_LOG(LogTemp, Error, TEXT("Main Spawn Loc: %.2f/%.2f/%.2f"), Spawn->GetActorLocation().X, Spawn->GetActorLocation().Y, Spawn->GetActorLocation().Z);
+			break;
+		}
+	}
+	
+
+	if (Spawn)
+	{
+		SetActorLocation(Spawn->GetActorLocation());
+		SetActorRotation(Spawn->GetActorRotation());
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cant get pawn from PlayerController, or spawn"));
+	}
+	
 }
-
-
 
 void APlayerCharacter_OM::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	
 	
 	if (CurrentPlayMode == EPlayModes::RegularMode)
 	{

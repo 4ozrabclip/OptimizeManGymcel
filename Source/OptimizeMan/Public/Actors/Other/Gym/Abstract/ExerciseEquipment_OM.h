@@ -27,6 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 protected:
 	virtual void BeginPlay() override;
+	void CreateInitialSequencePlayer(ULevelSequence* InitialLevelSequence = nullptr);
 
 
 	UFUNCTION()
@@ -37,7 +38,9 @@ protected:
 	TSoftObjectPtr<ASkeletalMeshActor> PlayerMesh;
 
 	UPROPERTY(EditInstanceOnly, Category = "Flexing")
-	TArray<ULevelSequence*> InjurySequences; 
+	TMap<ULevelSequence*, EExerciseType> InjurySequences;
+
+	
 
 	UPROPERTY()
 	ULevelSequencePlayer* SequencePlayer;
@@ -106,4 +109,6 @@ protected:
 	bool bUnderConstruction = true;
 	
 
+private:
+	EExerciseType CurrentExerciseType = EExerciseType::None;
 };

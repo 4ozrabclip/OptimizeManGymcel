@@ -12,6 +12,7 @@
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
 #include "Camera/CameraComponent.h"
 #include "Components/WidgetComponent.h"
+#include "DSP/AudioDebuggingUtilities.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Widgets/Gym/Abstract/ExerciseSelectionParentWidget_OM.h"
 
@@ -48,16 +49,22 @@ void AExerciseEquipment_OM::BeginPlay()
 	{
 		Player->OnPlayModeChange.AddDynamic(this, &AExerciseEquipment_OM::OnPlayModeChanged);
 	}
+	
+}
 
-	if (InjurySequences.Num() > 0)
+
+void AExerciseEquipment_OM::CreateInitialSequencePlayer(ULevelSequence* InitialLevelSequence)
+{
+	if (InitialLevelSequence && !SequencePlayer)
 	{
 		FMovieSceneSequencePlaybackSettings PlaybackSettings;
 		PlaybackSettings.bAutoPlay = false;
-
+		
+	
 		SequenceActor = nullptr;
 		SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(
 			GetWorld(),
-			InjurySequences[0], 
+			InitialLevelSequence, 
 			PlaybackSettings,
 			SequenceActor
 		);
@@ -76,10 +83,31 @@ void AExerciseEquipment_OM::BeginPlay()
 
 void AExerciseEquipment_OM::OnSequenceFinished()
 {
-	//PlayerMesh->SetActorHiddenInGame(true);
-	//Player->SetActorHiddenInGame(false);
+	PlayerMesh->SetActorHiddenInGame(true);
+	Player->SetActorHiddenInGame(false);
 
-	PlayerController->ShowExitButton();
+	switch (CurrentExerciseType)
+	{
+	case EExerciseType::None:
+		break;
+	case EExerciseType::Squat:
+		{
+			//Have a check here to see if equipment is a barbell
+			this->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NeckSocket"));
+			break;
+		}
+	case EExerciseType::BicepCurl:
+		{
+			this->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftHandSocket"));
+			FVector NewRelativeLocation = FVector(21.f, -1.f, 0.f); //bicepcurl
+			this->SetActorRelativeLocation(NewRelativeLocation);
+			break;
+		}
+	default:
+		break;
+	}
+
+		PlayerController->ShowExitButton();
 }
 
 void AExerciseEquipment_OM::OnPlayModeChanged(EPlayModes InPlayMode)
@@ -117,26 +145,54 @@ void AExerciseEquipment_OM::PlayInjurySequence()
 	//if (!PlayerMesh) return;
 	if (InjurySequences.Num() <= 0) return;
 
-	/*if (!PlayerMesh || !SequencePlayer)
+	if (!PlayerMesh)
 	{
-		UE_LOG(LogTemp, Error, TEXT("MuscleViewMirror: PlayerMesh or SequencePlayer is NULL"));
+		UE_LOG(LogTemp, Error, TEXT("PlayerMesh Is null:  Set it in the blueprint"));
 		return;
-	}*/
-
-	//Player->SetActorHiddenInGame(true);
-	//PlayerMesh->SetActorHiddenInGame(false);
-
-
+	}
+	if (!Player) return;
+	
+	Player->SetActorHiddenInGame(true);
+	CurrentExerciseType = Player->GetCurrentExerciseType();
+	
+	if (this->IsAttachedTo(Player))
+	{
+		this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	}
+	
+	PlayerMesh->SetActorHiddenInGame(false);
 	PlayerController->ShowExitButton(true);
 
-
-
-	int RandIndex = FMath::RandRange(0, InjurySequences.Num() - 1);
-	ULevelSequence* Seq = InjurySequences[RandIndex];
 	
-	SequencePlayer->Initialize(Seq, GetWorld()->GetCurrentLevel(), SequenceActor->CameraSettings);
+	ULevelSequence* SeqToUse = nullptr;
+	for (TPair<ULevelSequence*, EExerciseType>& Seq : InjurySequences)
+	{
+		if (Seq.Value == CurrentExerciseType)
+		{
+			if (Seq.Key)
+			{
+				SeqToUse = Seq.Key;
+			}
+		}
+	}
+
+	if (!SeqToUse || !SeqToUse->IsValidLowLevelFast())
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s: Injury Sequence To use is nullptr"), *this->GetName());
+		return;
+	}
+
+	if (!SequencePlayer)
+	{
+		CreateInitialSequencePlayer(SeqToUse);
+	}
+
+	
+	
+	SequencePlayer->Initialize(SeqToUse, GetWorld()->GetCurrentLevel(), SequenceActor->CameraSettings);
 
 	SequencePlayer->Play();
+	
 }
 
 void AExerciseEquipment_OM::TurnOffWidget()
