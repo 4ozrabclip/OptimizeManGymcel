@@ -58,5 +58,5 @@ void UYouDiedWidget_OM::ExitToMainMenu()
 {
 	GameInstance->ResetGame();
 
-	UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenu"));
+	UGameplayStatics::OpenLevel(GetWorld(), FName("EndPlaytest"));
 }

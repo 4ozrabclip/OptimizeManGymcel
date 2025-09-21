@@ -152,6 +152,12 @@ void UTodoManagementSubsystem::AddToPotentialTodos(const ETodoArrayList InTodo)
 	UE_LOG(LogTemp, Error, TEXT("Cant Find %s in TodoArray"), *TodoName);
 
 }
+
+void UTodoManagementSubsystem::ClearTodoList()
+{
+	CurrentTodoArray.Empty();
+}
+
 void UTodoManagementSubsystem::ProcessPotentialTodos()
 {
 	FBodyStatus& BodyStatus = GameInstance->GetBodyStatus();

@@ -177,7 +177,7 @@ void APlayerCharacter_OM::BeginPlay()
 		{
 			Spawn = *It;
 			FString SpawnLoc = FString::Printf( TEXT("Main Spawn Loc: %.2f/%.2f/%.2f"), Spawn->GetActorLocation().X, Spawn->GetActorLocation().Y, Spawn->GetActorLocation().Z);
-			GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Orange, SpawnLoc);
+			//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Orange, SpawnLoc);
 			UE_LOG(LogTemp, Error, TEXT("Main Spawn Loc: %.2f/%.2f/%.2f"), Spawn->GetActorLocation().X, Spawn->GetActorLocation().Y, Spawn->GetActorLocation().Z);
 			break;
 		}

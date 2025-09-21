@@ -25,6 +25,8 @@ public:
 	void AddToCurrentTodos(const FString& InTodo, const bool bClearCurrentTodo = false);
 	void RemoveFromCurrentTodos(const FString& InTodo);
 	void AddToPotentialTodos(ETodoArrayList InTodo);
+
+	void ClearTodoList();
 	
 
 	void CompleteTodo(const FGameplayTag TodoCompletedTags);

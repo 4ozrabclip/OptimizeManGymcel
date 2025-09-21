@@ -42,7 +42,8 @@ void UMainMenuWidget_OM::NativeConstruct()
 		NotificationAudio->SetAudioType(EAudioTypes::NotificationAudio);
 		NotificationAudio->bIsUISound = true;
 
-
+	
+		DarkModeToggle(GameInstance->GetDarkMode());
 	}
 }
 

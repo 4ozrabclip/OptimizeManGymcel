@@ -265,8 +265,6 @@ protected:
 	UButton* MetalMusicBuyButton;
 	UPROPERTY(meta = (BindWidget))
 	UButton* ElectroMusicBuyButton;
-	UPROPERTY(meta = (BindWidget))
-	UButton* RomanceMusicBuyButton;
 	// ---------------------------supply store
 	UPROPERTY(meta = (BindWidget))
 	UGridPanel* SupplyStoreGrid;

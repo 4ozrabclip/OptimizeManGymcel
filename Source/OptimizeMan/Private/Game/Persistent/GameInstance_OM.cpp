@@ -77,7 +77,11 @@ void UGameInstance_OM::ResetGame()
 	
 	ResetAllSaves();
 	if (TodoManagement)
+	{
+		TodoManagement->ClearTodoList();
 		TodoManagement->InitializeTodos();
+	}
+
 	else
 		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
 
