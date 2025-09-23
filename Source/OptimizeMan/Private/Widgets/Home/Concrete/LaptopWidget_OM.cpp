@@ -242,8 +242,8 @@ FButtonStyle ULaptopWidget_OM::GetRandomAdvertisementStyleFromArray(const TArray
 		OutStyle.Disabled.TintColor = FLinearColor::White;
 		OutStyle.Disabled.DrawAs = ESlateBrushDrawType::Image;
 		OutStyle.Hovered.SetResourceObject(Image);
-		OutStyle.Hovered.TintColor = FLinearColor::White;
-		OutStyle.Hovered.DrawAs = ESlateBrushDrawType::Image;
+		OutStyle.Hovered.TintColor = FLinearColor(0.9f, 0.9f, 0.9f, 1.0f);
+		OutStyle.Hovered.DrawAs = ESlateBrushDrawType::Image;   
 		OutStyle.Pressed.SetResourceObject(Image);
 		OutStyle.Pressed.TintColor = FLinearColor::White;
 		OutStyle.Pressed.DrawAs = ESlateBrushDrawType::Image;
@@ -438,7 +438,7 @@ void ULaptopWidget_OM::SetForSkanText()
 	switch (DayInfo.CurrentDay)
 	{
 	case EWeekDay::Monday:
-		DailyText = "ITS MONDAY BITCH";
+		DailyText = "TIME TO GRIND ITS MONDAY BABY";
 		break;
 	case EWeekDay::Tuesday:
 		DailyText = "ITS TUESADY";

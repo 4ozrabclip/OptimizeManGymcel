@@ -198,6 +198,8 @@ private:
 	bool bIsJumping = false;
 	bool bIsDoingRep = false;
 
+	float LookSensitivity = 1.f;
+
 	/**** Input Handling ****/
 public:
 	void Move(const FInputActionValue& Value);
@@ -264,7 +266,6 @@ public:
 public:
 	UFUNCTION()
 	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
-	float GetFocus() const;
 
 	UFUNCTION()
 	EWorkoutStates GetWorkoutState() const;
@@ -287,6 +288,8 @@ public:
 
 	void SetIsWalking(const bool InIsWalking) { bIsWalking = InIsWalking; }
 	bool GetIsWalking() const { return bIsWalking; }
+
+	void SetLookSensitivity(const float InLookSensitivity) { LookSensitivity = InLookSensitivity; };
 
 	bool GetIsJumping() const;
 

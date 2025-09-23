@@ -211,6 +211,8 @@ public:
 	UFUNCTION()
 	void SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx);
 
+	void SetLookSensitivity(const float InLookSensitivity);
+
 	
 //Gym Res Stats
 	UFUNCTION(BlueprintCallable)

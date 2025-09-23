@@ -100,13 +100,11 @@ void UExercise_OM::SetBodyPartInUse(const FBodyPartData& InBodyPart)
 
 void UExercise_OM::SetExerciseType(const EExerciseType InExerciseType)
 {
-
 	if (CurrentExerciseType != InExerciseType)
 	{
 		SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
 	
 	}
-	
 	//need exercise type to be stated before EnterExercisePosition
 	CurrentExerciseType = InExerciseType;
 	

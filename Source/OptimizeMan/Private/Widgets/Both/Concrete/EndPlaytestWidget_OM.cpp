@@ -33,7 +33,7 @@ void UEndPlaytestWidget_OM::OnEndAnimFinished()
 
 void UEndPlaytestWidget_OM::OnGoodbyeAnimFinished()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), FName("/Game/Levels/MainMenu"));
+	UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, false);
 }
 
 void UEndPlaytestWidget_OM::EndPlaytest()

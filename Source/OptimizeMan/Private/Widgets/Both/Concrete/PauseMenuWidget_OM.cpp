@@ -206,11 +206,21 @@ void UPauseMenuWidget_OM::UpdateGameSettings()
 	const float NotificationVolumeValue = NotificationVolume_Slider->GetValue();
 	const float SfxVolumeValue = SfxVolume_Slider->GetValue();
 
+	const float LookSensitivityValue = LookSensitivity_Slider->GetValue();
+
 	float NewMasterVolume = GameSettings.MasterVolume;
 	float NewMusicVolume = GameSettings.MusicVolume;
 	float NewVoiceVolume = GameSettings.VoiceVolume;
 	float NewNotificationVolume = GameSettings.NotificationVolume;
 	float NewSfxVolume = GameSettings.SfxVolume;
+
+	float NewLookSensitivity = GameSettings.LookSensitivity;
+
+	if (LookSensitivityValue != GameSettings.LookSensitivity)
+	{
+		NewLookSensitivity = LookSensitivityValue;
+		GameInstance->SetLookSensitivity(NewLookSensitivity);
+	}
 
 	if (MasterVolumeValue != GameSettings.MasterVolume)
 	{
@@ -335,6 +345,8 @@ void UPauseMenuWidget_OM::OpenSettings()
 	MusicVolume_Slider->SetValue(GameSettings.MusicVolume);
 	VoiceVolume_Slider->SetValue(GameSettings.VoiceVolume);
 	NotificationVolume_Slider->SetValue(GameSettings.NotificationVolume);
+
+	LookSensitivity_Slider->SetValue(GameSettings.LookSensitivity);
 
 	OpenWindow(FName("SettingsWindow"));
 }

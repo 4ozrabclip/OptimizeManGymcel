@@ -105,6 +105,9 @@ protected:
 	UButton* AcceptSettings_Button;
 	UPROPERTY(meta = (BindWidget))
 	UButton* BackFromSettings_Button;
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* LookSensitivity_Slider;
 	
 	
 	// Change Stats Testing

@@ -38,16 +38,17 @@ void UPlayerCharacterAnimInstance_OM::NativeUpdateAnimation(float DeltaSeconds)
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (Player && GetWorld() && !GetWorld()->IsPaused())
 	{
-		CurrentWorkoutState = Player->GetWorkoutState();
-
-		CurrentExerciseType = Player->GetCurrentExerciseType();
-		
 		if (CurrentPlayMode != EPlayModes::WorkoutMode)
 		{
 			bIsWalking = Player->GetIsWalking();
 			bIsJumping = Player->GetIsJumping();
 		}
-		
+		else
+		{
+			CurrentWorkoutState = Player->GetWorkoutState();
+
+			CurrentExerciseType = Player->GetCurrentExerciseType();
+		}
 	}
 }
 

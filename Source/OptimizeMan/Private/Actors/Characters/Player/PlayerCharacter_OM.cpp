@@ -145,6 +145,8 @@ void APlayerCharacter_OM::BeginPlay()
 	GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
 	if (!GameInstance) return;
 	
+	LookSensitivity = GameInstance->GetGameSettings().LookSensitivity;
+	
 	
 	if (USkeletalMeshComponent* SkeletalMeshComponent = FindComponentByClass<USkeletalMeshComponent>())
 	{
@@ -415,13 +417,19 @@ void APlayerCharacter_OM::InitPlayModes()
 EWorkoutStates APlayerCharacter_OM::GetWorkoutState() const
 {
 	if (ExerciseComponent)
+	{
 		return ExerciseComponent->GetCurrentWorkoutState();
+	}
+
 	return EWorkoutStates::NotInExercisePosition;
 }
 EExerciseType APlayerCharacter_OM::GetCurrentExerciseType() const
 {
 	if (ExerciseComponent)
+	{
 		return ExerciseComponent->GetCurrentExerciseType();
+	}
+
 	return EExerciseType::None;
 }
 
@@ -815,8 +823,8 @@ void APlayerCharacter_OM::Look(const FInputActionValue& Value)
 {
 	const FVector2D LookAxisVector = Value.Get<FVector2D>();
 	
-	AddControllerYawInput(LookAxisVector.X);
-	AddControllerPitchInput(-LookAxisVector.Y);
+	AddControllerYawInput(LookAxisVector.X * LookSensitivity);
+	AddControllerPitchInput(-LookAxisVector.Y * LookSensitivity);
 	
 }
 bool APlayerCharacter_OM::GetIsJumping() const

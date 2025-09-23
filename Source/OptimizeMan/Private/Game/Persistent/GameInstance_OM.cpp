@@ -8,7 +8,7 @@
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Utils/Static Helpers/Helper.h"
 
 
 void UGameInstance_OM::Init()
@@ -76,14 +76,15 @@ void UGameInstance_OM::ResetGame()
 	CurrentWaveType = EDifficultyWaveType::RestWave;
 	
 	ResetAllSaves();
-	if (TodoManagement)
+	if (auto* TodoMan = Helper::GetTodoManager(GetWorld()))
 	{
-		TodoManagement->ClearTodoList();
-		TodoManagement->InitializeTodos();
+		TodoMan->ClearTodoList();
+		TodoMan->InitializeTodos();
 	}
-
-	else
-		UE_LOG(LogTemp, Error, TEXT("TodoManagement Subsystem not found"));
+	if (auto* pc = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
+	{
+		pc->ResetUI();
+	}
 
 	SetDayNumber(1);
 	
@@ -251,6 +252,16 @@ void UGameInstance_OM::SetAudioSettings(const float InMaster, const float InVoic
 		GameSettings.SfxVolume = InSfx;
 
 	OnAudioSettingsChanged.Broadcast(InMaster, InVoice, InMusic, InNotification, InSfx);
+}
+
+void UGameInstance_OM::SetLookSensitivity(const float InLookSensitivity)
+{
+	GameSettings.LookSensitivity = InLookSensitivity;
+
+	if (auto* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	{
+		Player->SetLookSensitivity(InLookSensitivity);
+	}
 }
 
 void UGameInstance_OM::SetRandomEventAsWitnessed(const EEventAndGPData InRandomEvent, const bool InWitnessed)

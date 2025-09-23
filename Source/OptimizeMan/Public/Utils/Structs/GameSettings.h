@@ -10,6 +10,7 @@ struct FGameSettings
 
 	FGameSettings()
 	: bDarkMode(false),
+	LookSensitivity(1.0f),
 	MasterVolume(1.f),
 	MusicVolume(1.f),
 	VoiceVolume(2.f),
@@ -18,7 +19,10 @@ struct FGameSettings
 	{}
 	
 	UPROPERTY(BlueprintReadWrite)
-	bool bDarkMode;  
+	bool bDarkMode;
+
+	UPROPERTY(BlueprintReadWrite)
+	float LookSensitivity;
 
 	UPROPERTY(BlueprintReadWrite)
 	float MasterVolume;

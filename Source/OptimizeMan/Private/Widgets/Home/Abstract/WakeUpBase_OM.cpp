@@ -33,6 +33,15 @@ void UWakeUpBase_OM::NativeConstruct()
 	
 
 	InitializeTaskOptions();
+	for (FTaskOptionData& Opt : TaskOptions)
+	{
+		Opt.bIsSelected = false;
+		if (Opt.Button)
+		{
+			Opt.Button->SetStyle(Opt.OriginalStyle);
+		}
+	}
+	UpdateFakeTodoList(); 
 	CurrentButtonStyle = OriginalStyle_1;
 	OpenWindow(FName("MainWindow"));
 }
@@ -164,34 +173,43 @@ void UWakeUpBase_OM::UpdateFakeTodoList()
 		}
 	
 	
-		if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
+		if (SelectedTask)
 		{
-			const FString SelectedTaskString = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[0].Name});
-			SelectedTask->SetText(FText::FromString(SelectedTaskString));
+			if (TodoManager->GetCurrentTodoArray().IsValidIndex(0))
+			{
+				const FString SelectedTaskString = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[0].Name});
+				SelectedTask->SetText(FText::FromString(SelectedTaskString));
+			}
+			else
+			{
+				SelectedTask->SetText(FText::FromString(TEXT("- ")));
+			}
 		}
-		else
+
+		if (SelectedTask_1)
 		{
-			SelectedTask->SetText(FText::FromString(TEXT("- ")));
+			if (TodoManager->GetCurrentTodoArray().IsValidIndex(1))
+			{
+				const FString SelectedTask1String = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[1].Name});
+				SelectedTask_1->SetText(FText::FromString(SelectedTask1String));
+			}
+			else
+			{
+				SelectedTask_1->SetText(FText::FromString(TEXT("- ")));
+			}
 		}
-	
-		if (TodoManager->GetCurrentTodoArray().IsValidIndex(1))
+
+		if (SelectedTask_2)
 		{
-			const FString SelectedTask1String = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[1].Name});
-			SelectedTask_1->SetText(FText::FromString(SelectedTask1String));
-		}
-		else
-		{
-			SelectedTask_1->SetText(FText::FromString(TEXT("- ")));
-		}
-	
-		if (TodoManager->GetCurrentTodoArray().IsValidIndex(2))
-		{
-			const FString SelectedTask2String = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[2].Name});
-			SelectedTask_2->SetText(FText::FromString(SelectedTask2String));
-		}
-		else
-		{
-			SelectedTask_2->SetText(FText::FromString(TEXT("- ")));
+			if (TodoManager->GetCurrentTodoArray().IsValidIndex(2))
+			{
+				const FString SelectedTask2String = FString::Format(TEXT("- {0}"), {TodoManager->GetCurrentTodoArray()[2].Name});
+				SelectedTask_2->SetText(FText::FromString(SelectedTask2String));
+			}
+			else
+			{
+				SelectedTask_2->SetText(FText::FromString(TEXT("- ")));
+			}
 		}
 	}
 }
@@ -225,7 +243,7 @@ void UWakeUpBase_OM::AssignOptionsToWidget()
 				Opt.Penalty->SetText(FText::FromString(Options[i].Penal));
 				Opt.OP->SetText(FText::AsNumber(Options[i].Points));
     
-				Opt.Button->OnClicked.RemoveAll(this);
+				Opt.Button->OnClicked.Clear();
 				switch (i)
 				{
 				case 0: Opt.Button->OnClicked.AddDynamic(this, &UWakeUpBase_OM::HandleOption0Selected); break;

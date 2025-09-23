@@ -32,7 +32,6 @@ void UWakeUpTutorial_OM::NativeConstruct()
 	if (TaskOptionPanel_4) TaskOptionPanel_4->SetVisibility(ESlateVisibility::Visible);
 
 	SetTodoOptions();
-	UpdateFakeTodoList();
 	InitiateTutorialSequence();
 
 	CurrentTutorialStep = 0;
