@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Bedroom/Concrete/Laptop_OM.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "ShelfWidget_OM.generated.h"
 
 enum class EShopAndBook : uint8;
@@ -12,7 +12,7 @@ enum class EShopAndBook : uint8;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UShelfWidget_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API UShelfWidget_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 

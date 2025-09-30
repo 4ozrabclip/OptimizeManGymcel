@@ -50,6 +50,7 @@ void UExercise_OM::BeginPlay()
 		ExerciseParameters.UpdateParameters(GameInstance);
 		UE_LOG(LogTemp, Display, TEXT("Updated Exercise Paramaters"));
 	}
+	
 
 	SetComponentTickEnabled(false);
 }
@@ -202,7 +203,7 @@ void UExercise_OM::EnterExercisePosition()
 	SetStoppedExercise(false);
 
 }
-void UExercise_OM::MiniGame()
+void UExercise_OM::MiniGame(EMinigameResult MinigameResult)
 {
 	if (CurrentWorkoutState == EWorkoutStates::NotInExercisePosition)
 	{
@@ -539,11 +540,21 @@ void UExercise_OM::LeaveExercise()
 {
 	SetCurrentWorkoutState(EWorkoutStates::NotInExercisePosition);
 
+	if (!Equipment)
+		Equipment = Cast<AExerciseEquipment_OM>(Player->GetCurrentInteractedActor());
+
+	if (!Equipment)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UExercise_OM: Cant cast to equipment"));
+		return;
+	}
+	
+
 	Equipment->SetIsInteractable(true);
 	DetachEquipment();
 
 	
-	if (Equipment && !Equipment->AuraLight->GetVisibleFlag())
+	if (!Equipment->AuraLight->GetVisibleFlag())
 	{
 		Equipment->AuraLight->SetVisibility(true);
 	}

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "CalenderWidget_OM.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UCalenderWidget_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API UCalenderWidget_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 public:

@@ -423,6 +423,7 @@ EWorkoutStates APlayerCharacter_OM::GetWorkoutState() const
 
 	return EWorkoutStates::NotInExercisePosition;
 }
+
 EExerciseType APlayerCharacter_OM::GetCurrentExerciseType() const
 {
 	if (ExerciseComponent)

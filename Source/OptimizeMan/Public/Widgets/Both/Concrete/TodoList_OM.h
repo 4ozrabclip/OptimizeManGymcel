@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "TodoList_OM.generated.h"
 
 /**
@@ -12,7 +12,7 @@
 class UTextBlock;
 class UCheckBox;
 UCLASS()
-class OPTIMIZEMAN_API UTodoList_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API UTodoList_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 

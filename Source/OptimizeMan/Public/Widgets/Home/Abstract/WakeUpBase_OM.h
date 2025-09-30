@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "WakeUpBase_OM.generated.h"
 
 class UCanvasPanel;
@@ -67,7 +67,7 @@ struct FTaskOptionData
 	FButtonStyle SelectedStyle;
 };
 UCLASS(Abstract)
-class OPTIMIZEMAN_API UWakeUpBase_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API UWakeUpBase_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 public:

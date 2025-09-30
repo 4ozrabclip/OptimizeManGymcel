@@ -7,6 +7,7 @@
 #include "Components/Character/Abstract/CharacterComponentBase_OM.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Utils/Structs/ExerciseParameters.h"
+#include "Utils/Structs/MinigameData.h"
 #include "Utils/Structs/PlayerData.h"
 #include "Exercise_OM.generated.h"
 
@@ -94,7 +95,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void LeaveExercise();
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
-	void MiniGame();
+	void MiniGame(EMinigameResult MinigameResult = EMinigameResult::Success);
 
 	void PrepareExercise();
 	

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "PauseMenuWidget_OM.generated.h"
 
 class UImage;
@@ -15,7 +15,7 @@ class UVerticalBox;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UPauseMenuWidget_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API UPauseMenuWidget_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 public:

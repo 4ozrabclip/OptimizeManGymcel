@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Utils/Structs/SocialData.h"
 
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "SocialInteractionWidget_OM.generated.h"
 
 /**
@@ -46,7 +46,7 @@ struct FSocialInteractionTypes
 								PressedEmoji_Chad(nullptr) {}
 };
 UCLASS()
-class OPTIMIZEMAN_API USocialInteractionWidget_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API USocialInteractionWidget_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 public:

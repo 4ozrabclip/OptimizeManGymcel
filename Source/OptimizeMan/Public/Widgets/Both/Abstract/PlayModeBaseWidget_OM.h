@@ -6,7 +6,7 @@
 #include "InteractiveWidgetBase_OM.h"
 #include "ParentWidget_OM.h"
 #include "Blueprint/UserWidget.h"
-#include "MinigameBaseWidget_OM.generated.h"
+#include "PlayModeBaseWidget_OM.generated.h"
 
 class APlayerController_OM;
 class APlayerCharacter_OM;
@@ -14,7 +14,7 @@ class APlayerCharacter_OM;
  * 
  */
 UCLASS(Abstract)
-class OPTIMIZEMAN_API UMinigameBaseWidget_OM : public UInteractiveWidgetBase_OM
+class OPTIMIZEMAN_API UPlayModeBaseWidget_OM : public UInteractiveWidgetBase_OM
 {
 	GENERATED_BODY()
 

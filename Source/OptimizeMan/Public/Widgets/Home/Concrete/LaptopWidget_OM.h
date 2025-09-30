@@ -6,7 +6,7 @@
 #include "Actors/Other/Bedroom/Concrete/Laptop_OM.h"
 #include "Utils/Structs/ForSkanData.h"
 #include "Utils/Structs/LaptopData.h"
-#include "Widgets/Both/Abstract/MinigameBaseWidget_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "LaptopWidget_OM.generated.h"
 
 class UImage;
@@ -19,7 +19,7 @@ class UPanelWidget;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API ULaptopWidget_OM : public UMinigameBaseWidget_OM
+class OPTIMIZEMAN_API ULaptopWidget_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 public:
