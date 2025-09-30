@@ -18,23 +18,25 @@ UCLASS()
 class OPTIMIZEMAN_API UTimingGaugeMinigame_OM : public UMinigamesBase_OM
 {
 	GENERATED_BODY()
-	protected:
+	
+protected:
 	virtual void NativeConstruct() override;
-	void WorkoutTutorial(float DeltaTime);
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeDestruct() override;
-public:
 
+	virtual void SetWorkoutState(EWorkoutStates NewWorkoutState) override;
+	virtual void CheckAndSetStyles() override;
+
+	
+	void WorkoutTutorial(float DeltaTime);
+public:
 	void MiniGame(float InDeltaTime);
 
 	void SetNotificationText();
 	void SetInjuryRisk();
 	void SetSetAndRepCountTextBlocks();
 
-	UFUNCTION()
-	void SetWorkoutState(EWorkoutStates NewWorkoutState) { CurrentWorkoutState = NewWorkoutState; };
-	UFUNCTION()
-	void CheckAndSetStyles();
+
 	UFUNCTION(BlueprintCallable)
 	void UpdateStats();
 	UFUNCTION(BlueprintCallable)
@@ -52,15 +54,14 @@ public:
 
 
 protected:
-	EWorkoutStates CurrentWorkoutState;
-
 	UPROPERTY(EditAnywhere, Category = "MiniGameSpeed")
 	float Speed = 1.f;
 
 	UPROPERTY(EditAnywhere, Category = "MiniGameSpeed")
 	float Divider = 10.f;
 
-	FTimerHandle RepTimeHandle;
+
+	FTimerHandle MiniGameTickHandle;
 	FTimerHandle TextPopUpDelayHandle;
 	FTimerHandle ChangeWorkoutButtonHandle;
 
@@ -77,12 +78,6 @@ protected:
 
 
 	
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* NotificationText;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UButton* MiniGameClickButton;
-	
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	USlider* MiniGameSlider;
@@ -94,8 +89,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	USlider* SpecialSlider;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* BloodSplatter;
+
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UProgressBar* InjuryBoundsLeft;
@@ -123,8 +117,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
 	UTexture2D* ClickHand_Clicking;
 
-	FTimerHandle TutorialDelayHandle;
-	
+
 
 
 // --- images for dark/light mode
@@ -145,13 +138,14 @@ protected:
 	UExercise_OM* ExerciseComponent;
 
 
+	
+
+
 private: //Priv variables
 	bool bSpecialSliderOn = false;
 	bool bMiniGameOn = false;
+	
 
-	bool bHasWorkedOutInitial = true;
-
-	bool bDoingRep = false;
 	
 	float InjuryBoundsLeftValue = 0.f;
 	float InjuryBoundsRightValue = 1.f;

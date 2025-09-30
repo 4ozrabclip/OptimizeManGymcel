@@ -91,7 +91,6 @@ public:
 
 	
 	/** Functional **/
-
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void LeaveExercise();
 	UFUNCTION(BlueprintCallable, Category = "Exercise")

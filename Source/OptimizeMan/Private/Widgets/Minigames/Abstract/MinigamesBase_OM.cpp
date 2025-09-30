@@ -24,6 +24,15 @@ void UMinigamesBase_OM::NativeConstruct()
 		if (auto* ExerciseComponent = Player->GetComponentByClass<UExercise_OM>())
 		{
 			OnMinigameResult.AddDynamic(ExerciseComponent, &UExercise_OM::MiniGame);
+			ExerciseComponent->OnWorkoutStateChanged.RemoveAll(this);
+			ExerciseComponent->OnWorkoutStateChanged.AddDynamic(this, &UMinigamesBase_OM::SetWorkoutState);
+			
+			ExerciseComponent->PrepareExercise();
 		}
 	}
+
+	
+
+	CheckAndSetStyles();
+
 }

@@ -10,13 +10,30 @@ void USlotsMinigame_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (PlayButton)
+	if (MiniGameClickButton)
 	{
-		PlayButton->OnClicked.Clear();
-		PlayButton->OnClicked.AddDynamic(this, &USlotsMinigame_OM::PlayButton_OnClick);
+		MiniGameClickButton->OnClicked.Clear();
+		MiniGameClickButton->OnClicked.AddDynamic(this, &USlotsMinigame_OM::PlayButton_OnClick);
 	}
 
-	
+}
+
+void USlotsMinigame_OM::SetWorkoutState(EWorkoutStates NewWorkoutState)
+{
+	Super::SetWorkoutState(NewWorkoutState);
+	switch (CurrentWorkoutState)
+	{
+	case EWorkoutStates::InExercisePosition:
+		{
+			if (!MiniGameClickButton->GetIsEnabled())
+				MiniGameClickButton->SetIsEnabled(true);
+			break;
+		}
+	default:
+		if (MiniGameClickButton->GetIsEnabled())
+			MiniGameClickButton->SetIsEnabled(false);
+		return;
+	}
 }
 
 void USlotsMinigame_OM::PlayButton_OnClick()

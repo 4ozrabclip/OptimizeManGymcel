@@ -36,14 +36,6 @@ void UTimingGaugeMinigame_OM::NativeConstruct()
 		UE_LOG(LogTemp, Error, TEXT("Exercise Component Null"));
 		return;
 	}
-	if (ExerciseComponent)
-	{
-		ExerciseComponent->OnWorkoutStateChanged.RemoveAll(this);
-		ExerciseComponent->OnWorkoutStateChanged.AddDynamic(this, &UTimingGaugeMinigame_OM::SetWorkoutState);
-	}
-
-	
-
 
 	UpdateStats();
 	SetMiniGameOn(true);
@@ -54,10 +46,6 @@ void UTimingGaugeMinigame_OM::NativeConstruct()
 		RepCountTextBlock->SetText(FText::FromString(TEXT("")));
 	}
 
-
-	ExerciseComponent->PrepareExercise();
-
-	CheckAndSetStyles();
 
 	
 	GetWorld()->GetTimerManager().SetTimer(TutorialDelayHandle, [this]()
@@ -185,7 +173,6 @@ void UTimingGaugeMinigame_OM::NativeTick(const FGeometry& MyGeometry, float InDe
 			{
 				WorkoutTutorial(InDeltaTime);
 			}
-			
 			break;
 		}
 	case EWorkoutStates::SetComplete:
@@ -201,12 +188,19 @@ void UTimingGaugeMinigame_OM::NativeTick(const FGeometry& MyGeometry, float InDe
 		return;
 	}
 }
+void UTimingGaugeMinigame_OM::SetWorkoutState(EWorkoutStates NewWorkoutState)
+{
+	Super::SetWorkoutState(NewWorkoutState);
 
+	
+}
 void UTimingGaugeMinigame_OM::NativeDestruct()
 {
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 	Super::NativeDestruct();
 }
+
+
 
 
 void UTimingGaugeMinigame_OM::SetInjuryRisk()

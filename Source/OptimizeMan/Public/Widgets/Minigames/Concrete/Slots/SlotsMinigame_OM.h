@@ -7,6 +7,7 @@
 #include "Widgets/Minigames/Abstract/MinigamesBase_OM.h"
 #include "SlotsMinigame_OM.generated.h"
 
+class USlider;
 class USlotReel_OM;
 class UButton;
 /**
@@ -18,6 +19,8 @@ class OPTIMIZEMAN_API USlotsMinigame_OM : public UMinigamesBase_OM
 	GENERATED_BODY()
 protected:
 	virtual void NativeConstruct() override;
+	
+	virtual void SetWorkoutState(EWorkoutStates NewWorkoutState) override;
 
 public:
 	UFUNCTION()
@@ -30,12 +33,13 @@ private:
 	
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* PlayButton;
-
-	UPROPERTY(meta = (BindWidget))
 	USlotReel_OM* SlotReel_1;
 	UPROPERTY(meta = (BindWidget))
 	USlotReel_OM* SlotReel_2;
 	UPROPERTY(meta = (BindWidget))
 	USlotReel_OM* SlotReel_3;
+
+
+	UPROPERTY(meta = (BindWidget))
+	USlider* BetSlider;
 };
