@@ -73,6 +73,8 @@ protected:
 	UExercise_OM* ExerciseComponent;
 
 
+	float MuscleExertionRatio;
+
 	float EquipmentMaxWeight;
 	float EquipmentMinWeight;
 

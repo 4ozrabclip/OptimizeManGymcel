@@ -11,7 +11,7 @@
 #include "Components/Border.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
-#include "Widgets/Gym/Concrete/ExerciseInteractWidget_OM.h"
+#include "Widgets/Gym/Concrete/ExerciseMinigameWidget_OM.h"
 
 void USocialInteractionWidget_OM::NativeConstruct()
 {

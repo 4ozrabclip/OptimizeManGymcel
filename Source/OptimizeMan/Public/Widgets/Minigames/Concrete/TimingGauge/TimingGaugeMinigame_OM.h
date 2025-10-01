@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Utils/Structs/ExerciseData.h"
+#include "Widgets/Gym/Concrete/ExerciseMinigameWidget_OM.h"
 #include "Widgets/Minigames/Abstract/MinigamesBase_OM.h"
 #include "TimingGaugeMinigame_OM.generated.h"
 
@@ -15,7 +16,7 @@ class UTextBlock;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UTimingGaugeMinigame_OM : public UMinigamesBase_OM
+class OPTIMIZEMAN_API UTimingGaugeMinigame_OM : public UExerciseMinigameWidget_OM
 {
 	GENERATED_BODY()
 	

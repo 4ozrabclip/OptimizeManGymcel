@@ -41,7 +41,7 @@ void UExercise_OM::BeginPlay()
 	if (AbSysComp)
 		GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
 	
-	InitInjurys();
+	InitInjuries();
 	
 	AudioComponent = Player->FindComponentByClass<UPlayerVoiceAudio_OM>();
 	if (!AudioComponent) return;
@@ -54,7 +54,7 @@ void UExercise_OM::BeginPlay()
 
 	SetComponentTickEnabled(false);
 }
-void UExercise_OM::InitInjurys()
+void UExercise_OM::InitInjuries()
 {
 	if (!AnimInstance) return;
 	
@@ -62,8 +62,14 @@ void UExercise_OM::InitInjurys()
 
 	CurrentInjuredPart = nullptr;
 }
+
+void UExercise_OM::SetMinigame(const EMinigameType MinigameToPlay) const
+{
+	OnMinigameSelected.Broadcast(MinigameToPlay);
+}
+
 void UExercise_OM::TickComponent(float DeltaTime, enum ELevelTick TickType,
-	FActorComponentTickFunction* ThisTickFunction)
+                                 FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 

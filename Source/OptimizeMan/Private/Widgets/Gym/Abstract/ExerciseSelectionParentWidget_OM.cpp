@@ -103,7 +103,7 @@ void UExerciseSelectionParentWidget_OM::UpdateWeightSelect(float InValue)
 	WeightSelect_Text->SetText(FText::FromString(WeightSelectText_String));
 	
 	const float NormalizedInput = FMath::Clamp((InValue - EquipmentMinWeight) / (EquipmentMaxWeight - EquipmentMinWeight), 0.0f, 1.0f);
-	const float MuscleExertionRatio = FMath::Clamp((NormalizedInput - MuscleGroupCurrentStrength) * 5.f, 0.f, 1.f);
+	MuscleExertionRatio = FMath::Clamp((NormalizedInput - MuscleGroupCurrentStrength) * 5.f, 0.f, 1.f);
 
 	
 	const FLinearColor SafeColour = FLinearColor::FromSRGBColor(FColor(0, 255, 90));
@@ -115,7 +115,17 @@ void UExerciseSelectionParentWidget_OM::UpdateWeightSelect(float InValue)
 
 void UExerciseSelectionParentWidget_OM::OnWeightConfirmed()
 {
-	SelectedWeight = WeightSelect_Slider->GetValue();	
+	SelectedWeight = WeightSelect_Slider->GetValue();
+	constexpr float TooHeavyThreshold = 0.5f;
+	
+	if (MuscleExertionRatio > TooHeavyThreshold)
+	{
+		ExerciseComponent->SetMinigame(EMinigameType::Slots);
+	}
+	else
+	{
+		ExerciseComponent->SetMinigame(EMinigameType::TimingGauge);
+	}
 
 	if (ExerciseEquipment)
 	{

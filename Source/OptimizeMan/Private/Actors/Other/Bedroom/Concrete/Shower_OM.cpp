@@ -78,8 +78,6 @@ void AShower_OM::DarkModeToggle(const bool bIsDarkMode)
 
 void AShower_OM::TakeShower(bool bCold)
 {
-	
-	
 	/*
 	 * Probably want to add something here that stops input during shower sequence.  
 	 * --- Will do that after i get the sequence ready

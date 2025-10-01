@@ -198,6 +198,7 @@ private:
 	bool bIsJumping = false;
 	bool bIsDoingRep = false;
 
+	UPROPERTY(EditAnywhere, Category = "Movement")
 	float LookSensitivity = 1.f;
 
 	/**** Input Handling ****/

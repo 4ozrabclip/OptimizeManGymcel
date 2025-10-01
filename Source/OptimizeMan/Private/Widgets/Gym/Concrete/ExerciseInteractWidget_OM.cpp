@@ -1,30 +1,55 @@
 // Copyright © 2025 4ozStudio. All rights reserved.
 
-#include "Widgets/Gym/Concrete/ExerciseInteractWidget_OM.h"
+#include "Widgets/Gym/Concrete/ExerciseMinigameWidget_OM.h"
 
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Components/Character/Concrete/Exercise_OM.h"
 #include "Kismet/GameplayStatics.h"
 
-void UExerciseInteractWidget_OM::NativeConstruct()
+void UExerciseMinigameWidget_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (!PlayerController)
+	{	
+		PlayerController = Cast<APlayerController_OM>(GetOwningPlayer());
+	}
+	if (!Player && PlayerController)
+	{
+		Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
+	}
+
+	if (Player)
+	{
+		if (auto* ExerciseComponent = Player->GetComponentByClass<UExercise_OM>())
+		{
+			OnMinigameResult.AddDynamic(ExerciseComponent, &UExercise_OM::MiniGame);
+			ExerciseComponent->OnWorkoutStateChanged.RemoveAll(this);
+			ExerciseComponent->OnWorkoutStateChanged.AddDynamic(this, &UExerciseMinigameWidget_OM::SetWorkoutState);
+			
+			ExerciseComponent->PrepareExercise();
+		}
+	}
+
+	
+
+	CheckAndSetStyles();
 }
 
-void UExerciseInteractWidget_OM::NativeDestruct()
+void UExerciseMinigameWidget_OM::NativeDestruct()
 {
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(Minigame);
 	Super::NativeDestruct();
 }
-void UExerciseInteractWidget_OM::OnPlayModeChanged(EPlayModes InPlayMode)
+void UExerciseMinigameWidget_OM::OnPlayModeChanged(EPlayModes InPlayMode)
 {
 	if (InPlayMode == EPlayModes::PauseMode)
 		OnExitButtonClicked();
 }
 
-void UExerciseInteractWidget_OM::OnExitButtonClicked()
+void UExerciseMinigameWidget_OM::OnExitButtonClicked()
 {
 	if (!Player)
 	{

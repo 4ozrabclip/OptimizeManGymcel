@@ -12,8 +12,12 @@
 #include "Exercise_OM.generated.h"
 
 
-class AExerciseEquipment_OM;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorkoutStateChanged, EWorkoutStates, NewWorkoutState);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMinigameSelected, EMinigameType, MinigameToPlay);
+
+
+class AExerciseEquipment_OM;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class OPTIMIZEMAN_API UExercise_OM : public UCharacterComponentBase_OM
 {
@@ -26,12 +30,15 @@ protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 
-	
 private:
-	void InitInjurys();
+	void InitInjuries();
 
 public:
 	void ClearBodyPartsInUse() { BodyParts.Empty(); }
+
+
+	UFUNCTION()
+	void SetMinigame(const EMinigameType MinigameToPlay) const;
 
 protected:
 	UPROPERTY()
@@ -62,6 +69,8 @@ public:
 	/** Delegate Events **/
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnWorkoutStateChanged OnWorkoutStateChanged;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnMinigameSelected OnMinigameSelected;
 
 	/** Setters/Adders **/
 	UFUNCTION()

@@ -412,6 +412,17 @@ void APlayerCharacter_OM::InitPlayModes()
 	TodoConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Idle");
 	PlayModeConfigs.Add(EPlayModes::VendingMachine, VendingConfig);
 
+	FPlayModeConfig TutorialConfig;
+	TutorialConfig.bSetToUiMode = true;
+	TutorialConfig.bAllowGameMovement = false;
+	TutorialConfig.bHasWidget = true;
+	TutorialConfig.ForcedLocation = FVector();
+	TutorialConfig.ForcedRotation = FRotator();
+	TutorialConfig.bHasAFadeIn = false;
+	TutorialConfig.bNeedsPreSteps = false;
+	TodoConfig.StateTag = FGameplayTag::RequestGameplayTag("State.Paused");
+	PlayModeConfigs.Add(EPlayModes::TutorialMode, TutorialConfig);
+
 }
 
 EWorkoutStates APlayerCharacter_OM::GetWorkoutState() const

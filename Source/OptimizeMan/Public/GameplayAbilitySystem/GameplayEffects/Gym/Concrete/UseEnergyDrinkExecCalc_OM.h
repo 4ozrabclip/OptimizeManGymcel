@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 UCLASS()
 class OPTIMIZEMAN_API UUseEnergyDrinkExecCalc_OM : public UGameplayEffectExecutionCalculation
 {

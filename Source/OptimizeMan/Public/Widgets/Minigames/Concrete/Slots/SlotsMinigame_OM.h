@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Widgets/Gym/Concrete/ExerciseMinigameWidget_OM.h"
 #include "Widgets/Minigames/Abstract/MinigamesBase_OM.h"
 #include "SlotsMinigame_OM.generated.h"
 
@@ -14,7 +15,7 @@ class UButton;
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API USlotsMinigame_OM : public UMinigamesBase_OM
+class OPTIMIZEMAN_API USlotsMinigame_OM : public UExerciseMinigameWidget_OM
 {
 	GENERATED_BODY()
 protected:

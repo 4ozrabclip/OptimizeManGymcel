@@ -26,7 +26,7 @@ public:
 
 	UFUNCTION()
 	virtual void OnExitButtonClicked();
-
+	
 	
 
 	UFUNCTION()

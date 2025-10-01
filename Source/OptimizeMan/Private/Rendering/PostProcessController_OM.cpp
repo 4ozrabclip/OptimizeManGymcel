@@ -4,9 +4,11 @@
 #include "Rendering/PostProcessController_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
 #include "Components/Character/Concrete/Exercise_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
+#include "Widgets/Both/Concrete/GamePointsHud_OM.h"
 
 
 APostProcessController_OM::APostProcessController_OM()
@@ -18,6 +20,7 @@ APostProcessController_OM::APostProcessController_OM()
 	DarkModeMID = nullptr;
 	LightModeMID = nullptr;
 	GameInstance = nullptr;
+	GymStats = nullptr;
 
 }
 
@@ -64,6 +67,21 @@ void APostProcessController_OM::BeginPlay()
 		Player->OnPlayModeChange.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnPlayMode);
 		Player->OnTempEmotionsChanged.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnTempEmotion);
 	}
+
+
+	if (auto* AbSysComp = Player->GetComponentByClass<UAbilitySystemComponent_OM>())
+	{
+		GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
+		if (GymStats)
+		{
+			if (auto MutableStats = const_cast<UGymSpecificStats_OM*>(GymStats))
+			{
+				if (!MutableStats->OnEnergyBelowThreshold.IsAlreadyBound(this, &APostProcessController_OM::OnEnergyBelowThreshold))
+					MutableStats->OnEnergyBelowThreshold.AddDynamic(this, &APostProcessController_OM::OnEnergyBelowThreshold);
+			}
+		}
+	}
+
 
 }
 
@@ -160,6 +178,10 @@ void APostProcessController_OM::ManageEffectsOnPlayMode(EPlayModes CurrentPlayMo
 		{
 			if (Player)
 			{
+				if (GetWorld()->GetTimerManager().TimerExists(CameraFadeHandle))
+				{
+					GetWorld()->GetTimerManager().ClearTimer(CameraFadeHandle);
+				}
 				if (auto* ExerciseComp = Player->GetComponentByClass<UExercise_OM>())
 				{
 					if (ExerciseComp->GetFocus() < 0.7f)
@@ -174,6 +196,10 @@ void APostProcessController_OM::ManageEffectsOnPlayMode(EPlayModes CurrentPlayMo
 		{
 			if (Player)
 			{
+				if (GetWorld()->GetTimerManager().TimerExists(CameraFadeHandle))
+				{
+					GetWorld()->GetTimerManager().ClearTimer(CameraFadeHandle);
+				}
 				if (auto* ExerciseComp = Player->GetComponentByClass<UExercise_OM>())
 				{
 					if (ExerciseComp->GetEnergy() < 0.7f)
@@ -185,7 +211,47 @@ void APostProcessController_OM::ManageEffectsOnPlayMode(EPlayModes CurrentPlayMo
 			break;
 		}
 	default:
-		break;
+			break;
+	}
+}
+
+void APostProcessController_OM::OnEnergyBelowThreshold(float InEnergyVal)
+{
+	if (InEnergyVal <= LowestEnergyThreshold)
+	{
+		if (auto* PC = Cast<APlayerController>(Player->GetController()))
+		{
+			CameraManager = PC->PlayerCameraManager;
+			if (CameraManager)
+			{
+				GetWorld()->GetTimerManager().ClearTimer(CameraFadeHandle);
+				//GetWorld()->GetTimerManager().SetTimer(CameraFadeHandle, this, &APostProcessController_OM::CameraFadeTick, CameraFadeTickRate, true);
+			}
+		}
+	}
+}
+
+void APostProcessController_OM::CameraFadeTick()
+{
+	constexpr float MinFade = 0.f;
+	constexpr float MaxFade = 1.f;
+
+
+	if (GymStats->GetEnergy() > LowestEnergyThreshold)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(CameraFadeHandle);
+		return;
+	}
+	
+	CurrentFadeAmount += GetWorld()->GetDeltaSeconds();
+
+	CurrentFadeAmount = FMath::Clamp(CurrentFadeAmount,MinFade, MaxFade);
+	
+	CameraManager->SetManualCameraFade(CurrentFadeAmount, FLinearColor::Black, false);
+
+	if (CurrentFadeAmount >= MaxFade)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(CameraFadeHandle);
 	}
 }
 

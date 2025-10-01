@@ -13,6 +13,7 @@
 #include "Components/Slider.h"
 #include "Components/VerticalBox.h"
 #include "Kismet/GameplayStatics.h"
+#include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
 
 
 void UPauseMenuWidget_OM::NativeConstruct()

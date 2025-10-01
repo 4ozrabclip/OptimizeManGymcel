@@ -10,29 +10,6 @@
 void UMinigamesBase_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
-	if (!PlayerController)
-	{	
-		PlayerController = Cast<APlayerController_OM>(GetOwningPlayer());
-	}
-	if (!Player && PlayerController)
-	{
-		Player = Cast<APlayerCharacter_OM>(PlayerController->GetPawn());
-	}
 
-	if (Player)
-	{
-		if (auto* ExerciseComponent = Player->GetComponentByClass<UExercise_OM>())
-		{
-			OnMinigameResult.AddDynamic(ExerciseComponent, &UExercise_OM::MiniGame);
-			ExerciseComponent->OnWorkoutStateChanged.RemoveAll(this);
-			ExerciseComponent->OnWorkoutStateChanged.AddDynamic(this, &UMinigamesBase_OM::SetWorkoutState);
-			
-			ExerciseComponent->PrepareExercise();
-		}
-	}
-
-	
-
-	CheckAndSetStyles();
 
 }

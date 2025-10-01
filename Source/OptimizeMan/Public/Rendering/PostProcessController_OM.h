@@ -8,6 +8,7 @@
 #include "Utils/Structs/PlayModes.h"
 #include "PostProcessController_OM.generated.h"
 
+class UGymSpecificStats_OM;
 class APlayerCharacter_OM;
 class UGameInstance_OM;
 
@@ -92,6 +93,10 @@ protected:
 	UFUNCTION()
 	void ManageEffectsOnPlayMode(EPlayModes CurrentPlayMode);
 	UFUNCTION()
+	void OnEnergyBelowThreshold(float InEnergyVal);
+	UFUNCTION()
+	void CameraFadeTick();
+	UFUNCTION()
 	void ManageEffectsOnTempEmotion(ETemporaryEmotionalStates InState);
 
 	
@@ -131,6 +136,15 @@ protected:
 	
 
 private:
+	UPROPERTY(EditAnywhere)
+	float FadeDuration = 10.f;
+	float LeftoverFadeDuration = 10.f;
+	float CameraFadeTickRate = 0.065;
+	float CurrentFadeAmount = 0.f;
+
+	UPROPERTY(EditAnywhere)
+	float LowestEnergyThreshold = 0.1f;
+	
 	bool bFilmGrainOn = false;
 	bool bChromaticOn = false;
 	bool bVignetteOn = false;
@@ -150,6 +164,14 @@ private:
 	UGameInstance_OM* GameInstance;
 	UPROPERTY()
 	APlayerCharacter_OM* Player;
+	UPROPERTY()
+	APlayerCameraManager* CameraManager;
+
+	UPROPERTY()
+	const UGymSpecificStats_OM* GymStats;
+
+
+	FTimerHandle CameraFadeHandle;
 
 
 protected:
