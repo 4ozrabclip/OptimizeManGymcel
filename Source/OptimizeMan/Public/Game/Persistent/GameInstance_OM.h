@@ -207,6 +207,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetDarkMode(const bool InDarkMode);
+
+	UFUNCTION()
+	void SetTutorialsOn(const bool InEnabled) { GameSettings.bTutorialsOn = InEnabled; }
+	UFUNCTION()
+	bool GetTutorialsOn() const { return GameSettings.bTutorialsOn; }
+	
 	
 	UFUNCTION()
 	void SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx);

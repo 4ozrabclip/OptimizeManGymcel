@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "InfoSign_OM.generated.h"
 
+class UTutorialWidget_OM;
+class APlayerCharacter_OM;
+
 UCLASS()
 class OPTIMIZEMAN_API AInfoSign_OM : public AActor
 {
@@ -24,15 +27,34 @@ protected:
 		bool bFromSweep,
 		const FHitResult& SweepResult
 	);
+public:
+	UFUNCTION()
+	void OnTutorialOff();
 
 public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
-	UStaticMeshComponent* StaticMesh;
+	UStaticMeshComponent* Mesh;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+	UTutorialWidget_OM* TutorialWidget;
 
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Motion")
+	float Amplitude = 20.f;
+	UPROPERTY(EditAnywhere, Category = "Motion")
+	float Frequency = 1.f;
+
+	FVector InitialLocation;
+
+	UPROPERTY()
+	APlayerCharacter_OM* Player;
+
+	
+	
 	
 };

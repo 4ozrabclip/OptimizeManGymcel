@@ -15,7 +15,8 @@ struct FGameSettings
 	MusicVolume(1.f),
 	VoiceVolume(2.f),
 	NotificationVolume(1.f),
-	SfxVolume(1.f)
+	SfxVolume(1.f),
+	bTutorialsOn(true)
 	{}
 	
 	UPROPERTY(BlueprintReadWrite)
@@ -34,4 +35,7 @@ struct FGameSettings
 	float NotificationVolume;
 	UPROPERTY(BlueprintReadWrite)
 	float SfxVolume;
+
+	UPROPERTY()
+	bool bTutorialsOn;
 };

@@ -11,6 +11,7 @@
  * 
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatBelowThreshold, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStatEmpty);
 
 UCLASS()
 class OPTIMIZEMAN_API UGymSpecificStats_OM : public UPlayerAttributeSet_OM
@@ -24,6 +25,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Stats")
 	FOnStatBelowThreshold OnEnergyBelowThreshold;
 
+	UPROPERTY(BlueprintAssignable, Category = "Stats")
+	FOnStatEmpty OnEnergyEmpty;
 
 
 

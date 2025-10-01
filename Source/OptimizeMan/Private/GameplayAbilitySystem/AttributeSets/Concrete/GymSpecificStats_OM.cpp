@@ -20,9 +20,12 @@ void UGymSpecificStats_OM::PostGameplayEffectExecute(const FGameplayEffectModCal
 	{
 		if (float EnergyVal = GetEnergy())
 		{
-			if (EnergyVal <= 0.f || EnergyThreshold <= 0.f)
+			if (EnergyVal <= 0.f)
+			{
+				OnEnergyEmpty.Broadcast();
 				bCanTriggerEnergyLow = false;
-			if (EnergyVal < EnergyThreshold)
+			}
+			else if (EnergyVal < EnergyThreshold)
 			{
 				OnEnergyBelowThreshold.Broadcast(EnergyVal);
 				EnergyThreshold -= 0.1f;
