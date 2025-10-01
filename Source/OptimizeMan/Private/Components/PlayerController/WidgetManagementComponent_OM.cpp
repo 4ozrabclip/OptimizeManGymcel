@@ -3,12 +3,21 @@
 
 #include "Components/PlayerController/WidgetManagementComponent_OM.h"
 
+#include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Character/Concrete/Exercise_OM.h"
+#include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
+#include "GameFramework/Character.h"
+#include "Interfaces/InteractableInterface_OM.h"
+#include "Utils/Static Helpers/Helper.h"
 #include "Widgets/Both/Concrete/GamePointsHud_OM.h"
+#include "Widgets/Both/Concrete/HintsWidget_OM.h"
 #include "Widgets/Both/Concrete/InteractWidget_OM.h"
 #include "Widgets/Both/Concrete/TodoCompletePopupWidget_OM.h"
 #include "Widgets/Both/Concrete/TutorialWidget_OM.h"
 #include "Widgets/Both/Concrete/YouDiedWidget_OM.h"
+#include "Widgets/Gym/Concrete/ExerciseInteractWidget_OM.h"
 
 UWidgetManagementComponent_OM::UWidgetManagementComponent_OM()
 {
@@ -19,7 +28,40 @@ UWidgetManagementComponent_OM::UWidgetManagementComponent_OM()
 void UWidgetManagementComponent_OM::BeginPlay()
 {
 	Super::BeginPlay();
+	auto* PC = Cast<APlayerController>(GetOwner());
+	if (!PC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WidgetManagementComponent: Coudn't Get PC in BeginPlay"));
+		return;
+	}
 	
+	auto* PlayerCharacter = Cast<APlayerCharacter_OM>(PC->GetPawn());
+	if (!PlayerCharacter)
+	{
+		UE_LOG(LogTemp, Error, TEXT("WidgetManagementComponent: Coudn't Get Player Pawn in BeginPlay"));
+		return;
+	}
+	if (auto* ExerciseComponent = PlayerCharacter->GetComponentByClass<UExercise_OM>())
+	{
+		if (!ExerciseComponent->OnMinigameSelected.IsAlreadyBound(this, &UWidgetManagementComponent_OM::SetWorkoutMinigame))
+			ExerciseComponent->OnMinigameSelected.AddDynamic(this, &UWidgetManagementComponent_OM::SetWorkoutMinigame);
+	}
+	
+	if (auto* AbSysComp = Cast<UAbilitySystemComponent_OM>(PlayerCharacter->GetAbilitySystemComponent()))
+	{
+		if (auto* GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>())
+		{
+			if (auto MutableStats = const_cast<UGymSpecificStats_OM*>(GymStats))
+			{
+				if (!MutableStats->OnEnergyEmpty.IsAlreadyBound(this, &UWidgetManagementComponent_OM::ShowYouDiedWidget))
+					MutableStats->OnEnergyEmpty.AddDynamic(this, &UWidgetManagementComponent_OM::ShowYouDiedWidget);
+			}
+		}
+	}
+	if (auto* TodoManager = Helper::GetTodoManager(this))
+	{
+		TodoManager->OnTodoComplete.AddDynamic(this, &UWidgetManagementComponent_OM::TodoCompletedPopUp);
+	}
 }
 
 void UWidgetManagementComponent_OM::PlaymodeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn)
@@ -49,6 +91,29 @@ void UWidgetManagementComponent_OM::PlaymodeWidgetManagement(EPlayModes CurrentP
 	}
 }
 
+void UWidgetManagementComponent_OM::WidgetInteraction(
+	const TScriptInterface<IInteractableInterface_OM>& InteractedActorInterface)
+{
+	if (InteractWidgetPtr && InteractWidgetPtr->IsInViewport())
+	{
+		InteractWidgetPtr->SetText(InteractedActorInterface->GetInteractionWidgetText());
+		InteractWidgetPtr->SetVisibility(ESlateVisibility::Visible);
+		return; 
+	}
+
+	if (const TSubclassOf<UUserWidget> WidgetClass = InteractedActorInterface->GetInteractableWidget())
+	{
+		InteractWidgetPtr = CreateWidget<UInteractWidget_OM>(GetWorld(), WidgetClass);
+		
+		InteractWidgetPtr->SetText(InteractedActorInterface->GetInteractionWidgetText());
+
+		if (!InteractWidgetPtr->IsInViewport())
+		{
+			InteractWidgetPtr->AddToViewport(3);
+		}
+	}
+}
+
 void UWidgetManagementComponent_OM::SetTutorialWidget(const UTutorialWidget_OM* InTutorialWidget)
 {
 	if (InTutorialWidget)
@@ -62,12 +127,15 @@ void UWidgetManagementComponent_OM::SetTutorialWidget(const UTutorialWidget_OM* 
 
 void UWidgetManagementComponent_OM::SetWorkoutMinigame(EMinigameType InMiniGame)
 {
-		if (TSubclassOf<UPlayModeBaseWidget_OM>* Minigame = PlayModeWidgets.Find(EPlayModes::WorkoutMode))
+	if (TSubclassOf<UPlayModeBaseWidget_OM>* Minigame = PlayModeWidgets.Find(EPlayModes::WorkoutMode))
+	{
+		if (TSubclassOf<UExerciseMinigameWidget_OM>* Ex = WorkoutMinigames.Find(InMiniGame))
 		{
-			*Minigame = WorkoutMinigames.Find(InMiniGame);
+			*Minigame = Ex->Get();
 		}
 	}
 }
+
 
 void UWidgetManagementComponent_OM::ShowYouDiedWidget()
 {
@@ -207,4 +275,163 @@ void UWidgetManagementComponent_OM::LoadPersistentHud(const bool bLoad)
 			PersistentHudPtr->RemoveFromParent();
 		}
 	}
+}
+
+void UWidgetManagementComponent_OM::ResetUI()
+{
+	RemoveAllActiveWidgets();
+
+	if (PersistentHudPtr)
+	{
+		PersistentHudPtr->RemoveFromParent();
+		PersistentHudPtr = nullptr;
+	}
+
+	if (TodoWidgetPtr)
+	{
+		TodoWidgetPtr->RemoveFromParent();
+		TodoWidgetPtr = nullptr;
+	}
+
+	if (HintsPtr)
+	{
+		HintsPtr->RemoveFromParent();
+		HintsPtr = nullptr;
+	}
+
+	if (InteractWidgetPtr)
+	{
+		InteractWidgetPtr->RemoveFromParent();
+		InteractWidgetPtr = nullptr;
+	}
+}
+
+void UWidgetManagementComponent_OM::ToggleInteractWidgetFromViewport(bool bRemove)
+{
+	if (!InteractWidgetPtr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No interact widget ptr"));
+		return;
+	}
+
+	if (bRemove)
+	{
+		InteractWidgetPtr->RemoveFromParent();
+		InteractWidgetPtr = nullptr; 
+	}
+	else
+	{
+		if (!InteractWidgetPtr->IsInViewport())
+		{
+			InteractWidgetPtr->AddToViewport(3);
+		}
+		InteractWidgetPtr->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UWidgetManagementComponent_OM::HideUnhideInteractableWidget(bool bHide) const
+{
+	if (!InteractWidgetPtr) return;
+
+	if (bHide)
+	{
+		InteractWidgetPtr->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		InteractWidgetPtr->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UWidgetManagementComponent_OM::ShowOrHideHint(const FString& HintText, float HintLength, bool HideHint,
+                                                   bool RemoveFully)
+{
+
+	if (!HintsPtr)
+	{
+		if (HintWidget)
+		{
+			HintsPtr = CreateWidget<UHintsWidget_OM>(this, HintWidget);
+		}
+		if (!HintsPtr) return;
+	}
+
+	UHintsWidget_OM* HintWidgetClassCast = Cast<UHintsWidget_OM>(HintsPtr);
+	if (!HintWidgetClassCast) return;
+
+	const FText HintInputText = FText::FromString(*HintText);
+
+	if (RemoveFully && HintsPtr->IsInViewport())
+		HintsPtr->RemoveFromParent();
+
+	if (HideHint && HintsPtr->IsInViewport())
+	{
+		HintWidgetClassCast->HideHint();
+	}
+	else if (!HideHint && !HintsPtr->IsInViewport())
+	{
+		HintsPtr->AddToViewport(4);
+		if (HintLength > 0.f)
+		{
+			HintWidgetClassCast->ShowHint(HintInputText, HintLength);
+		}
+		else
+		{
+			HintWidgetClassCast->ShowHint(HintInputText);
+		}
+	}
+	else if (!HideHint && HintsPtr->IsInViewport())
+	{
+		if (HintLength > 0.f)
+		{
+			HintWidgetClassCast->ShowHint(HintInputText, HintLength);
+		}
+		else
+		{
+			HintWidgetClassCast->ShowHint(HintInputText);
+		}
+	}
+}
+
+void UWidgetManagementComponent_OM::HidePersistentHud(bool bHide) const
+{
+	if (PersistentHudPtr)
+	{
+		if (bHide)
+			PersistentHudPtr->SetVisibility(ESlateVisibility::Hidden);
+		else
+			PersistentHudPtr->SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+}
+
+void UWidgetManagementComponent_OM::HideMentalHealthStats(float TimeHidden)
+{
+	if (PersistentHudPtr)
+	{
+		PersistentHudPtr->SetMentalStatVisibility(false);
+	}
+	GetWorld()->GetTimerManager().ClearTimer(HideMentalStats);
+	GetWorld()->GetTimerManager().SetTimer(HideMentalStats, [this]()
+	{
+		if (PersistentHudPtr)
+		{
+			PersistentHudPtr->SetMentalStatVisibility(true);
+		}
+	}, TimeHidden, false);
+}
+void UWidgetManagementComponent_OM::ShowExitButton(bool bHide) const
+{
+	if (PersistentHudPtr)
+		PersistentHudPtr->SetExitButtonVisibility(!bHide);
+}
+
+void UWidgetManagementComponent_OM::FlashExitButton(int LoopsToPlay) const
+{
+	if (PersistentHudPtr)
+		PersistentHudPtr->FlashExitButton(LoopsToPlay);
+}
+
+bool UWidgetManagementComponent_OM::GetIsInteractableWidgetOnViewport() const
+{
+	return (InteractWidgetPtr && InteractWidgetPtr->IsInViewport());
 }

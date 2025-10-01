@@ -31,6 +31,7 @@ class UTodoList_OM;
 class USocialInteractionWidget_OM;
 class UExerciseMinigameWidget_OM;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWidgetExited);
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class OPTIMIZEMAN_API UWidgetManagementComponent_OM : public UActorComponent
 {
@@ -48,23 +49,25 @@ public:
 
 	/** Toggles **/
 	void ToggleInteractWidgetFromViewport(bool bRemove);
-	void HideUnhideInteractableWidget(bool bHide);
-	void ShowOrHideHint(const FString& HintText, float HintLength = 0.f, bool HideHint = false, bool RemoveFully = false) const;
-	void HideGamePointsHud(bool bHide);
+	void HideUnhideInteractableWidget(bool bHide) const;
+	void ShowOrHideHint(const FString& HintText, float HintLength = 0.f, bool HideHint = false, bool RemoveFully = false);
+	void HidePersistentHud(bool bHide) const;
 	void HideMentalHealthStats(float TimeHidden = 2.f);
-	void ShowExitButton(bool bHide = false);
+	void ShowExitButton(bool bHide = false) const;
 
 	/** Indicators **/
-	void FlashExitButton(int LoopsToPlay = 2);
+	void FlashExitButton(int LoopsToPlay = 2) const;
 	
 	/** Getters **/
-	bool GetIsInteractableWidgetOnViewport();
+	bool GetIsInteractableWidgetOnViewport() const;
 	UPlayModeBaseWidget_OM* GetCurrentPlayModeWidgetInstance() const { return CurrentPlayModeWidgetInstance; }
 	TArray<UUserWidget*> GetActiveWidgets() const { return ActiveWidgets; }
 
 	/** Setters **/
+	UFUNCTION()
 	void SetTutorialWidget(const UTutorialWidget_OM* InTutorialWidget);
-	void SetWorkoutMinigame(const UExerciseMinigameWidget_OM* InWorkoutMinigame);
+	UFUNCTION()
+	void SetWorkoutMinigame(EMinigameType InMiniGame);
 
 
 	/** Delegate Called UFunctions **/
@@ -74,6 +77,11 @@ public:
 	void TodoCompletedPopUp();
 	UFUNCTION()
 	void RemoveAllActiveWidgets();
+
+protected:
+	/** Delegate Events **/
+	UPROPERTY(EditDefaultsOnly, Category = "Events")
+	FOnWidgetExited OnWidgetExited;
 
 private:
 	/** Helpers **/

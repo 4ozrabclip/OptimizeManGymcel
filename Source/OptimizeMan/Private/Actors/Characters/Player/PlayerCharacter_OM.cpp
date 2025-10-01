@@ -29,6 +29,7 @@
 #include "Components/Character/Concrete/CameraComponent_OM.h"
 #include "Components/Character/Concrete/PlayerAmbienceControlComponent.h"
 #include "Components/Character/Concrete/SpringArmComponent_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameplayAbilitySystem/GameplayEffects/Gym/Concrete/FocusTick_OM.h"
@@ -495,7 +496,7 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 
 	if (Config.bHasWidget)
 	{
-		PlayerController->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
+		PlayerController->GetWidgetManagementComponent()->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
 	}
 
 	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
@@ -781,6 +782,10 @@ void APlayerCharacter_OM::CheckInteractable()
 	FCollisionQueryParams CollisionParams;
 	if (!PlayerController) return;
 
+	auto* WidgetManager = PlayerController->GetWidgetInteractionComponent();
+	if (!WidgetManager) return;
+	
+	
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 	if (bHit)
 	{
@@ -791,20 +796,20 @@ void APlayerCharacter_OM::CheckInteractable()
 		if (AInteractableActor_OM* InteractedActorInterface = Cast<AInteractableActor_OM>(InteractedActor))
 		{
 			if (!InteractedActorInterface->InteractableInterfaceProperties.bIsInteractable) return;
-			PlayerController->WidgetInteraction(InteractedActorInterface);
+			WidgetManager->WidgetInteraction(InteractedActorInterface);
 		}
 		else if (ANpcBase_OM* InteractedNpcInterface = Cast<ANpcBase_OM>(InteractedActor))
 		{
-			PlayerController->WidgetInteraction(InteractedNpcInterface);
+			WidgetManager->WidgetInteraction(InteractedNpcInterface);
 		}
-		else if (PlayerController->GetIsInteractableWidgetOnViewport())
+		else if (WidgetManager->GetIsInteractableWidgetOnViewport())
 		{
-			PlayerController->ToggleInteractWidgetFromViewport(true);
+			WidgetManager->ToggleInteractWidgetFromViewport(true);
 		}
 	}
-	else if (PlayerController->GetIsInteractableWidgetOnViewport())
+	else if (WidgetManager->GetIsInteractableWidgetOnViewport())
 	{
-		PlayerController->ToggleInteractWidgetFromViewport(true);
+		WidgetManager->ToggleInteractWidgetFromViewport(true);
 	}
 }
 
@@ -887,10 +892,10 @@ void APlayerCharacter_OM::Jump()
 
 void APlayerCharacter_OM::InteractClick()
 {
-	if (PlayerController && PlayerController->WidgInteractionComp)
+	if (PlayerController && PlayerController->GetWidgetInteractionComponent())
 	{
-		PlayerController->WidgInteractionComp->PressPointerKey(EKeys::LeftMouseButton);
-		PlayerController->WidgInteractionComp->ReleasePointerKey(EKeys::LeftMouseButton);
+		PlayerController->GetWidgetInteractionComponent()->PressPointerKey(EKeys::LeftMouseButton);
+		PlayerController->GetWidgetInteractionComponent()->ReleasePointerKey(EKeys::LeftMouseButton);
 	}
 	Interact(false);
 }

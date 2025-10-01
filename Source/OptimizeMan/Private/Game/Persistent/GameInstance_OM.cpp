@@ -6,6 +6,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/Static Helpers/Helper.h"
@@ -83,7 +84,7 @@ void UGameInstance_OM::ResetGame()
 	}
 	if (auto* pc = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
 	{
-		pc->ResetUI();
+		pc->GetWidgetManagementComponent()->ResetUI();
 	}
 
 	SetDayNumber(1);
