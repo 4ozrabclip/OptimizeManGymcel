@@ -57,7 +57,7 @@ void AInfoSign_OM::OnPlayerOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 		{
 			if (auto* PC = Cast<APlayerController_OM>(Player->GetController()))
 			{
-				PC->SetTutorialWidget(TutorialWidget);
+				PC->GetWidgetManagementComponent()->SetTutorialWidget(TutorialWidget);
 
 
 				Player->SetCurrentPlayMode(EPlayModes::TutorialMode);

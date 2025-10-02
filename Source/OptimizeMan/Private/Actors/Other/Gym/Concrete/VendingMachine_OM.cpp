@@ -70,7 +70,7 @@ void AVendingMachine_OM::Interact_Implementation()
 
 	Player->TogglePlayMode(EPlayModes::VendingMachine, Player->bInteractableOpen, this);
 	
-	//PlayerController->ToggleInteractWidgetFromViewport(true);
+	//PlayerController->GetWidgetManagementComponent()->ToggleInteractWidgetFromViewport(true);
 	//InteractableInterfaceProperties.bIsInteractable = false;
 	//Player->SetToUIMode(true, true, VendorWidgetComponent->GetWidget(), true);
 	SetActorTickEnabled(true);

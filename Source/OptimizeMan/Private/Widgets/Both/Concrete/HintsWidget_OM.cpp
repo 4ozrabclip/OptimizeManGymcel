@@ -85,3 +85,17 @@ void UHintsWidget_OM::HideHint()
 	SetVisibility(ESlateVisibility::Hidden);
 	bHintOnScreen = false;
 }
+
+bool UHintsWidget_OM::GetIsHintVisible()
+{
+	if (GetVisibility() == ESlateVisibility::Hidden || GetVisibility() == ESlateVisibility::Collapsed)
+	{
+		return false;
+	}
+	return true;
+}
+
+void UHintsWidget_OM::SetIsHintVisible(bool bIsHintVisible)
+{
+	SetVisibility(bIsHintVisible ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Hidden);
+}

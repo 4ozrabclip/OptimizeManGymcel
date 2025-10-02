@@ -33,7 +33,7 @@ void AToilet_OM::Interact_Implementation()
 		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 
-	PlayerController->ToggleInteractWidgetFromViewport(true);
+	PlayerController->GetWidgetManagementComponent()->ToggleInteractWidgetFromViewport(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
 	
 	const int PissLength = PlayPissingSound();
@@ -44,7 +44,7 @@ void AToilet_OM::Interact_Implementation()
 	GetWorld()->GetTimerManager().SetTimer(ToiletTimerHandle, [this]()
 	{
 		PlayerController->SetCinematicMode(false, true, true);
-		PlayerController->ToggleInteractWidgetFromViewport(false);
+		PlayerController->GetWidgetManagementComponent()->ToggleInteractWidgetFromViewport(false);
 		InteractableInterfaceProperties.bIsInteractable = true;
 		ResetBladder();
 		

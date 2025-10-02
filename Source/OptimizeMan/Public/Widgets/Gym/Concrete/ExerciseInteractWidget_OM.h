@@ -8,6 +8,7 @@
 #include "ExerciseMinigameWidget_OM.generated.h"
 
 
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMinigameResult, EMinigameResult, Result);
 
 class USlotsMinigame_OM;
@@ -16,9 +17,7 @@ class UImage;
 class UTextBlock;
 class APlayerController_OM;
 class APlayerCharacter_OM;
-/**
- * 
- */
+
 UCLASS(Abstract)
 class OPTIMIZEMAN_API UExerciseMinigameWidget_OM : public UPlayModeBaseWidget_OM
 {

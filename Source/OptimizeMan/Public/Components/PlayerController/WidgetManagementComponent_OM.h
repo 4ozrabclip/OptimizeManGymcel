@@ -40,7 +40,6 @@ public:
 	UWidgetManagementComponent_OM();
 protected:
 	virtual void BeginPlay() override;
-
 public:
 	/** Core **/
 	void PlaymodeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn);
@@ -54,7 +53,7 @@ public:
 	void HidePersistentHud(bool bHide) const;
 	void HideMentalHealthStats(float TimeHidden = 2.f);
 	void ShowExitButton(bool bHide = false) const;
-
+	
 	/** Indicators **/
 	void FlashExitButton(int LoopsToPlay = 2) const;
 	
@@ -62,14 +61,13 @@ public:
 	bool GetIsInteractableWidgetOnViewport() const;
 	UPlayModeBaseWidget_OM* GetCurrentPlayModeWidgetInstance() const { return CurrentPlayModeWidgetInstance; }
 	TArray<UUserWidget*> GetActiveWidgets() const { return ActiveWidgets; }
-
+	
 	/** Setters **/
 	UFUNCTION()
 	void SetTutorialWidget(const UTutorialWidget_OM* InTutorialWidget);
 	UFUNCTION()
 	void SetWorkoutMinigame(EMinigameType InMiniGame);
-
-
+	
 	/** Delegate Called UFunctions **/
 	UFUNCTION()
 	void ShowYouDiedWidget();
@@ -78,7 +76,6 @@ public:
 	UFUNCTION()
 	void RemoveAllActiveWidgets();
 
-protected:
 	/** Delegate Events **/
 	UPROPERTY(EditDefaultsOnly, Category = "Events")
 	FOnWidgetExited OnWidgetExited;
@@ -122,23 +119,5 @@ private:
 	TObjectPtr<UGamePointsHud_OM> PersistentHudPtr;
 	UPROPERTY()
 	TObjectPtr<UInteractWidget_OM> InteractWidgetPtr;
-
-
 	
-	/** Add These To Persistent Hud **/
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UHintsWidget_OM> HintWidget;
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UTodoCompletePopupWidget_OM> TodoCompleteWidget;
-	UPROPERTY()
-	TObjectPtr<UHintsWidget_OM> HintsPtr;
-	UPROPERTY()
-	TObjectPtr<UTodoCompletePopupWidget_OM> TodoWidgetPtr;
-
-
-
-
-	
-
-
 };

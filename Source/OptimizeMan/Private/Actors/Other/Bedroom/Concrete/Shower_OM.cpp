@@ -8,6 +8,7 @@
 #include "Components/PointLightComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -46,7 +47,7 @@ void AShower_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
 
-	PlayerController->ToggleInteractWidgetFromViewport(true);
+	PlayerController->GetWidgetManagementComponent()->ToggleInteractWidgetFromViewport(true);
 	WidgetComp->SetVisibility(true);
 	InteractableInterfaceProperties.bIsInteractable = false;
 	Player->SetToUIMode(true, true, WidgetComp->GetWidget());
@@ -146,6 +147,6 @@ void AShower_OM::CloseWidget()
 	WidgetComp->SetVisibility(false);
 	InteractableInterfaceProperties.bIsInteractable = true;
 	Player->SetToUIMode(false);
-	PlayerController->ToggleInteractWidgetFromViewport(false);
+	PlayerController->GetWidgetManagementComponent()->ToggleInteractWidgetFromViewport(false);
 	SetActorTickEnabled(false);
 }

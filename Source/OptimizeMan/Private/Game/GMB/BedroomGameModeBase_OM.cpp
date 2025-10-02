@@ -5,6 +5,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Audio/Concrete/NotificationAudio_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Widgets/Home/Concrete/DisplayDayWidget_OM.h"
 #include "OptimizeMan/Public/Game/Persistent/GameInstance_OM.h"
@@ -130,11 +131,11 @@ void ABedroomGameModeBase_OM::ShowInteractHint()
 	{
 		const FString TodoHintText = TEXT("Left Click or press E to Interact with objects");
 		
-		PlayerController->ShowOrHideHint(TodoHintText);
+		PlayerController->GetWidgetManagementComponent()->ShowOrHideHint(TodoHintText);
 	}
 	else  //CLEAR TODOLIST TIMER
 	{
-		PlayerController->ShowOrHideHint(TEXT(""), 0.f,  true);
+		PlayerController->GetWidgetManagementComponent()->ShowOrHideHint(TEXT(""), 0.f,  true);
 		GetWorld()->GetTimerManager().ClearTimer(ShowInteractTimerHandle);
 		
 		GetWorld()->GetTimerManager().SetTimer(
@@ -156,11 +157,11 @@ void ABedroomGameModeBase_OM::ShowTodoHint()
 	{
 		const FString TodoHintText = TEXT("Press T to open Todo List");
 		
-		PlayerController->ShowOrHideHint(TodoHintText);
+		PlayerController->GetWidgetManagementComponent()->ShowOrHideHint(TodoHintText);
 	}
 	else  //CLEAR TODOLIST TIMER
 	{
-		PlayerController->ShowOrHideHint(TEXT(""), 0.f,  true);
+		PlayerController->GetWidgetManagementComponent()->ShowOrHideHint(TEXT(""), 0.f,  true);
 		GetWorld()->GetTimerManager().ClearTimer(ShowTodoTimerHandle);
 		
 		GetWorld()->GetTimerManager().SetTimer(
@@ -183,11 +184,11 @@ void ABedroomGameModeBase_OM::ShowPauseMenuHint()
 	{
 		const FString PauseMenuHintText = TEXT("Press Esc to open settings");
 		
-		PlayerController->ShowOrHideHint(PauseMenuHintText);
+		PlayerController->GetWidgetManagementComponent()->ShowOrHideHint(PauseMenuHintText);
 	}
 	else  //CLEAR TODOLIST TIMER
 	{
-		PlayerController->ShowOrHideHint(TEXT(""), 0.f,  true);
+		PlayerController->GetWidgetManagementComponent()->ShowOrHideHint(TEXT(""), 0.f,  true);
 		GetWorld()->GetTimerManager().ClearTimer(ShowPauseMenuTimerHandle);
 		
 	}

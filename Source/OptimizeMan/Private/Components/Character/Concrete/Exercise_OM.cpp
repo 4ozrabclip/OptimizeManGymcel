@@ -240,7 +240,7 @@ void UExercise_OM::Injury(const EInjuryLevel& InInjuryLevel)
 		if (auto* pc = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
 		{
 			UE_LOG(LogTemp, Display, TEXT("PC casted"));
-			pc->ShowYouDiedWidget();
+			pc->GetWidgetManagementComponent()->ShowYouDiedWidget();
 			return;
 		}
 	}

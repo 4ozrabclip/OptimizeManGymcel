@@ -165,20 +165,18 @@ void UWidgetManagementComponent_OM::ShowYouDiedWidget()
 
 void UWidgetManagementComponent_OM::TodoCompletedPopUp()
 {
-	if (!TodoWidgetPtr)
-	{
-		if (TodoCompleteWidget)
-		{
-			TodoWidgetPtr = CreateWidget<UTodoCompletePopupWidget_OM>(this, TodoCompleteWidget);
-		}
-		if (!TodoWidgetPtr) return;
-	}
 
-	if (!TodoWidgetPtr->IsInViewport())
+	if (!PersistentHudPtr)
 	{
-		TodoWidgetPtr->AddToViewport(2);
+		UE_LOG(LogTemp, Error, TEXT("PersistentHudPtr null"));
+		return;
 	}
-
+	
+	if (!PersistentHudPtr->GetTodoPopupIsVisible())
+	{
+		PersistentHudPtr->SetTodoCompletePopupVisibility(true);
+	}
+	
 	constexpr float PopUpTimeAmount = 4.f;
 
 	GetWorld()->GetTimerManager().ClearTimer(TodoPopUpHandle);
@@ -186,9 +184,9 @@ void UWidgetManagementComponent_OM::TodoCompletedPopUp()
 		TodoPopUpHandle,
 		[this]()
 		{
-			if (TodoWidgetPtr->IsInViewport())
+			if (PersistentHudPtr->GetTodoPopupIsVisible())
 			{
-				TodoWidgetPtr->RemoveFromParent();
+				PersistentHudPtr->SetTodoCompletePopupVisibility(false);
 			}
 		},
 		PopUpTimeAmount,
@@ -287,18 +285,6 @@ void UWidgetManagementComponent_OM::ResetUI()
 		PersistentHudPtr = nullptr;
 	}
 
-	if (TodoWidgetPtr)
-	{
-		TodoWidgetPtr->RemoveFromParent();
-		TodoWidgetPtr = nullptr;
-	}
-
-	if (HintsPtr)
-	{
-		HintsPtr->RemoveFromParent();
-		HintsPtr = nullptr;
-	}
-
 	if (InteractWidgetPtr)
 	{
 		InteractWidgetPtr->RemoveFromParent();
@@ -346,51 +332,8 @@ void UWidgetManagementComponent_OM::HideUnhideInteractableWidget(bool bHide) con
 void UWidgetManagementComponent_OM::ShowOrHideHint(const FString& HintText, float HintLength, bool HideHint,
                                                    bool RemoveFully)
 {
-
-	if (!HintsPtr)
-	{
-		if (HintWidget)
-		{
-			HintsPtr = CreateWidget<UHintsWidget_OM>(this, HintWidget);
-		}
-		if (!HintsPtr) return;
-	}
-
-	UHintsWidget_OM* HintWidgetClassCast = Cast<UHintsWidget_OM>(HintsPtr);
-	if (!HintWidgetClassCast) return;
-
-	const FText HintInputText = FText::FromString(*HintText);
-
-	if (RemoveFully && HintsPtr->IsInViewport())
-		HintsPtr->RemoveFromParent();
-
-	if (HideHint && HintsPtr->IsInViewport())
-	{
-		HintWidgetClassCast->HideHint();
-	}
-	else if (!HideHint && !HintsPtr->IsInViewport())
-	{
-		HintsPtr->AddToViewport(4);
-		if (HintLength > 0.f)
-		{
-			HintWidgetClassCast->ShowHint(HintInputText, HintLength);
-		}
-		else
-		{
-			HintWidgetClassCast->ShowHint(HintInputText);
-		}
-	}
-	else if (!HideHint && HintsPtr->IsInViewport())
-	{
-		if (HintLength > 0.f)
-		{
-			HintWidgetClassCast->ShowHint(HintInputText, HintLength);
-		}
-		else
-		{
-			HintWidgetClassCast->ShowHint(HintInputText);
-		}
-	}
+	if (PersistentHudPtr)
+		PersistentHudPtr->HintSystem(HintText, HintLength, HideHint, RemoveFully);
 }
 
 void UWidgetManagementComponent_OM::HidePersistentHud(bool bHide) const

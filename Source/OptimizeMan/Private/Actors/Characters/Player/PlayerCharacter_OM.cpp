@@ -563,7 +563,7 @@ void APlayerCharacter_OM::ManageCurrentPlayMode()
 void APlayerCharacter_OM::ManageRegularMode()
 {
 	if (!PlayerController) return;
-	PlayerController->RemoveAllActiveWidgets();
+	PlayerController->GetWidgetManagementComponent()->RemoveAllActiveWidgets();
 	if (CurrentInteractedCharacter)
 	{
 		CurrentInteractedCharacter->EndDialog();
@@ -583,9 +583,9 @@ void APlayerCharacter_OM::ManageRegularMode()
 	SwitchStateTag(FGameplayTag::RequestGameplayTag("State.Idle"));
 
 	
-	if (!PlayerController->GetIsInteractableWidgetOnViewport())
+	if (!PlayerController->GetWidgetManagementComponent()->GetIsInteractableWidgetOnViewport())
 	{
-		PlayerController->ToggleInteractWidgetFromViewport(false);
+		PlayerController->GetWidgetManagementComponent()->ToggleInteractWidgetFromViewport(false);
 	}
 }
 
@@ -677,7 +677,7 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
 		{
 			InputModeUI.SetWidgetToFocus(InWidget->TakeWidget());
 		}
-		else if (UUserWidget* WidgetInstanceToFocus = PlayerController->GetCurrentPlayModeWidgetInstance())
+		else if (UUserWidget* WidgetInstanceToFocus = PlayerController->GetWidgetManagementComponent()->GetCurrentPlayModeWidgetInstance())
 		{
 			InputModeUI.SetWidgetToFocus(WidgetInstanceToFocus->TakeWidget());
 		}
@@ -782,7 +782,7 @@ void APlayerCharacter_OM::CheckInteractable()
 	FCollisionQueryParams CollisionParams;
 	if (!PlayerController) return;
 
-	auto* WidgetManager = PlayerController->GetWidgetInteractionComponent();
+	auto* WidgetManager = PlayerController->GetWidgetManagementComponent();
 	if (!WidgetManager) return;
 	
 	

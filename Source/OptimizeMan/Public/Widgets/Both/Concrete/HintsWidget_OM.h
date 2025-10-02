@@ -21,6 +21,9 @@ public:
 	void ShowHint(const FText& HintTextString, float DisplayTime = 0.f, bool bFlash = false);
 	void HideHint();
 
+	bool GetIsHintVisible();
+	void SetIsHintVisible(bool bIsHintVisible);
+
 
 protected:
 	UPROPERTY(meta = (BindWidget))
