@@ -13,5 +13,7 @@ UCLASS()
 class OPTIMIZEMAN_API UTodoCompletePopupWidget_OM : public UParentWidget_OM
 {
 	GENERATED_BODY()
+public:
+	virtual void NativeConstruct() override;
 	
 };

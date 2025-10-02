@@ -17,7 +17,7 @@
 #include "Widgets/Both/Concrete/TodoCompletePopupWidget_OM.h"
 #include "Widgets/Both/Concrete/TutorialWidget_OM.h"
 #include "Widgets/Both/Concrete/YouDiedWidget_OM.h"
-#include "Widgets/Gym/Concrete/ExerciseInteractWidget_OM.h"
+#include "Widgets/Gym/Concrete/ExerciseMinigameWidget_OM.h"
 
 UWidgetManagementComponent_OM::UWidgetManagementComponent_OM()
 {
@@ -62,6 +62,9 @@ void UWidgetManagementComponent_OM::BeginPlay()
 	{
 		TodoManager->OnTodoComplete.AddDynamic(this, &UWidgetManagementComponent_OM::TodoCompletedPopUp);
 	}
+
+
+	LoadPersistentHud();
 }
 
 void UWidgetManagementComponent_OM::PlaymodeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn)
@@ -71,9 +74,8 @@ void UWidgetManagementComponent_OM::PlaymodeWidgetManagement(EPlayModes CurrentP
 	TSubclassOf<UPlayModeBaseWidget_OM> WidgetToCreateClass = nullptr;
 
 	WidgetToCreateClass = *PlayModeWidgets.Find(CurrentPlayMode);
-
 	
-	CurrentPlayModeWidgetInstance = CreateWidget<UPlayModeBaseWidget_OM>(this, WidgetToCreateClass);
+	CurrentPlayModeWidgetInstance = CreateWidget<UPlayModeBaseWidget_OM>(GetWorld(), WidgetToCreateClass);
 	if (!CurrentPlayModeWidgetInstance) return;
 
 	ActiveWidgets.Add(CurrentPlayModeWidgetInstance);
@@ -141,7 +143,7 @@ void UWidgetManagementComponent_OM::ShowYouDiedWidget()
 {
 	if (!YouDiedWidget) return;
 
-	if (UYouDiedWidget_OM* YouDiedWidgetPtr = CreateWidget<UYouDiedWidget_OM>(this, YouDiedWidget))
+	if (UYouDiedWidget_OM* YouDiedWidgetPtr = CreateWidget<UYouDiedWidget_OM>(GetWorld(), YouDiedWidget))
 	{
 		ShowExitButton(true);
 
@@ -161,7 +163,6 @@ void UWidgetManagementComponent_OM::ShowYouDiedWidget()
 		}
 	}
 }
-
 
 void UWidgetManagementComponent_OM::TodoCompletedPopUp()
 {
@@ -254,7 +255,7 @@ void UWidgetManagementComponent_OM::LoadPersistentHud(const bool bLoad)
 	{
 		if (PersistentHud)
 		{
-			PersistentHudPtr = CreateWidget<UGamePointsHud_OM>(this, PersistentHud);
+			PersistentHudPtr = CreateWidget<UGamePointsHud_OM>(GetWorld(), PersistentHud);
 		}
 		if (!PersistentHudPtr) return;
 	}

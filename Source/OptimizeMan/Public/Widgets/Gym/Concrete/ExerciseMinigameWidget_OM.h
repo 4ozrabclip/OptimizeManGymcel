@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Utils/Structs/ExerciseData.h"
+#include "Utils/Structs/MinigameData.h"
 #include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "ExerciseMinigameWidget_OM.generated.h"
 
 
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMinigameResult, EMinigameResult, Result);
+class UExercise_OM;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMinigameResult, FMinigameResultData, Result);
 
 class USlotsMinigame_OM;
 class UMinigamesBase_OM;
@@ -27,8 +28,14 @@ protected:
 	virtual void NativeDestruct() override;
 
 	virtual void OnExitButtonClicked() override;
+
+	virtual void OnMiniGameClick();
+
+	virtual void MiniGameTutorial() {};
 	
 
+	void SetHasPlayedThisMinigame(const bool InHasPlayedThisMinigame) { bHasPlayedThisMinigame = InHasPlayedThisMinigame; }
+	
 	UFUNCTION()
 	virtual void SetWorkoutState(EWorkoutStates NewWorkoutState) { CurrentWorkoutState = NewWorkoutState; };
 
@@ -42,6 +49,16 @@ protected:
 
 	/** Delegates / Events **/
 	FOnMinigameResult OnMinigameResult;
+
+	/** Result Data **/
+	FMinigameResultData CurrentMinigameResult;
+
+
+	/** Class Cache **/
+	UPROPERTY()
+	UExercise_OM* ExerciseComponent;
+
+	
 
 protected:
 	EWorkoutStates CurrentWorkoutState;
@@ -61,7 +78,9 @@ protected:
 
 
 	bool bDoingRep = false;
-	bool bHasWorkedOutInitial = true;
+
+private:
+	bool bHasPlayedThisMinigame = false;
 
 	
 

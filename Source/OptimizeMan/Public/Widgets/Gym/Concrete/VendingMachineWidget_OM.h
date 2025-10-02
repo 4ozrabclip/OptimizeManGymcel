@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Other/Gym/Concrete/VendingMachine_OM.h"
-#include "Widgets/Both/Abstract/InteractiveWidgetBase_OM.h"
+#include "Widgets/Both/Abstract/PlayModeBaseWidget_OM.h"
 #include "Widgets/Both/Abstract/ParentWidget_OM.h"
 #include "VendingMachineWidget_OM.generated.h"
 
@@ -30,7 +30,7 @@ struct FVendorItem
  * 
  */
 UCLASS()
-class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UInteractiveWidgetBase_OM
+class OPTIMIZEMAN_API UVendingMachineWidget_OM : public UPlayModeBaseWidget_OM
 {
 	GENERATED_BODY()
 public:

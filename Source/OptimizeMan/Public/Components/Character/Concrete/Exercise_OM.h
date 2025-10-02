@@ -103,7 +103,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
 	void LeaveExercise();
 	UFUNCTION(BlueprintCallable, Category = "Exercise")
-	void MiniGame(EMinigameResult MinigameResult = EMinigameResult::Success);
+	void MiniGame(FMinigameResultData Result);
 
 	void PrepareExercise();
 	

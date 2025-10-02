@@ -183,8 +183,8 @@ public:
 	bool GetHasBeenToGymToday() const { return bHasBeenToGymToday; }
 	void SetHasBeenToGymToday(const bool InHasBeenToGymToday) { bHasBeenToGymToday = InHasBeenToGymToday; }
 
-	bool GetHasDoneWorkoutInitial() const { return bHasDoneWorkoutInitial; }
-	void SetHasDoneWorkoutInitial(const bool InHasDoneWorkoutInitial) { bHasDoneWorkoutInitial = InHasDoneWorkoutInitial; }
+	bool GetHasDoneMinigameInitial(EMinigameType InMiniGame) const { return HasDoneMiniGamesInitial.Find(InMiniGame); }
+	void SetHasDoneMinigameInitial(const bool InHasDoneWorkoutInitial) { bHasDoneWorkoutInitial = InHasDoneWorkoutInitial; }
 
 	UFUNCTION(BlueprintCallable) //for use with bedroom door
 	bool GetHasOpenedTodoListInitial() const { return bHasOpenedTodoListInitial; }
@@ -299,7 +299,8 @@ private:
 	bool bHasOpenedTodoListInitial;
 	bool bHasOpenedPauseMenuInitial;
 	bool bHasInteractedInitial;
-	bool bHasDoneWorkoutInitial;
+
+	TArray<EMinigameType, bool> HasDoneMiniGamesInitial;
 
 	float BaseDifficultyMultiplier = 1.f;
 	float TempWaveDifficultyMultiplier = 1.f;

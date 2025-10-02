@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 
 void UPlayModeBaseWidget_OM::NativeConstruct()
 {
@@ -17,8 +18,11 @@ void UPlayModeBaseWidget_OM::NativeConstruct()
 
 	if (PlayerController)
 	{
-		if (!PlayerController->OnWidgetExited.IsAlreadyBound(this, &UPlayModeBaseWidget_OM::OnExitButtonClicked))
-			PlayerController->OnWidgetExited.AddDynamic(this, &UPlayModeBaseWidget_OM::OnExitButtonClicked);
+		if (auto* wm = PlayerController->GetWidgetManagementComponent())
+		{
+			if (!wm->OnWidgetExited.IsAlreadyBound(this, &UPlayModeBaseWidget_OM::OnExitButtonClicked))
+				wm->OnWidgetExited.AddDynamic(this, &UPlayModeBaseWidget_OM::OnExitButtonClicked);
+		}
 	}
 
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));

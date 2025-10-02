@@ -20,15 +20,24 @@ class OPTIMIZEMAN_API USlotsMinigame_OM : public UExerciseMinigameWidget_OM
 	GENERATED_BODY()
 protected:
 	virtual void NativeConstruct() override;
-	
 	virtual void SetWorkoutState(EWorkoutStates NewWorkoutState) override;
 
 public:
 	UFUNCTION()
 	void PlayButton_OnClick();
 
+	UFUNCTION()
+	void IncreaseBet() { ChangeBet(+BetStep); };
+
+	UFUNCTION()
+	void DecreaseBet() { ChangeBet(-BetStep); };
+	
 
 private:
+	void ChangeBet(const float InBet);
+
+	void CalculateChanceOfWin();
+	
 	UFUNCTION()
 	void OnScrollFinished();
 	
@@ -43,4 +52,20 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	USlider* BetSlider;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* IncreaseBet_Button;
+	UPROPERTY(meta = (BindWidget))
+	UButton* DecreaseBet_Button;
+
+private:
+
+	UPROPERTY(EditAnywhere)
+	float MaxBet = 7;
+	UPROPERTY(EditAnywhere)
+	int MinBet = 2;
+
+	
+	int CurrentBet = MinBet;
+	int BetStep = 1;
 };

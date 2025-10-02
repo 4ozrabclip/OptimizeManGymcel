@@ -6,6 +6,7 @@
 UENUM()
 enum class EMinigameResult : uint8
 {
+	None	UMETA(DisplayName = "None"),
 	Success	UMETA(DisplayName = "Success"),
 	Failed	UMETA(DisplayName = "Failed"),
 };
@@ -15,4 +16,22 @@ enum class EMinigameType : uint8
 {
 	TimingGauge	UMETA(DisplayName = "Timing Gauge"),
 	Slots		UMETA(DisplayName = "Slots"),
+};
+
+USTRUCT(Blueprintable)
+struct FMinigameResultData
+{
+	GENERATED_BODY()
+
+	FMinigameResultData() :
+	EnergyFactor(1.f),
+	Result(EMinigameResult::Success)
+	{}
+
+	UPROPERTY()
+	float EnergyFactor;
+	UPROPERTY()
+	EMinigameResult Result;
+	
+	
 };

@@ -12,6 +12,7 @@
 #include "Actors/Other/Gym/Concrete/GymCamera.h"
 #include "Camera/CameraComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "DSP/AudioDebuggingUtilities.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Widgets/Gym/Abstract/ExerciseSelectionParentWidget_OM.h"
@@ -107,7 +108,7 @@ void AExerciseEquipment_OM::OnSequenceFinished()
 		break;
 	}
 
-		PlayerController->ShowExitButton();
+		PlayerController->GetWidgetManagementComponent()->ShowExitButton();
 }
 
 void AExerciseEquipment_OM::OnPlayModeChanged(EPlayModes InPlayMode)
@@ -161,7 +162,7 @@ void AExerciseEquipment_OM::PlayInjurySequence()
 	}
 	
 	PlayerMesh->SetActorHiddenInGame(false);
-	PlayerController->ShowExitButton(true);
+	PlayerController->GetWidgetManagementComponent()->ShowExitButton(true);
 
 	
 	ULevelSequence* SeqToUse = nullptr;
@@ -201,7 +202,7 @@ void AExerciseEquipment_OM::TurnOffWidget()
 	//InteractableInterfaceProperties.bIsInteractable = true;
 	SetIsInteractable(true);
 	Player->SetToUIMode(false);
-	PlayerController->HideUnhideInteractableWidget(false);
+	PlayerController->GetWidgetManagementComponent()->HideUnhideInteractableWidget(false);
 	SetActorTickEnabled(false);
 }
 
@@ -216,7 +217,7 @@ void AExerciseEquipment_OM::Interact_Implementation()
 
 	if (!PlayerController) return;
 	
-	PlayerController->HideUnhideInteractableWidget(true);
+	PlayerController->GetWidgetManagementComponent()->HideUnhideInteractableWidget(true);
 	SelectWorkoutWidget->SetVisibility(true);
 	SetIsInteractable(false);
 	//InteractableInterfaceProperties.bIsInteractable = false;

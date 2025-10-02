@@ -28,6 +28,7 @@ public:
 	/** Getters **/
 	bool GetIsFinalCenter() const { return bIsFinalCenter; }
 	bool GetIsPositionedCenter() const { return bIsPositionedCenter; }
+	FSlotItemData GetType() const { return Type; }
 
 protected:
 	FSlotItemData Type;

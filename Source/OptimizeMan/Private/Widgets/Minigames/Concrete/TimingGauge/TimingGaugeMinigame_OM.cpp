@@ -2,7 +2,6 @@
 
 
 #include "Widgets/Minigames/Concrete/TimingGauge/TimingGaugeMinigame_OM.h"
-
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
@@ -55,6 +54,7 @@ void UTimingGaugeMinigame_OM::NativeConstruct()
 
 	
 }
+
 
 
 
@@ -129,6 +129,7 @@ void UTimingGaugeMinigame_OM::CheckAndSetStyles()
 		RepCountTextBlock->SetColorAndOpacity(Black);
 	}
 }
+
 void UTimingGaugeMinigame_OM::WorkoutTutorial(float DeltaTime)
 {
 	if (!ClickImage) return;
@@ -391,21 +392,18 @@ void UTimingGaugeMinigame_OM::UpdateStats()
 
 void UTimingGaugeMinigame_OM::OnMiniGameClick()
 {
-	if (!Player)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Player Pointer is NULL"));
-		return;
-	}
-	if (!ExerciseComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ExerciseComponent Pointer is NULL"));
-		return;
-	}
 
+	Super::OnMiniGameClick();
+	/*
+	 * Refactor this to make the workout tutorials persistent.
+	 *
+	 * Could do a good system here that connects it with all playmodes?
+	 *
+	 * CTRL+H All Minigames to MiniGames.  Anytime you see unregular naming conventions, fix.
+	 */
 	if (!bHasWorkedOutInitial)
 	{
 		GameInstance->SetHasDoneWorkoutInitial(true);
-		bHasWorkedOutInitial = true;
 		ClickImage->SetVisibility(ESlateVisibility::Hidden);
 	}
 		
@@ -431,21 +429,45 @@ void UTimingGaugeMinigame_OM::OnMiniGameClick()
 	const float MinorInjuryBoundsValueLeft = (MinorInjuryLeft->GetPercent()) / 2.f;
 	const float MinorInjuryBoundsValueRight = 1.f - ((MinorInjuryRight->GetPercent()) / 2.f);
 
+	
+
+	if (MiniGameSlider->GetValue() >= MinorInjuryBoundsValueLeft &&
+		MiniGameSlider->GetValue() <= MinorInjuryBoundsValueRight)
+	{
+		NewResult = EMinigameResult::Success;
+		NewEnergyFactor += 0.1f;
+		
+	}
+	else if (MiniGameSlider->GetValue() >= MajorInjuryBoundsValueLeft &&
+			 MiniGameSlider->GetValue() <= MajorInjuryBoundsValueRight)
+	{
+		NewResult = EMinigameResult::Success;
+		NewEnergyFactor += 0.4f;
+		
+	}
+	else
+	{
+		NewResult = EMinigameResult::Failed;
+	}
+
+	
+	CurrentMinigameResult.Result = NewResult;
+	CurrentMinigameResult.EnergyFactor = NewEnergyFactor;
+
+	Speed += 0.1 * NewEnergyFactor;
+	LeftMax += 0.005f * NewEnergyFactor;
+	RightMin -= 0.005f * NewEnergyFactor;
+	InjuryBoundsLeftValue = 0.f;
+	InjuryBoundsRightValue = 1.f;
+	
+	ExerciseComponent->MiniGame(CurrentMinigameResult);
+	UpdateStats();
+	
 	//		S U C C E S F U L  
 	if (MiniGameSlider->GetValue() >= MinorInjuryBoundsValueLeft && MiniGameSlider->GetValue() <= MinorInjuryBoundsValueRight)
 	{
 		//bMiniGameOn = false;
-		ExerciseComponent->MiniGame();
-
-		if (EnergyLevel <= 0.4f)
-		{
-			Speed += 0.01f;
-		}
-		LeftMax += 0.005f;
-		RightMin -= 0.005f;
-		InjuryBoundsLeftValue = 0.f;
-		InjuryBoundsRightValue = 1.f;
-		UpdateStats();
+		
 	}
 	//				M I N O R  I N J U R Y
 	else if (MiniGameSlider->GetValue() >= MajorInjuryBoundsValueLeft && MiniGameSlider->GetValue() <= MajorInjuryBoundsValueRight)
@@ -453,7 +475,7 @@ void UTimingGaugeMinigame_OM::OnMiniGameClick()
 		
 		ExerciseComponent->Injury(EInjuryLevel::Minor);
 		
-		ExerciseComponent->MiniGame();
+		ExerciseComponent->MiniGame(CurrentMinigameResult);
 
 		UpdateStats();
 
@@ -485,6 +507,12 @@ void UTimingGaugeMinigame_OM::OnMiniGameClick()
 
 
 }
+
+void UTimingGaugeMinigame_OM::MiniGameTutorial()
+{
+	Super::MiniGameTutorial();
+}
+
 
 void UTimingGaugeMinigame_OM::SetNotificationText()
 {
@@ -564,4 +592,5 @@ void UTimingGaugeMinigame_OM::SetMiniGameOn(const bool InMiniGameOn)
 		
 	}
 }
+
 

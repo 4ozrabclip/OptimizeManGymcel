@@ -30,7 +30,6 @@ public:
 private:
 	/* Init */
 	void SetInitialItems();
-
 	UFUNCTION()
 	void TickScroll();
 	UFUNCTION()
@@ -39,6 +38,8 @@ private:
 public:
 	UFUNCTION(BlueprintCallable)
 	void StartScroll(int EnergyBid, int ReelIndex);
+
+	void SelectItemCenter(ESlotItemType InType);
 
 
 	/* Setters */

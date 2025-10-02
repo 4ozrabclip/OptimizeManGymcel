@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Utils/Structs/ExerciseData.h"
 #include "Widgets/Gym/Concrete/ExerciseMinigameWidget_OM.h"
-#include "Widgets/Minigames/Abstract/MinigamesBase_OM.h"
 #include "TimingGaugeMinigame_OM.generated.h"
 
 class UExercise_OM;
@@ -28,6 +27,10 @@ protected:
 	virtual void SetWorkoutState(EWorkoutStates NewWorkoutState) override;
 	virtual void CheckAndSetStyles() override;
 
+	virtual void OnMiniGameClick() override;
+
+	virtual void MiniGameTutorial() override;
+
 	
 	void WorkoutTutorial(float DeltaTime);
 public:
@@ -40,8 +43,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateStats();
-	UFUNCTION(BlueprintCallable)
-	void OnMiniGameClick();
+
+
 	UFUNCTION(BlueprintCallable)
 	void NotificationTextPopUp(const FString& InString = "");
 	UFUNCTION(BlueprintCallable)
@@ -140,11 +143,17 @@ protected:
 
 
 	
-
-
 private: //Priv variables
+
+	EMinigameResult NewResult = EMinigameResult::None;
+	float NewEnergyFactor = 1.f;
+
+
+	
 	bool bSpecialSliderOn = false;
 	bool bMiniGameOn = false;
+
+
 	
 
 	

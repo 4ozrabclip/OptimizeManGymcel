@@ -61,28 +61,27 @@ void APostProcessController_OM::BeginPlay()
 
 	InitializeEffects();
 
+	
 	Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (Player)
 	{
 		Player->OnPlayModeChange.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnPlayMode);
 		Player->OnTempEmotionsChanged.AddDynamic(this, &APostProcessController_OM::ManageEffectsOnTempEmotion);
-	}
-
-
-	if (auto* AbSysComp = Player->GetComponentByClass<UAbilitySystemComponent_OM>())
-	{
-		GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
-		if (GymStats)
+		
+		if (auto* AbSysComp = Player->GetComponentByClass<UAbilitySystemComponent_OM>())
 		{
-			if (auto MutableStats = const_cast<UGymSpecificStats_OM*>(GymStats))
+			GymStats = AbSysComp->GetSet<UGymSpecificStats_OM>();
+			if (GymStats)
 			{
-				if (!MutableStats->OnEnergyBelowThreshold.IsAlreadyBound(this, &APostProcessController_OM::OnEnergyBelowThreshold))
-					MutableStats->OnEnergyBelowThreshold.AddDynamic(this, &APostProcessController_OM::OnEnergyBelowThreshold);
+				if (auto MutableStats = const_cast<UGymSpecificStats_OM*>(GymStats))
+				{
+					if (!MutableStats->OnEnergyBelowThreshold.IsAlreadyBound(this, &APostProcessController_OM::OnEnergyBelowThreshold))
+						MutableStats->OnEnergyBelowThreshold.AddDynamic(this, &APostProcessController_OM::OnEnergyBelowThreshold);
+				}
 			}
 		}
 	}
-
-
+	
 }
 
 void APostProcessController_OM::EndPlay(const EEndPlayReason::Type EndPlayReason)

@@ -10,6 +10,7 @@
 #include "Game/Persistent/GameInstance_OM.h"
 #include "AnimInstances/PlayerCharacterAnimInstance_OM.h"
 #include "Components/Character/Concrete/AbilitySystemComponent_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -209,7 +210,7 @@ void UExercise_OM::EnterExercisePosition()
 	SetStoppedExercise(false);
 
 }
-void UExercise_OM::MiniGame(EMinigameResult MinigameResult)
+void UExercise_OM::MiniGame(FMinigameResultData Result)
 {
 	if (CurrentWorkoutState == EWorkoutStates::NotInExercisePosition)
 	{

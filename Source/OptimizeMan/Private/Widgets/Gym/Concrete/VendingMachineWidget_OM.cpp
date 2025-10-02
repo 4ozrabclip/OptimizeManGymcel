@@ -15,7 +15,9 @@ void UVendingMachineWidget_OM::NativeConstruct()
 	Super::NativeConstruct();
 
 	SetIsFocusable(true);
-	if (auto* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	if (!Player)
+		Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (Player)
 		VendingMachine = Cast<AVendingMachine_OM>(Player->GetCurrentInteractedActor());
 
 	Option1_Button->SetVisibility(ESlateVisibility::Hidden);
@@ -72,11 +74,9 @@ void UVendingMachineWidget_OM::InitWindowsArray()
 
 void UVendingMachineWidget_OM::ExitVendor()
 {
-	if (auto* Player = Cast<APlayerCharacter_OM>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	if (Player)
 	{
 		Player->SetCurrentPlayMode(EPlayModes::RegularMode);
-
-
 		Player->bInteractableOpen = false;
 	}
 }

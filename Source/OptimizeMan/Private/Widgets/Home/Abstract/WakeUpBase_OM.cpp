@@ -2,7 +2,8 @@
 
 
 #include "Widgets/Home/Abstract/WakeUpBase_OM.h"
-
+#include "Game/Persistent/GameInstance_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/Button.h"
@@ -163,13 +164,22 @@ void UWakeUpBase_OM::UpdateFakeTodoList()
 		if (TodoManager->GetCurrentTodoArray().Num() == 3)
 		{
 			if (pc)
-				pc->FlashExitButton();
+			{
+				if (auto* wm = pc->GetComponentByClass<UWidgetManagementComponent_OM>())
+				{
+					wm->FlashExitButton();
+				}
+			}
 		}
 		else
 		{
 			if (pc)
-				pc->ShowExitButton(true);
-		
+			{
+				if (auto* wm = pc->GetComponentByClass<UWidgetManagementComponent_OM>())
+				{
+					wm->ShowExitButton(true);
+				}
+			}
 		}
 	
 	

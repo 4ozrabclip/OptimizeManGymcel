@@ -3,3 +3,9 @@
 
 #include "Widgets/Both/Concrete/TodoCompletePopupWidget_OM.h"
 
+void UTodoCompletePopupWidget_OM::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	SetVisibility(ESlateVisibility::Hidden);
+}

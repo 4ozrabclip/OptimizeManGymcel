@@ -33,9 +33,7 @@ void UExerciseMinigameWidget_OM::NativeConstruct()
 			ExerciseComponent->PrepareExercise();
 		}
 	}
-
 	
-
 	CheckAndSetStyles();
 }
 
@@ -72,4 +70,25 @@ void UExerciseMinigameWidget_OM::OnExitButtonClicked()
 	{
 		AnimInstance->SetHasInjury(false);
 	}
+}
+
+void UExerciseMinigameWidget_OM::OnMiniGameClick()
+{
+	if (!Player)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player Pointer is NULL"));
+		return;
+	}
+	if (!ExerciseComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ExerciseComponent Pointer is NULL"));
+		return;
+	}
+
+	if (!bHasPlayedThisMinigame)
+	{
+		MiniGameTutorial();
+		SetHasPlayedThisMinigame(true);
+	}
+	
 }

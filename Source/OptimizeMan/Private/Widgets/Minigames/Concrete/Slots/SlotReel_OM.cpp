@@ -23,11 +23,8 @@ void USlotReel_OM::SetInitialItems()
 	AboveBottomItem->SetType(GetRandomType());
 	BottomItem->SetType(GetRandomType());
 	CenterItem->SetType(GetRandomType());
-}
 
-FSlotItemData USlotReel_OM::GetRandomType()
-{
-	return ItemTypes[FMath::RandRange(0, ItemTypes.Num() - 1)];
+	
 }
 
 void USlotReel_OM::StartScroll(int EnergyBid, int ReelIndex)
@@ -54,6 +51,22 @@ void USlotReel_OM::StartScroll(int EnergyBid, int ReelIndex)
 	GetWorld()->GetTimerManager().SetTimer(EndScrollTimerHandle, this, &USlotReel_OM::EndScroll, ScrollTime, false);
 	
 }
+
+void USlotReel_OM::SelectItemCenter(ESlotItemType InType)
+{
+	if (AllItems.Num() > 0)
+	{
+		for (auto& Item : AllItems)
+		{
+			if (Item->GetType().Type == InType)
+			{
+				Item->SetIsFinalCenter(true);
+				return;
+			}
+		}
+	}
+}
+
 
 void USlotReel_OM::TickScroll()
 {
@@ -98,3 +111,8 @@ void USlotReel_OM::EndScroll()
 
 }
 
+
+FSlotItemData USlotReel_OM::GetRandomType()
+{
+	return ItemTypes[FMath::RandRange(0, ItemTypes.Num() - 1)];
+}
