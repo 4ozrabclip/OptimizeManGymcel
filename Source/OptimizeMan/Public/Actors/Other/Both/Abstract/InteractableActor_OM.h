@@ -11,23 +11,43 @@
 
 class APlayerController_OM;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteract, TSubclassOf<UUserWidget>, InWidget);
+
 UCLASS(Blueprintable)
 class OPTIMIZEMAN_API AInteractableActor_OM : public AActor, public IInteractableInterface_OM
 {
 	GENERATED_BODY()
 public:	
 	AInteractableActor_OM();
+protected:
+	/** Native Overrides **/
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+public:
 	virtual void Tick(float DeltaTime) override;
+	virtual void Interact_Implementation() override;
+
+	
+	/** Bound Event Functions **/
+	virtual void OnPlayModeChanged(EPlayModes InPlayMode) {};
 	UFUNCTION()
 	virtual void DarkModeToggle(const bool bIsDarkMode) {}
-	virtual void OnPlayModeChanged(EPlayModes InPlayMode) {};
 
+
+	/** Getters **/
 	bool GetIsInteractable() const { return InteractableInterfaceProperties.bIsInteractable; }
 
 
+	/** Events/Delegates **/
+	UPROPERTY(VisibleAnywhere, Category = Events)
+	FOnInteract OnInteract;
+
+
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UUserWidget> WidgetClass;
+
+	/** Class Cache **/	
 	UPROPERTY()
 	APlayerController_OM* PlayerController;
 
@@ -41,7 +61,7 @@ protected:
 	class UTodoManagementSubsystem* TodoManager;
 
 public:	
-	virtual void Interact_Implementation() override;
+
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 	UStaticMeshComponent* ItemMesh;

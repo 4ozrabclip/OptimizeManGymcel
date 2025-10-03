@@ -6,6 +6,11 @@
 #include "Components/Button.h"
 #include "Widgets/Minigames/Concrete/Slots/SlotReel_OM.h"
 
+USlotsMinigame_OM::USlotsMinigame_OM()
+{
+	MiniGameType = EMiniGameType::Slots;
+}
+
 void USlotsMinigame_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -26,39 +31,6 @@ void USlotsMinigame_OM::NativeConstruct()
 	}
 }
 
-void USlotsMinigame_OM::SetWorkoutState(EWorkoutStates NewWorkoutState)
-{
-	Super::SetWorkoutState(NewWorkoutState);
-	switch (CurrentWorkoutState)
-	{
-	case EWorkoutStates::InExercisePosition:
-		{
-			if (!MiniGameClickButton->GetIsEnabled())
-				MiniGameClickButton->SetIsEnabled(true);
-			break;
-		}
-	default:
-		if (MiniGameClickButton->GetIsEnabled())
-			MiniGameClickButton->SetIsEnabled(false);
-		return;
-	}
-}
-
-void USlotsMinigame_OM::PlayButton_OnClick()
-{
-	if (!SlotReel_1 || !SlotReel_2 || !SlotReel_3) return;
-	
-	CalculateChanceOfWin();
-	
-	
-	SlotReel_3->OnScrollFinished.Clear();
-	SlotReel_3->OnScrollFinished.AddDynamic(this, &USlotsMinigame_OM::OnScrollFinished);
-
-	SlotReel_1->StartScroll(0, 1);
-	SlotReel_2->StartScroll(0, 2);
-	SlotReel_3->StartScroll(0, 3);
-	
-}
 
 /*
  * A higher bet will increase your odds of winning (Your bet is larger than the bet factor).
@@ -91,6 +63,39 @@ void USlotsMinigame_OM::CalculateChanceOfWin()
 void USlotsMinigame_OM::OnScrollFinished()
 {
 	OnMinigameResult.Broadcast(CurrentMinigameResult);
+}
+
+void USlotsMinigame_OM::SetWorkoutState(EWorkoutStates NewWorkoutState)
+{
+	Super::SetWorkoutState(NewWorkoutState);
+	switch (CurrentWorkoutState)
+	{
+	case EWorkoutStates::InExercisePosition:
+		{
+			if (!MiniGameClickButton->GetIsEnabled())
+				MiniGameClickButton->SetIsEnabled(true);
+			break;
+		}
+	default:
+		if (MiniGameClickButton->GetIsEnabled())
+			MiniGameClickButton->SetIsEnabled(false);
+		return;
+	}
+}
+
+void USlotsMinigame_OM::PlayButton_OnClick()
+{
+	if (!SlotReel_1 || !SlotReel_2 || !SlotReel_3) return;
+	
+	CalculateChanceOfWin();
+	
+	SlotReel_3->OnScrollFinished.Clear();
+	SlotReel_3->OnScrollFinished.AddDynamic(this, &USlotsMinigame_OM::OnScrollFinished);
+
+	SlotReel_1->StartScroll(0, 1);
+	SlotReel_2->StartScroll(0, 2);
+	SlotReel_3->StartScroll(0, 3);
+	
 }
 void USlotsMinigame_OM::ChangeBet(const float InBet)
 {

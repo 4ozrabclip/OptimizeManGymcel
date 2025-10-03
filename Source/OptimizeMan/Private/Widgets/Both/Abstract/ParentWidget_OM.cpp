@@ -44,6 +44,25 @@ void UParentWidget_OM::NativeDestruct()
 	}
 }
 
+void UParentWidget_OM::SetupButtonStyle(FButtonStyle& Style, UMaterial* Image, UMaterial* HoverImage)
+{
+	if (!Image || !HoverImage)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Image or HoverImage is null"));
+		return;
+	}
+	Style.Normal.SetResourceObject(Image);
+	Style.Hovered.SetResourceObject(HoverImage);
+	Style.Pressed.SetResourceObject(Image);
+	
+	Style.Normal.Margin = FMargin(0);
+	Style.Hovered.Margin = FMargin(0);
+	Style.Pressed.Margin = FMargin(0);
+    
+	Style.NormalPadding = FMargin(15);
+	Style.PressedPadding = FMargin(15);
+}
+
 
 void UParentWidget_OM::FadeIn()
 {

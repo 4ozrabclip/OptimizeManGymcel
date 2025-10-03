@@ -30,7 +30,7 @@ struct FPlayModeConfig
 	FPlayModeConfig()
 	: bSetToUiMode(false)
 	, bAllowGameMovement(true)
-	, bHasWidget(true)
+	, bHasUsed(false)
 	, ForcedLocation(FVector::ZeroVector)
 	, ForcedRotation(FRotator::ZeroRotator)
 	, bHasAFadeIn(false)
@@ -44,7 +44,7 @@ struct FPlayModeConfig
 	bool bAllowGameMovement;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bHasWidget;
+	bool bHasUsed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector ForcedLocation;

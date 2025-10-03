@@ -5,6 +5,7 @@
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
 #include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Components/PointLightComponent.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/Persistent/SubSystems/TodoManagementSubsystem.h"
@@ -75,4 +76,14 @@ void AInteractableActor_OM::Tick(float DeltaTime)
 
 void AInteractableActor_OM::Interact_Implementation()
 {
+	if (!PlayerController)
+		PlayerController = Cast<APlayerController_OM>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	if (PlayerController && WidgetClass)
+	{
+		if (auto* WidgetManager = PlayerController->GetComponentByClass<UWidgetManagementComponent_OM>())
+		{
+			WidgetManager->OpenWidget(WidgetClass);
+		}
+	}
 }

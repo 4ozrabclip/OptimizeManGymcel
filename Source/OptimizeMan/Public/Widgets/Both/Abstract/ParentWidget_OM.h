@@ -23,6 +23,10 @@ public:
 	virtual void NativeDestruct() override;
 
 	virtual void UpdateOnPlayMode(const EPlayModes InPlayMode) {}
+
+
+	/** Style Setters **/
+	static void SetupButtonStyle(FButtonStyle& Style, UMaterial* Image, UMaterial* HoverImage);
 	
 	UFUNCTION()
 	virtual void DarkModeToggle(const bool bIsDarkMode) {}

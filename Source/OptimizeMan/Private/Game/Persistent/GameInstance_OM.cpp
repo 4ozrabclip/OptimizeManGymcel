@@ -24,6 +24,8 @@ void UGameInstance_OM::Init()
 	SetHasOpenedTodoListInitial(false);
 	SetHasInteractedInitial(false);
 	SetHasOpenedPauseMenuInitial(false);
+
+	InitPlayModes();
 	
 	
 	ResetAllSaves();
@@ -101,6 +103,38 @@ void UGameInstance_OM::FinishDemo()
 	});
 }
 
+
+/*
+ * Refactor PlayMode system out and exchange for context specific minigames
+ */
+void UGameInstance_OM::SetHasDonePlayModeInitial(const EPlayModes InPlayMode, const bool InHasDonePlayMode)
+{
+	/*if (FPlayModeConfig* PM = PlayModeConfigs.Find(InPlayMode))
+	{
+		PM->bHasUsed = InHasDonePlayMode;
+	}*/
+}
+/*
+ *  This is good
+ */
+void UGameInstance_OM::SetHasPlayedMiniGameInitial(const EMiniGameType InMiniGame, const bool InHasPlayedMiniGame)
+{
+	if (FMiniGameData* MG = MiniGameData.Find(InMiniGame))
+	{
+		MG->bHasPlayed = InHasPlayedMiniGame;
+	}
+}
+
+bool UGameInstance_OM::GetHasPlayedMiniGameInitial(const EMiniGameType InMiniGame)
+{
+	if (FMiniGameData* MG = MiniGameData.Find(InMiniGame))
+	{
+		return MG->bHasPlayed;
+	}
+	UE_LOG(LogTemp, Error, TEXT("GameInstance(GetHasPlayedMiniGameInitial): Couldn't find MiniGame in MiniGameData Map"));
+	return true;
+}
+
 void UGameInstance_OM::SetInnerStatus(const FInnerStatus& InInnerStatus)
 {
 	InnerStatus = InInnerStatus;
@@ -142,6 +176,12 @@ void UGameInstance_OM::InitializeGameSettings()
 {
 	GameSettings.bDarkMode = false;
 }
+
+void UGameInstance_OM::InitPlayModes()
+{
+
+}
+
 FBodyPartData* UGameInstance_OM::FindBodyPart(const EBodyPart& Part, const EBodyPartSide& Side)
 {
 	for (FBodyPartData& PartData : BodyStatus.BodyParts)

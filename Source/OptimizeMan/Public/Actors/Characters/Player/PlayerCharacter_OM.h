@@ -109,7 +109,10 @@ private:
 	/**** PlayMode + UI State ****/
 	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	EPlayModes CurrentPlayMode;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "PlayModes")
 	TMap<EPlayModes, FPlayModeConfig> PlayModeConfigs;
+
 
 	/** Other States **/
 	ETemporaryEmotionalStates CurrentTempEmotionalState = ETemporaryEmotionalStates::Default;
@@ -262,54 +265,40 @@ public:
 	void ClearTimers();
 	void ResetPlayer();
 	void SetToUIMode(const bool bSetToUiMode, const bool bAllowGameMovement = false, UUserWidget* InWidget = nullptr, bool bAllowCameraRotation = false) const;
+	
 
-	/**** Getters / Setters ****/
-public:
+	/** Getters **/
 	UFUNCTION()
 	UPlayerCharacterAnimInstance_OM* GetCachedAnimInstance() const { return CachedAnimInstance.Get(); }
-
 	UFUNCTION()
 	EWorkoutStates GetWorkoutState() const;
 	UFUNCTION()
 	EExerciseType GetCurrentExerciseType() const;
-
-	UFUNCTION(Category = "Gameplay")
-	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter = nullptr);
-
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	EPlayModes GetCurrentPlayMode() const { return CurrentPlayMode; }
-
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	AInteractableActor_OM* GetCurrentInteractedActor() const { return CurrentInteractedActor; }
-
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	ANpcBase_OM* GetCurrentInteractedCharacter() const { return CurrentInteractedCharacter; }
-
-	void SetCurrentInteractedCharacter(ANpcBase_OM* InInteractedCharacter = nullptr) { CurrentInteractedCharacter = InInteractedCharacter; }
-
-	void SetIsWalking(const bool InIsWalking) { bIsWalking = InIsWalking; }
+	
 	bool GetIsWalking() const { return bIsWalking; }
-
-	void SetLookSensitivity(const float InLookSensitivity) { LookSensitivity = InLookSensitivity; };
-
 	bool GetIsJumping() const;
-
-	void SetIsDoingRep(const bool InIsDoingRep) { bIsDoingRep = InIsDoingRep; }
-	bool GetIsDoingRep() const { return bIsDoingRep; }
-
-	void SetMaxMovementSpeed(const float InMaxMovementSpeed);
 	float GetMaxMovementSpeed() const;
-
-	void SetOriginalMovementSpeed(const float InOriginalMovementSpeed) { OriginalMovementSpeed = InOriginalMovementSpeed; }
 	float GetOriginalMovementSpeed() const { return OriginalMovementSpeed; }
-
-	void SetMinimumMovementThreshold(const float InMinimumMovementThreshold) { MinimumMovementThreshold = InMinimumMovementThreshold; }
 	float GetMinimumMovementThreshold() const { return MinimumMovementThreshold; }
+	ETemporaryEmotionalStates GetTempEmotionalState() const { return CurrentTempEmotionalState; }
 
+	/** Setters **/
+	UFUNCTION(Category = "Gameplay")
+	void SetCurrentPlayMode(const EPlayModes InPlayMode, const TWeakObjectPtr<AInteractableActor_OM> InInteractedActor = nullptr, const TWeakObjectPtr<ANpcBase_OM> InInteractedCharacter = nullptr);
+	void SetCurrentInteractedCharacter(ANpcBase_OM* InInteractedCharacter = nullptr) { CurrentInteractedCharacter = InInteractedCharacter; }
+	void SetIsWalking(const bool InIsWalking) { bIsWalking = InIsWalking; }
+	void SetLookSensitivity(const float InLookSensitivity) { LookSensitivity = InLookSensitivity; };
+	void SetMaxMovementSpeed(const float InMaxMovementSpeed);
+	void SetOriginalMovementSpeed(const float InOriginalMovementSpeed) { OriginalMovementSpeed = InOriginalMovementSpeed; }
+	void SetMinimumMovementThreshold(const float InMinimumMovementThreshold) { MinimumMovementThreshold = InMinimumMovementThreshold; }
 	void SetEmotionalState();
-
-
 	void SetTempEmotionalState(const ETemporaryEmotionalStates InState);
-	ETemporaryEmotionalStates GetTempEmotionalState() const { return CurrentTempEmotionalState; } 
+
 };
 

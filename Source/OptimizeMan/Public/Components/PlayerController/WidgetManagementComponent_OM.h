@@ -42,9 +42,12 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	/** Core **/
-	void PlaymodeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn);
+	void PlayModeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn);
 	void WidgetInteraction(const TScriptInterface<class IInteractableInterface_OM>& InteractedActorInterface);
 	void ResetUI();
+
+	void OpenWidget(TSubclassOf<UUserWidget> InWidgetClass);
+	
 
 	/** Toggles **/
 	void ToggleInteractWidgetFromViewport(bool bRemove);
@@ -59,14 +62,14 @@ public:
 	
 	/** Getters **/
 	bool GetIsInteractableWidgetOnViewport() const;
-	UPlayModeBaseWidget_OM* GetCurrentPlayModeWidgetInstance() const { return CurrentPlayModeWidgetInstance; }
+	UUserWidget* GetCurrentPlayModeWidgetInstance() const { return CurrentPlayModeWidgetInstance; }
 	TArray<UUserWidget*> GetActiveWidgets() const { return ActiveWidgets; }
 	
 	/** Setters **/
 	UFUNCTION()
 	void SetTutorialWidget(const UTutorialWidget_OM* InTutorialWidget);
 	UFUNCTION()
-	void SetWorkoutMinigame(EMinigameType InMiniGame);
+	void SetWorkoutMinigame(EMiniGameType InMiniGame);
 	
 	/** Delegate Called UFunctions **/
 	UFUNCTION()
@@ -91,18 +94,15 @@ private:
 	FTimerHandle HideMentalStats;
 	FTimerHandle YouDiedTimer;
 	
-
-
 	UPROPERTY()
 	TArray<UUserWidget*> ActiveWidgets;
-
-
+	
 	/** Widget Classes **/
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TMap<EPlayModes, TSubclassOf<UPlayModeBaseWidget_OM>> PlayModeWidgets;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
-	TMap<EMinigameType, TSubclassOf<UExerciseMinigameWidget_OM>> WorkoutMinigames;
+	TMap<EMiniGameType, TSubclassOf<UExerciseMinigameWidget_OM>> WorkoutMinigames;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UGamePointsHud_OM> PersistentHud;
@@ -114,7 +114,7 @@ private:
 	TSubclassOf<UDisplayDayWidget_OM> ShowDayWidget;
 	
 	UPROPERTY()
-	TObjectPtr<UPlayModeBaseWidget_OM> CurrentPlayModeWidgetInstance;
+	TObjectPtr<UUserWidget> CurrentPlayModeWidgetInstance;
 	UPROPERTY()
 	TObjectPtr<UGamePointsHud_OM> PersistentHudPtr;
 	UPROPERTY()

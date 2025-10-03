@@ -4,12 +4,14 @@
 #include "Actors/Other/Bedroom/Concrete/Laptop_OM.h"
 
 #include "Actors/Characters/Player/PlayerCharacter_OM.h"
+#include "Actors/Characters/Player/PlayerController_OM.h"
 #include "Actors/Other/Bedroom/Concrete/Poster_OM.h"
 #include "Actors/Other/Bedroom/Concrete/Shelf_OM.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/Audio/Abstract/GameAudio_OM.h"
+#include "Components/PlayerController/WidgetManagementComponent_OM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/Persistent/GameInstance_OM.h"
 #include "Game/Persistent/Subsystems/TodoManagementSubsystem.h"
@@ -76,13 +78,10 @@ void ALaptop_OM::Interact_Implementation()
 {
 	Super::Interact_Implementation();
 
-	if (!Player || !Player->IsValidLowLevel())
-	{
-		UE_LOG(LogTemp, Error, TEXT("Player is invalid"));
-		return;
-	}
+
+	
 	//Player->SetCurrentPlayMode(EPlayModes::LaptopMode, this);
-	Player->TogglePlayMode(EPlayModes::LaptopMode, Player->bInteractableOpen, this);
+	//Player->TogglePlayMode(EPlayModes::LaptopMode, Player->bInteractableOpen, this);
 }
 
 

@@ -9,6 +9,8 @@
 #include "Utils/Structs/GameSettings.h"
 #include "Utils/Structs/PlayerData.h"
 #include "Utils/Structs/EventAndGPData.h"
+#include "Utils/Structs/MinigameData.h"
+#include "Utils/Structs/PlayModes.h"
 #include "GameInstance_OM.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDarkModeToggled, bool, bIsDarkMode);
@@ -41,6 +43,7 @@ public:
 	void InitializePlayerData();
 	void InitializePostersOwned();
 	void InitializeGameSettings();
+	void InitPlayModes();
 
 	void FirstDay();
 	void ResetGame();
@@ -96,8 +99,13 @@ protected:
 	FInnerStatus InnerStatus;
 	UPROPERTY(BlueprintReadOnly)
 	FInventoryData InventoryData;
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Day info")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Day info")
 	FDayInfo DayInfo;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "PlayModes")
+	TMap<EMiniGameType, FMiniGameData> MiniGameData;
+	
 
 public:
 //General Non-UFUNCS
@@ -105,7 +113,7 @@ public:
 	void Check3DayScore();
 	void BroadcastNotEnoughPoints();
 
-//General UFUNCTIONS
+	/** Events **/
 	UFUNCTION(BlueprintCallable)
 	void DarkModeToggle();
 	UFUNCTION(BlueprintCallable)
@@ -132,8 +140,21 @@ public:
 	void IncrementMonth();
 
 
+
 	
-//General Helpers
+	/** Setters / Adders **/
+	void SetPosterAsOwned(const int PosterIndex, const FString& PosterType);
+	void SetTempWaveDifficultyMultiplier(const float InMultiplier) { TempWaveDifficultyMultiplier = InMultiplier; }
+	void SetBaseDifficultyMultiplier(const float InMultiplier) { BaseDifficultyMultiplier = InMultiplier; }
+	void SetHasDonePlayModeInitial(const EPlayModes InPlayMode, const bool InHasDonePlayMode = true);
+	void SetHasPlayedMiniGameInitial(const EMiniGameType InMiniGame, const bool InHasPlayedMiniGame = true);
+	void SetHasOpenedTodoListInitial(const bool InHasOpenedTodoListInitial) { bHasOpenedTodoListInitial = InHasOpenedTodoListInitial; }
+	void SetHasBeenToGymToday(const bool InHasBeenToGymToday) { bHasBeenToGymToday = InHasBeenToGymToday; }
+	void SetInnerStatus(const FInnerStatus& InInnerStatus);
+	void SetHasOpenedPauseMenuInitial(const bool InHasOpenedPauseMenuInitial) { bHasOpenedPauseMenuInitial = InHasOpenedPauseMenuInitial; }
+	void SetHasInteractedInitial(const bool InHasInteractedInitial) { bHasInteractedInitial = InHasInteractedInitial; }
+	void SetLookSensitivity(const float InLookSensitivity);
+	void SetMoney(const int InMoney)  { InventoryData.Money += InMoney; }
 	void SetStat(float& Stat, float Value)
 	{
 		Stat = FMath::Clamp(Value, -1.f, 1.0f);
@@ -161,126 +182,71 @@ public:
 	{
 		bPossesable = bInPossesion;
 	}
-
-	
-//General Getters/Setters
-
-	/*** GAS ***/
-	void SetInnerStatus(const FInnerStatus& InInnerStatus);
-
-	
-	float GetBaseDifficultyMultiplier() const { return BaseDifficultyMultiplier; }
-	void SetBaseDifficultyMultiplier(const float InMultiplier) { BaseDifficultyMultiplier = InMultiplier; }
-	float GetTempWaveDifficultyMultiplier() const { return TempWaveDifficultyMultiplier; }
-	void SetTempWaveDifficultyMultiplier(const float InMultiplier) { TempWaveDifficultyMultiplier = InMultiplier; }
-
-	float GetDifficultyMultiplier() const { return BaseDifficultyMultiplier * TempWaveDifficultyMultiplier; }
-
-	void SetPosterAsOwned(const int PosterIndex, const FString& PosterType);
-	TArray<bool> GetOwnedWaifuPosters() { return bOwnsWaifuPosters;}
-	TArray<bool> GetOwnedChadPosters() { return bOwnsChadPosters;}
-		
-	bool GetHasBeenToGymToday() const { return bHasBeenToGymToday; }
-	void SetHasBeenToGymToday(const bool InHasBeenToGymToday) { bHasBeenToGymToday = InHasBeenToGymToday; }
-
-	bool GetHasDoneMinigameInitial(EMinigameType InMiniGame) const { return HasDoneMiniGamesInitial.Find(InMiniGame); }
-	void SetHasDoneMinigameInitial(const bool InHasDoneWorkoutInitial) { bHasDoneWorkoutInitial = InHasDoneWorkoutInitial; }
-
-	UFUNCTION(BlueprintCallable) //for use with bedroom door
-	bool GetHasOpenedTodoListInitial() const { return bHasOpenedTodoListInitial; }
-	void SetHasOpenedTodoListInitial(const bool InHasOpenedTodoListInitial) { bHasOpenedTodoListInitial = InHasOpenedTodoListInitial; }	
-
-	UFUNCTION(BlueprintCallable)
-	bool GetHasOpenedPauseMenuInitial() const { return bHasOpenedPauseMenuInitial; }
-	void SetHasOpenedPauseMenuInitial(const bool InHasOpenedPauseMenuInitial) { bHasOpenedPauseMenuInitial = InHasOpenedPauseMenuInitial; }
-
-	UFUNCTION(BlueprintCallable)
-	bool GetHasInteractedInitial() const { return bHasInteractedInitial; }
-	void SetHasInteractedInitial(const bool InHasInteractedInitial) { bHasInteractedInitial = InHasInteractedInitial; }
-
-	
-//Game Settings
-	UFUNCTION(BlueprintCallable)
-	FGameSettings& GetGameSettings() { return GameSettings; }
-	UFUNCTION(BlueprintCallable)
-	bool GetDarkMode() const { return GameSettings.bDarkMode; }
-
-	UFUNCTION(BlueprintCallable)
-	void SetDarkMode(const bool InDarkMode);
-
 	UFUNCTION()
 	void SetTutorialsOn(const bool InEnabled) { GameSettings.bTutorialsOn = InEnabled; }
-	UFUNCTION()
-	bool GetTutorialsOn() const { return GameSettings.bTutorialsOn; }
-	
-	
+	UFUNCTION(BlueprintCallable)
+	void SetDarkMode(const bool InDarkMode);
 	UFUNCTION()
 	void SetAudioSettings(const float InMaster, const float InVoice, const float InMusic, const float InNotification, const float InSfx);
-
-	void SetLookSensitivity(const float InLookSensitivity);
-
-	
-//Gym Res Stats
+	UFUNCTION()
+	void SetGymResStats(float& Stat, float Value);
 	UFUNCTION(BlueprintCallable)
-	FGymResStats& GetGymResStats() { return GymResStats; }
-	
+	void SetRandomEventAsWitnessed(const EEventAndGPData InRandomEvent, const bool InWitnessed);
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentEmotionalState(const EPlayerEmotionalStates NewState);
 	UFUNCTION()
 	void AddGymResStats(float& Stat, float Value);
 	UFUNCTION()
-	void SetGymResStats(float& Stat, float Value);
-
-//Random Events
-	UFUNCTION(BlueprintCallable)
-	FEventAndGPData& GetRandomEvents() { return RandomEvents; }
-	UFUNCTION(BlueprintCallable)
-	void SetRandomEventAsWitnessed(const EEventAndGPData InRandomEvent, const bool InWitnessed);
+	void AddGamePoints(const int InPoints);
 	
-	UFUNCTION(BlueprintCallable)
-	TMap<EEventAndGPData, bool> GetRandomEventsWitnessedMap() { return RandomEvents.RandomEventsWitnessedMap; }
-	
-//Body Status
-	UFUNCTION()
-	FBodyStatus& GetBodyStatus() { return BodyStatus;}
-	bool GetCurrentlyOnSteroids() const { return BodyStatus.bCurrentlyOnSteroids; }
-
-//Inner Status
-	UFUNCTION()
-	FInnerStatus& GetInnerStatus() { return InnerStatus; }
-	
+	/** Getters **/
 	float GetEgo() const { return InnerStatus.Ego; }
 	float GetSexAppeal() const { return InnerStatus.SexAppeal; }
 	float GetSocial() const { return InnerStatus.Social; }
 	
-	
-	UFUNCTION(BlueprintCallable)
-	void SetCurrentEmotionalState(const EPlayerEmotionalStates NewState);
-	UFUNCTION(BlueprintCallable)
-	EPlayerEmotionalStates GetCurrentEmotionalState() const { return InnerStatus.CurrentEmotionalState; }
-	
-//Inventory Data
-	UFUNCTION()
-	FInventoryData& GetInventoryData() { return InventoryData; }
-	
+	bool GetHasPlayedMiniGameInitial(const EMiniGameType InMiniGame);
+	float GetBaseDifficultyMultiplier() const { return BaseDifficultyMultiplier; }
+	float GetTempWaveDifficultyMultiplier() const { return TempWaveDifficultyMultiplier; }
+	float GetDifficultyMultiplier() const { return BaseDifficultyMultiplier * TempWaveDifficultyMultiplier; }
+	bool GetHasBeenToGymToday() const { return bHasBeenToGymToday; }
+	bool GetCurrentlyOnSteroids() const { return BodyStatus.bCurrentlyOnSteroids; }
 	bool GetOwnsSteroids() const { return InventoryData.bOwnsSteroids; }
 	bool GetOwnsPreWorkout() const { return InventoryData.bOwnsPreWorkout; }
 	int GetMoney() const { return InventoryData.Money; }
-	void SetMoney(const int InMoney)
-	{
-		InventoryData.Money += InMoney;
-	}
-
-//Consumable Status
-
+	TArray<bool> GetOwnedWaifuPosters() { return bOwnsWaifuPosters;}
+	TArray<bool> GetOwnedChadPosters() { return bOwnsChadPosters;}
 	
-//Game Points Data
+	UFUNCTION(BlueprintCallable) //for use with bedroom door
+	bool GetHasOpenedTodoListInitial() const { return bHasOpenedTodoListInitial; }
+	UFUNCTION(BlueprintCallable)
+	bool GetHasOpenedPauseMenuInitial() const { return bHasOpenedPauseMenuInitial; }
+	UFUNCTION(BlueprintCallable)
+	bool GetHasInteractedInitial() const { return bHasInteractedInitial; }
+	UFUNCTION(BlueprintCallable)
+	FGameSettings& GetGameSettings() { return GameSettings; }
+	UFUNCTION(BlueprintCallable)
+	bool GetDarkMode() const { return GameSettings.bDarkMode; }
+	UFUNCTION()
+	bool GetTutorialsOn() const { return GameSettings.bTutorialsOn; }
+	UFUNCTION(BlueprintCallable)
+	FGymResStats& GetGymResStats() { return GymResStats; }
+	UFUNCTION()
+	FBodyStatus& GetBodyStatus() { return BodyStatus;}
+	UFUNCTION(BlueprintCallable)
+	FEventAndGPData& GetRandomEvents() { return RandomEvents; }
+	UFUNCTION(BlueprintCallable)
+	TMap<EEventAndGPData, bool> GetRandomEventsWitnessedMap() { return RandomEvents.RandomEventsWitnessedMap; }
+	UFUNCTION()
+	FInnerStatus& GetInnerStatus() { return InnerStatus; }
+	UFUNCTION(BlueprintCallable)
+	EPlayerEmotionalStates GetCurrentEmotionalState() const { return InnerStatus.CurrentEmotionalState; }
+	UFUNCTION()
+	FInventoryData& GetInventoryData() { return InventoryData; }
 	UFUNCTION()
 	FGamePointsData& GetGamePointsData() { return GamePointsData; }
-	
 	UFUNCTION()
 	int GetGamePoints() const { return GamePointsData.GamePoints; }
-	
-	UFUNCTION()
-	void AddGamePoints(const int InPoints);
+
 
 
 	
@@ -299,18 +265,13 @@ private:
 	bool bHasOpenedTodoListInitial;
 	bool bHasOpenedPauseMenuInitial;
 	bool bHasInteractedInitial;
-
-	TArray<EMinigameType, bool> HasDoneMiniGamesInitial;
-
+	
 	float BaseDifficultyMultiplier = 1.f;
 	float TempWaveDifficultyMultiplier = 1.f;
 
 	int DaysSinceBaseDifficultyIncreased = 0;
 	int DaysSinceScoreChecked = 0;
 	int GameScoreSincePreviousCheck = 0;
-
-
-	
 	
 
 };

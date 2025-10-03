@@ -12,9 +12,15 @@
 #include "Utils/Structs/ExerciseData.h"
 
 
+UTimingGaugeMinigame_OM::UTimingGaugeMinigame_OM()
+{
+	MiniGameType = EMiniGameType::TimingGauge;
+}
+
 void UTimingGaugeMinigame_OM::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
 	if (MiniGameClickButton)
 	{
 		MiniGameClickButton->OnClicked.RemoveAll(this);
@@ -36,7 +42,6 @@ void UTimingGaugeMinigame_OM::NativeConstruct()
 		return;
 	}
 
-	UpdateStats();
 	SetMiniGameOn(true);
 	
 	if (SetCountTextBlock && RepCountTextBlock)
@@ -44,46 +49,47 @@ void UTimingGaugeMinigame_OM::NativeConstruct()
 		SetCountTextBlock->SetText(FText::FromString(TEXT("")));
 		RepCountTextBlock->SetText(FText::FromString(TEXT("")));
 	}
-
-
-	
-	GetWorld()->GetTimerManager().SetTimer(TutorialDelayHandle, [this]()
-	{
-		bHasWorkedOutInitial = GameInstance->GetHasDoneWorkoutInitial();
-	},2.f, false);
-
 	
 }
 
+void UTimingGaugeMinigame_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	
+	switch (CurrentWorkoutState)
+	{
+	case EWorkoutStates::InExercisePosition:
+		{
+			if (!MiniGameClickButton->GetIsEnabled())
+				MiniGameClickButton->SetIsEnabled(true);
+			if (GetMiniGameOn())
+				MiniGame(InDeltaTime);
 
-
+			if (!GetHasPlayedThisMiniGame())
+			{
+				WorkoutTutorial(InDeltaTime);
+			}
+			break;
+		}
+	case EWorkoutStates::SetComplete:
+		{
+			NotificationTextPopUp(TEXT("Set Complete"));
+			if (ExerciseComponent)
+				ExerciseComponent->SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
+			break;
+		}
+	default:
+		if (MiniGameClickButton->GetIsEnabled())
+			MiniGameClickButton->SetIsEnabled(false);
+		return;
+	}
+}
 
 void UTimingGaugeMinigame_OM::CheckAndSetStyles()
 {
+	Super::CheckAndSetStyles();
 
-	auto SetupButtonStyle = [this](FButtonStyle& Style, UMaterial* Image, UMaterial* HoverImage)
-	{
-		if (!Image || !HoverImage)
-		{
-			UE_LOG(LogTemp, Error, TEXT("Image or HoverImage is null"));
-			return;
-		}
-		Style.Normal.SetResourceObject(Image);
-		Style.Hovered.SetResourceObject(HoverImage);
-		Style.Pressed.SetResourceObject(Image);
-	
-		Style.Normal.Margin = FMargin(0);
-		Style.Hovered.Margin = FMargin(0);
-		Style.Pressed.Margin = FMargin(0);
-    
-		Style.NormalPadding = FMargin(15);
-		Style.PressedPadding = FMargin(15);
-	};
-	
-	const bool bDarkMode = GameInstance->GetDarkMode();
-	
-
-	if (bDarkMode)
+	if (const bool bDarkMode = GameInstance->GetDarkMode())
 	{
 		FSlateBrush WhiteThumb;
 		WhiteThumb.SetResourceObject(DownArrowWhite);
@@ -91,17 +97,7 @@ void UTimingGaugeMinigame_OM::CheckAndSetStyles()
 		SliderDarkStyle.SetNormalThumbImage(WhiteThumb);
 		SliderDarkStyle.SetBarThickness(0.f);
 
-		FSlateBrush BarFillDarkMode;
-		BarFillDarkMode.SetResourceObject(EnergyLevelDarkFill);
-
-		FSlateBrush BarFill;
-		BarFill.SetResourceObject(EnergyLevelDarkFill);
-		FSlateBrush BackgroundFill;
-		BackgroundFill.SetResourceObject(EnergyLevelBorderDark);
-		FProgressBarStyle EnergyBarStyle;
-		EnergyBarStyle.SetFillImage(BarFill);
-		EnergyBarStyle.SetBackgroundImage(BackgroundFill);
-		
+	
 		MiniGameSlider->SetWidgetStyle(SliderDarkStyle);
 		NotificationText->SetColorAndOpacity(White);
 		SetCountTextBlock->SetColorAndOpacity(White);
@@ -114,14 +110,6 @@ void UTimingGaugeMinigame_OM::CheckAndSetStyles()
 		FSliderStyle SliderLightStyle;
 		SliderLightStyle.SetNormalThumbImage(BlackThumb);
 		SliderLightStyle.SetBarThickness(0.f);
-
-		FSlateBrush BarFill;
-		BarFill.SetResourceObject(EnergyLevelLightFill);
-		FSlateBrush BackgroundFill;
-		BackgroundFill.SetResourceObject(EnergyLevelBorderLight);
-		FProgressBarStyle EnergyBarStyle;
-		EnergyBarStyle.SetFillImage(BarFill);
-		EnergyBarStyle.SetBackgroundImage(BackgroundFill);
 		
 		MiniGameSlider->SetWidgetStyle(SliderLightStyle);
 		NotificationText->SetColorAndOpacity(Black);
@@ -157,30 +145,15 @@ void UTimingGaugeMinigame_OM::WorkoutTutorial(float DeltaTime)
 	}
 
 }
-void UTimingGaugeMinigame_OM::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UTimingGaugeMinigame_OM::SetWorkoutState(EWorkoutStates NewWorkoutState)
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-	
+	Super::SetWorkoutState(NewWorkoutState);
 	switch (CurrentWorkoutState)
 	{
 	case EWorkoutStates::InExercisePosition:
 		{
 			if (!MiniGameClickButton->GetIsEnabled())
 				MiniGameClickButton->SetIsEnabled(true);
-			if (GetMiniGameOn())
-				MiniGame(InDeltaTime);
-
-			if (!bHasWorkedOutInitial)
-			{
-				WorkoutTutorial(InDeltaTime);
-			}
-			break;
-		}
-	case EWorkoutStates::SetComplete:
-		{
-			NotificationTextPopUp(TEXT("Set Complete"));
-			if (ExerciseComponent)
-				ExerciseComponent->SetCurrentWorkoutState(EWorkoutStates::InExercisePosition);
 			break;
 		}
 	default:
@@ -188,27 +161,12 @@ void UTimingGaugeMinigame_OM::NativeTick(const FGeometry& MyGeometry, float InDe
 			MiniGameClickButton->SetIsEnabled(false);
 		return;
 	}
-}
-void UTimingGaugeMinigame_OM::SetWorkoutState(EWorkoutStates NewWorkoutState)
-{
-	Super::SetWorkoutState(NewWorkoutState);
-
 	
 }
 void UTimingGaugeMinigame_OM::NativeDestruct()
 {
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 	Super::NativeDestruct();
-}
-
-
-
-
-void UTimingGaugeMinigame_OM::SetInjuryRisk()
-{
-	if (!GameInstance)
-		GameInstance = Cast<UGameInstance_OM>(GetWorld()->GetGameInstance());
-
 }
 
 void UTimingGaugeMinigame_OM::MiniGame(float InDeltaTime)
@@ -219,11 +177,6 @@ void UTimingGaugeMinigame_OM::MiniGame(float InDeltaTime)
 	}
 
 	float ScaledSpeed = Speed * InDeltaTime;
-//	FString MinAndMaxVals = FString::Printf(TEXT("RightMin: %.2f RightMax: %.2f\n LeftMin: %.2f LeftMax: %.2f\n"
-//											  "LeftVal: %.2f RightVal: %.2f"), RightMin, RightMax, LeftMin, LeftMax, InjuryBoundsLeftValue, InjuryBoundsRightValue);
-	
-//	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Orange, MinAndMaxVals);
-
 	
 	if (bMovingRight)
 	{
@@ -243,7 +196,6 @@ void UTimingGaugeMinigame_OM::MiniGame(float InDeltaTime)
 			bMovingRight = true;
 		}
 	}
-	
     //injury bounds
 	if (bLeftMovingUp)
 	{
@@ -336,32 +288,6 @@ void UTimingGaugeMinigame_OM::MiniGame(float InDeltaTime)
 
 		SpecialSlider->SetValue(SpecialSliderValue);
 	}
-
-	
-}
-
-void UTimingGaugeMinigame_OM::SetSetAndRepCountTextBlocks()
-{
-	if (!ExerciseComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ExerciseComponent null in SetSetAndRepCountTextBlock"));
-		return;
-	}
-	if (!SetCountTextBlock || !RepCountTextBlock)
-	{
-		UE_LOG(LogTemp, Error, TEXT("SetCountTextBlock and/or RepCountTextBlock is null"));
-		return;
-	}
-
-	const int SetCount = ExerciseComponent->GetSetCount();
-	const int RepCount = ExerciseComponent->GetRepCount();
-	
-	const FText SetCountText = FText::Format(FText::FromString(TEXT("Set: {0}")), FText::AsNumber(SetCount));
-	const FText RepCountText = FText::Format(FText::FromString(TEXT("Reps: {0}")), FText::AsNumber(RepCount));
-
-	SetCountTextBlock->SetText(SetCountText);
-	RepCountTextBlock->SetText(RepCountText);
-	
 }
 
 void UTimingGaugeMinigame_OM::SetSpecialSliderOn(const bool InSpecialSliderOn)
@@ -378,44 +304,30 @@ void UTimingGaugeMinigame_OM::SetSpecialSliderOn(const bool InSpecialSliderOn)
 }
 
 
-void UTimingGaugeMinigame_OM::UpdateStats()
+void UTimingGaugeMinigame_OM::CheckStatsForFrontEnd()
 {
-	const float EnergyLevel = ExerciseComponent->GetEnergy();
-	if (EnergyLevel <= 0.f)
+	if (!ExerciseComponent) return;
+	SetLocalEnergyLevel(ExerciseComponent->GetEnergy());
+	if (GetEnergyLevel() <= 0.f)
 	{
 		NotificationTextPopUp(TEXT("No Energy"));
 		SetMiniGameOn(false);
 	}
-}
 
+	SetSetAndRepCountTextBlocks();
+}
 
 
 void UTimingGaugeMinigame_OM::OnMiniGameClick()
 {
-
 	Super::OnMiniGameClick();
-	/*
-	 * Refactor this to make the workout tutorials persistent.
-	 *
-	 * Could do a good system here that connects it with all playmodes?
-	 *
-	 * CTRL+H All Minigames to MiniGames.  Anytime you see unregular naming conventions, fix.
-	 */
-	if (!bHasWorkedOutInitial)
+	
+	if (GetHasPlayedThisMiniGame())
 	{
-		GameInstance->SetHasDoneWorkoutInitial(true);
 		ClickImage->SetVisibility(ESlateVisibility::Hidden);
 	}
-		
-
-	MiniGameClickButton->SetIsEnabled(false);
-
 	
-	float EnergyLevel = ExerciseComponent->GetEnergy();
-
-	bDoingRep = true;
-	if (Player)
-		Player->SetIsDoingRep(bDoingRep);
+	MiniGameClickButton->SetIsEnabled(false);
 	
 	constexpr float SigmaOffset = 0.15f;
 	if (bSpecialSliderOn && MiniGameSlider->GetValue() >= SpecialSlider->GetValue() - SigmaOffset && MiniGameSlider->GetValue() <= SpecialSlider->GetValue() + SigmaOffset)
@@ -443,11 +355,20 @@ void UTimingGaugeMinigame_OM::OnMiniGameClick()
 	{
 		NewResult = EMinigameResult::Success;
 		NewEnergyFactor += 0.4f;
+
+		const FName InjuredPartName = ExerciseComponent->GetCurrentInjuredPart()->Name;
 		
+		const FString InjuryString = FString::Printf(TEXT("You have injured your: %s"), *InjuredPartName.ToString());
+		NotificationTextPopUp(InjuryString);
 	}
 	else
 	{
 		NewResult = EMinigameResult::Failed;
+
+		BloodSplatter->SetVisibility(ESlateVisibility::HitTestInvisible);
+		ExerciseComponent->Injury(EInjuryLevel::Major);
+		
+		SetMiniGameOn(false);
 	}
 
 	
@@ -461,101 +382,26 @@ void UTimingGaugeMinigame_OM::OnMiniGameClick()
 	InjuryBoundsRightValue = 1.f;
 	
 	ExerciseComponent->MiniGame(CurrentMinigameResult);
-	UpdateStats();
 	
-	//		S U C C E S F U L  
-	if (MiniGameSlider->GetValue() >= MinorInjuryBoundsValueLeft && MiniGameSlider->GetValue() <= MinorInjuryBoundsValueRight)
-	{
-		//bMiniGameOn = false;
-		
-	}
-	//				M I N O R  I N J U R Y
-	else if (MiniGameSlider->GetValue() >= MajorInjuryBoundsValueLeft && MiniGameSlider->GetValue() <= MajorInjuryBoundsValueRight)
-	{
-		
-		ExerciseComponent->Injury(EInjuryLevel::Minor);
-		
-		ExerciseComponent->MiniGame(CurrentMinigameResult);
+	CheckStatsForFrontEnd();
 
-		UpdateStats();
 
-		FName InjuredPartName = ExerciseComponent->GetCurrentInjuredPart()->Name;
-		
-		FString InjuryString = FString::Printf(TEXT("You have injured your: %s"), *InjuredPartName.ToString());
-		NotificationTextPopUp(InjuryString);
-		
-	}
-	else   //			M A J O R  I N J U R Y 
-	{
-		BloodSplatter->SetVisibility(ESlateVisibility::HitTestInvisible);
-		ExerciseComponent->Injury(EInjuryLevel::Major);
-		
-		SetMiniGameOn(false);
-	}
-	if (!bSpecialSliderOn && ( EnergyLevel > 0.8f || EnergyLevel < 0.3f && EnergyLevel > 0.1))
+	/*
+	 * Special Slider Logic is full of Magic Numbers.  Make a separate function for this
+	 *
+	 * 
+	 *if (!bSpecialSliderOn && ( GetEnergyLevel() > 0.8f || GetEnergyLevel() < 0.3f && GetEnergyLevel() > 0.1))
 	{
 		SetSpecialSliderOn(true);
 	}
 	else
 	{
 		SetSpecialSliderOn(false);
-	}
-
-	SetInjuryRisk();
-
-	SetSetAndRepCountTextBlocks();
-
-
-}
-
-void UTimingGaugeMinigame_OM::MiniGameTutorial()
-{
-	Super::MiniGameTutorial();
-}
-
-
-void UTimingGaugeMinigame_OM::SetNotificationText()
-{
-	if (!ExerciseComponent) return;
-	const float EnergyLevel = ExerciseComponent->GetEnergy();
-	if (EnergyLevel <= 0.f && CurrentWorkoutState == EWorkoutStates::SetComplete)
-	{
-		const FText SetCompleteNoEnergyText = FText::FromString("Last Set No Energy");
-		NotificationText->SetText(SetCompleteNoEnergyText);
-	}
-	else if (EnergyLevel <= 0.f)
-	{
-		const FText NoEnergyText = FText::FromString("No Energy");
-		NotificationText->SetText(NoEnergyText);
-		
-	}
-	else if (CurrentWorkoutState == EWorkoutStates::SetComplete)
-	{
-		const FText SetCompleteText = FText::FromString("Set Complete");
-		NotificationText->SetText(SetCompleteText);
-	}
-}
-
-void UTimingGaugeMinigame_OM::NotificationTextPopUp(const FString& InString) 
-{
-	//if (EnergyLevel > 0.f) return;
-	SetNotificationText();
-	constexpr float PopUpTimeShown = 2.f;
-
-	NotificationText->SetText(FText::FromString(InString));
-	NotificationText->SetVisibility(ESlateVisibility::Visible);
+	}*/
 	
-	GetWorld()->GetTimerManager().ClearTimer(TextPopUpDelayHandle);
-	GetWorld()->GetTimerManager().SetTimer(
-			TextPopUpDelayHandle,
-			[this]()
-			{
-				NotificationText->SetVisibility(ESlateVisibility::Hidden);
-			},
-			PopUpTimeShown, 
-			false 
-		);
 }
+
+
 
 void UTimingGaugeMinigame_OM::SetMiniGameOn(const bool InMiniGameOn)
 {

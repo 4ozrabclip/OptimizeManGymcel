@@ -64,10 +64,32 @@ void UWidgetManagementComponent_OM::BeginPlay()
 	}
 
 
+
 	LoadPersistentHud();
 }
 
-void UWidgetManagementComponent_OM::PlaymodeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn)
+void UWidgetManagementComponent_OM::OpenWidget(TSubclassOf<UUserWidget> InWidgetClass)
+{
+	RemoveAllActiveWidgets();
+	
+	/*
+	 *	Dont use CurrentPlayModeWidgetInstance
+	 * 
+	 */
+	CurrentPlayModeWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), InWidgetClass);
+	if (!CurrentPlayModeWidgetInstance) return;
+
+	ActiveWidgets.Add(CurrentPlayModeWidgetInstance);
+	
+	if (!CurrentPlayModeWidgetInstance) return;
+	if (CurrentPlayModeWidgetInstance->IsInViewport()) return;
+
+	CurrentPlayModeWidgetInstance->AddToViewport(2);
+	
+}
+
+
+void UWidgetManagementComponent_OM::PlayModeWidgetManagement(EPlayModes CurrentPlayMode, bool bHasFadeIn)
 {
 	RemoveAllActiveWidgets();
 
@@ -127,7 +149,7 @@ void UWidgetManagementComponent_OM::SetTutorialWidget(const UTutorialWidget_OM* 
 	}
 }
 
-void UWidgetManagementComponent_OM::SetWorkoutMinigame(EMinigameType InMiniGame)
+void UWidgetManagementComponent_OM::SetWorkoutMinigame(EMiniGameType InMiniGame)
 {
 	if (TSubclassOf<UPlayModeBaseWidget_OM>* Minigame = PlayModeWidgets.Find(EPlayModes::WorkoutMode))
 	{
@@ -292,6 +314,7 @@ void UWidgetManagementComponent_OM::ResetUI()
 		InteractWidgetPtr = nullptr;
 	}
 }
+
 
 void UWidgetManagementComponent_OM::ToggleInteractWidgetFromViewport(bool bRemove)
 {

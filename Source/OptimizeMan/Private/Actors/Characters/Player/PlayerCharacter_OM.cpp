@@ -290,7 +290,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig PauseModeConfig;
 	PauseModeConfig.bSetToUiMode = true;
 	PauseModeConfig.bAllowGameMovement = false;
-	PauseModeConfig.bHasWidget = true;
 	PauseModeConfig.ForcedLocation = FVector();
 	PauseModeConfig.ForcedRotation = FRotator();
 	PauseModeConfig.bHasAFadeIn = false;
@@ -301,7 +300,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig SocialModeConfig;
 	SocialModeConfig.bSetToUiMode = true;
 	SocialModeConfig.bAllowGameMovement = true;
-	SocialModeConfig.bHasWidget = true;
 	SocialModeConfig.ForcedLocation = FVector();
 	SocialModeConfig.ForcedRotation = FRotator();
 	SocialModeConfig.bHasAFadeIn = false;
@@ -312,7 +310,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig WorkoutModeConfig;
 	WorkoutModeConfig.bSetToUiMode = true;
 	WorkoutModeConfig.bAllowGameMovement = false;
-	WorkoutModeConfig.bHasWidget = true;
 	WorkoutModeConfig.ForcedLocation = FVector();
 	WorkoutModeConfig.ForcedRotation = FRotator();
 	WorkoutModeConfig.bHasAFadeIn = false;
@@ -325,7 +322,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig MirrorModeConfig;
 	MirrorModeConfig.bSetToUiMode = true;
 	MirrorModeConfig.bAllowGameMovement = false;
-	MirrorModeConfig.bHasWidget = true;
 	MirrorModeConfig.ForcedLocation = PlayerFacingMirrorLoc;
 	MirrorModeConfig.ForcedRotation = FRotator(1, 1, 0);
 	MirrorModeConfig.bHasAFadeIn = false;
@@ -336,7 +332,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig MuscleViewModeConfig;
 	MuscleViewModeConfig.bSetToUiMode = true;
 	MuscleViewModeConfig.bAllowGameMovement = false;
-	MuscleViewModeConfig.bHasWidget = true;
 	MuscleViewModeConfig.ForcedLocation = FVector();
 	MuscleViewModeConfig.ForcedRotation = FRotator::ZeroRotator;
 	MuscleViewModeConfig.bHasAFadeIn = false;
@@ -350,7 +345,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig ShelfModeConfig;
 	ShelfModeConfig.bSetToUiMode = true;
 	ShelfModeConfig.bAllowGameMovement = false;
-	ShelfModeConfig.bHasWidget = true;
 	ShelfModeConfig.ForcedLocation = PlayerFacingShelfLoc;
 	ShelfModeConfig.ForcedRotation = PlayerFacingShelfRot;
 	ShelfModeConfig.bHasAFadeIn = false;
@@ -360,8 +354,6 @@ void APlayerCharacter_OM::InitPlayModes()
   
 	FPlayModeConfig LaptopModeConfig;
 	LaptopModeConfig.bSetToUiMode = true;
-	LaptopModeConfig.bAllowGameMovement = false;
-	LaptopModeConfig.bHasWidget = true;
 	LaptopModeConfig.ForcedLocation = FVector();
 	LaptopModeConfig.ForcedRotation = FRotator();
 	LaptopModeConfig.bHasAFadeIn = false;
@@ -372,7 +364,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig CalenderModeConfig;
 	CalenderModeConfig.bSetToUiMode = true;
 	CalenderModeConfig.bAllowGameMovement = false;
-	CalenderModeConfig.bHasWidget = true;
 	CalenderModeConfig.ForcedLocation = FVector();
 	CalenderModeConfig.ForcedRotation = FRotator();
 	CalenderModeConfig.bHasAFadeIn = false;
@@ -383,7 +374,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig WakeUpConfig;
 	WakeUpConfig.bSetToUiMode = true;
 	WakeUpConfig.bAllowGameMovement = false;
-	WakeUpConfig.bHasWidget = true;
 	WakeUpConfig.ForcedLocation = FVector();
 	WakeUpConfig.ForcedRotation = FRotator();
 	WakeUpConfig.bHasAFadeIn = false;
@@ -394,7 +384,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig TodoConfig;
 	TodoConfig.bSetToUiMode = true;
 	TodoConfig.bAllowGameMovement = true;
-	TodoConfig.bHasWidget = true;
 	TodoConfig.ForcedLocation = FVector();
 	TodoConfig.ForcedRotation = FRotator();
 	TodoConfig.bHasAFadeIn = false;
@@ -405,7 +394,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig VendingConfig;
 	VendingConfig.bSetToUiMode = true;
 	VendingConfig.bAllowGameMovement = false;
-	VendingConfig.bHasWidget = true;
 	VendingConfig.ForcedLocation = FVector();
 	VendingConfig.ForcedRotation = FRotator();
 	VendingConfig.bHasAFadeIn = false;
@@ -416,7 +404,6 @@ void APlayerCharacter_OM::InitPlayModes()
 	FPlayModeConfig TutorialConfig;
 	TutorialConfig.bSetToUiMode = true;
 	TutorialConfig.bAllowGameMovement = false;
-	TutorialConfig.bHasWidget = true;
 	TutorialConfig.ForcedLocation = FVector();
 	TutorialConfig.ForcedRotation = FRotator();
 	TutorialConfig.bHasAFadeIn = false;
@@ -494,10 +481,8 @@ void APlayerCharacter_OM::SetCurrentPlayMode(const EPlayModes InPlayMode, const 
 	if (Config.bNeedsPreSteps)
 		ManageCurrentPlayMode();
 
-	if (Config.bHasWidget)
-	{
-		PlayerController->GetWidgetManagementComponent()->PlaymodeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
-	}
+
+	PlayerController->GetWidgetManagementComponent()->PlayModeWidgetManagement(CurrentPlayMode, Config.bHasAFadeIn);
 
 	SetToUIMode(Config.bSetToUiMode, Config.bAllowGameMovement);
 	
@@ -512,7 +497,6 @@ void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrCl
 	{
 		SetCurrentPlayMode(InPlayMode, InInteractableActor, InInteractedCharacter);
 		InOpenOrClosedState = true;
-		UE_LOG(LogTemp, Error, TEXT("Toggle on"));
 	}
 	else
 	{
@@ -521,10 +505,7 @@ void APlayerCharacter_OM::TogglePlayMode(EPlayModes InPlayMode, bool& InOpenOrCl
 		else
 			SetCurrentPlayMode(EPlayModes::RegularMode);
 		InOpenOrClosedState = false;
-		UE_LOG(LogTemp, Error, TEXT("Toggle off"));
 	}
-
-
 }
 
 void APlayerCharacter_OM::TogglePauseMode()
@@ -734,6 +715,10 @@ void APlayerCharacter_OM::SetToUIMode(const bool bSetToUiMode, const bool bAllow
  * 
  */
 
+/*
+ *	Set InteractedActor/Character In this func
+ * 
+ */
 void APlayerCharacter_OM::Interact(const bool bToggleable)
 {
 	FVector Start = Camera->GetComponentLocation();
@@ -744,7 +729,6 @@ void APlayerCharacter_OM::Interact(const bool bToggleable)
 	FCollisionQueryParams CollisionParams;
 
 	if (CurrentPlayMode != EPlayModes::RegularMode && !bToggleable) return;
-	
 	
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 
@@ -760,12 +744,14 @@ void APlayerCharacter_OM::Interact(const bool bToggleable)
 				GameInstance->SetHasInteractedInitial(true);
 			
 			InteractedActorInterface->Interact_Implementation();
+			CurrentInteractedActor = InteractedActorInterface;
 		}
 		else if (ANpcBase_OM* InteractedNpcInterface = Cast<ANpcBase_OM>(InteractedActor))
 		{
 			InteractedNpcInterface->Interact_Implementation();
+			CurrentInteractedCharacter = InteractedNpcInterface;
 		}
-	}
+	} // ????
 	else if (CurrentInteractedActor && CurrentPlayMode != EPlayModes::RegularMode && CurrentPlayMode != EPlayModes::WorkoutMode)
 	{
 		CurrentInteractedActor->Interact_Implementation();

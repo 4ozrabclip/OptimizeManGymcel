@@ -120,11 +120,11 @@ void UExerciseSelectionParentWidget_OM::OnWeightConfirmed()
 	
 	if (MuscleExertionRatio > TooHeavyThreshold)
 	{
-		ExerciseComponent->SetMinigame(EMinigameType::Slots);
+		ExerciseComponent->SetMinigame(EMiniGameType::Slots);
 	}
 	else
 	{
-		ExerciseComponent->SetMinigame(EMinigameType::TimingGauge);
+		ExerciseComponent->SetMinigame(EMiniGameType::TimingGauge);
 	}
 
 	if (ExerciseEquipment)

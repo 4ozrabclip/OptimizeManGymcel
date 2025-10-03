@@ -64,7 +64,7 @@ void UExercise_OM::InitInjuries()
 	CurrentInjuredPart = nullptr;
 }
 
-void UExercise_OM::SetMinigame(const EMinigameType MinigameToPlay) const
+void UExercise_OM::SetMinigame(const EMiniGameType MinigameToPlay) const
 {
 	OnMinigameSelected.Broadcast(MinigameToPlay);
 }

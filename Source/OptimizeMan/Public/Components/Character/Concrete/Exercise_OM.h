@@ -14,7 +14,7 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorkoutStateChanged, EWorkoutStates, NewWorkoutState);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMinigameSelected, EMinigameType, MinigameToPlay);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMinigameSelected, EMiniGameType, MinigameToPlay);
 
 
 class AExerciseEquipment_OM;
@@ -38,7 +38,7 @@ public:
 
 
 	UFUNCTION()
-	void SetMinigame(const EMinigameType MinigameToPlay) const;
+	void SetMinigame(const EMiniGameType MinigameToPlay) const;
 
 protected:
 	UPROPERTY()

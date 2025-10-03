@@ -18,82 +18,79 @@ UCLASS()
 class OPTIMIZEMAN_API UTimingGaugeMinigame_OM : public UExerciseMinigameWidget_OM
 {
 	GENERATED_BODY()
-	
+public:
+	UTimingGaugeMinigame_OM();
 protected:
+	/** Native Overrides **/
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeDestruct() override;
 
+	/** MiniGame Overrides **/
 	virtual void SetWorkoutState(EWorkoutStates NewWorkoutState) override;
 	virtual void CheckAndSetStyles() override;
-
+	virtual void WorkoutTutorial(float DeltaTime) override;
+	virtual void CheckStatsForFrontEnd() override;
+	UFUNCTION()
 	virtual void OnMiniGameClick() override;
 
-	virtual void MiniGameTutorial() override;
 
-	
-	void WorkoutTutorial(float DeltaTime);
 public:
+	/** Minigame Logic **/
 	void MiniGame(float InDeltaTime);
 
-	void SetNotificationText();
-	void SetInjuryRisk();
-	void SetSetAndRepCountTextBlocks();
-
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateStats();
-
-
-	UFUNCTION(BlueprintCallable)
-	void NotificationTextPopUp(const FString& InString = "");
+	
+	/** Getters **/
 	UFUNCTION(BlueprintCallable)
 	bool GetMiniGameOn() const { return bMiniGameOn; }
+	UFUNCTION(BlueprintCallable)
+	bool GetSpecialSliderOn() const { return bSpecialSliderOn; };
+	
+	/** Setters **/
 	UFUNCTION(BlueprintCallable)
 	void SetMiniGameOn(const bool InMiniGameOn);
 	UFUNCTION(BlueprintCallable)
 	void SetSpecialSliderOn(const bool InSpecialSliderOn);
-	UFUNCTION(BlueprintCallable)
-	bool GetSpecialSliderOn() const { return bSpecialSliderOn; };
 
 
 protected:
+	/** MiniGame Params **/
 	UPROPERTY(EditAnywhere, Category = "MiniGameSpeed")
 	float Speed = 1.f;
-
 	UPROPERTY(EditAnywhere, Category = "MiniGameSpeed")
 	float Divider = 10.f;
 
-
+	
+	/** TimerHandles **/
 	FTimerHandle MiniGameTickHandle;
-	FTimerHandle TextPopUpDelayHandle;
 	FTimerHandle ChangeWorkoutButtonHandle;
 
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
-	UMaterial* EnergyLevelLightFill;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
-	UMaterial* EnergyLevelDarkFill;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
-	UMaterial* EnergyLevelBorderLight;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/Light mode")
-	UMaterial* EnergyLevelBorderDark;
+	/** UObjects **/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
+	UMaterial* DownArrowBlack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
+	UMaterial* DownArrowWhite;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
+	UMaterial* SigmaWhite;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
+	UMaterial* SigmaBlack;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
+	UTexture2D* ClickHand;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
+	UTexture2D* ClickHand_Clicking;
 
 
 	
-	
+	/** Widget UObjects **/
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	USlider* MiniGameSlider;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	USlider* WinBoundsLeftSlider;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	USlider* WinBoundsRightSlider;
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	USlider* SpecialSlider;
-
-
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UProgressBar* InjuryBoundsLeft;
@@ -104,48 +101,12 @@ protected:
 	UProgressBar* MinorInjuryLeft;
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UProgressBar* MinorInjuryRight;
-
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* RepCountTextBlock;
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* SetCountTextBlock;
-
-
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* ClickImage;
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
-	UTexture2D* ClickHand;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Images")
-	UTexture2D* ClickHand_Clicking;
-
-
-
-
-// --- images for dark/light mode
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* DownArrowBlack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* DownArrowWhite;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* SigmaWhite;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dark/LightMode images")
-	UMaterial* SigmaBlack;
-
-
-
-	/** Class Cache **/
-	UPROPERTY()
-	UExercise_OM* ExerciseComponent;
-
-
-	
-private: //Priv variables
-
-	EMinigameResult NewResult = EMinigameResult::None;
+private:
 	float NewEnergyFactor = 1.f;
 
 
